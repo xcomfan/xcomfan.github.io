@@ -1,6 +1,7 @@
 ---
 layout: page
 title: My References
+permalink: /pagetest/
 ---
 
 # Mermaid Test
