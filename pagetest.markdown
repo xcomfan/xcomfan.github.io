@@ -1,6 +1,6 @@
 ---
 layout: page
-title: My References
+title: "My References"
 permalink: /pagetest/
 ---
 
