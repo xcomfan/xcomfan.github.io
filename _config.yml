@@ -35,6 +35,9 @@ plugins:
   - jekyll-feed
   - jekyll-mermaid
 
+header_pages:
+  - gitref.md
+
 mermaid:
   src: https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js
 # Exclude from processing.
