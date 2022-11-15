@@ -6,6 +6,10 @@ permalink: /gitref/definitions/
 
 ### Definitions
 
+**Author** - Author in a commit is the person that originally wrote the work vs committer is the person who last applied the work.
+
+**Committer** -  Committer is the person in a commit history entry that applied the work vs the author who is the person that originally wrote the work.
+
 **Index** - Another term for the Git staging area
 
 **Snapshot** - TODO Need to get a good definition here.
