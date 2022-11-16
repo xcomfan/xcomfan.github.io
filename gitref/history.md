@@ -35,7 +35,7 @@ The **git log** command command will show you the history below are some usefull
 [comment]: <> (TODO: Some of the tables on this page are not adjusting to page witdth see if you can fix that in Jekyll options)
 [comment]: <> (TODO: Clarify how to distinguish between a merge commit and a regular commit)
 
-# Limiting and Filtering 
+# Limiting and Filtering git log Output
 
 | Option | Description | Example |
 | ------ | ----------- | ------- |
