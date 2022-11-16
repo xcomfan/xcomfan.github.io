@@ -3,20 +3,20 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Working on your code | My References</title>
+<title>Commiting Your Changes | My References</title>
 <meta name="generator" content="Jekyll v3.9.2" />
-<meta property="og:title" content="Working on your code" />
+<meta property="og:title" content="Commiting Your Changes" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://localhost:4000/gitref/work/" />
-<meta property="og:url" content="http://localhost:4000/gitref/work/" />
+<link rel="canonical" href="http://localhost:4000/gitref/commit/" />
+<meta property="og:url" content="http://localhost:4000/gitref/commit/" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Working on your code" />
+<meta property="twitter:title" content="Commiting Your Changes" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Working on your code","url":"http://localhost:4000/gitref/work/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Commiting Your Changes","url":"http://localhost:4000/gitref/commit/"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
@@ -39,70 +39,46 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Working on your code</h1>
+    <h1 class="post-title">Commiting Your Changes</h1>
   </header>
 
   <div class="post-content">
-    <h2 id="vieing-the-status-of-your-working-tree">Vieing the status of your working tree</h2>
+    <h1 id="basic-commit">Basic Commit</h1>
 
-<p><code class="language-plaintext highlighter-rouge">git status</code></p>
+<p>Use default editor to write your commit message.</p>
 
-<p>This command will display the following details</p>
+<p><code class="language-plaintext highlighter-rouge">git commit</code></p>
 
-<table>
-  <thead>
-    <tr>
-      <th>Section</th>
-      <th>Purpose</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>“On branch”</td>
-      <td>Branch you are currently on TODO: Link to Branching section once you have it.  Probably need to rephrase “working on”</td>
-    </tr>
-    <tr>
-      <td>“No commits yet”</td>
-      <td>Only displayed if repository has no commits/history</td>
-    </tr>
-    <tr>
-      <td>“Changes to be commited”</td>
-      <td>The staged changes the will be commited when you run the <code class="language-plaintext highlighter-rouge">git commit</code> command</td>
-    </tr>
-    <tr>
-      <td>“Changes not staged for commit”</td>
-      <td>Modified files in your working copy that are not staged to be commited</td>
-    </tr>
-    <tr>
-      <td>“Untracked Files”</td>
-      <td>Files in your working copy that Git is not tracking</td>
-    </tr>
-  </tbody>
-</table>
+<p>One line commit</p>
 
-<h2 id="recording-changes-in-your-working-tree">Recording Changes In Your Working Tree</h2>
+<p><code class="language-plaintext highlighter-rouge">git commit -m "My commit message"</code></p>
 
-<h3 id="stage-new-files-or-changes-to-a-tracked-files">Stage new files or changes to a tracked files</h3>
+<p><strong>Good Commit Messages</strong></p>
 
-<p>Add a single file</p>
+<h1 id="updating-amending-a-commit">Updating (amending) a Commit</h1>
 
-<p><code class="language-plaintext highlighter-rouge">git add somefile.txt</code></p>
+<p>If you mess up a commit and want to change or add a file use <code class="language-plaintext highlighter-rouge">git commit --amend</code> as in the example below.  Your configured editor will pop up to allow you to modify the commit message as well.</p>
 
-<p>Add all modified and new files</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git commit -m 'My commit message'
+git add forgotten_or_updated_file
+git commit --amend
+</code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">git add .</code></p>
+<p><strong><em>WARNING:</em></strong> <em>Only amend commits that are in your local and have not been pushed to a remote repository.  Amending previously pushed commits and force pushing the branch will cause problems for your collaborators.</em></p>
 
-<p>You can add with globbing</p>
+<h1 id="unstaging-a-staged-file">Unstaging a Staged File</h1>
 
-<p><code class="language-plaintext highlighter-rouge">git add *.py</code></p>
+<p>If you staged a file by mistake you can un stage it with the command below.  Git status shows this command as a hint as well.</p>
 
-<p><strong><em>Note:</em></strong> Git stages files exactly as they are at the moment of staging.  This means that if you <code class="language-plaintext highlighter-rouge">git add</code> a file and then modify it you will see it in both “Changes to be commited” and “Changes not staged for commit” sections when you run the <code class="language-plaintext highlighter-rouge">git status</code> command.</p>
+<p><code class="language-plaintext highlighter-rouge">git reset HEAD filename.xyz</code></p>
 
-<h3 id="un-stage-a-file">Un-stage a file</h3>
+<h1 id="unmodifying-a-modified-file">Unmodifying a Modified File</h1>
 
-<p>If you staged a file by mistake you can un-stage it with the command</p>
+<p>If you want to undo the changes you made to a tracked file use the command below.</p>
 
-<p><code class="language-plaintext highlighter-rouge">git restore --staged myfile.txt</code></p>
+<p><strong><em>WARNING</em></strong> <em>This is a dangerous command.  Git will replace the specified files witht he last <strong>staged or committed</strong> version.  Any changes you made to the file will be gone</em></p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout filename.xyz</code></p>
 
   </div>
 
