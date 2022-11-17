@@ -8,16 +8,18 @@ permalink: /gitref/history/
 
 The **git log** command command will show you the history below are some usefull modifiers to the git log command.
 
-* `git log -p` or `git log --patch` will show the patch output introduced in each commit.
-* `git log --stat` will show the commit stats (number of changes etc)
-    * `git log --shortstat` Displays only the changed/insertion/deletions line from the --stat command.
 * `git log [--name-only | --name-status  ]` - Shows just the list of files modified after commit information with name-status adding the added, modified, deleted information.
-* `git log --relative-date` Show the "2 weeks ago" format insted of the full date.
+
+* `git log -p` or `git log --patch` will show the patch output introduced in each commit.
+
 * `git log --pretty` changes the log output to formats other than the default.  There are some pre pubit options available.
+
     * `git log --pretty=oneline` will print each commit on a single line.
+
         * `git log --pretty=oneline --graph` Adding the graph option will add an ASCII graph showing the branch and merge history which combines well with the --pretty=oneline modifier.
-    * `git log --pretty=[short |full | fuller]` lets you see various amounts of information. (Author, Date, Commit Date, Author Date etc.)
+
     * `git log --pretty=format:"%h - %an, %ar : %s"` lets you customize the output format where...
+
         * | Specifier | Description of Output|
           | --------- | -------------------- |
           | %H , %h| Commit hash, abbreviated commit hash |
@@ -26,9 +28,17 @@ The **git log** command command will show you the history below are some usefull
           | %an , %ae | Author name, Author email |
           | %ad , %ar | Author date (format respects the --date=option), Author date, relative |
           | %cn , %ce | Committer name, Committer email |
-          | %cd , %cr | Committer date, Committer date, relative |
+          | %cd , %cr | Committer date, Committer date relative |
           | %s | Subject |
 
+    *  useful example of custom output: `git log --pretty=format:"%h %cd %cn %s" --graph`
+
+    * `git log --pretty=[short |full | fuller]` lets you see various amounts of information. (Author, Date, Commit Date, Author Date etc.)
+
+* `git log --stat` will show the commit stats (number of changes etc)
+    * `git log --shortstat` Displays only the changed/insertion/deletions line from the --stat command.
+
+* `git log --relative-date` Show the "2 weeks ago" format insted of the full date.
 
 [comment]: <> (TODO: What is a tree hash?)
 [comment]: <> (TODO: Make a pass over this section and see if there is a better way to orgnize it.)
