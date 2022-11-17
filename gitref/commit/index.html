@@ -72,13 +72,21 @@ git commit --amend
 
 <p><code class="language-plaintext highlighter-rouge">git reset HEAD filename.xyz</code></p>
 
+<p>If on git version 2.23.0 or newer you can also use the git restore command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git restore --staged filename.xyz</code></p>
+
 <h1 id="unmodifying-a-modified-file">Unmodifying a Modified File</h1>
 
 <p>If you want to undo the changes you made to a tracked file use the command below.</p>
 
-<p><strong><em>WARNING</em></strong> <em>This is a dangerous command.  Git will replace the specified files witht he last <strong>staged or committed</strong> version.  Any changes you made to the file will be gone</em></p>
+<p><strong><em>WARNING</em></strong> <em>This is a dangerous command.  Git will replace the specified files witht he last <strong>staged or committed</strong> version.  Any changes you made to the file will be gone</em>  If you wish to keep the changes made to the file but get it out of the way temporarily you can stash it.</p>
 
 <p><code class="language-plaintext highlighter-rouge">git checkout filename.xyz</code></p>
+
+<p>If on git version 2.23.0 or newer you can also use the git restore command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git restore filename.xyz</code></p>
 
   </div>
 

@@ -48,23 +48,26 @@
 <p>The <strong>git log</strong> command command will show you the history below are some usefull modifiers to the git log command.</p>
 
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">git log -p</code> or <code class="language-plaintext highlighter-rouge">git log --patch</code> will show the patch output introduced in each commit.</li>
-  <li><code class="language-plaintext highlighter-rouge">git log --stat</code> will show the commit stats (number of changes etc)
-    <ul>
-      <li><code class="language-plaintext highlighter-rouge">git log --shortstat</code> Displays only the changed/insertion/deletions line from the –stat command.</li>
-    </ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">git log [--name-only | --name-status  ]</code> - Shows just the list of files modified after commit information with name-status adding the added, modified, deleted information.</p>
   </li>
-  <li><code class="language-plaintext highlighter-rouge">git log [--name-only | --name-status  ]</code> - Shows just the list of files modified after commit information with name-status adding the added, modified, deleted information.</li>
-  <li><code class="language-plaintext highlighter-rouge">git log --relative-date</code> Show the “2 weeks ago” format insted of the full date.</li>
-  <li><code class="language-plaintext highlighter-rouge">git log --pretty</code> changes the log output to formats other than the default.  There are some pre pubit options available.
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">git log -p</code> or <code class="language-plaintext highlighter-rouge">git log --patch</code> will show the patch output introduced in each commit.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">git log --pretty</code> changes the log output to formats other than the default.  There are some pre pubit options available.</p>
+
     <ul>
-      <li><code class="language-plaintext highlighter-rouge">git log --pretty=oneline</code> will print each commit on a single line.
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">git log --pretty=oneline</code> will print each commit on a single line.</p>
+
         <ul>
           <li><code class="language-plaintext highlighter-rouge">git log --pretty=oneline --graph</code> Adding the graph option will add an ASCII graph showing the branch and merge history which combines well with the –pretty=oneline modifier.</li>
         </ul>
       </li>
-      <li><code class="language-plaintext highlighter-rouge">git log --pretty=[short |full | fuller]</code> lets you see various amounts of information. (Author, Date, Commit Date, Author Date etc.)</li>
-      <li><code class="language-plaintext highlighter-rouge">git log --pretty=format:"%h - %an, %ar : %s"</code> lets you customize the output format where…
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">git log --pretty=format:"%h - %an, %ar : %s"</code> lets you customize the output format where…</p>
+
         <ul>
           <li>
             <table>
@@ -101,7 +104,7 @@
                 </tr>
                 <tr>
                   <td>%cd , %cr</td>
-                  <td>Committer date, Committer date, relative</td>
+                  <td>Committer date, Committer date relative</td>
                 </tr>
                 <tr>
                   <td>%s</td>
@@ -112,8 +115,20 @@
           </li>
         </ul>
       </li>
+      <li>
+        <p>useful example of custom output: <code class="language-plaintext highlighter-rouge">git log --pretty=format:"%h %cd %cn %s" --graph</code></p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">git log --pretty=[short |full | fuller]</code> lets you see various amounts of information. (Author, Date, Commit Date, Author Date etc.)</p>
+      </li>
     </ul>
   </li>
+  <li><code class="language-plaintext highlighter-rouge">git log --stat</code> will show the commit stats (number of changes etc)
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">git log --shortstat</code> Displays only the changed/insertion/deletions line from the –stat command.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">git log --relative-date</code> Show the “2 weeks ago” format insted of the full date.</li>
 </ul>
 
 <h1 id="limiting-and-filtering-git-log-output">Limiting and Filtering git log Output</h1>
