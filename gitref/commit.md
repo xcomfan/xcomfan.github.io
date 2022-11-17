@@ -39,10 +39,18 @@ If you staged a file by mistake you can un stage it with the command below.  Git
 
 `git reset HEAD filename.xyz`
 
+If on git version 2.23.0 or newer you can also use the git restore command
+
+`git restore --staged filename.xyz`
+
 # Unmodifying a Modified File #
 
 If you want to undo the changes you made to a tracked file use the command below.  
 
-***WARNING*** *This is a dangerous command.  Git will replace the specified files witht he last **staged or committed** version.  Any changes you made to the file will be gone*
+***WARNING*** *This is a dangerous command.  Git will replace the specified files witht he last **staged or committed** version.  Any changes you made to the file will be gone*  If you wish to keep the changes made to the file but get it out of the way temporarily you can stash it.
 
 `git checkout filename.xyz`
+
+If on git version 2.23.0 or newer you can also use the git restore command
+
+`git restore filename.xyz`
