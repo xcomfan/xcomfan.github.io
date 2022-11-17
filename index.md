@@ -7,3 +7,4 @@ title: Contents
 ---
 
 ## [Git]({% link gitref/gitref.md %}) ##
+## [Jekyll]({% link jekyllref/jekyllref.md %}) ##
