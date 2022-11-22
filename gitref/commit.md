@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "Commiting Your Changes"
+title: "Committing Your Changes"
 permalink: /gitref/commit/
 ---
 
@@ -43,11 +43,11 @@ If on git version 2.23.0 or newer you can also use the git restore command
 
 `git restore --staged filename.xyz`
 
-# Unmodifying a Modified File #
+# Un-modifying a Modified File #
 
 If you want to undo the changes you made to a tracked file use the command below.  
 
-***WARNING*** *This is a dangerous command.  Git will replace the specified files witht he last **staged or committed** version.  Any changes you made to the file will be gone*  If you wish to keep the changes made to the file but get it out of the way temporarily you can stash it.
+***WARNING*** *This is a dangerous command.  Git will replace the specified files width he last **staged or committed** version.  Any changes you made to the file will be gone*  If you wish to keep the changes made to the file but get it out of the way temporarily you can stash it.
 
 `git checkout filename.xyz`
 

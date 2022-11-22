@@ -25,7 +25,7 @@ permalink: /gitref/
     click remotes "{% link gitref/remotes.md%}"
 {% endmermaid %}
 
-[comment]: <> (TODO: May want to add some quick links so that someone who does not know whic mermaid bubble to look to can jump to info.)
+[comment]: <> (TODO: May want to add some quick links so that someone who does not know which mermaid bubble to look to can jump to info.)
 
 # Configuration
 [comment]: <> (TODO: Need to fill out this section.)
