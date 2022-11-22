@@ -4,9 +4,9 @@ title: "Repository history"
 permalink: /gitref/history/
 ---
 
-# Viewing the Commit History
+# Viewing the Commit History #
 
-The **git log** command command will show you the history below are some usefull modifiers to the git log command.
+The **git log** command command will show you the history below are some useful modifiers to the git log command.
 
 * `git log [--name-only | --name-status  ]` - Shows just the list of files modified after commit information with name-status adding the added, modified, deleted information.
 
@@ -41,9 +41,19 @@ The **git log** command command will show you the history below are some usefull
 * `git log --relative-date` Show the "2 weeks ago" format insted of the full date.
 
 [comment]: <> (TODO: What is a tree hash?)
-[comment]: <> (TODO: Make a pass over this section and see if there is a better way to orgnize it.)
-[comment]: <> (TODO: Some of the tables on this page are not adjusting to page witdth see if you can fix that in Jekyll options)
+[comment]: <> (TODO: Make a pass over this section and see if there is a better way to organize it.)
+[comment]: <> (TODO: Some of the tables on this page are not adjusting to page width see if you can fix that in Jekyll options)
 [comment]: <> (TODO: Clarify how to distinguish between a merge commit and a regular commit)
+
+## Git log and branching ##
+
+By default git log will only show history for the branch you are currently working on.  To see the history for another branch you can explicitly specify it.
+
+`git log <some_branch_name>`
+
+You can also have Git show you the history for all branches
+
+`git log --all`
 
 # Limiting and Filtering git log Output
 
