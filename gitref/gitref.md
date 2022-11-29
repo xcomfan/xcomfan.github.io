@@ -6,6 +6,8 @@ permalink: /gitref/
 
 # Workflow
 
+[working copy]({% link gitref/definitions.md  %}#working-tree)
+
 [comment]: <> (TODO: Once you build out the content may want to sue the subgraph option to make more granular pages.)
 
 {% mermaid %}
