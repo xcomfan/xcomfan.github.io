@@ -36,6 +36,14 @@ A topic branch is a short lived branch that you create and use for a single part
 
 File that were in the last snapshot as well as any new staged files.  Tracked files can be either unmodified, modified or staged.
 
+# tracking branch
+
+A local branch that tracks a remote [upstream branch]({% link gitref/definitions.md %}#upstream-branch). If you are on a tracking branch and you run the command `git pull` Git automatically knows which server to fetch from and which branch to merge in.
+
+# upstream branch
+
+A remote branch that is being tracked by a local [tracking branch]({% link gitref/definitions.md %}#tracking-branch)
+
 # working copy
 
 When you are working in a Git repository the working copy is the copy on your disk actively being worked on.
