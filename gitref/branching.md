@@ -188,6 +188,8 @@ The command `git fetch` will download all of the changes from the server that yo
 
 If you have a tracking branch set up `git pull` will lookup what server and branch your current branch is tracking, fetch from that server, and then try to merge in the remote branch.
 
+[comment]: <> (TODO: Try the above workflow.  If you rebase on origin/master doesn't that change the remote?)
+
 # Rebasing
 
 Rebasing is an alternative approach to merging for integrating changes from one branch to another.  Rebasing replays changes from one line of work onto another in the order they were introduced, whereas merging takes the endpoints merges them together.
@@ -253,7 +255,86 @@ Rebasing makes for a cleaner history.  If you look at the log of a rebased branc
 
 Rebasing is often used to make sure that your commits apply cleanly on a remote branch - perhaps in a project to which you're trying to contribute but that you don't maintain.  In this use case you would work in a branch and then rebase your work onto origin/master when you are ready to submit your patches to the main project.  This way the maintainer does not need to do any integration work.  Just a fast forward for a clean apply
 
-[comment]: <> (TODO: Try the above workflow.  If you rebase on origin/master doesn't that change the remote?)
+## Other users for Rebase
+
+You can use rebase to apply topic branches that were created from another topic branch onto your mainline.  The diagram below has a client branch that was created from the server branch. (client branch was created off of the server branch)
+
+
+{% mermaid %}
+ flowchart RL
+
+    C6([C6])-->C5([C5])-->C2([C2])-->C1([C1])
+    C10([C10])-->C4([C4])-->C3([C3])
+    C9([C9])-->C8([C8])
+    C3-->C2
+    C8-->C3
+    server[server]-.-C10
+    master[master]-.-C6
+    client[client]-.-C9
+
+{% endmermaid %}
+
+If you wish to apply to master the changes you made on the client branch, but you are not ready to integrate the changes from server.  You can do this with the command.
+
+`git rebase --onto master server client`
+
+This command basically says "Take the client branch, figure out the patches since it diverged from the server branch, and replay these patches in the client branch as it was based directly off the master branch instead.  After this command your history tree will look like the below.
+
+
+{% mermaid %}
+ flowchart RL
+
+    C9([C9])-->C8([C8])-->C6([C6])-->C5([C5])-->C2([C2])-->C1([C1])
+    C10([C10])-->C4([C4])-->C3([C3])
+    C3-->C2
+    master[master]-.-C6
+    client[client]-.-C9
+    server[server]-.-C10
+
+{% endmermaid %}
+
+At this point you just need to fast forward master with the commands
+
+`git checkout master`
+
+`git merge client`
+
+At this point your history looks like
+
+{% mermaid %}
+ flowchart RL
+
+    C9([C9])-->C8([C8])-->C6([C6])-->C5([C5])-->C2([C2])-->C1([C1])
+    C10([C10])-->C4([C4])-->C3([C3])
+    C3-->C2
+    master[master]-.-C9
+    client[client]-.-C9
+    server[server]-.-C10
+
+{% endmermaid %}
+
+
+At this point you can pull in your server branches by rebasing the server branch onto the master branch without having to check it out first by running the command.
+
+`git rebase <basebranch> <topicbranch>`  in this case `git rebase master server`
+
+This will replay your server work on top of your master work.  And once the replay is complete your history will be in the state below so you just need to merge in the serer branch to fast forward the master branch.
+
+`git checkout master`
+
+`git merge server`
+
+At this point its safe to remove the client and server branches since their changes have been integrated and they are no longer needed.
+
+## Perils of rebasing
+
+***Do not rebase commits that exist outside of your repository and that people may have based their work on***
+
+When you rebase you are abandoning existing commits and creating new ones that are similar but different.  If you push commits somewhere and others pull them down and base work on them, and then you rewrite those commits with git rebase and push them again, your collaborators will have to re merge theri work an things will get messy when you try to pull their work back into yours.
+
+## Rebase vs. merge
+
+When you merge branches you see the full history of your repository.  ALl the experimental and dead end branches will be visible in the repository history.  Rebasing lets you have a cleaner history.
 
 # Deleting a remote branch
 
