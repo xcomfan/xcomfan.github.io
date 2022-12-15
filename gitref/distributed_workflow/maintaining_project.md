@@ -5,6 +5,8 @@ permalink: /gitref/working_on_github
 ---
 
 [comment]: <> (TODO: Should break out the GitHub stuff to a separate page)
+[comment]: <> (TODO: https://git-scm.com/docs has a good breakdown of catagories that you can use also a few commands you have not covered that you should look at and possibly add.)
+
 
 ## Contributing to a project on GitHub
 

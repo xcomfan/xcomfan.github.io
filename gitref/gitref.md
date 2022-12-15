@@ -4,6 +4,8 @@ title: "Git Reference"
 permalink: /gitref/
 ---
 
+[comment]: <> (TODO: Good idea to add table of contents at top of each page so you can jump to sections.)
+
 # Workflow
 
 [working copy]({% link gitref/definitions.md  %}#working-tree)
