@@ -1,7 +1,7 @@
 ---
 layout: page
 title: "Git Configuration"
-permalink: /gitref/gitconfigref
+permalink: /gitref/configuration
 ---
 
 ## 3 levels of configuration in Git
@@ -63,4 +63,6 @@ Git has aliasing capabilities that allow you to create shorthands for commands.
 
 `git config --global alias.br branch` - Type `git br` instead of `git branch`
 
-`git config --global 
+`git config --global alias.unstage 'reset HEAD --'` - Add git unstage command that does not exist by default
+
+`git config --global alias.last 'log -1 Head'` - Use git last to see the last commit.
