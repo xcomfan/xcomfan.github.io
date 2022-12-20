@@ -67,6 +67,26 @@ You can also have Git show you the history for all branches
 | --no-merges | Prevent the display of merge commits | `git log --no-merge` |
 | -- path/to/file | Limit output to commit that introduced changes to those files | `git log -- a.c`, `git log -- *.c`|
 
+## Git log searching
+
+If you are not looking for where a term exists, but when it existed or was introduce you want to use git log searching.
+
+If for example you want to find when the ZLIB_BUF_MAX constant was originally introduced, we can use the -S option to git log.  The output of the command will be the commit details of the commit that introduced the variable. If you need to be more specific you can use the -G option to provide a regular expression.
+
+`git log -S ZLIB_BUG_MAX --oneline`
+
+### Line Log Search
+
+you can use Line Log Search to check the history of a function or a line of code.  Just use the -L option with git log.  For example, if we want to see every change made to the function git_deflate_bound in the zlib.c file we would do similar to the following command.  This will try to figure out what the bounds of that function are and then look though the history and show us every change that was made to the function as a series of patches.
+
+`git log -L :git_deflate_bound:zlib.c`
+
+[comment]: <> (TODO: Play around with this feature to get a better write up and understand it better?)
+
+If Git can't figure out hwo to match a function or method in your programming language, you can also provide it with a regular expression as in the example below.
+
+`git log -L '/unsigned long git_deflate_bound/',/^}/:zlib.c`
+
 ## Revision Selection
 
 Git allows you to refer to a single commit, set of commits, or range of commits in a number of ways.
@@ -197,3 +217,82 @@ In your sample history this would yield
 \> C
 
 [comment]: <> (TODO: Need to play around with this feature as well)
+
+## Rewriting commit history
+
+### Changing the last commit
+
+If you just want to change your commit message (in your local working directory) the command below will bring up the editor for you to do so if you have no changes staged.
+
+`git commit --amend`
+
+If you have changes staged, the command above will modify your last commit again in your local working directory with the staged changes and allow you to modify your commit message.
+
+If you want to modify the code of your last commit with the staged changes, but not the commit message use the command
+
+`git commit --amend --no-edit`
+
+***Note:*** Amending a commit changes the SHA-1 of the commit.  **DO NOT AMEND YOUR LAST COMMIT IF YOU ALREADY PUSHED IT.**
+
+### Squashing Commits
+
+You can use the interactive rebase to take a series of commits and squash them into a single commit.
+
+First run the rebase command to go back the desired amount of commits
+
+`git rebase -i HEAD~3`
+
+In the interactive rebase editor replace the `pick` keyword with `squash` and Git will apply both that change and the change directly before it and have you merge the commit message.
+
+[comment]: <> (TODO: Try this out and make any clarification updates also need to take the changing multiple commit below details of the step by step process and apply it here since you are placing this one first.)
+
+### Splitting Commits
+
+### Deleting a Commit
+
+### Changing multiple commit messages
+
+Git does not have a modify history tool, but you can use the rebase tool to rebase a series of commits onto the HEAD that they were originally based on.
+
+With the interactive rebase tool you can stop after each commit you want to modify and change the message, add files or do whatever you wish.
+
+For example if you want to change the last 3 commits you would use the command
+
+`git rebase -i HEAD~3`
+
+The -i option is for interactive rebase
+
+***Note:*** This is a rebase command so **DO NOT** modify commits you already pushed.
+
+Once you run the above command will bring up an editor with a list of commits you selected listed newest first. The editor shows a script the rebase will run as well as some hint information.
+
+You need to edit this script replacing the word `pick` with `edit` on the commits you wish to stop at.
+
+When you save and exit the editor, Git will rewind you to the last commit in the list and drops you at the command line with some hint information displayed.
+
+As the hint says, you can now use `git commit --amend` to modify the commit you landed on or `git rebase --continue` to move on to the next commit you marked with the `edit` word in the script.
+
+Once you are done modifying all the selected commits you will have a rewritten history.
+
+### Reordering Commits
+
+Similar to rewriting multiple commits, you can use interactive rebase to reorder or remove commits entirely.  In the example below if you want to remove the "Add cat file" commit and reorder the other two you would take the below interactive rebase script
+
+```
+pick f7f3f6d Change my name a bit
+pick 310154e Update README formatting and add blame
+pick a5f4a0d Add cat-file
+```
+
+and change it to
+
+```
+pick 310154e Update README formatting and add blame
+pick f7f3f6d Change my name a bit
+```
+
+When you save and exit the editor, Git rewinds your branch to the parent of these commits, applies 310154e and then f7f3f6d and then stops.
+
+At this point you effectively changed the order of those commits and remove the "Add-cat-file" commit completely.
+
+***Note:*** This is a rebase command so **DO NOT** modify commits you already pushed.

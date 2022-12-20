@@ -51,3 +51,42 @@ You can add with globbing
 If you staged a file by mistake you can un-stage it with the command
 
 `git restore --staged myfile.txt`
+
+## Searching 
+
+Git ships with a built in grep that allows you to search though any committed tree, the working tree, or even the index for a string of regular expressions.  The benefit of git grep over regular grep is that its faster and you can search through any gree in Git not just the working directory.
+
+By default git grep will look through files in your local directory.  
+
+You can use the -n or --line-number option to print out the line numbers where Git has found matches.
+
+`git grep -n my_magic_function` or `git grep --line-number my_magic_function`
+
+[comment]: <> (TODO: Look at man page/help and write up some common use cases here.)
+
+There are many options to git grep
+
+You can use -c or --count to get the file names and found instance counts.
+
+`git grep -c TODO` or `git grep --count TODO`
+
+[comment]: <> (TODO: Need to test this on some code currently I am not clear on what this does.)
+
+You can have git show you the preceding line of function matches with the -p or --show-function argument
+
+`git grep -p my_func *.c` or `git grep --show-function my_func *.c`
+
+You can search for complex combinations of strings with the --and flag, which ensures that multiple matches must occur in the same line of text. 
+
+The example below will search for lines that define a constant whose name contains either of the substrings LINK or BUF_MAX specifically in an older version of the codebase by specifying the tag v1.8.0
+
+`git grep --break --heading -n -e '#define' --and \( -e LINK -e BUF_MAX \) v1.8.0`
+
+* --break argument will print empty lines between matches from different files
+
+* --heading argument will show the file name above the matches
+
+* -n or --line-number will add line numbers to output
+
+* -e argument specified that the next parameter in command is the pattern.  
+
