@@ -4,7 +4,24 @@
 
 # Comments in your Jekyll markdown
 
-`[comment]: <> (TODO: What is a tree hash?)`
+`[comment]: <> (TODO: a task for you!)`
 
-# List of Tasks
+# Table
 
+| Heading 1 | Heading 2 | Heading 3|
+| --------- | --------- | -------- |
+| data 1 | data 2 | data 3 |
+
+# Code
+
+## Single line
+
+`my line of code`
+
+## multiple lines
+
+```
+code line 1
+code line 2
+code line N
+```

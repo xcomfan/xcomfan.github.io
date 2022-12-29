@@ -6,7 +6,7 @@ permalink: /gitref/branching/
 
 [comment]: <> (TODO: right now this is just your notes streamlined need to make this a flow)
 
-# What is a Git branch? #
+## What is a Git branch?
 
 To understand branching it is helpful to have an idea of how Git stores data.
 
@@ -24,7 +24,7 @@ When you make a commit, Git stores a commit object that contains
 
 [comment]: <> (TODO: If the internals section gives you more info on what a snapshot is document that in definitions and link.)
 
-# Creating a new branch #
+## Creating a new branch
 
 To create a new branch use the command 
 
@@ -36,7 +36,7 @@ This command creates a pointer to the same commit  you are currently on.  Git kn
 
 [comment]: <> (TODO: Need confirm this HEAD statement and probably have more content about HEAD someplace once you better understand it.)
 
-# Switching branches #
+## Switching branches
 
 To switch to an existing branch use the command.  Same command can be used to switch back to the branch you started at.  When switching branches the content of your working directory will be updated to reflect the state of the last commit to the branch you are switching to.
 
@@ -62,7 +62,7 @@ To return to your previously checked out branch
 
 `git switch -`
 
-# Listing local branches
+## Listing local branches
 
 To list all current branches
 
@@ -82,7 +82,7 @@ For example to see what has not been merged into the master branch you would use
 
 `git branch --no-merged master`
 
-# Basic branching and merging
+## Basic branching and merging
 
 To switch branches it is a good practice to have a clean working tree.  
 
@@ -100,7 +100,7 @@ To delete a branch you no longer need (once you have merged it into another bran
 
 `git branch -d <branch_to_delete>`
 
-# Basic merge conflicts
+## Basic merge conflicts
 
 Merge conflicts happen when you change the same part of a file in two branches you are trying to merge.
 
@@ -114,7 +114,7 @@ Once you are happy with your merge, you can use `git commit` to commit the merge
 
 [comment]: <> (TODO: git mergetool can be used to help you resolve merge conflicts but its a bit glossed over.  Need to do a deep dive into it and write it up better)
 
-# Working with remote branches
+## Working with remote branches
 
 [comment]: <> (TODO: Maybe just move the below explanation to definitions and just link it here to keep verbiage minimal.)
 
@@ -136,7 +136,7 @@ To synchronize your work with a given remote, you run the command
 
 This command looks up which server origin is, fetches any data from it that you don't have yet and updates your local database moving the origin/master pointer to its new more up-to-date position.
 
-# Pushing
+## Pushing
 
 When you want to share a branch with the world, you need to push it up to a remote to which you have write access.  You need to explicitly push the branches you want to share.  This lets you control what you want locally and what you want visible to your collaborators or the public.
 
@@ -152,7 +152,7 @@ It is important to note that when you do a fetch that brings down remote trackin
 
 `git checkout -b bugfix origin/serverfix`
 
-# Tracking Branches
+## Tracking Branches
 
 Tracking branches are local branches that have a direct relationship to a remote branch.  If you are on a tracking branch and you run the command `git pull` Git automatically knows which server to fetch from and which branch to merge in.
 
@@ -182,7 +182,7 @@ If you wish to name the local branch a different name than the remote use
 
 `git checkout -b <my_branch_name> <remote><branch>`
 
-# Pulling git git fetch vs git git pull
+## Pulling git git fetch vs git git pull
 
 The command `git fetch` will download all of the changes from the server that you don't have locally yet, but it will not modify your working directory.  It downloads the data and lets you merge it yourself when you decide to.  The command `git pull` is essentially running `git fetch` and immediately calling git merge.
 
@@ -190,11 +190,11 @@ If you have a tracking branch set up `git pull` will lookup what server and bran
 
 [comment]: <> (TODO: Try the above workflow.  If you rebase on origin/master doesn't that change the remote?)
 
-# Rebasing
+## Rebasing
 
 Rebasing is an alternative approach to merging for integrating changes from one branch to another.  Rebasing replays changes from one line of work onto another in the order they were introduced, whereas merging takes the endpoints merges them together.
 
-## Rebasing explained
+### Rebasing explained
 
 In the diagram below there is worked that diverged and there are commits on tow different branches.
 
@@ -249,13 +249,13 @@ At this point your history will look like as the diagram below.  Note that the c
 [comment]: <> (TODO: Work though the above example to make sure that all 4 commands are needed and to get a feel for how this works)
 [comment]: <> (TODO: Write a definition entry for fast forward merge)
 
-## Why use reabasing?
+### Why use reabasing?
 
 Rebasing makes for a cleaner history.  If you look at the log of a rebased branch, it looks like a liner history.  It looks like a linear history.  It appears that the work happened in series when it actually happened in parallel.
 
 Rebasing is often used to make sure that your commits apply cleanly on a remote branch - perhaps in a project to which you're trying to contribute but that you don't maintain.  In this use case you would work in a branch and then rebase your work onto origin/master when you are ready to submit your patches to the main project.  This way the maintainer does not need to do any integration work.  Just a fast forward for a clean apply
 
-## Other users for Rebase
+### Other users for Rebase
 
 You can use rebase to apply topic branches that were created from another topic branch onto your mainline.  The diagram below has a client branch that was created from the server branch. (client branch was created off of the server branch)
 
@@ -326,13 +326,13 @@ This will replay your server work on top of your master work.  And once the repl
 
 At this point its safe to remove the client and server branches since their changes have been integrated and they are no longer needed.
 
-## Perils of rebasing
+### Perils of rebasing
 
 ***Do not rebase commits that exist outside of your repository and that people may have based their work on***
 
 When you rebase you are abandoning existing commits and creating new ones that are similar but different.  If you push commits somewhere and others pull them down and base work on them, and then you rewrite those commits with git rebase and push them again, your collaborators will have to re merge theri work an things will get messy when you try to pull their work back into yours.
 
-## Rebase vs. merge
+### Rebase vs. merge
 
 When you merge branches you see the full history of your repository.  ALl the experimental and dead end branches will be visible in the repository history.  Rebasing lets you have a cleaner history.
 
@@ -382,3 +382,173 @@ In the current state the master branch is gone and replaced with the main branch
 After you have done the above tasks and are certain the main branch performs just as the master branch, you can delete the master brach with teh command
 
 `git push origin --delete master`
+
+## Advanced Merging
+
+[comment]: <> (TODO: This is another section page that I need to move to a better easier to find area)
+
+### Merge conflicts
+
+When attempting a merge make sure your working tree is clean.  If you have work in progress either commit it to a temporary branch or stash it.  This makes it so that you can undo things when you try to merge.
+
+If you started a merge and get conflicts you can use the below command to abort the merge.
+
+`git merge --abort`
+
+If for some reason you want to start over you can use `git --reset HEAD` and return your repo to its last committed state. ***Note:*** Any of your uncommitted work will be lost.
+
+### Ignoring whitespace
+
+A whitespace related conflict looks like every line being being removed on the left side appearing on the right.  By default Git sees all of these lines as being changed, so it can't merge the files.  If you are seeing a lot of whitespace conflicts you can abort your merge and re-attempt it with the command below.
+
+[comment]: <> (TODO: Need to try this out to see how it works)
+
+`git merge --Xignore-space-change somebranch`
+
+The --Xignore-space-change option ignores whitespace completely when comparing lines.  It will treat sequences of one or more whitespace lines as equivalent.
+
+### Manual file re-merging
+
+[comment]: <> (TODO: Need to experiment with this and see how it compares to normal take this or that change option)
+
+You will very likely run into situations where Git can't automatically fix things in a merge.  In this scenario git allows you to get copies of the 3 states of the conflicting file.
+
+* One state is the merge conflict state.
+* One state is "my version" of the file (the one you are trying to check in after merge)
+* The other version is the "their" version (the one you are trying to merge in)
+
+Git stores gives you access to these files under stages that have a number associated with them.
+
+Stage **1** The common ancestor
+
+Stage **2** is your version
+
+Stage **3** is the MERGE_HEAD (the theirs version)
+
+To access these states you can sue the commands below.
+
+`git show :1:hello.rb > hello.common.rb`
+
+`git show :2:hello.rb > hello.ours.rb`
+
+`git show :3:hello.rb > hello.theirs.rb`
+
+Once you have the 3 stages in your working directory you can modify than as needed for example...
+
+[comment]: <> (TODO: Need to dig deeper into the git merge-file command)
+
+```
+dos2unix hello.theirs.rb
+
+git merge-file -p hello.ours hello.common.rb hello.theirs.rb > hello.rb
+```
+
+[comment]: <> (TODO: Need to experiment with the below as well)
+
+You can use git diff to compare what is in your working directory that you're about to commit as the result of the merge to ay of these stages.
+
+```
+git diff --ours
+
+git diff --theirs -b
+
+git diff --base -b
+```
+
+After you are done fixing the merge you can use git clean to clear our the files you added but no longer need.
+
+`git clean -f`
+
+### Checking out conflicts
+
+[comment]: <> (TODO: Need to experiment with this and add an actual example command)
+
+Git checkout with the --conflict option will re-checkout the file again and replace the merge conflict markers.  This can be useful if you want to reset the conflict markers and try the merge again.
+
+[comment]: <> (TODO: Need to experiment with this and move it to configuration section)
+
+You can pass --conflict either diff3 or merge.  With diff 3 you will get a slightly different conflict output showing you the ours, theirs and base version. 
+
+`git checkout --conflict merge`
+
+`git checkout --conflict diff3`
+
+If you prefer the diff3 version of the output you can make that your default with the command.
+
+`git config --global merge.conflictstyle diff3`
+
+The diff3 option can be particularly useful when merging large binary files where you just need to pick one side or when you are merging large files from other branches.  You can do the merge then checkout certain files from one side or the other before committing.
+
+### Merge log
+
+[comment]: <> (TODO: Need to work though the examples in this section I am a bit lost at the moment)
+
+You can use the triple dot syntax to get a full list of the unique commits that were included in either branch involved in this merge.
+
+`git log --oneline --left-right HEAD...MERGE_HEAD`
+
+This gives you a list of the commits involved, as well as which line of development each commit was on.
+
+The --merge option to git log will only show the commits in either side of the merge that touch a file that's currently conflicted.
+
+`git log --oneline --left-right --merge`
+
+If you run that with the -p option you get ust the diffs tot he file that ended up in conflict.  This can be really helpful in quickly giving you the context you ned to help understand why something conflicts and how to more intelligently resolve it.
+
+### Combined diff format
+
+Since Git stages any merge results that are successful, when you run git diff while in a conflicted merge state, you only get what is currently still in conflict.  This can be helpful to see what you still have to resolve.  
+
+[comment]: <> (TODO: Combined diff is a good candidate for a definition entry)
+
+When you run git diff directly after a merge conflict it will show you a "Combined Diff".  This format gives you two columns of data nest to each line.  
+
+* The first column shows you if that line is different (added or removed) between the ours branch and teh file in your working directory.
+* The second column does the same between the "theirs" branch and your working directory copy.
+
+As you resolve conflicts and run git diff you will see the progress.
+
+If you run git show on a merge commit you will see this format as well.
+
+## Undoing merges
+
+Lets say you started work on a topic branch, accidentally merged it to master and want to undo the error.
+
+There are two ways to approach this problem.  
+
+### Fix the reference
+
+If the unwanted commit only exists on your local repository, the easiest and best solution is to move the branches so they point to where you want the to.
+
+In most cases you can follow the problematic git merge command with `git reset --hard HEAD~`  This will reset the branch pointers effectively undoing the merge.
+
+The downside of this approach is that you are rewriting history which is problematic for a shared repository.  It also does not work if you made commits after making the mistake.  
+
+### Reverse the commit
+
+Git gives you the option of making a new commit that undoes all the changes from an existing one.  Git calls this option a "revert"
+
+`git revert -m 1 HEAD`
+
+[comment]: <> (TODO: Need to work though this I am not following what the -m 1 is doing)
+
+The -m 1 flag indicates which parent is the "mainline" and should be kept.  When you invoke a merge into HEAD, the new commit has two parents: the first one is HEAD and the second is the tip fo the branch being merged.  Git will get confused here if you try to merge in the topic branch again as all the topic changes are technically in master.  To work around this you need to un-revert the original merge since now you want to bring back the changes that were reverted out.
+
+
+[comment]: <> (TODO: Need to go back tot he book and really work though this I am very confused command below is definitely not correct)
+
+`git revert ^M`
+
+## Ours or theirs preference when merging
+
+[comment]: <> (TODO: This section needs to be moved to be with merging when I reorganize these notes to be smaller chunks.  I also need to actually try the arguments being discussed here to understand how they work.)
+
+When merging you can use the -Xours or -Xtheirs options to git merge to tell Git to to prefer either their or your version.  This means if there is a merge conflict the side you are specifying will win and you don't need to manually do the merging.
+
+`git merge -Xours somebranch`
+
+This option will also work on the merge-file command for individual file  merges.
+
+[comment]: <> (TODO: Need to try this merge-file business)
+
+`git merge-file --ours`
