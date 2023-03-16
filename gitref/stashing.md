@@ -4,6 +4,8 @@ title: "Stashing"
 permalink: /gitref/stashing/
 ---
 
+[comment]: <> (TODO: REV MARKER)
+
 Stashing can be used to save your modified tracked files and staged changes.  This saved state can be re applied at any time and to any branch.  
 
 ## Viewing your Git stash

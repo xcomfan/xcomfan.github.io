@@ -4,6 +4,8 @@ title: "Distributed Work"
 permalink: /gitref/distributed_work
 ---
 
+[comment]: <> (TODO: REV MARKER)
+
 ## Summaries of common distributed workflows
 
 ### Centralized workflow

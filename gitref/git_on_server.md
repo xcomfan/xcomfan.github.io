@@ -4,6 +4,8 @@ title: "Git Reference"
 permalink: /gitref/git_on_server
 ---
 
+[comment]: <> (TODO: REV MARKER)
+
 [comment]: <> (TODO: This is raw copy paste from your notes need to format and organize.)
 
 Git on the Server - The Protocols

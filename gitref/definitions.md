@@ -4,9 +4,15 @@ title: "Definitions"
 permalink: /gitref/definitions/
 ---
 
+[comment]: <> (TODO: REV MARKER)
+
 # author
 
 Author in a commit is the person that originally wrote the work vs committer is the person who last applied the work.
+
+# committed tree
+
+[comment]: <> (TODO: find this definition!)
 
 # committer
 
@@ -24,6 +30,10 @@ A commit created by Git when two branches with diverging changes are merged.
 
 TODO Need to get a good definition here.
 
+# staged
+
+A staged file is a version of a file you marked to go into your next commit.  You mark the file to go into your next commit with the `git add` command.
+
 # staging area
 
 A file generally in your Git directory that stores what changes will go into your next commit.  Its technical name in Git is "index"
@@ -39,6 +49,10 @@ File that were in the last snapshot as well as any new staged files.  Tracked fi
 # tracking branch
 
 A local branch that tracks a remote [upstream branch]({% link gitref/definitions.md %}#upstream-branch). If you are on a tracking branch and you run the command `git pull` Git automatically knows which server to fetch from and which branch to merge in.
+
+# tree
+
+[comment]: <> (TODO: find this definition Not it may overlap with committed tree definition)
 
 # upstream branch
 

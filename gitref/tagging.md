@@ -4,6 +4,8 @@ title: "Tagging"
 permalink: /gitref/tagging/
 ---
 
+[comment]: <> (TODO: REV MARKER)
+
 ## What are tags
 
 Tags are typically used to mark release points.  They can also be used to mark certain points in a repository history as important.

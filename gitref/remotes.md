@@ -4,6 +4,8 @@ title: "Working with remote repositories"
 permalink: /gitref/remotes/
 ---
 
+[comment]: <> (TODO: REV MARKER)
+
 [comment]: <> (TODO: Go over this section and see if you can organize it more as a workflow than just a list of commands)
 
 * The term remote does not necessarily mean that the "remote" repository is elsewhere on a network.  Remote just means elsewhere and can be a different directory on your system.

@@ -4,6 +4,8 @@ title: "Branching"
 permalink: /gitref/branching/
 ---
 
+[comment]: <> (TODO: REV MARKER)
+
 [comment]: <> (TODO: right now this is just your notes streamlined need to make this a flow)
 
 ## What is a Git branch?

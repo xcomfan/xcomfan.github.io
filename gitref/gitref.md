@@ -4,11 +4,11 @@ title: "Git Reference"
 permalink: /gitref/
 ---
 
+[comment]: <> (TODO: REV MARKER)
+
 [comment]: <> (TODO: Good idea to add table of contents at top of each page so you can jump to sections.)
 
 # Workflow
-
-[working copy]({% link gitref/definitions.md  %}#working-tree)
 
 [comment]: <> (TODO: Once you build out the content may want to sue the subgraph option to make more granular pages.)
 
@@ -17,7 +17,7 @@ permalink: /gitref/
 
     init([Create or clone repo])-->work([Work on code])
     init-->history([View repository history])
-    history-->work
+    history<-->work
     work-->commit([Commit your changes])
     commit-->remotes([Remote repositories])
     remotes-->init

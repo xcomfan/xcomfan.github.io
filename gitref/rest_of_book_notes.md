@@ -3,6 +3,9 @@ layout: page
 title: "Raw Notes"
 permalink: /gitref/rawnotes/
 ---
+
+[comment]: <> (TODO: REV MARKER)
+
 ## Git Configuration
 
 ### Customizing Git - Git Configuration

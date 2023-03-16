@@ -4,6 +4,8 @@ title: "Git Configuration"
 permalink: /gitref/configuration
 ---
 
+[comment]: <> (TODO: REV MARKER)
+
 ## 3 levels of configuration in Git
 
 Git comes with a tool called git config that lets you get and set configuration variables that control various aspects of how Git looks and operates.  These configuration variables can be stored in 3 places.

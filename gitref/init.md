@@ -4,6 +4,8 @@ title: "Initialization"
 permalink: /gitref/init/
 ---
 
+[comment]: <> (TODO: REV MARKER)
+
 ## Creating brand new repository
 
 `git init my_new_repo`
@@ -18,6 +20,6 @@ This command creates a directory named libgit2 on your system initializes a .git
 
 ***Note:*** When you clone a repository you are not just getting the working copy.  You will get a full copy of the repository with all the commit history.
 
-**Cloning into a directory with a different name**
+If you want to have your local directory name be different you can use the command below.
 
 `git clone https://github.com/libgit2/libgit2 mydirname`

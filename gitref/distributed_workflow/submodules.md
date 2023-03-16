@@ -4,6 +4,8 @@ title: "Submodules"
 permalink: /gitref/submodules
 ---
 
+[comment]: <> (TODO: REV MARKER)
+
 ## What are submodules
 
 Submodules allow you to keep a Git repository as a subdirectory of another Git repository.  This lets you clone another repository into your project and keep your commits separate.

@@ -4,6 +4,8 @@ title: "Maintaining a Project"
 permalink: /gitref/maintaining_a_project
 ---
 
+[comment]: <> (TODO: REV MARKER)
+
 [comment]: <> (TODO: Below This was a straight copy paste from notes so need to clean up formatting)
 
 ## Distributed Git - maintaining a project
