@@ -6,9 +6,7 @@ permalink: /gitref/repo_history/debugging_using_repo_history
 
 [comment]: <> (TODO: REV MARKER)
 
-## Debugging with Git
-
-### File annotation (git blame)
+## File annotation (git blame)
 
 File annotations is the best tool if you want to track down when something such as a bug was introduced to the code and why.  File annotations will show you what commit was the last to modify each line of any file.  So for example if you see a method in your code is buggy you can annotate it with git blame to determine which commit was responsible for the introduction fo that line.
 
@@ -28,7 +26,7 @@ You can use git blame with the -C option to try and figure our where snippets of
 
 `git blame -C -L 123, 145 somefile.txt`
 
-### Binary Search (git bisect)
+## Binary Search (git bisect)
 
 The bisect command does a binary search though your commit history to help you identify as quickly as possible which commit introduced an issue.
 

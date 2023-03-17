@@ -94,7 +94,7 @@ To merge a branch into the branch you are currently working on use the command
 
 `git merge <branch_to_merge_from>`
 
-If the branches you are merging are not diverged (one branch is just ahead of another) when merging Git can just move pointers around (fast forward).  If however, there was a divergence then Git does a 3 way merge between the two branch tips and the common ancestor of the branches being merged.  When this happens git will create a new commit for the merge knows as a merge commit.
+If the branches you are merging are not diverged (one branch is just ahead of another) when merging Git can just move pointers around (fast forward).  If however, there was a divergence then Git does a 3 way merge between the two branch tips and the common ancestor of the branches being merged.  When this happens git will create a new commit for the merge known as a merge commit.
 
 [comment]: <> (TODO: Still need to figure out how to tell the difference between regular and merge commit)
 
@@ -108,7 +108,7 @@ Merge conflicts happen when you change the same part of a file in two branches y
 
 git status will show you which files are in conflict.  Git will also add conflict resolution markers to the files that have conflicts to help you resolve the conflicts.
 
-[comment]: <> (TODO: What are these markers???)
+[comment]: <> (TODO: Add info on what these markers look like)
 
 After you resolve a conflict use `git add` to mark the file as resolved (staging a file marks it as resolved).  You can also use `git-status` to confirm all conflicts have been resolved.
 
@@ -198,7 +198,7 @@ Rebasing is an alternative approach to merging for integrating changes from one 
 
 ### Rebasing explained
 
-In the diagram below there is worked that diverged and there are commits on tow different branches.
+In the diagram below there is worked that diverged and there are commits on two different branches.
 
 {% mermaid %}
  flowchart RL
@@ -253,8 +253,9 @@ At this point your history will look like as the diagram below.  Note that the c
 
 ### Why use reabasing?
 
-Rebasing makes for a cleaner history.  If you look at the log of a rebased branch, it looks like a liner history.  It looks like a linear history.  It appears that the work happened in series when it actually happened in parallel.
+Rebasing makes for a cleaner history.  If you look at the log of a rebased branch, it looks like a liner history.  It appears that the work happened in series when it actually happened in parallel.
 
+[comment]: <> (TODO: Double check if you would rebase onto the work or rebase the work onto your work.)
 Rebasing is often used to make sure that your commits apply cleanly on a remote branch - perhaps in a project to which you're trying to contribute but that you don't maintain.  In this use case you would work in a branch and then rebase your work onto origin/master when you are ready to submit your patches to the main project.  This way the maintainer does not need to do any integration work.  Just a fast forward for a clean apply
 
 ### Other users for Rebase
