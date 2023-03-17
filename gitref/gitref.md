@@ -22,7 +22,7 @@ permalink: /gitref/
 
     click init "{% link gitref/init.md %}"
     click work "{% link gitref/work.md %}"
-    click history "{% link gitref/repo_history/history.md %}"
+    click history "{% link gitref/repo_history/repo_history.md %}"
     click commit "{% link gitref/commit.md %}"
     click remotes "{% link gitref/remotes.md%}"
 {% endmermaid %}
