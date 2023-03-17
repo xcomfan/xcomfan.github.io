@@ -4,9 +4,9 @@ title: "Initialization"
 permalink: /gitref/init/
 ---
 
-[comment]: <> (TODO: REV MARKER)
+**[Back]({% link gitref/gitref.md %}#Workflow)**
 
-## Creating brand new repository
+## Create new repository
 
 `git init my_new_repo`
 
