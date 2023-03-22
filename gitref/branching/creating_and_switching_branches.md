@@ -52,6 +52,15 @@ If Git cannot cleanly get the files in your working directory to have the conten
 
 `git switch -`
 
+# Deleting a branch
+
+To delete a local branch use the command
+`git branch -d <branch_name>`
+
+If the branch has not been merged and you are certain you want to delete it use the command.
+
+`git branch -D <branch_name>`
+
 # Renaming a branch
 
 ***Note:*** Do not rename branches that are still in use by other collaborators.
