@@ -43,23 +43,62 @@
   </header>
 
   <div class="post-content">
-    <h3 id="definitions">Definitions</h3>
+    
+<h1 id="author">author</h1>
 
-<p><strong>Author</strong> - Author in a commit is the person that originally wrote the work vs committer is the person who last applied the work.</p>
+<p>Author in a commit is the person that originally wrote the work vs committer is the person who last applied the work.</p>
 
-<p><strong>Committer</strong> -  Committer is the person in a commit history entry that applied the work vs the author who is the person that originally wrote the work.</p>
+<h1 id="committed-tree">committed tree</h1>
 
-<p><strong>Index</strong> - Another term for the Git staging area</p>
+<h1 id="committer">committer</h1>
 
-<p><strong>Snapshot</strong> - TODO Need to get a good definition here.</p>
+<p>Committer is the person in a commit history entry that applied the work vs the author who is the person that originally wrote the work.</p>
 
-<p><strong>Staging Area</strong> - A file generally in your Git directory that stores what changes will go into your next commit.  Its technical name in Git is “index”</p>
+<h1 id="index">index</h1>
 
-<p><strong>Tracked Files</strong> - File that were in the last snapshot as waell as any new staged files.  Tracked files can be either unmodified, modified or staged.</p>
+<p>Another term for the Git staging area</p>
 
-<p><strong>Working Copy</strong> - When you are wokring in a Git repository the working copy is the copy on your disk actively being worked on.</p>
+<h1 id="merge-commit">merge commit</h1>
 
-<p><strong>Working Tree</strong> - A single checkout of one version of the project.  These files are extracted from the Git directory and placed on disk for you to use or modify.</p>
+<p>A commit created by Git when two branches with diverging changes are merged.</p>
+
+<h1 id="snapshot">snapshot</h1>
+
+<p>TODO Need to get a good definition here.</p>
+
+<h1 id="staged">staged</h1>
+
+<p>A staged file is a version of a file you marked to go into your next commit.  You mark the file to go into your next commit with the <code class="language-plaintext highlighter-rouge">git add</code> command.</p>
+
+<h1 id="staging-area">staging area</h1>
+
+<p>A file generally in your Git directory that stores what changes will go into your next commit.  Its technical name in Git is “index”</p>
+
+<h1 id="topic-branch">topic branch</h1>
+
+<p>A topic branch is a short lived branch that you create and use for a single particular feature or related work</p>
+
+<h1 id="tracked-files">tracked files</h1>
+
+<p>File that were in the last snapshot as well as any new staged files.  Tracked files can be either unmodified, modified or staged.</p>
+
+<h1 id="tracking-branch">tracking branch</h1>
+
+<p>A local branch that tracks a remote <a href="/gitref/definitions/#upstream-branch">upstream branch</a>. If you are on a tracking branch and you run the command <code class="language-plaintext highlighter-rouge">git pull</code> Git automatically knows which server to fetch from and which branch to merge in.</p>
+
+<h1 id="tree">tree</h1>
+
+<h1 id="upstream-branch">upstream branch</h1>
+
+<p>A remote branch that is being tracked by a local <a href="/gitref/definitions/#tracking-branch">tracking branch</a></p>
+
+<h1 id="working-copy">working copy</h1>
+
+<p>When you are working in a Git repository the working copy is the copy on your disk actively being worked on.</p>
+
+<h1 id="working-tree">working tree</h1>
+
+<p>A single checkout of one version of the project.  These files are extracted from the Git directory and placed on disk for you to use or modify.</p>
 
   </div>
 

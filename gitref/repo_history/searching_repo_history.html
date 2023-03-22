@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Searching Repository History | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Searching Repository History" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/gitref/repo_history/searching_repo_history" />
+<meta property="og:url" content="http://localhost:4000/gitref/repo_history/searching_repo_history" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Searching Repository History" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Searching Repository History","url":"http://localhost:4000/gitref/repo_history/searching_repo_history"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Searching Repository History</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="git-log-searching">Git log searching</h2>
+
+<p>If you are not looking for where a term exists, but when it existed or was introduce you want to use git log searching.</p>
+
+<p>If for example you want to find when the ZLIB_BUF_MAX constant was originally introduced, we can use the -S option to git log.  The output of the command will be the commit details of the commit that introduced the variable. If you need to be more specific you can use the -G option to provide a regular expression.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git log -S ZLIB_BUG_MAX --oneline</code></p>
+
+<h3 id="line-log-search">Line Log Search</h3>
+
+<p>you can use Line Log Search to check the history of a function or a line of code.  Just use the -L option with git log.  For example, if we want to see every change made to the function git_deflate_bound in the zlib.c file we would do similar to the following command.  This will try to figure out what the bounds of that function are and then look though the history and show us every change that was made to the function as a series of patches.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git log -L :git_deflate_bound:zlib.c</code></p>
+
+<p>If Git can’t figure out hwo to match a function or method in your programming language, you can also provide it with a regular expression as in the example below.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git log -L '/unsigned long git_deflate_bound/',/^}/:zlib.c</code></p>
+
+<h2 id="revision-selection">Revision Selection</h2>
+
+<p>Git allows you to refer to a single commit, set of commits, or range of commits in a number of ways.</p>
+
+<h3 id="single-revisions">Single Revisions</h3>
+
+<p>You can refer to a commit using the full 40 character SHA-1 of the commit, but typically the first few characters of the sha are needed.  4 is the minimum, but 8 to 10 characters will be enough to make sure your selection is unique.</p>
+
+<h3 id="branch-references">Branch References</h3>
+
+<p>If a commit is the tip of a branch, you can use teh branch name in any git command that expects a reference</p>
+
+<p><code class="language-plaintext highlighter-rouge">git show ca82a6dff812ec44f44442008202890a8989033</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git show topic1</code></p>
+
+<p>To get the commit hash of a branch you can use the rev-parse command.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git rev-parse topic1</code></p>
+
+<h3 id="reflog-shortnames">Reflog Shortnames</h3>
+
+<p>As you are working, Git keeps a “reflog” a log of where your HEAD and branch references have been.  Every time your branch tip is updated for any reason, Git will store that information for you in this temporary history.  <strong><em>Note:</em></strong> reflog information is strictly local.  Reflog will only contain information for what you have done in your local repository.  Think of reflos as Git’s version of the Linux shell history.</p>
+
+<p>To see this history use the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git reflog</code></p>
+
+<p>You can use reflog data to refer to older commits.</p>
+
+<p>If you want to see the 5th prior commit</p>
+
+<p><code class="language-plaintext highlighter-rouge">git show HEAD@{5}</code></p>
+
+<p>You can also look back days, months etc</p>
+
+<p><code class="language-plaintext highlighter-rouge">git show HEAD@{2.months.ago}</code></p>
+
+<p>To see reflog information formatted like the git log output use the -g option to git log</p>
+
+<p><code class="language-plaintext highlighter-rouge">git log -g master</code></p>
+
+<h3 id="ancestry-references">Ancestry References</h3>
+
+<p>You can specify commits via their ancestry.  If you place a ^ (caret) symbol at the end fo a reference, Git resolves it to mean the parent of that commit.  You can also specify a number after the ^ at the end of a reference to identify which parent you want.  For example d921970^2 means the second parent of commit d921970.</p>
+
+<p>The other ancestry specification is the ~ (tilde) symbol.  This reference also refers to the parent, so HEAD~ and HEAD^ are equivalent.  HEAD~2 means the first parent of the fist parent.</p>
+
+<p>You can combine the two references to do something like HEAD~3^2</p>
+
+<h3 id="commit-ranges">Commit Ranges</h3>
+
+<p>If you have a lot of branches, you can use Git’s range specification to answer questions such as “What work is on this branch that I haven’t yet merged into my main branch?”</p>
+
+<h4 id="double-dot-range-specification">Double Dot range specification</h4>
+
+<p>Given the commit history below</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"></script>
+<div class="mermaid">
+ flowchart RL
+
+    F([F])--&gt;E([E])--&gt;B([B])--&gt;A([A])
+    D([D])--&gt;C([C])
+    C--&gt;B
+    experiment[experiment]-.-D
+    master[master]-.-F
+
+</div>
+
+<p>Say you want to see what is in your experiment branch that has not yet been merged into your master branch.  You can ask git to show you a lof of just those commits with the master..experiment range.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git log master..experiment</code></p>
+
+<p>This command means all commits reachable from experiment that aren’t reachable from master. So for the above example you would have D and C as the result.</p>
+
+<p>If on the other hand you wanted to see the opposite: all commits in master that are not in experiment you reverse the double dot range.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git log experiment..master</code></p>
+
+<p>This would yield the F and E commits.</p>
+
+<p>A useful take on this command is if you want to check what you are about to push.  The command below will give you a summary of what you are about to push if your branch is tracking origin/master</p>
+
+<p><code class="language-plaintext highlighter-rouge">git log origin/master..HEAD</code></p>
+
+<h4 id="multiple-points-range-specification">Multiple points range specification</h4>
+
+<p>If you want to see what commits are in any of several branches that aren’t in the branch you are currently on, Git allows you to do this by suing either the ^ or the –not before any reference from which you don’t want to see reachable commits.  The following commands are equivalent.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git log refA..refB</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git log ^refA refB</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git log refB --not refA</code></p>
+
+<p>This syntax can specify more than two references in your query which you cannot do with double dot syntax.  For example if you want to see commits that are reachable from refA or refB but not from refC you can use either of the commands below.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git log refA refB ^refC</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git log refA refB --not refC</code></p>
+
+<h4 id="triple-dot-range-specification">Triple Dot range specification</h4>
+
+<p>The triple dot range selection syntax specifies all the commits that are reachable by either of two references but not by both of them.</p>
+
+<p>If you want to see what is in master or experiment but not any common references you can run the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git log master...experiment</code></p>
+
+<p>This command will give you the normal git log output.  You can modify that with –left-right option which will show which side of the range each commit is in and make the output easier to read.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git log --left-right master...experiment</code></p>
+
+<p>In your sample history this would yield</p>
+
+<p>&lt; F</p>
+
+<p>&lt; E</p>
+
+<p>&gt; D</p>
+
+<p>&gt; C</p>
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -43,24 +43,40 @@
   </header>
 
   <div class="post-content">
-    <h1 id="workflow">Workflow</h1>
+    <p><a href="&lt;&gt; (TODO: Need to fill out this section.)">comment</a>: &lt;&gt; (TODO: Fix some of the metadata around the site and see if you can update th styling to have a breadcrumb or back at top instead of “My References”.)</p>
+
+<h2 id="workflow">Workflow</h2>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"></script>
 <div class="mermaid">
  flowchart LR
-
-    init([Create or clone repo])--&gt;work([Work on code])
-    init--&gt;history([View Repository History])
-    history--&gt;work
-    work--&gt;commit([Commit your changes])
+    init([Create or clone repo])
+    branching([Brach based development])
+    work([Work on code locally])
+    history([View repository history])
+    commit([Commit your changes])
+    remotes([Remote repositories])
+    
 
     click init "/gitref/init/"
-    click work "/gitref/work/"
-    click history "/gitref/history/"
+    click work "/gitref/work_locally/"
+    click branching "/gitref/branching/"
+    click history "/gitref/repo_history"
     click commit "/gitref/commit/"
+    click remotes "/gitref/remotes/"
+
+
+    init--&gt;branching
+    init--&gt;history
+    branching--&gt;work
+    history&lt;--&gt;work
+    work--&gt;commit
+    commit--&gt;remotes
+    remotes--&gt;init
+    
 </div>
 
-<h1 id="configuration">Configuration</h1>
+<h2 id="configuration">Configuration</h2>
 
   </div>
 

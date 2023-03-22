@@ -3,20 +3,20 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Initialization | My References</title>
+<title>Branching Concepts | My References</title>
 <meta name="generator" content="Jekyll v3.9.2" />
-<meta property="og:title" content="Initialization" />
+<meta property="og:title" content="Branching Concepts" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://localhost:4000/gitref/init/" />
-<meta property="og:url" content="http://localhost:4000/gitref/init/" />
+<link rel="canonical" href="http://localhost:4000/gitref/branching/concepts" />
+<meta property="og:url" content="http://localhost:4000/gitref/branching/concepts" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Initialization" />
+<meta property="twitter:title" content="Branching Concepts" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Initialization","url":"http://localhost:4000/gitref/init/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Branching Concepts","url":"http://localhost:4000/gitref/branching/concepts"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
@@ -39,29 +39,39 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Initialization</h1>
+    <h1 class="post-title">Branching Concepts</h1>
   </header>
 
   <div class="post-content">
-    <p><strong><a href="/gitref/#Workflow">Back</a></strong></p>
+    
+<h2 id="what-is-a-git-branch">What is a Git branch?</h2>
 
-<h2 id="create-new-repository">Create new repository</h2>
+<p>To understand branching it is helpful to have an idea of how Git stores data.</p>
 
-<p><code class="language-plaintext highlighter-rouge">git init my_new_repo</code></p>
+<p>When you make a commit, Git stores a commit object that contains</p>
 
-<p>This command will create a new directory named my_new_repo with the .git subdirectory.</p>
+<ul>
+  <li>A pointer to a snapshot of the content you staged</li>
+  <li>The commit author’s name and email address</li>
+  <li>The commit message</li>
+  <li>Pointers to the commit or commits that directly came before this commit (the parents)
+    <ul>
+      <li>Zero parents for the initial commit</li>
+      <li>One parent for normal commit</li>
+      <li>Multiple parents for a commit that results from a merge of two or more branches.</li>
+    </ul>
+  </li>
+</ul>
 
-<h2 id="cloning-a-repository">Cloning a repository</h2>
+<p><strong>A branch in git is a lightweight movable pointer to one of these commit objects.</strong></p>
 
-<p><code class="language-plaintext highlighter-rouge">git clone https://github.com/libgit2/libgit2</code></p>
+<h2 id="what-happens-when-i-run-the-git-branch-command">What happens when I run the git branch command.</h2>
 
-<p>This command creates a directory named libgit2 on your system initializes a .git directory inside and pulls down all the data for that repository.  It will also check out a <a href="/gitref/definitions/">working copy</a></p>
+<p>The command <code class="language-plaintext highlighter-rouge">git branch &lt;new_branch_name&gt;</code> creates a pointer to the same commit you are currently on.  Git knows which branch you are currently on because it keeps a special pointer called HEAD that points to the branch you are currently on.</p>
 
-<p><strong><em>Note:</em></strong> When you clone a repository you are not just getting the working copy.  You will get a full copy of the repository with all the commit history.</p>
+<h2 id="merged-vs-unmerged-commits">Merged vs unmerged commits</h2>
 
-<p>If you want to have your local directory name be different you can use the command below.</p>
-
-<p><code class="language-plaintext highlighter-rouge">git clone https://github.com/libgit2/libgit2 mydirname</code></p>
+<p>Note that non merged means branches that have not been merged into the named commit.  If named commit is missing HEAD is assumed.</p>
 
   </div>
 

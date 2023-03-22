@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Maintaining a Project | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Maintaining a Project" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/gitref/working_on_github" />
+<meta property="og:url" content="http://localhost:4000/gitref/working_on_github" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Maintaining a Project" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Maintaining a Project","url":"http://localhost:4000/gitref/working_on_github"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Maintaining a Project</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="contributing-to-a-project-on-github">Contributing to a project on GitHub</h2>
+
+<h3 id="the-github-flow">The GitHub Flow</h3>
+
+<ol>
+  <li>Fork the project</li>
+  <li>Create a topic branch from master</li>
+  <li>Make some commits to improve the project</li>
+  <li>Push this branch to your GitHub Project</li>
+  <li>Open a Pull Request on GitHub</li>
+  <li>Discuss, and optionally continue committing.</li>
+  <li>The project owner merges or closes the Pull Request</li>
+  <li>Sync the updated master back to your fork</li>
+</ol>
+
+<p>This is essentially the Git <a href="/gitref/distributed_work#integration-manager-workflow">Integration Manager workflow</a> but using GitHub tooling instead of email.</p>
+
+<h3 id="creating-a-pull-request">Creating a Pull Request</h3>
+
+<ol>
+  <li>Clone the fork of the you want to contribute to locally.</li>
+  <li>Create a descriptive topic branch.</li>
+  <li>Make your changes to the code.</li>
+  <li>Check that the change is good.</li>
+  <li>Commit the change to the topic branch.</li>
+  <li>Push your new topic branch to the GitHub fork.</li>
+  <li>GitHub will notice that you pushed a new topic branch up and present you with a big green button to check out your changes and open a Pull Request to the original project.
+    <ul>
+      <li>
+        <p>You can also navigate to the branch in your project and find the option to open a pull request at the url below.</p>
+
+        <p><code class="language-plaintext highlighter-rouge">https://github.com/&lt;user&gt;/&lt;project&gt;/branches</code></p>
+      </li>
+    </ul>
+  </li>
+  <li>Once you click the big green button you are asked to give the pull request a title and description.</li>
+  <li>When you create the pull request the owner of the project you forked will get a notification that someone is suggesting a change.  The notification will have a link to your pull request.</li>
+</ol>
+
+<h3 id="iterating-on-a-pull-request">Iterating on a Pull Request</h3>
+
+<p>Once you have a Pull Request created the project owner can accept, reject, or comment on the pull request.</p>
+
+<p>The project owner can make comments on the diff of the pull request.  Once the maintainer makes their comment, the person who opened the pull request (and anyone watching the history) will get a notification.</p>
+
+<p>Now you just need to commit to your topic branch and push.  This will automatically update the Pull Request.  Adding commits to an existing Pull Request doesn’t trigger a notification.  You can communicate and trigger a notification via comments in the pull request.</p>
+
+<p>It is important to note that you can also open a Pull Request between two branches in the same repository.  If you have write access you can push a topic branch to the repository and open a Pull Request on it to the master branch fo that same project to initiate a code review and discuss process.</p>
+
+<h3 id="keeping-up-with-upstream">Keeping up with Upstream</h3>
+
+<p>If your Pull Request becomes out of date or otherwise doesn’t merge cleanly you will want to fix it so that the maintainer can easily merge it.  GitHub will test for this, and let you know at the bottom of each pull request if the merge is trivial or not.</p>
+
+<p>You have two main option to fix a non clean pull request merge.</p>
+
+<ul>
+  <li>You can rebase your branch on top of whatever the target branch is (normally the master branch of the repository you forked).  Rebasing will get you a cleaner history, but its more error prone thus the option below is chosen by most developers on GitHub.</li>
+  <li>You can merge teh target branch into your branch.</li>
+</ul>
+
+<p>If you want to merge the target branch into your Pull Request to make it mergeable, you would take the following steps.</p>
+
+<ol>
+  <li>Add the original repository as a remote named upstream.</li>
+  <li>Fetch the newest work from that remote.</li>
+  <li>Merge the main branch of that repository into your topic branch.</li>
+  <li>Fix any conflicts that occur.</li>
+  <li>Push back up to the same topic branch.  Once you do this the Pull Request will be automatically updated and re-checked to see if it merges cleanly.</li>
+</ol>
+
+<h3 id="collaborating-on-pull-requests">Collaborating on Pull Requests</h3>
+
+<h4 id="references-in-comments-and-descriptions">References in comments and descriptions</h4>
+
+<p>All issues and Pull Requests on GitHub are assigned a uniq number within the project.  If you want to reference any pull request or issue you can simply put <code class="language-plaintext highlighter-rouge">#&lt;num&gt;</code> in the comment or description.  You can also be more specific.  If the issue or Pull Request lives somewhere else you can write `username#<num> if you are referring to an issue or Pull Request in a fork of the repository you are working on.  In addition to issue numbers you can also reference specific commits by their SHA-1.</num></p>
+
+<p>Below is an example</p>
+
+<blockquote>
+  <p>This PR replaces #2 as a rebased branch.</p>
+
+  <p>You should also see tonychacon#1 and of course sachacon/kidgloves#2.</p>
+
+  <p>Though nothing compares to https://github.com/schacon/kidgloves/issues/1</p>
+</blockquote>
+
+<h4 id="github-flavored-markdown">Github Flavored Markdown</h4>
+
+<p>GitHub markdown is supported by nearly every textbox you will find on GitHub</p>
+
+<h5 id="task-lists">Task Lists</h5>
+
+<p>Task Lists is a GitHub markdown specific feature, and it allows you to create a list of checkboxes that can be used as lists of thing that need to be done for example in a pull request.  When you mark boxes as checked in GitHub it will correctly update the markdown.</p>
+
+<p>Below is the syntax for Task Lists</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- [X] Write the code
+- [ ] Write all the tests
+- [ ] Document the code
+</code></pre></div></div>
+
+<p>Which will look like</p>
+
+<ul class="task-list">
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" checked="checked" />Write the code</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Write all the tests</li>
+  <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled="disabled" />Document the code</li>
+</ul>
+
+<h5 id="code-snippets">Code Snippets</h5>
+
+<p>You can add code snippets to comments.  This is useful if you want to provide a suggestion within the comments.  Use triple back quotes to denote a code block.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+```java
+for(int i=0 ; i &lt; 5 ; i++)
+{
+	System.out.println("i is: " + i);
+}
+</code></pre></div></div>
+
+<p><strong><em>Note:</em></strong> Due to page formatting the close triple backquote is not displayed above.</p>
+
+<h5 id="quoting">Quoting</h5>
+
+<p>You can use the &gt; symbol do denote a line being quoted.  This is useful if you are referring to specific content in the repository in your text.</p>
+
+<h5 id="images">Images</h5>
+
+<p>GitHub allows you to drag and drop images and will create the link for you.</p>
+
+<h3 id="keeping-your-github-repository-up-to-date">Keeping your GitHub repository up to date</h3>
+
+<p>Once you fork a repository your fork exists independently from the original repository.</p>
+
+<p>When the original repository has new commits, Git will inform you with a message similar to the example below, but it will not automatically update your work.</p>
+
+<blockquote>
+  <p>This branch is 5 commits behind progit:master</p>
+</blockquote>
+
+<p>You can keep your master of your forked project up to date with the original with the following series of commands.  These commands .  .</p>
+
+<p>Add the source repository and give it a name.	<code class="language-plaintext highlighter-rouge">git remote add progit https://github.com/progit/progit2.git</code></p>
+
+<p>Get a reference on progit’s branches, in particular master.	<code class="language-plaintext highlighter-rouge">git fetch progit</code></p>
+
+<p>Set your master branch to fetch from progit remote.	<code class="language-plaintext highlighter-rouge">git branch --set-upstream-to=progit/master master</code></p>
+
+<p>Define the default push repository to origin.	<code class="language-plaintext highlighter-rouge">git config --local remote.pushDefault origin</code></p>
+
+<p>After the set up work done by the above commands you can use the series of commands below to keep your fork up to date.</p>
+
+<p>If you are on another branch return to master	<code class="language-plaintext highlighter-rouge">git checkout master</code></p>
+
+<p>Fetch changes from progit and merge changes into master	<code class="language-plaintext highlighter-rouge">git pull</code></p>
+
+<p>Push your master branch to origin	<code class="language-plaintext highlighter-rouge">git push</code></p>
+
+<p><strong><em>Note:</em></strong> You will need to be careful not to commit changes to master since that branch effectively belongs tot he upstream repository.</p>
+
+<h2 id="maintaining-a-project-on-github">Maintaining a Project on GitHub</h2>
+
+<h3 id="special-files">Special Files</h3>
+
+<h3 id="readme-file">README file</h3>
+
+<p>The README file can be in any format that GitHub will recognize (README.md, README, README.asciidoc).  GitHub will render this file as the home page of the project.</p>
+
+<p>Its a good idea to put the following in this file</p>
+
+<ul>
+  <li>What the project is for</li>
+  <li>How to configure and install it</li>
+  <li>An example of how to use it or get it running</li>
+  <li>The license that the project is under</li>
+  <li>How to contribute to it.</li>
+  <li>As GitHub renders the file add any images that will help better understanding</li>
+</ul>
+
+<h3 id="contributing-file">CONTRIBUTING file</h3>
+
+<p>If you have this file in your repository, GitHub will display its contents when someone opens a Pull Request.  This is a good place to put instructions.</p>
+
+<h3 id="github-scripting">GitHub Scripting</h3>
+
+<h4 id="services">Services</h4>
+
+<p>Under project settings you will find a service and hooks section that can be used to integrate with other services and CIs</p>
+
+<h4 id="hooks">Hooks</h4>
+
+<p>GitHub hooks will post an HTTP payload to a URL that you can specify an any event in GitHub that you choose.  A developer screen is provided that you can use for experimenting.</p>
+
+<h4 id="github-api">GitHub API</h4>
+
+<p>You can use GitHub APIs to do things such as add collaborators or label issues.  There is a library available (Octokit) if you don’t want to use curl requests.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Distributed Work | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Distributed Work" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/gitref/distributed_work" />
+<meta property="og:url" content="http://localhost:4000/gitref/distributed_work" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Distributed Work" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Distributed Work","url":"http://localhost:4000/gitref/distributed_work"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Distributed Work</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="summaries-of-common-distributed-workflows">Summaries of common distributed workflows</h2>
+
+<h3 id="centralized-workflow">Centralized workflow</h3>
+
+<p>This is a basic pull, make changes and if you try to submit after someone else has submitted, you pull the changes down and merge before getting to upload them.</p>
+
+<p>You can use git fetch origin to get the updates of the master branch then merge the master branch into your topic branch before submitting code.  This is better than merging into master and having your work stuck in master in your local repo.  Just remember to merge origin/master into your topic branch instead of your local master.</p>
+
+<h3 id="integration-manager-workflow">Integration-Manager Workflow</h3>
+
+<p>This workflow has the following flow</p>
+
+<ol>
+  <li>The project maintainer pushes to their public repository.</li>
+  <li>A contributor clones that repository and makes changes.</li>
+  <li>The contributor pushes to their own public copy.</li>
+  <li>The contributor sends the maintainer an email asking them to pull changes.</li>
+  <li>The maintainer adds the contributor’s repository as a remote and merges locally.</li>
+  <li>The maintainer pushes merged changes to the main repository.</li>
+</ol>
+
+<p>The main advantage of this workflow is that you can continue to work and the maintainer can pull in your changes at any time.  Contributor’s don’t have to wait for the project to incorporate their changes.  Each party can work at their own pace.</p>
+
+<h3 id="dictator-and-lieutenants-workflow">Dictator and lieutenants workflow</h3>
+
+<p>This workflow is generally used by huge projects such as the Linux kernel.</p>
+
+<p>Various integration managers are in charge of certain parts of the repository.  They are called lieutenants.  All lieutenants have one integration manager known as the benevolent dictator.  The benevolent dictator pushes from their directory to a reference repository from which all the collaborators need to pull.  The process has the following flow.</p>
+
+<ol>
+  <li>Regular developers work on their topic branch and rebase their work on top of master.  The master branch is that of the reference repository to which the dictator pushes.</li>
+  <li>Lieutenants merge the developers topic</li>
+  <li>Lieutenants merge the developers topic branches into their master branch.</li>
+  <li>The dictator merges the lieutenants master branches into the dictator’s master branch.</li>
+  <li>Finally, the dictator pushes that master branch to the reference repository so the other developers can rebase on it.</li>
+</ol>
+
+<p>This workflow is not common but can be very useful in big projects or highly hierarchical environments.  It allows the project leader (the dictator) to delegate much of the work and collect large subsets of code at multiple points before integrating them.</p>
+
+<h3 id="git-workflows-references">Git workflows references</h3>
+
+<p><a href="https://martinfowler.com/articles/branching-patterns.html">Patterns for Managing Source Code Branches by Martin Fowler</a></p>
+
+<h2 id="best-practices-when-committing-to-a-project">Best practices when committing to a project</h2>
+
+<ul>
+  <li>
+    <p>Before you submit changes run <code class="language-plaintext highlighter-rouge">git diff --check</code> which will identify any whitespace changes in your change and list them for you.  Whitespace changes may annoy other developers.</p>
+  </li>
+  <li>
+    <p>Try to make each commit a logically separate changeset.</p>
+    <ul>
+      <li>For example, use your staging area to split your code into at least one issue per commit</li>
+      <li>If some changes modify the same file use <code class="language-plaintext highlighter-rouge">git add --patch</code> to partially stage files.
+  <a href="&lt;&gt; (TODO: Below should be broken out into its own file.)">comment</a>: &lt;&gt; (TODO: Need a reference link above on how to use git patch once you have that written up.)</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="writing-your-commit-message">Writing your commit message</h3>
+
+<ul>
+  <li>Should start with a single line that is no more than 50 characters long and described the change set followed by a blank line followed by a more detailed explanation.</li>
+  <li>Write in imperative “Fix bug” versus “Fixed bug” or “Fixes bug”</li>
+</ul>
+
+<p>Sample commit message</p>
+
+<blockquote>
+  <p>Capitalized, short (50 chars or less) summary</p>
+
+  <p>More detailed explanation if needed.  Keep it to around 72 chars.  Blank line separating summary from body is critical to make life easier when you use tools such as rebase.  Write in imperative to match the messages generated by git commands.</p>
+
+  <p>More paragraphs can come after blank lines.</p>
+
+  <ul>
+    <li>
+      <p>Bullet points are okay, too</p>
+    </li>
+    <li>
+      <p>Hyphen or asterisk is used for bullets followed by a single space and blank lines in between the bullets</p>
+    </li>
+  </ul>
+</blockquote>
+
+<h2 id="github-workflow">GitHub workflow</h2>
+
+<h3 id="forked-public-project">Forked Public Project</h3>
+
+<ul>
+  <li>First you clone the project you want to contribute to and make a feature branch that you will work on.</li>
+  <li>When you are ready to contribute the work in your feature branch to the maintainers go to the original project page and click the Fork button to create a fork of the project.</li>
+  <li>Add the fork as a remote in your environment, and push your work to this new remote.
+    <ul>
+      <li>It is easiest to push the topic branch you are working on to your forked repository, rather than merging that work into your master branch and pushing that.  The reason is if your work is not selected or is  cherry picked, you don’t have to rewind your master branch.</li>
+    </ul>
+  </li>
+  <li>Push your work <code class="language-plaintext highlighter-rouge">git push -u myfork featureA</code></li>
+  <li>Once your work has been pushed to your fork of the repository you need to notify the maintainers of the original project that you have work you would like them to merge by generating a pull request.
+    <ul>
+      <li>You can generate the pull request via the project website</li>
+      <li>You can also use the git request-pull command and email the output
+        <ul>
+          <li>git request-pull command takes the base branch into which you want your topic branch pulled and the Git repository URL you want them to pull from, and produces a summary of all the changes you’re asking to be pulled.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>On a project where you are not the maintainer its generally easier to have a branch like master always track origin master and to do your work in topic branches that you can easily discard if rejected.</li>
+</ul>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

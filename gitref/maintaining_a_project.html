@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Maintaining a Project | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Maintaining a Project" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/gitref/maintaining_a_project" />
+<meta property="og:url" content="http://localhost:4000/gitref/maintaining_a_project" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Maintaining a Project" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Maintaining a Project","url":"http://localhost:4000/gitref/maintaining_a_project"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Maintaining a Project</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="distributed-git---maintaining-a-project">Distributed Git - maintaining a project</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>• You can apply a patch generated with git diff using a command similar to the below…
+	○ $ git apply /tmp/patch-ruby-client.patch
+	○ git apply is all apply all or abort command.  Either it does it all or nothing at all.
+• Git patch is another command you can use, but git apply is more conservative and makes less assumptions.
+
+Determining What is Introduced
+	
+	○ When you have a topic branch that contains contributed work you may want to review all of the commits that are in this branch but that aren't  in your master.  You can do this with the command…
+		§ $ git log contrib --not master
+			□ contrib is the name of the branch you are on in this example
+	○ If you want to diff the last commit of the branch you are on and its common ancestor with another branch you can use the … syncatx.  For exmple
+		§ $ git diff master…contrib
+
+Rebasing and Cherry-Picking Workflows
+
+	○ A cherry pick in Git is like a rebase for a single commit.
+		§ It takes the patch that was introduced in a commit and tries to reapply it on the branch you're currently on.  
+		§ This is useful if you have a number of commits on a topic branch and you want to integrate only one of them, or if you have one commit on a topic branch and you'd prefer to cherry-pick it rather than run rebase.
+		§ If you want to pull commit e43a6 into your master branch, you can run …
+			□ $ git cherry-pick e43a6
+Rerere
+
+	○ If you're doing lots of merging and rebasing, or you're maintining a long lived topic branch, Git has a feature called "rerere" that can help.
+		§ Rerere stands for reuse recorded resolution.  it’s a way of shortcutting manual conflict resolution.  
+		§ When rerere is enabled Git will keep a set of pre and post images from successful merges, and if it notices that there's a conflict that looks exactly like one you've already fixed, it'll just use the fix from last time, without bothering you with it.
+
+Generating a Build Number
+
+	○ Git does not have monotonically increasing numbers like v123 to go with each commit.  If you want to have a human readable name to go with a commit, you can run git describe on that commit.  In response Git will generates as string consisting of the name of the most recent tag earlier than that commit, folllowed by the number of commits since that tag, followed by a partial SHA-1 value of the commit being described.  
+		§ 
+
+Preparing a Release
+
+	○ One thing you want to do is create an archive of the latest snapshot of yoru code for those who don't use Git.  The command to do this is …
+		§ $ git archive master --prefix='project/' --format=zip &gt; `git describe master`.zip
+		§ This will give you a nice tarball and zip archive of your project relaesase that you can upload to your website or email to people.
+
+The Shortlog
+
+	○ A nice way of quickly getting a sorot of changelog of what has been added to your project since your last release is to use the git shortlog command.  It  summarizes all the commits in the range you give it:
+		§ [comment]: &lt;&gt; (TODO: This was a straight copy paste from notes so need to clean up formatting)
+</code></pre></div></div>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

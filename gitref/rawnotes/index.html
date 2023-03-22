@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Raw Notes | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Raw Notes" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/gitref/rawnotes/" />
+<meta property="og:url" content="http://localhost:4000/gitref/rawnotes/" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Raw Notes" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Raw Notes","url":"http://localhost:4000/gitref/rawnotes/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Raw Notes</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="git-configuration">Git Configuration</h2>
+
+<h3 id="customizing-git---git-configuration">Customizing Git - Git Configuration</h3>
+
+<h4 id="git-configuration-1">Git Configuration</h4>
+
+<p>This section was just a review of the 3 config levels I already have in notes.</p>
+
+<h5 id="basic-client-configuration">Basic Client Configuration</h5>
+
+<p>Git configuration options fall into two catagories, client-side and server-side.  Majority of options are client-side.  There are many configuration options the common ones are covered here.   To see a list of all the options use the command below or <a href="link https://git-scm.com/docs/git-config">the reference here</a></p>
+
+<p><code class="language-plaintext highlighter-rouge">man git-config</code></p>
+
+<p><strong>core.editor</strong></p>
+
+<p>Sets your editor to a value that is not derived from the VISUAL or EDITOR shell environment variables.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global core.editor emacs</code></p>
+
+<p><strong>commit.template</strong></p>
+
+<p>If you set this to the path of a file on your system, Git will use that file as the default initial message when you commit.  You can use this to remind yourself or others the format and style when creating a commit message.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global commit.template ~/.gitmessage.txt</code></p>
+
+<p><strong>core.pager</strong></p>
+
+<p>This setting controls which pager is used when git pages output such as log or diff.  You can set it to <code class="language-plaintext highlighter-rouge">more</code> or your favorite pager (by default it uses less) or you can turn it off by setting a blank value.  If off git will page the entire output regardless of how long it is.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global core.pager ''</code></p>
+
+<p><strong>user.signinkey</strong></p>
+
+<p>This sets your GPG signing key for signed annotated tags.  You can set your key ID with the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global user.signinkey &lt;gpg-key-id&gt;</code></p>
+
+<p><strong>core.excludesfile</strong></p>
+
+<p>This setting is like the .gitignore file, but applies to all of your repositories.  This is a good place to put filenames such as .DS_Store (for Mac users) or .swp files.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global core.excludesfile ~/.gitignore_global</code></p>
+
+<p><strong>help.autocorrect</strong></p>
+
+<p>By default if you miss type a command git will suggest the command for you.  If you set this option to 1 it will actually run the command it thinks you intended.</p>
+
+<p>The value you actually set it to represents tenths of a second (10 means one second) and that is the amount of time Git will give you to change your mind if Git guesses the command wrong.</p>
+
+<h5 id="colors-in-git">Colors in Git</h5>
+
+<p><strong>color.ui</strong></p>
+
+<p>By default Git colors most of its output.  This lets you disable/enable that.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global color.ui false</code></p>
+
+<p>The default setting is auto which colors output if its going to terminal, but omits the color codes if its redirected to a pipe or file.  You can also set it to always to ignore the difference between terminal and pipes.  You can also pass –color to any Git command to force it to send the color codes ad hoc.</p>
+
+<p><strong>color.*</strong></p>
+
+<p>Git provides verb-specific color settings if you want to be more specific about which commands are colored.  Each of these can be set to <code class="language-plaintext highlighter-rouge">true</code>, <code class="language-plaintext highlighter-rouge">false</code> or <code class="language-plaintext highlighter-rouge">always</code></p>
+
+<ul>
+  <li>color.branch</li>
+  <li>color.diff</li>
+  <li>color.interactive</li>
+  <li>color.status</li>
+</ul>
+
+<p>In addition, each of these has a sub-setting you can use to set specific colors for parts of the output. For example to set the meta information in your diff output to blue foreground, black background and bold text use the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global color.diff.meta "blue black bold"</code></p>
+
+<p>You can set the color to any of the following values.  <code class="language-plaintext highlighter-rouge">normal</code>, <code class="language-plaintext highlighter-rouge">black</code>, <code class="language-plaintext highlighter-rouge">red</code>, <code class="language-plaintext highlighter-rouge">green</code>, <code class="language-plaintext highlighter-rouge">yellow</code>, <code class="language-plaintext highlighter-rouge">blue</code>, <code class="language-plaintext highlighter-rouge">magenta</code>, <code class="language-plaintext highlighter-rouge">cyan</code> or <code class="language-plaintext highlighter-rouge">white</code>.  For emphasis attributes you have the options <code class="language-plaintext highlighter-rouge">bold</code>, <code class="language-plaintext highlighter-rouge">dim</code>, <code class="language-plaintext highlighter-rouge">ul</code> (underline), <code class="language-plaintext highlighter-rouge">blink</code> and <code class="language-plaintext highlighter-rouge">reverse</code> (swap foreground and background)</p>
+
+<h5 id="external-merge-and-diff-tools">External Merge and Diff Tools</h5>
+
+<p>This section shows how to set up the Perforce merge tool (a free graphical merge-conflict tool) instead of the Git default merge tool.  The example here should work on Mac and Linux.  You will need to adjust the paths used for Windows.</p>
+
+<p>You can download the P4Merge tool <a href="https://www.perforce.com/product/components/perforce-visual-merge-and-diff-tools">here</a></p>
+
+<p>First create a merge wrapper script named <code class="language-plaintext highlighter-rouge">extMerge</code> as below.  Adjust the path to your binary.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!/bin/sh
+/Applications/p4merge.app/Contents/MacOS/p4merge $*
+</code></pre></div></div>
+
+<p>Next create the <code class="language-plaintext highlighter-rouge">extDiff</code> diff wrapper script as below.  This wrapper checks to make sure seven arguments are provided and passes two of them to your merge script.  By default git passes the following arguments to the diff program.</p>
+
+<p>path, old-file, old-hex, old-mode, new-file, new-hex, new-mode</p>
+
+<p>In our case we only want the old-file and new-file arguments so we have the wrapper script pass those.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!/bin/sh
+[ $# -eq 7 ] &amp;&amp; /usr/local/bin/extMerge "$2" "$5"
+</code></pre></div></div>
+
+<p>Make sure to give execute permission to both scripts.</p>
+
+<p>Now we can set up our Git config to use our custom merge resolution and diff tools.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config --global merge.tool extMerge
+git config --global mergetool.extMerge.cmd \
+  'extMerge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"'
+git config --global mergetool.extMerge.trustExitCode false
+git config --global diff.external extDiff
+</code></pre></div></div>
+
+<p>alternatively you can edit your ~/.gitconfig with the following changes</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[merge]
+  tool = extMerge
+[mergetool "extMerge"]
+  cmd = extMerge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+  trustExitCode = false
+[diff]
+  external = extDiff
+</code></pre></div></div>
+
+<p>With this changes when you run <code class="language-plaintext highlighter-rouge">git diff 32d1786b1^ 32d1786b1</code> instead of the Git output, Git will fire up P4Merge.  If you try to merge two branches and have a conflict.  Running <code class="language-plaintext highlighter-rouge">git mergetool</code> will now start P4Merge to let you resolve the conflicts through that GUI tool.</p>
+
+<p>Git comes preset to use a number of other merge-resolution tools without your having to set up the cmd configuration.  To see a list of supported tools run the below command.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git mergetool --tool-help</code></p>
+
+<p>If for example you are not interested in using KDiff3 for diff, but rather want to use it just for merge resolution, and the kdiff3 command is in your PATH, then you can run the command below.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global merge.tool kdiff3</code></p>
+
+<h5 id="formatting-and-whitespace">Formatting and Whitespace</h5>
+
+<p><strong>core.autocrlf</strong></p>
+
+<p>If you are working on Windows with people that are not you will probably run into line ending issues at some point.  Windows uses both carriage-return and linefeed characters for newlines while MacOS and Linux only use linefeed.  Many editors on Windows replace or append LF-style endings with CRLF.</p>
+
+<p>Git can handle this by auto-converting CRLF line endings into LF when you add a file to the index and vice versa when it checks out code onto your filesystem.  You can turn this on with the <code class="language-plaintext highlighter-rouge">core.autocrlf</code> setting.</p>
+
+<p>If you are on a Windows machine, set it to <code class="language-plaintext highlighter-rouge">true</code> - this will convert LF endings into CRLF when you check out code.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global core.autocrlf true</code></p>
+
+<p>if you’re on a Linux or MacOS system that uses LF line endings, you don’t want Git to automatically convert them when you check out files, however if a file with CRLF endings accidentally gets introduced, then you may want Git to fix it.  You can tell Git to convert CRLF to LF on commit but not the other way around by setting <code class="language-plaintext highlighter-rouge">core.autocrlf</code> to <code class="language-plaintext highlighter-rouge">input</code>.  This setup should leave you with CRLF endings in Windows checkout, but LF endings on macOS and Linux systems and in the repository.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global core.autocrlf input</code></p>
+
+<p>If you are a Windows programmer doing a Windows only project, then you can turn off this functionality, recording the carriage returns in the repository by setting <code class="language-plaintext highlighter-rouge">core.autocrlf</code> to <code class="language-plaintext highlighter-rouge">false</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global core.autocrlf false</code></p>
+
+<p><strong>core.whitespace</strong></p>
+
+<p>Git has the ability to fix 6 types of whitespace issue.  3 are enabled by default and 3 are disabled by default.</p>
+
+<p>3 that are on by default are</p>
+
+<ul>
+  <li>blank-at-eol - looks for spaces at end of line</li>
+  <li>blank-at-eof - looks for spaces at end of a file</li>
+  <li>space-before-tab - looks for spaces before tabs at the beginning of a line</li>
+</ul>
+
+<p>3 that are disabled by default are</p>
+
+<ul>
+  <li>indent-with-non-tab - looks for lines tha begin with spaces instead of tabs (controlled by the <code class="language-plaintext highlighter-rouge">tabwidth</code> option)</li>
+  <li>tab-in-indent - watches for tabs in the indentation portion of a line</li>
+  <li>cr-at-eol - tells Git that carriage returns at the end of lines are OK.</li>
+</ul>
+
+<p>You can tell Git which of these you want enabled by setting <code class="language-plaintext highlighter-rouge">core.whitespace</code> to the values you want on or off.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config --global core.whitespace \
+    trailing-space,-space-before-tab,indent-with-non-tab,tab-in-indent,cr-at-eol
+</code></pre></div></div>
+
+<p>Git will detect these issues when you run <code class="language-plaintext highlighter-rouge">git diff</code> command and try to color them so that you can fix them before you commit.  It will also use these values when you apply patches with <code class="language-plaintext highlighter-rouge">git apply</code>  When you are applying patches you can ask Git to warn you if it’s applying patches with the specified whitespace issues:</p>
+
+<p><code class="language-plaintext highlighter-rouge">git apply --whitespace=warn &lt;path&gt;</code></p>
+
+<p>or you can have Git automatically fix the issue before applying the patch.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git apply --whitespace=fix &lt;path&gt;</code></p>
+
+<p>These options apply to <code class="language-plaintext highlighter-rouge">git rebase</code> as well.  If you committed whitespace issues, but haven’t pushed them upstream you can run <code class="language-plaintext highlighter-rouge">git rebase --whitespace=fix</code> to have Git automatically fix whitespace issues as it’s rewriting the patches.</p>
+
+<h5 id="server-configuration">Server Configuration</h5>
+
+<p><strong>receive.fsckObjects</strong></p>
+
+<p>Git has capability to make sure every object received during a push matches its SHA-1 checksum and points to valid objects.  This is disabled by default because it is an expensive operation especially on large repositories.  You an use <code class="language-plaintext highlighter-rouge">receive.fsckObjects</code> to enable this functionality.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --system receive.fsckObjects true</code></p>
+
+<p><strong>receive.denyNonFastForwards</strong></p>
+
+<p>This setting lets you prevent user from pushing changes that rewrite history by using the -f flag.  This is generally good policy.  <strong><em>Note:</em></strong> There is a way to do this with hooks that let you allow the force commit to a certain set of users.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --system receive.denyNonFastForwards true</code></p>
+
+<p><strong>receive.denyDeletes</strong></p>
+
+<p>This setting will deny the deletion of branches.  If this setting is enabled to remove branches you would need to remove the ref files on the server manually.  There is a way to configure this on a per user basis via access control lists (ACLs)</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --system receive.denyDeletes true</code></p>
+
+<h3 id="git-attributes">Git Attributes</h3>
+
+<p>Certain settings can be specified for a specific path so that Git only applies those settings for a subdirectory of files.  These path specific settings are called Git attributes, and they can be set either in a <code class="language-plaintext highlighter-rouge">.gitattributes</code> file in one of you directories (normally the root of your project) or in the <code class="language-plaintext highlighter-rouge">.git/info/attributes</code> file if you don’t want the attributes committed to your project.</p>
+
+<p>You can use Git attributes to specify separate merge strategies for individual files or directories, tell Git how to diff non-text files, or have Git filter content before you check it into or out of Git.</p>
+
+<h4 id="binary-files">Binary Files</h4>
+
+<p>You can use Git attributes to tell Git which files are binary in case it may not be able to figure it out, and how to handle those files.</p>
+
+<h5 id="identifying-binary-files">Identifying Binary Files</h5>
+
+<p>Some files such as lightweight database are written as UTF-8, but area not meant to be treated as text.  You can’t effectively diff or merge this kind of file.  To tell Git to treat a certain file extension as binary at an entry to your <code class="language-plaintext highlighter-rouge">.gitattributes</code> file similar to the one below.  By doing this Git won’t try to convert or fix CRLF issues nor will it try to compute and display changes for these files when you run <code class="language-plaintext highlighter-rouge">git show</code> or <code class="language-plaintext highlighter-rouge">git diff</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">.myextension binary</code></p>
+
+<h5 id="diffing-binary-files">Diffing Binary Files</h5>
+
+<p>You can use Git attributes to effectively diff binary file by telling Git how to convert binary files to text format that can be compared with a diff.</p>
+
+<h6 id="word-documents">Word documents</h6>
+
+<p>You can use this to let Git diff word documents.  To do this make an entry similar to the one below in your <code class="language-plaintext highlighter-rouge">.gitattributes</code> file.  You will also need to set up the “word” filter.</p>
+
+<p><code class="language-plaintext highlighter-rouge">.docx diff=word</code></p>
+
+<p>You will aso need to install the <a href="https://sourceforge.net/projects/docx2txt">doc2txt program</a> to convert Word documents into text files.  You will need the below wrapper script, and Git config entry to make Git use the doc2txt program.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!/bin/bash
+docx2txt.pl "$1" -
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">git config diff.word.textconv docx2txt</code></p>
+
+<h6 id="images">Images</h6>
+
+<p>You can run images though a program that extracts their EXIF information (metadata that is recorded with most image formats).  You can do this by installing the <code class="language-plaintext highlighter-rouge">exiftool</code> which you can use to convert you images into text about the metadata.</p>
+
+<p>Add the following to your <code class="language-plaintext highlighter-rouge">.gitattributes</code> file.</p>
+
+<p><code class="language-plaintext highlighter-rouge">*.png diff=exif</code></p>
+
+<p>And configure Git to use this tool</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config diff.exif.textconv exiftool</code></p>
+
+<p>Not if you replace an image in your project git diff will show you the metadata changes.</p>
+
+<h4 id="clean-and-smudge-filters">Clean and smudge filters</h4>
+
+<p>Git has functionality that lets you set up a filter that runs when you check out a code to “smudge” it and when you stage it to “clean it”.  For example if you want to run the <code class="language-plaintext highlighter-rouge">indent</code> program on <code class="language-plaintext highlighter-rouge">c</code> files when you check them out and the <code class="language-plaintext highlighter-rouge">cat</code> program (does nothing but we are using it as an example) when you stage the files you would add the below line to your <code class="language-plaintext highlighter-rouge">.gitattributes</code> file.</p>
+
+<p><code class="language-plaintext highlighter-rouge">*.c filter=indent</code></p>
+
+<p>And se the following Git configuration for smudge and clean.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config --global filter.indent.clean indent
+git config --global filter.indent.smudge cat
+</code></pre></div></div>
+
+<h4 id="exporting-your-repository">Exporting your repository</h4>
+
+<p>Git attributes allow you to do some interesting things when exporting an archive of your project</p>
+
+<h5 id="export-ignore">export-ignore</h5>
+
+<p>You can tell Git not to export certain files or directories when generating an archive.  For example if you don’t want file sin the test directory to be exported when creating an archive you would add the following to your <code class="language-plaintext highlighter-rouge">.gitattributes</code> file and those files would not be included when you run <code class="language-plaintext highlighter-rouge">git archive</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">test/ export-ignore</code></p>
+
+<h5 id="export-subset">export-subset</h5>
+
+<p>When exporting files for deployment you can apply formatting and keyword expansion from <code class="language-plaintext highlighter-rouge">git log</code> processing to selected portions of files marked with the <code class="language-plaintext highlighter-rouge">export-subset</code> attributes.</p>
+
+<p>For example if you want to include a file named LAST_COMMIT in your project, and have metadata about the last commit automatically injected into it when <code class="language-plaintext highlighter-rouge">git archive</code> runs you would add the below to your <code class="language-plaintext highlighter-rouge">.gitattributes</code> files.</p>
+
+<p><code class="language-plaintext highlighter-rouge">LAST_COMMIT export-subst</code></p>
+
+<p>and create the LAST_COMMIT template.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ echo 'Last commit date: $Format:%cd by %aN$' &gt; LAST_COMMIT
+$ git add LAST_COMMIT .gitattributes
+$ git commit -am 'adding LAST_COMMIT file for archives'
+</code></pre></div></div>
+
+<p>Now when you run <code class="language-plaintext highlighter-rouge">git archive</code> the contents of the archived file would show.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git archive HEAD | tar xCf ../deployment-testing -
+$ cat ../deployment-testing/LAST_COMMIT
+Last commit date: Tue Apr 21 08:38:48 2009 -0700 by Scott Chacon
+</code></pre></div></div>
+
+<h4 id="merge-strategies">Merge strategies</h4>
+
+<p>You can use Git attributes to tell Git to use different merge strategies for specific files in your project.  One useful option is to tell Git to not try to merge specific files when they have conflicts, but rather to use your side of the merge over someone else’s   For example if you have if you have a database.xml file and you want your settings to be preserved on a merge.  You would add the following to your <code class="language-plaintext highlighter-rouge">.gitattributes</code> file.</p>
+
+<p><code class="language-plaintext highlighter-rouge">database.xml merge=ours</code></p>
+
+<p>And then define a dummy ours merge strategy with</p>
+
+<p><code class="language-plaintext highlighter-rouge">$ git config --global merge.ours.driver true</code></p>
+
+<p>Now if you merge in another branch instead of having merge conflicts for database.xml you will see something like the below. and database.xml stays at whatever version you originally had it at.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git merge topic
+Auto-merging database.xml
+Merge made by recursive.
+</code></pre></div></div>
+
+<h3 id="git-hooks">Git Hooks</h3>
+
+<p>Git Hooks is a way to fire off custom scripts when certain actions occur.  There are client-side and server-side Git hooks.  Client side hooks are triggered by operations such as committing and merging while server side hooks run on network operations such as receiving pushed commits.</p>
+
+<h4 id="installing-a-hook">Installing a hook</h4>
+
+<p>Hooks are installed in the <code class="language-plaintext highlighter-rouge">hooks</code> subdirectory of the Git directory.  In most projects that will git <code class="language-plaintext highlighter-rouge">.git/hooks</code>.  When you initialize a new project with <code class="language-plaintext highlighter-rouge">git init</code>, Git populates the hooks directory with a bunch of example scripts.  If you want to use the bundled in scripts you will need to rename them to remove the <code class="language-plaintext highlighter-rouge">.sample</code> extension.</p>
+
+<p>For a hook script to be enabled, it needs bo be in the hooks directory, appropriately named and have execute permission.  You are free to use any scripting you want to write the scripts.  Use the sample scripts as a reference for naming and what arguments scripts are expecting.</p>
+
+<h4 id="client-side-hooks">Client-side hooks</h4>
+
+<h5 id="committing-workflow-hooks">Committing-Workflow Hooks</h5>
+
+<p><strong>pre-commit</strong> - This hook runs before you get prompted for a commit message.  It is used to inspect the snapshot that is about to be committed.  Exiting non zero from this hook aborts the commit.  This is a good place to run linters, check for trailing white spaces etc.  You can skip the execution of this hook if you use the –no-verify argument to git commit (`git commit –no-verify)</p>
+
+<p><strong>prepare-commit-msg</strong> - This hook runs before the commit message editor is fired up, but after the default message is created.  It lets you edit the default message before the commit author sees it.  This hook is not generally useful for normal commits; rather it’s good for commits where the default message is auto generated, such as templated commit messages, merge commits, squashed commits, and amended commits.  You can use it in combination with a commit template to programmatically insert information.</p>
+
+<p><strong>commit-msg</strong> - This hook is useful for validating the content of a commit message.  The script for this hook gets a single argument that is the path to the temporary file with the commit message written by the author.  If this script exits non zero than the commit is aborted.</p>
+
+<p><strong>post-commit</strong> - This script does not receive any arguments, but you can get the last commit by running <code class="language-plaintext highlighter-rouge">git log -1 HEAD</code>.  It is generally used for notifications.</p>
+
+<h5 id="other-client-hooks">Other Client Hooks</h5>
+
+<p><strong>pre-rebase</strong> - This hook runs before you rebase, and can halt the process by exiting non-zero.  You can use this hook to block rebasing any commits tha have already been pushed.  The example pre-rebase hood provided by Git does this.</p>
+
+<p><strong>post-rewrite</strong> - This hook is run by commands that replace commits, such as <code class="language-plaintext highlighter-rouge">git commit --amend</code> and <code class="language-plaintext highlighter-rouge">git rebase</code>.  Its single argument is the command that triggered the rewrite, and it gets the list of rewrites on stdin.  This hook has many of the same uses as the post-checkout and post-merge hooks.</p>
+
+<p><strong>post-checkout</strong> - This hook runs after you run a successful <code class="language-plaintext highlighter-rouge">git checkout</code>.  You can use this hook to set up your working directory properly for your project environment.  Examples are moving in large binary files that you don’t want source managed or auto generating documentation.</p>
+
+<p><strong>post-merge</strong> - This hook runs after a successful merge command.  You can use it to restore data in the working that that Git can’t truck such as permissions data.</p>
+
+<p><strong>pre-push</strong> - This hook runs during git push, after the remote refs have been updated but before any objects have been transferred.  It receives the name and location of the remote as parameters, and a list of to be updated refs through stdin.  You can use this hook to validate a set of ref updates before a push occurs.  A non zero exit code in this hook will abort the push.</p>
+
+<p><strong>pre-auto-gc</strong> - This hook is invoked just before Git does garbage collection (by calling <code class="language-plaintext highlighter-rouge">git gc --auto</code>).  You an use it to abort the garbage collection.</p>
+
+<h4 id="server-side-hooks">Server-Side Hooks</h4>
+
+<p>Server side hooks can be used to enforce project policy.  These scripts run before and after pushes to the server.  The pre hooks can exit with a non zero to reject a push and print an error message back to the client.</p>
+
+<p><strong>pre-receive</strong> - This hook gets a list of references being pushed on stdin.  If it exists non zero, none of the references are accepted.  You can use this hook to make sure none of the updated references are non-fast-forwards, or to do access control for all the refs and files they’re modifying with the push.</p>
+
+<p><strong>update</strong> - This hook is similar to pre-receive, but it is run once for each branch the push is trying to update.  This script takes 3 arguments: the name of the reference (branch), the SHA-1 that reference pointed to before the push, and the SHA-1 the uer is trying to push.  If the update script exits non-zero, only that reference is rejected.
+<a href="&lt;&gt; (TODO: Add the above to your definition list.)">comment</a>: &lt;&gt; (TODO: How do you push to multiple branches?)</p>
+
+<p><strong>post-receive</strong> - This hook runs after the entire process is completed, and can be used to update other services or notify users.  It takes the same stdin data s pre-receive hook.  Uses for this hook include emailing a list, notifying a continuous integration server, or updating a ticket tracking system.  You can even parse the commit message to see if any ticket need to be opened, modified or closed.  This script can’t stop the push process, but the client doesn’t disconnect until it has completed so its not a good place for long running actions.</p>
+
+<h3 id="customizing-git---an-example-git-enforced-policy">Customizing Git - An example Git enforced policy</h3>
+
+<p>The Git Pro book has an example of using hooks to set up a policy that is a good reference.  It can be found <a href="https://git-scm.com/book/en/v2/Customizing-Git-An-Example-Git-Enforced-Policy">here</a></p>
+
+<h2 id="git-internals">Git Internals</h2>
+
+<h3 id="git-internals---plumbing-and-porcelain">Git Internals - Plumbing and Porcelain</h3>
+
+<p>Below is what a freshly <code class="language-plaintext highlighter-rouge">git init</code> directory looks like.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ls -F1
+config
+description
+HEAD
+hooks/
+info/
+objects/
+refs/
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">description</code> file is used only by the GitWeb program so we don’t cover it.</li>
+  <li><code class="language-plaintext highlighter-rouge">config</code> file contains your project-specific options</li>
+  <li><code class="language-plaintext highlighter-rouge">info</code> directory keeps a global exclude file for ignored patterns that you don’t want to track in a .gitignore file.</li>
+  <li><code class="language-plaintext highlighter-rouge">hooks</code> directory contains your client or server hook scripts.</li>
+</ul>
+
+<p>The 4 we don’t see yet and will cover later are</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">index</code> file where Git stores your staging area information.</li>
+  <li><code class="language-plaintext highlighter-rouge">objects</code> directory which stores all the content for your database</li>
+  <li><code class="language-plaintext highlighter-rouge">refs</code> directory which stores pointers into commit objects in the objects directory (branches, tags, remotes, etc.)</li>
+  <li><code class="language-plaintext highlighter-rouge">HEAD</code> file which points to the branch you currently have check out</li>
+</ul>
+
+<h3 id="git-internals---git-objects">Git Internals - Git Objects</h3>
+
+<p>Git is a content addressable filesystem.  This means that at its core Git is a key value store.  You can insert any content into a Git repository and Git will hand you back a unique key which you can later use to retrieve that content.</p>
+
+<p>The book goes though an example where the <code class="language-plaintext highlighter-rouge">git hash-object</code> command is used to store a file in the <code class="language-plaintext highlighter-rouge">objects</code> directory.  The key take away from this example is that if you have a file test.txt and use git hash-object to store it, each time you call git hash-object and pass it text.txt a new object is stored in the objects directory with the hash generated by the contents of the file.  In the object directory the hash is the filename for the content as it was when git hash-object is used.  The hashed stored object is called a <code class="language-plaintext highlighter-rouge">blob</code>.</p>
+
+<h4 id="tree-objects">Tree Objects</h4>
+
+<p>The <strong>tree</strong> object is using in Git internals to store the file name and allow you to store a group of files together.</p>
+
+<p>In Git internals everything as stored as tree and blob objects with trees corresponding to UNIX directory entries and blobs corresponding more or less to inode or file contents.</p>
+
+<p>A single tree object contains one or more entries, each of which is the SHA-1 hash of a blob or subtree with tis associated mode, type, and filename.</p>
+
+<p>Git normally creates a tree by taking the state of your staging area or index and writing a series of tree objects from it.</p>
+
+<h4 id="commit-objects">Commit Objects</h4>
+
+<p>The tree object essentially stores a snapshot, but we don’t have an easy way of referencing that snapshot (SHA-1 values are hard to remember) and we have no information about the snapshot (who saved it or when they saved it).  This is the information that the commit object stores for you.</p>
+
+<p>A commit object stores the top level tree for the snapshot of the project at that point, the parent commits if any, the author/committer information, a timestamp, and after a blank line the commit message.</p>
+
+<p>The stored objects, tree objects and commit objects make up the history you see when you use the <code class="language-plaintext highlighter-rouge">git log</code> command.  This is essentially what Git does when you run the git add and git commit commands — it stores blobs for the files that have changed, updates the index, writes out trees, and writes commit objects that reference the top-level trees and the commits that came immediately before them.</p>
+
+<h4 id="object-storage">Object Storage</h4>
+
+<p>There is a header stored with every object you commit to your Git object database.  This header stores the type of object (blob or tree), the size in bytes of the content and a null byte at the end.</p>
+
+<p>Git concatenates the header and the original content adn then calculates the SHA-1 checksum of that new content.  Git compresses the new content with zlib and writes the zlib-deflated content toa n object on disk.  The file is stored in objects directory with first 2 chars of the sha1 being the subdirectory and the remaining 38 the filename.  All Git objects are stored this way.</p>
+
+<h2 id="git-internals---git-references">Git Internals - Git References</h2>
+
+<p>Within the .git directory there is a refs directory.  This directory contains files which store the SHA-1 for the commits in your projects that are the HEADs for your local and remote branches.  For example the HEAD file you see in your .git directory refers to .git/refs/heads/main if you are on the main branch.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat HEAD
+ref: refs/heads/main
+</code></pre></div></div>
+
+<p>When you are in a detached head state (if you check out a tag, commit or remote branch) the value in the HEAD file will be a specific SHA-1 of a commit.</p>
+
+<h3 id="tags">Tags</h3>
+
+<p>In addition to blobs, trees and commits; tags are the fourth object type in Git.  Like the commit objects, a tag contains a tagger, a date, a message, and a pointer.  The main difference is that a tag object generally points to a commit object instead of a tree.  Its like a branch reference but it never moves.  It always points to the ame commit but gives it a friendlier name.</p>
+
+<h3 id="remotes">Remotes</h3>
+
+<p>The third type of reference is the remote reference.  If you add a remote and put to it, Git stores the commit SHA-1 value you last pushed to that remote for each branch in the refs/remotes directory.</p>
+
+<p>Remote references are considered read only.  You can git checkout one, but Git won’t symbolically reference HEAD to one so you will never update it with a commit.  Git manages them as bookmarks of the last known state of where those branches were on those servers.</p>
+
+<h2 id="git-internals---packfiles">Git Internals - Packfiles</h2>
+
+<p>Packfiles are the Git mechanism for organizing files in stored in your commits to save disk space.  Instead of story the copy of the file in each commit, packer files store and organize the deltas between those files.</p>
+
+<h2 id="git-internals---transfer-protocols">Git Internals - Transfer Protocols</h2>
+
+<p>Git can transfer data between two repositories via a dumb protocol or a smart one.  The dump protocol is used if you are setting up a read only repository to be read only over HTTP via GET requests.  The smart protocol needs Git code running on the server.  It can figure out what the client has and needs and generate the packfile for that request.</p>
+
+<h2 id="git-internals---maintenance-and-data-recovery">Git Internals - Maintenance and Data Recovery</h2>
+
+<h3 id="maintenance">Maintenance</h3>
+
+<p>Git periodically runs the git auto gc (garbage collection) call which you can trigger manually by running <code class="language-plaintext highlighter-rouge">git gc --auto</code>.  This usually does nothing as you need to have 7K loose files or more than 50 packfiles before this command takes action.  These limits can be adjusted via the <code class="language-plaintext highlighter-rouge">gc.auto</code> and <code class="language-plaintext highlighter-rouge">gc.autopacklimit</code> configuration settings.  When this call does act it will place the loose files into a packfile and consolidate the packfiles into one big packfile.  It also removes objects that are not accessible from any commit and are a few months old.</p>
+
+<h3 id="data-recovery">Data Recovery</h3>
+
+<p>If you force delete a branch that had work in it, or you hard reset a branch abandoning the commits there you may be able to recover the work.</p>
+
+<p>For example in the below scenario…</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git log --pretty=oneline
+ab1afef80fac8e34258ff41fc1b867c702daa24b Modify repo.rb a bit
+484a59275031909e19aadb7c92262719cfcdf19a Create repo.rb
+1a410efbd13591db07496601ebc7a059dd55cfe9 Third commit
+cac0cab538b970a37ea1e769cbbde608743bc96d Second commit
+fdf4fc3344e67ab068f836878b6c4951e3b15f3d First commit
+</code></pre></div></div>
+
+<p>If you run the command <code class="language-plaintext highlighter-rouge">git reset --hard 1a410efbd13591db07496601ebc7a059dd55cfe9</code>  You effectively loose the top two commits.  See blow…</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git log --pretty=oneline
+1a410efbd13591db07496601ebc7a059dd55cfe9 Third commit
+cac0cab538b970a37ea1e769cbbde608743bc96d Second commit
+fdf4fc3344e67ab068f836878b6c4951e3b15f3d First commit
+</code></pre></div></div>
+
+<p>One way to get your lost work back is via the <code class="language-plaintext highlighter-rouge">reflog</code> command.</p>
+
+<p>When you run <code class="language-plaintext highlighter-rouge">git reflog</code> it will show you the history of where you have been as in the example below.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git reflog
+1a410ef HEAD@{0}: reset: moving to 1a410ef
+ab1afef HEAD@{1}: commit: Modify repo.rb a bit
+484a592 HEAD@{2}: commit: Create repo.rb
+</code></pre></div></div>
+
+<p>You can use the git log format on your reflog data by using the -g argument o git log.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git log -g</code></p>
+
+<p>Once you identify the commit you lost you can create a new branch from that commit with the command below.  This will give you a new branch named recover-branch which will be where your master branch used to be making the lost commits reachable again.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch recover-branch ab1afef</code></p>
+
+<p>If for some reason you don’t have the lost work in your reflog history.  You can try using the git fsck utility.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git fsck --full</code></p>
+
+<p>When run with full option git fsck will show you all of the commits that are not reachable.  You can identify your lost commit from that output and create a branch from it as you did above.</p>
+
+<h3 id="removing-objects">Removing Objects</h3>
+
+<p>This is useful if someone committed a large binary file to your repo.</p>
+
+<p><strong><em>This technique is destructive to the commit history</em></strong>  It rewrites every commit object sine the earliest tree y ou have to modify to remove a large file reference.  If you do this when users have based their work on the commit you have to notify all users to rebase their work onto your new commits.</p>
+
+<p>Kind of a side note but you can use the below command to see how much space your repo is using.</p>
+
+<p>To find the large file you can use the Git plumbing command git verify-pack and sort ont he third field</p>
+
+<p><code class="language-plaintext highlighter-rouge">git verify-pack -v .git/objects/pack/pack-29…69.idx | sort -k 3 -n | tail -3</code></p>
+
+<p>Once you find the commit with the large file you can use rev-list command to find the file itself.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git rev-list --objects --all | grep 82c99a3</code></p>
+
+<p>Now you need to remove this file from all trees in your past.  You can see what commits modified this file with the command…</p>
+
+<p><code class="language-plaintext highlighter-rouge">git log --oneline --branches -- git.tgz</code></p>
+
+<p>Based on our example you must rewrite all commits downstream from 7b30847.  To do this we use filter-branch command.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git filter-branch --index-filter \
+  'git rm --ignore-unmatch --cached git.tgz' -- 7b30847^..
+Rewrite 7b30847d080183a1ab7d18fb202473b3096e9f34 (1/2)rm 'git.tgz'
+Rewrite dadf7258d699da2c8d89b09ef6670edb7d5f91b4 (2/2)
+Ref 'refs/heads/master' was rewritten
+</code></pre></div></div>
+
+<p>The –index-filter option is similar to the –tree-filter option used in Rewriting History except that instead of passing a command that modifies the files checkout on disk you are modifying your staging area or index each time.</p>
+
+<p>Rather than remove a specific file with <code class="language-plaintext highlighter-rouge">rm file</code> you have to remove it with git rm – cached.  You must remove it from the index, not from disk.  The reason to do it this way is speed because Git doesn’t have to check out each revision to disk before running your filter, the process can be much much faster.</p>
+
+<p>The –ignore-unmatch option to git rm tells it not to error out if the pattern you’re trying to remove isn’t there. Finally, you ask filter-branch to rewrite your history only from the 7b30847 commit up, because you know that is where this problem started. Otherwise, it will start from the beginning and will unnecessarily take longer.</p>
+
+<p>Your history no longer contains a reference to that file. However, your reflog and a new set of refs that Git added when you did the filter-branch under .git/refs/original still do, so you have to remove them and then repack the database. You need to get rid of anything that has a pointer to those old commits before you repack:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rm -Rf .git/refs/original
+$ rm -Rf .git/logs/
+$ git gc
+Counting objects: 15, done.
+Delta compression using up to 8 threads.
+Compressing objects: 100% (11/11), done.
+Writing objects: 100% (15/15), done.
+Total 15 (delta 1), reused 12 (delta 0)
+</code></pre></div></div>
+
+<p>You can see from the size value that the big object is still in your loose objects, so it’s not gone; but it won’t be transferred on a push or subsequent clone, which is what is important. If you really wanted to, you could remove the object completely by running git prune with the –expire option:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git prune --expire now
+$ git count-objects -v
+count: 0
+size: 0
+in-pack: 15
+packs: 1
+size-pack: 8
+prune-packable: 0
+garbage: 0
+size-garbage: 0
+</code></pre></div></div>
+
+<h2 id="git-internals---environment-variables">Git Internals - Environment Variables</h2>
+
+<p>Git always runs inside a bash shell and uses environment variables to determine how it behaves.  Below are the most useful environment variables.</p>
+
+<h3 id="global-behavior-environment-variables">Global behavior environment variables</h3>
+
+<p><strong>GIT_EXEC_PATH</strong> - determines where Git looks for its sub-programs such as git-commit, git-diff etc.  You can check the current setting with the command <code class="language-plaintext highlighter-rouge">git --exec-path</code></p>
+
+<p><strong>HOME</strong> - Not usually customized as many things depend on it.  This variable is where Git looks for the global config file.</p>
+
+<p><strong>PREFIX</strong> - Similar to the HOME variable but for system-wide configuration file.</p>
+
+<p><strong>GIT_CONFIG_NOSYSTEM</strong> - if set, disabled use of the system wide configuration file.  This is useful if your system config is interfering with your commands, but you don’t have access to change or remove it.</p>
+
+<p><strong>GIT_PAGER</strong> - controls the program used to display multi-page output on the command line.  If this is not set PAGER will be used as the fallback.</p>
+
+<p><strong>GIT_EDITOR</strong> - The editor Git will launch when the user needs to edit text.  In a commit for example.</p>
+
+<h3 id="repository-location-environment-variables">Repository location environment variables</h3>
+
+<p><strong>GIT_DIR</strong> - The location of the .git folder.  If this directory is not specified Git will walk up directory tree till it finds or gets to ~ or / directories.</p>
+
+<p><strong>GIT_CEILING_DIRECTORY</strong> - Controls the behavior of searching for a .git directory.  If you have some slow loading directories such as a tape drive you may want to prevent Git from searching those directories.</p>
+
+<p><strong>GIT_ALTERNATE_OBJECTS_DIRECTORIES</strong> - Is a colon separated list which tells Git where to check for objects if they are not in GIT_OBJECT_DIRECTORY.  If you have a lot of projects with large files that have the exact same contents, this can be used to avoid storing too many copies of them.</p>
+
+<h3 id="pathspec-environment-variables">Pathspec environment variables</h3>
+
+<p>A “pathspec” refers to how you specify paths to things in Git, including the use of wildcards.  These are used in the .gitignore file as well as in command lines such as git add *.c.</p>
+
+<p><strong>GIT_GLOB_PATHSPECS and GIT_NOGLOB_PATHSPECS</strong> - control the default behavior of wildcards in pathspecs.  If GIT_GLOB_PATHSPECS is set to 1, wildcard characters act as wildcards (which is the default); if GIT_NOGLOB_PATHSPECS is set to 1, wildcard characters only match themselves, meaning something like *.c would only match a file named “*.c”, rather than any file whose name ends with .c. You can override this in individual cases by starting the pathspec with :(glob) or :(literal), as in :(glob)*.c.</p>
+
+<p><strong>GIT_LITERAL_PATHSPECS</strong> - Makes it so that no wildcard expansion works and override prefixes are disabled as well.</p>
+
+<p><strong>GIT_ICASE_PATHSPECS</strong> - sets all pathspecs tow ork in a case-insensitive manner.</p>
+
+<h3 id="committing-environment-variables">Committing environment variables</h3>
+
+<p>The final creation of a Git commit object is usually done by git-commit-tree which uses the following environment variables falling back on config values if not set.</p>
+
+<p><strong>GIT_AUTHOR_NAME</strong> - Human readable name in the “author” field</p>
+
+<p><strong>GIT_AUTHOR_DATE</strong> is the timestamp used for the “author” field.</p>
+
+<p><strong>GIT_COMMITTER_NAME</strong> sets the human name for the “committer” field.</p>
+
+<p><strong>GIT_COMMITTER_EMAIL</strong> is the email address for the “committer” field.</p>
+
+<p><strong>GIT_COMMITTER_DATE</strong> is used for the timestamp in the “committer” field.</p>
+
+<p><strong>EMAIL</strong> is the fallback email address in case the user.email configuration value isn’t set. If this isn’t set, Git falls back to the system user and host names.</p>
+
+<h3 id="networking-environment-variables">Networking environment variables</h3>
+
+<p><strong>GIT_CURL_VERBOSE</strong> - Git uses curl library to do network operations over HTTP.  This setting tells Git to emit all the messages generated by that library similar to <code class="language-plaintext highlighter-rouge">curl -v</code></p>
+
+<p><strong>GIT_SSL_NO_VERIFY</strong> - Tells Git not to verify SSL certificates.</p>
+
+<h3 id="diffing-and-merging-environment-variables">Diffing and merging environment variables</h3>
+
+<p><strong>GIT_DIFF_OPTS</strong> - The only valid values are <code class="language-plaintext highlighter-rouge">-u&lt;n&gt;</code> or <code class="language-plaintext highlighter-rouge">--unified=&lt;n&gt;</code>, which controls the number of context lines shown in a git diff command.</p>
+
+<p><strong>GIT_MERGE_VERBOSITY</strong> - controls the output for the recursive merge strategy. The allowed values are as follows:</p>
+<ul>
+  <li>0 outputs nothing, except possibly a single error message.</li>
+  <li>1 shows only conflicts.</li>
+  <li>2 also shows file changes.</li>
+  <li>3 shows when files are skipped because they haven’t changed.</li>
+  <li>4 shows all paths as they are processed.</li>
+  <li>5 and above show detailed debugging information.</li>
+</ul>
+
+<p>The default value is 2</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

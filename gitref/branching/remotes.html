@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Remote Branches | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Remote Branches" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/gitref/branching/remotes" />
+<meta property="og:url" content="http://localhost:4000/gitref/branching/remotes" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Remote Branches" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Remote Branches","url":"http://localhost:4000/gitref/branching/remotes"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Remote Branches</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="working-with-remote-branches">Working with remote branches</h2>
+
+<p>Remote-tracking branches are local references to the state of remote branches.  You cannot move these references; Git moves them for you whenever you do any network communication to make sure they accurately represent the state of the remote repository.  Think of them as bookmarks to remind you where the branches in your remote repositories were the last time you connected to them.</p>
+
+<p>Remote tracking branch names take the form &lt;remote&gt;/&lt;branch&gt; for example if you wanted to see what the master branch on your remote origin looks like as of the last time you communicated with it you can check out the origin/master branch.</p>
+
+<p>If you are working on an issue with a partner, you can have a local issue123, but the branch on the server would be represented by the remote-tracking branch origin/issue123</p>
+
+<p>When you clone a git repository, Git makes the clone, but also creates a local master for you to work from.</p>
+
+<p>To synchronize your work with a given remote, you run the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git fetch &lt;remote&gt;</code> for example <code class="language-plaintext highlighter-rouge">git fetch origin</code></p>
+
+<p>This command looks up which server origin is, fetches any data from it that you don’t have yet and updates your local database moving the origin/master pointer to its new more up-to-date position.</p>
+
+<h2 id="pushing">Pushing</h2>
+
+<p>When you want to share a branch with the world, you need to push it up to a remote to which you have write access.  You need to explicitly push the branches you want to share.  This lets you control what you want locally and what you want visible to your collaborators or the public.</p>
+
+<p>To push a local fix branch named bugfix use the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push origin bugfix</code></p>
+
+<p>If you want the remote name to be different you can use the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push origin bugfix:newremotename</code></p>
+
+<p>It is important to note that when you do a fetch that brings down remote tracking branches, you don’t automatically have local, editable copies of them.  For example if you want a local copy of the bugfix branch, you would run the command.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout -b bugfix origin/serverfix</code></p>
+
+<h2 id="tracking-branches">Tracking Branches</h2>
+
+<p>Tracking branches are local branches that have a direct relationship to a remote branch.  If you are on a tracking branch and you run the command <code class="language-plaintext highlighter-rouge">git pull</code> Git automatically knows which server to fetch from and which branch to merge in.</p>
+
+<p>When you clone a repository Git automatically creates a local master branch that automatically tracks origin/master.</p>
+
+<p>To see what tracking branches you have set up you can use the -vv option to git branch</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch -vv</code></p>
+
+<p>Note the information displayed showing how far ahead/behind you are from remotes is based on local data.  To pull the latest use the commands</p>
+
+<p><code class="language-plaintext highlighter-rouge">git fetch --all; git branch -vv</code></p>
+
+<p>You can set up your own tracking branches (ones that track branches on other remotes or don’t track the master branch).</p>
+
+<p>To check out a remote branch that is not master and track it use</p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout -b &lt;branch&gt; &lt;remote&gt;/&lt;branch&gt;</code> or <code class="language-plaintext highlighter-rouge">git checkout --track &lt;remote&gt;/&lt;branch&gt;</code></p>
+
+<p>As this practice is so common if you run <code class="language-plaintext highlighter-rouge">git checkout &lt;branch&gt;</code> and your branch name does not exist locally and exactly matches a name on only one remote git will automatically create a tracking branch.</p>
+
+<p>If you already have a local branch and want to set the upstream branch for it use the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch -u &lt;remote&gt;&lt;branch&gt;</code> for example <code class="language-plaintext highlighter-rouge">git branch -u origin/serverfix</code></p>
+
+<p>If you wish to name the local branch a different name than the remote use</p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout -b &lt;my_branch_name&gt; &lt;remote&gt;&lt;branch&gt;</code></p>
+
+<h2 id="pulling-git-git-fetch-vs-git-git-pull">Pulling git git fetch vs git git pull</h2>
+
+<p>The command <code class="language-plaintext highlighter-rouge">git fetch</code> will download all of the changes from the server that you don’t have locally yet, but it will not modify your working directory.  It downloads the data and lets you merge it yourself when you decide to.  The command <code class="language-plaintext highlighter-rouge">git pull</code> is essentially running <code class="language-plaintext highlighter-rouge">git fetch</code> and immediately calling git merge.</p>
+
+<p>If you have a tracking branch set up <code class="language-plaintext highlighter-rouge">git pull</code> will lookup what server and branch your current branch is tracking, fetch from that server, and then try to merge in the remote branch.</p>
+
+<h1 id="deleting-a-remote-branch">Deleting a remote branch</h1>
+
+<p>To delete a remote branch use the command below.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push origin --delete &lt;branchname&gt;</code></p>
+
+<h1 id="changing-the-master-branch-name">Changing the master branch name</h1>
+
+<p><strong><em>Note:</em></strong> Changing a branch such as master/main/mainline/default can break scripts and integrations.  Make sure you know what you are doing.</p>
+
+<p>Rename your local master branch to main with the following command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch --move master main</code></p>
+
+<p>To let others see the new main branch, you need to push it to the remote with the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push --set-upstream origin main</code></p>
+
+<p>In the current state the master branch is gone and replaced with the main branch.  The main branch is present on the remote, however the old master branch is still present on the remote, and collaborators will continue to use the master as the base of their work until you make the following changes.</p>
+
+<ul>
+  <li>Any project that depends on this one will need to update their code and/or configuration.</li>
+  <li>Update any test-runner configuration files</li>
+  <li>Adjust build and release scripts</li>
+  <li>Redirect settings on your rep host for things like the repo’s default merge rules and other things that match branch names</li>
+  <li>Update references to the old branch in documentation</li>
+  <li>Close and merge any pull requests that target the old branch</li>
+</ul>
+
+<p>After you have done the above tasks and are certain the main branch performs just as the master branch, you can delete the master brach with teh command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push origin --delete master</code></p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

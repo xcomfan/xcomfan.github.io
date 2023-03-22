@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Branching | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Branching" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/gitref/branching/" />
+<meta property="og:url" content="http://localhost:4000/gitref/branching/" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Branching" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Branching","url":"http://localhost:4000/gitref/branching/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Branching</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="what-is-a-git-branch">What is a Git branch?</h2>
+
+<p>To understand branching it is helpful to have an idea of how Git stores data.</p>
+
+<p>When you make a commit, Git stores a commit object that contains</p>
+
+<ul>
+  <li>a pointer to a snapshot of the content you staged</li>
+  <li>author’s name and email address</li>
+  <li>the commit message</li>
+  <li>pointers to the commit or commits that directly came before this commit (its parents)
+    <ul>
+      <li>zero parents for the initial commit</li>
+      <li>one parent for normal commit</li>
+      <li>multiple parents for a commit that results from a merge of two or more branches.</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>A branch in git is a lightweight movable pointer to one of these commit objects.</strong></p>
+
+<h2 id="creating-a-new-branch">Creating a new branch</h2>
+
+<p>To create a new branch use the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch &lt;new_branch_name&gt;</code></p>
+
+<p>This command creates a pointer to the same commit  you are currently on.  Git knows which branch you are currently on because it keeps a special pointer called HEAD that points to the branch you are currently on.  You can see where HEAD is pointing to in the <code class="language-plaintext highlighter-rouge">git log</code> command output.</p>
+
+<p><strong><em>Note:</em></strong> The above command just creates a new pointer it does not move where the HEAD pointing to.  In other words it creates the branch, but does not switch you to the newly created branch.</p>
+
+<h2 id="switching-branches">Switching branches</h2>
+
+<p>To switch to an existing branch use the command.  Same command can be used to switch back to the branch you started at.  When switching branches the content of your working directory will be updated to reflect the state of the last commit to the branch you are switching to.</p>
+
+<p>If Git cannot cleanly get the files in your working directory to have the content of the branch you are switching to, it won’t let you switch.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout &lt;existing_branch_name&gt;</code></p>
+
+<p>If you want to create a new branch and switch to it in a single command use</p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout -b &lt;my_new_branch_name&gt;</code></p>
+
+<p>If you are using Git version 2.23 or newer you can also use the git switch command.</p>
+
+<p>To switch to an existing branch</p>
+
+<p><code class="language-plaintext highlighter-rouge">git switch &lt;branch_name&gt;</code></p>
+
+<p>To create a new branch and switch to it</p>
+
+<p><code class="language-plaintext highlighter-rouge">git switch -c &lt;new_branch_name&gt;</code> -c stands for create and you can also use the –create flag</p>
+
+<p>To return to your previously checked out branch</p>
+
+<p><code class="language-plaintext highlighter-rouge">git switch -</code></p>
+
+<h2 id="listing-local-branches">Listing local branches</h2>
+
+<p>To list all current branches</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch</code> The * symbol indicates the branch you currently have checked out.</p>
+
+<p>To see the last commit message on each branch</p>
+
+<p><code class="language-plaintext highlighter-rouge">git brach -v</code></p>
+
+<p>Filter for merged or non merged commits.  Note that non merged means branches that have not been merged into the named commit.  If named commit is missing HEAD is assumed.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch --merged</code> or <code class="language-plaintext highlighter-rouge">git branch --merged [commit]</code> for a specific commit.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch --no-merged</code> or <code class="language-plaintext highlighter-rouge">git branch --no-merged [commit]</code> for a specific commit.</p>
+
+<p>For example to see what has not been merged into the master branch you would use the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch --no-merged master</code></p>
+
+<h2 id="basic-branching-and-merging">Basic branching and merging</h2>
+
+<p>To switch branches it is a good practice to have a clean working tree.</p>
+
+<p>To merge a branch into the branch you are currently working on use the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git merge &lt;branch_to_merge_from&gt;</code></p>
+
+<p>If the branches you are merging are not diverged (one branch is just ahead of another) when merging Git can just move pointers around (fast forward).  If however, there was a divergence then Git does a 3 way merge between the two branch tips and the common ancestor of the branches being merged.  When this happens git will create a new commit for the merge known as a merge commit.</p>
+
+<p>To delete a branch you no longer need (once you have merged it into another branch for example) use the -d option</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch -d &lt;branch_to_delete&gt;</code></p>
+
+<h2 id="basic-merge-conflicts">Basic merge conflicts</h2>
+
+<p>Merge conflicts happen when you change the same part of a file in two branches you are trying to merge.</p>
+
+<p>git status will show you which files are in conflict.  Git will also add conflict resolution markers to the files that have conflicts to help you resolve the conflicts.</p>
+
+<p>After you resolve a conflict use <code class="language-plaintext highlighter-rouge">git add</code> to mark the file as resolved (staging a file marks it as resolved).  You can also use <code class="language-plaintext highlighter-rouge">git-status</code> to confirm all conflicts have been resolved.</p>
+
+<p>Once you are happy with your merge, you can use <code class="language-plaintext highlighter-rouge">git commit</code> to commit the merge.  Git will provide a default commit message, but you have the option to replace that.</p>
+
+<h2 id="working-with-remote-branches">Working with remote branches</h2>
+
+<p>Remote-tracking branches are local references to the state of remote branches.  You cannot move these references; Git moves them for you whenever you do any network communication to make sure they accurately represent the state of the remote repository.  Think of them as bookmarks to remind you where the branches in your remote repositories were the last time you connected to them.</p>
+
+<p>Remote tracking branch names take the form &lt;remote&gt;/&lt;branch&gt; for example if you wanted to see what the master branch on your remote origin looks like as of the last time you communicated with it you can check out the origin/master branch.</p>
+
+<p>If you are working on an issue with a partner, you can have a local issue123, but the branch on the server would be represented by the remote-tracking branch origin/issue123</p>
+
+<p>When you clone a git repository, Git makes the clone, but also creates a local master for you to work from.</p>
+
+<p>To synchronize your work with a given remote, you run the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git fetch &lt;remote&gt;</code> for example <code class="language-plaintext highlighter-rouge">git fetch origin</code></p>
+
+<p>This command looks up which server origin is, fetches any data from it that you don’t have yet and updates your local database moving the origin/master pointer to its new more up-to-date position.</p>
+
+<h2 id="pushing">Pushing</h2>
+
+<p>When you want to share a branch with the world, you need to push it up to a remote to which you have write access.  You need to explicitly push the branches you want to share.  This lets you control what you want locally and what you want visible to your collaborators or the public.</p>
+
+<p>To push a local fix branch names bugfix use the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push origin bugfix</code></p>
+
+<p>If you want the remote name to be different you can use the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push origin bugfix:newremotename</code></p>
+
+<p>It is important to note that when you do a fetch that brings down remote tracking branches, you don’t automatically have local, editable copies of them.  For example if you want a local copy of the bugfix branch, you would run the command.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout -b bugfix origin/serverfix</code></p>
+
+<h2 id="tracking-branches">Tracking Branches</h2>
+
+<p>Tracking branches are local branches that have a direct relationship to a remote branch.  If you are on a tracking branch and you run the command <code class="language-plaintext highlighter-rouge">git pull</code> Git automatically knows which server to fetch from and which branch to merge in.</p>
+
+<p>When you clone a repository Git automatically creates a local master branch that automatically tracks origin/master.</p>
+
+<p>To see what tracking branches you have set up you can use the -vv option to git branch</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch -vv</code></p>
+
+<p>Note the information displayed showing how far ahead/behind you are from remotes is based on local data.  To pull the latest use the commands</p>
+
+<p><code class="language-plaintext highlighter-rouge">git fetch --all; git branch -vv</code></p>
+
+<p>You can set up your own tracking branches (ones that track branches on other remotes or don’t track the master branch).</p>
+
+<p>To check out a remote branch that is not master and track it use</p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout -b &lt;branch&gt; &lt;remote&gt;/&lt;branch&gt;</code> or <code class="language-plaintext highlighter-rouge">git checkout --track &lt;remote&gt;/&lt;branch&gt;</code></p>
+
+<p>As this practice is so common if you run <code class="language-plaintext highlighter-rouge">git checkout &lt;branch&gt;</code> and your branch name does not exist locally and exactly matches a name on only one remote git will automatically create a tracking branch.</p>
+
+<p>If you already have a local branch and want to set the upstream branch for it use the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch -u &lt;remote&gt;&lt;branch&gt;</code> for example <code class="language-plaintext highlighter-rouge">git branch -u origin/serverfix</code></p>
+
+<p>If you wish to name the local branch a different name than the remote use</p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout -b &lt;my_branch_name&gt; &lt;remote&gt;&lt;branch&gt;</code></p>
+
+<h2 id="pulling-git-git-fetch-vs-git-git-pull">Pulling git git fetch vs git git pull</h2>
+
+<p>The command <code class="language-plaintext highlighter-rouge">git fetch</code> will download all of the changes from the server that you don’t have locally yet, but it will not modify your working directory.  It downloads the data and lets you merge it yourself when you decide to.  The command <code class="language-plaintext highlighter-rouge">git pull</code> is essentially running <code class="language-plaintext highlighter-rouge">git fetch</code> and immediately calling git merge.</p>
+
+<p>If you have a tracking branch set up <code class="language-plaintext highlighter-rouge">git pull</code> will lookup what server and branch your current branch is tracking, fetch from that server, and then try to merge in the remote branch.</p>
+
+<h2 id="rebasing">Rebasing</h2>
+
+<p>Rebasing is an alternative approach to merging for integrating changes from one branch to another.  Rebasing replays changes from one line of work onto another in the order they were introduced, whereas merging takes the endpoints merges them together.</p>
+
+<h3 id="rebasing-explained">Rebasing explained</h3>
+
+<p>In the diagram below there is worked that diverged and there are commits on two different branches.</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"></script>
+<div class="mermaid">
+ flowchart RL
+
+    C3([C3])--&gt;C2([C2])--&gt;C1([C1])--&gt;C0([C0])
+    C4([C4])--&gt;C2
+    experiment[experiment]-.-C4
+    master[master]-.-C3
+
+</div>
+
+<p>The easiest way to integrate the branches is to merge them.  A merge will perform a three way merge between the two latest branches C4 and C3 and their most common ancestor C2, creating a new snapshot as in the diagram below.</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"></script>
+<div class="mermaid">
+ flowchart RL
+
+    C5([C5])--&gt;C3([C3])--&gt;C2([C2])--&gt;C1([C1])--&gt;C0([C0])
+    C4([C4])--&gt;C2
+    C5--&gt;C4
+    experiment[experiment]-.-C4
+    master[master]-.-C5
+
+</div>
+
+<p>Rebasing lets you do this integration of changes without creating the merge commit C5.  Rebasing will take the patch of the change that was introduced in C4 and reapply it on top of C3.</p>
+
+<p>Rebasing lets you take all of the changes that were committed on one branch and replay them on a different branch.  In the above example above you would rebase with the commands below.  This sequence of commands will check out the experiment branch and then rebase it onto the master branch.</p>
+
+<p>This operation works by going to the common ancestor of the two branches (the one you are on and the one you are rebasing onto), getting the diff introduced by each commit  of the branch you are on, saving those diffs to temporary files, resetting the current branch to the same commit as the branch you are rebasing onto, and finally applying each change in turn.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout experiment</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git rebase master</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout master</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git merge experiment</code> This merge will just be a fat forward merge as the changes are already integrated.</p>
+
+<p>At this point your history will look like as the diagram below.  Note that the commit C4 is exactly the same as the C5 commit from the resulting history when we used merge.</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"></script>
+<div class="mermaid">
+ flowchart RL
+
+    C4([C4])--&gt;C3([C3])--&gt;C2([C2])--&gt;C1([C1])--&gt;C0([C0])
+    experiment[experiment]-.-C4
+    master[master]-.-C4
+
+</div>
+
+<h3 id="why-use-reabasing">Why use reabasing?</h3>
+
+<p>Rebasing makes for a cleaner history.  If you look at the log of a rebased branch, it looks like a liner history.  It appears that the work happened in series when it actually happened in parallel.</p>
+
+<p>Rebasing is often used to make sure that your commits apply cleanly on a remote branch - perhaps in a project to which you’re trying to contribute but that you don’t maintain.  In this use case you would work in a branch and then rebase your work onto origin/master when you are ready to submit your patches to the main project.  This way the maintainer does not need to do any integration work.  Just a fast forward for a clean apply</p>
+
+<h3 id="other-users-for-rebase">Other users for Rebase</h3>
+
+<p>You can use rebase to apply topic branches that were created from another topic branch onto your mainline.  The diagram below has a client branch that was created from the server branch. (client branch was created off of the server branch)</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"></script>
+<div class="mermaid">
+ flowchart RL
+
+    C6([C6])--&gt;C5([C5])--&gt;C2([C2])--&gt;C1([C1])
+    C10([C10])--&gt;C4([C4])--&gt;C3([C3])
+    C9([C9])--&gt;C8([C8])
+    C3--&gt;C2
+    C8--&gt;C3
+    server[server]-.-C10
+    master[master]-.-C6
+    client[client]-.-C9
+
+</div>
+
+<p>If you wish to apply to master the changes you made on the client branch, but you are not ready to integrate the changes from server.  You can do this with the command.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git rebase --onto master server client</code></p>
+
+<p>This command basically says “Take the client branch, figure out the patches since it diverged from the server branch, and replay these patches in the client branch as it was based directly off the master branch instead.  After this command your history tree will look like the below.</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"></script>
+<div class="mermaid">
+ flowchart RL
+
+    C9([C9])--&gt;C8([C8])--&gt;C6([C6])--&gt;C5([C5])--&gt;C2([C2])--&gt;C1([C1])
+    C10([C10])--&gt;C4([C4])--&gt;C3([C3])
+    C3--&gt;C2
+    master[master]-.-C6
+    client[client]-.-C9
+    server[server]-.-C10
+
+</div>
+
+<p>At this point you just need to fast forward master with the commands</p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout master</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git merge client</code></p>
+
+<p>At this point your history looks like</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"></script>
+<div class="mermaid">
+ flowchart RL
+
+    C9([C9])--&gt;C8([C8])--&gt;C6([C6])--&gt;C5([C5])--&gt;C2([C2])--&gt;C1([C1])
+    C10([C10])--&gt;C4([C4])--&gt;C3([C3])
+    C3--&gt;C2
+    master[master]-.-C9
+    client[client]-.-C9
+    server[server]-.-C10
+
+</div>
+
+<p>At this point you can pull in your server branches by rebasing the server branch onto the master branch without having to check it out first by running the command.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git rebase &lt;basebranch&gt; &lt;topicbranch&gt;</code>  in this case <code class="language-plaintext highlighter-rouge">git rebase master server</code></p>
+
+<p>This will replay your server work on top of your master work.  And once the replay is complete your history will be in the state below so you just need to merge in the serer branch to fast forward the master branch.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout master</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git merge server</code></p>
+
+<p>At this point its safe to remove the client and server branches since their changes have been integrated and they are no longer needed.</p>
+
+<h3 id="perils-of-rebasing">Perils of rebasing</h3>
+
+<p><strong><em>Do not rebase commits that exist outside of your repository and that people may have based their work on</em></strong></p>
+
+<p>When you rebase you are abandoning existing commits and creating new ones that are similar but different.  If you push commits somewhere and others pull them down and base work on them, and then you rewrite those commits with git rebase and push them again, your collaborators will have to re merge theri work an things will get messy when you try to pull their work back into yours.</p>
+
+<h3 id="rebase-vs-merge">Rebase vs. merge</h3>
+
+<p>When you merge branches you see the full history of your repository.  ALl the experimental and dead end branches will be visible in the repository history.  Rebasing lets you have a cleaner history.</p>
+
+<h1 id="deleting-a-remote-branch">Deleting a remote branch</h1>
+
+<p>To delete a remote branch use the command below.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push origin --delete &lt;branchname&gt;</code></p>
+
+<h1 id="renaming-a-branch">Renaming a branch</h1>
+
+<p><strong><em>Note:</em></strong> Do not rename branches that are still in use by other collaborators.</p>
+
+<p>Rename a branch locally</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch --moved bad_branch_name corrected_branch_name</code></p>
+
+<p>To let others see the corrected branch on the remote, push it.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push --set-upstream origin corrected-branch-name</code></p>
+
+<p>Delete the old branch (you can run the <code class="language-plaintext highlighter-rouge">git branch --all</code> command to see that old branch still exists)</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push origin --delete bad_branch_name</code></p>
+
+<h1 id="changing-the-master-branch-name">Changing the master branch name</h1>
+
+<p><strong><em>Note:</em></strong> Changing a branch such as master/main/mainline/default can break scripts and integrations.  Make sure you know what you are doing.</p>
+
+<p>Rename your local master branch to main with the following command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch --move master main</code></p>
+
+<p>To let others see the new main branch, you need to push it to the remote with the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push --set-upstream origin main</code></p>
+
+<p>In the current state the master branch is gone and replaced with the main branch.  The main branch is present on the remote, however the old master branch is still present on the remote, and collaborators will continue to use the master as the base of their work until you make the following changes.</p>
+
+<ul>
+  <li>Any project that depends on this one will need to update their code and/or configuration.</li>
+  <li>Update any test-runner configuration files</li>
+  <li>Adjust build and release scripts</li>
+  <li>Redirect settings on your rep host for things like the repo’s default merge rules and other things that match branch names</li>
+  <li>Update references to the old branch in documentation</li>
+  <li>Close and merge any pull requests that target the old branch</li>
+</ul>
+
+<p>After you have done the above tasks and are certain the main branch performs just as the master branch, you can delete the master brach with teh command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push origin --delete master</code></p>
+
+<h2 id="advanced-merging">Advanced Merging</h2>
+
+<h3 id="merge-conflicts">Merge conflicts</h3>
+
+<p>When attempting a merge make sure your working tree is clean.  If you have work in progress either commit it to a temporary branch or stash it.  This makes it so that you can undo things when you try to merge.</p>
+
+<p>If you started a merge and get conflicts you can use the below command to abort the merge.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git merge --abort</code></p>
+
+<p>If for some reason you want to start over you can use <code class="language-plaintext highlighter-rouge">git --reset HEAD</code> and return your repo to its last committed state. <strong><em>Note:</em></strong> Any of your uncommitted work will be lost.</p>
+
+<h3 id="ignoring-whitespace">Ignoring whitespace</h3>
+
+<p>A whitespace related conflict looks like every line being being removed on the left side appearing on the right.  By default Git sees all of these lines as being changed, so it can’t merge the files.  If you are seeing a lot of whitespace conflicts you can abort your merge and re-attempt it with the command below.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git merge --Xignore-space-change somebranch</code></p>
+
+<p>The –Xignore-space-change option ignores whitespace completely when comparing lines.  It will treat sequences of one or more whitespace lines as equivalent.</p>
+
+<h3 id="manual-file-re-merging">Manual file re-merging</h3>
+
+<p>You will very likely run into situations where Git can’t automatically fix things in a merge.  In this scenario git allows you to get copies of the 3 states of the conflicting file.</p>
+
+<ul>
+  <li>One state is the merge conflict state.</li>
+  <li>One state is “my version” of the file (the one you are trying to check in after merge)</li>
+  <li>The other version is the “their” version (the one you are trying to merge in)</li>
+</ul>
+
+<p>Git stores gives you access to these files under stages that have a number associated with them.</p>
+
+<p>Stage <strong>1</strong> The common ancestor</p>
+
+<p>Stage <strong>2</strong> is your version</p>
+
+<p>Stage <strong>3</strong> is the MERGE_HEAD (the theirs version)</p>
+
+<p>To access these states you can sue the commands below.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git show :1:hello.rb &gt; hello.common.rb</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git show :2:hello.rb &gt; hello.ours.rb</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git show :3:hello.rb &gt; hello.theirs.rb</code></p>
+
+<p>Once you have the 3 stages in your working directory you can modify than as needed for example…</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dos2unix hello.theirs.rb
+
+git merge-file -p hello.ours hello.common.rb hello.theirs.rb &gt; hello.rb
+</code></pre></div></div>
+
+<p>You can use git diff to compare what is in your working directory that you’re about to commit as the result of the merge to ay of these stages.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git diff --ours
+
+git diff --theirs -b
+
+git diff --base -b
+</code></pre></div></div>
+
+<p>After you are done fixing the merge you can use git clean to clear our the files you added but no longer need.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git clean -f</code></p>
+
+<h3 id="checking-out-conflicts">Checking out conflicts</h3>
+
+<p>Git checkout with the –conflict option will re-checkout the file again and replace the merge conflict markers.  This can be useful if you want to reset the conflict markers and try the merge again.</p>
+
+<p>You can pass –conflict either diff3 or merge.  With diff 3 you will get a slightly different conflict output showing you the ours, theirs and base version.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout --conflict merge</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout --conflict diff3</code></p>
+
+<p>If you prefer the diff3 version of the output you can make that your default with the command.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global merge.conflictstyle diff3</code></p>
+
+<p>The diff3 option can be particularly useful when merging large binary files where you just need to pick one side or when you are merging large files from other branches.  You can do the merge then checkout certain files from one side or the other before committing.</p>
+
+<h3 id="merge-log">Merge log</h3>
+
+<p>You can use the triple dot syntax to get a full list of the unique commits that were included in either branch involved in this merge.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git log --oneline --left-right HEAD...MERGE_HEAD</code></p>
+
+<p>This gives you a list of the commits involved, as well as which line of development each commit was on.</p>
+
+<p>The –merge option to git log will only show the commits in either side of the merge that touch a file that’s currently conflicted.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git log --oneline --left-right --merge</code></p>
+
+<p>If you run that with the -p option you get ust the diffs tot he file that ended up in conflict.  This can be really helpful in quickly giving you the context you ned to help understand why something conflicts and how to more intelligently resolve it.</p>
+
+<h3 id="combined-diff-format">Combined diff format</h3>
+
+<p>Since Git stages any merge results that are successful, when you run git diff while in a conflicted merge state, you only get what is currently still in conflict.  This can be helpful to see what you still have to resolve.</p>
+
+<p>When you run git diff directly after a merge conflict it will show you a “Combined Diff”.  This format gives you two columns of data nest to each line.</p>
+
+<ul>
+  <li>The first column shows you if that line is different (added or removed) between the ours branch and teh file in your working directory.</li>
+  <li>The second column does the same between the “theirs” branch and your working directory copy.</li>
+</ul>
+
+<p>As you resolve conflicts and run git diff you will see the progress.</p>
+
+<p>If you run git show on a merge commit you will see this format as well.</p>
+
+<h2 id="undoing-merges">Undoing merges</h2>
+
+<p>Lets say you started work on a topic branch, accidentally merged it to master and want to undo the error.</p>
+
+<p>There are two ways to approach this problem.</p>
+
+<h3 id="fix-the-reference">Fix the reference</h3>
+
+<p>If the unwanted commit only exists on your local repository, the easiest and best solution is to move the branches so they point to where you want the to.</p>
+
+<p>In most cases you can follow the problematic git merge command with <code class="language-plaintext highlighter-rouge">git reset --hard HEAD~</code>  This will reset the branch pointers effectively undoing the merge.</p>
+
+<p>The downside of this approach is that you are rewriting history which is problematic for a shared repository.  It also does not work if you made commits after making the mistake.</p>
+
+<h3 id="reverse-the-commit">Reverse the commit</h3>
+
+<p>Git gives you the option of making a new commit that undoes all the changes from an existing one.  Git calls this option a “revert”</p>
+
+<p><code class="language-plaintext highlighter-rouge">git revert -m 1 HEAD</code></p>
+
+<p>The -m 1 flag indicates which parent is the “mainline” and should be kept.  When you invoke a merge into HEAD, the new commit has two parents: the first one is HEAD and the second is the tip fo the branch being merged.  Git will get confused here if you try to merge in the topic branch again as all the topic changes are technically in master.  To work around this you need to un-revert the original merge since now you want to bring back the changes that were reverted out.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git revert ^M</code></p>
+
+<h2 id="ours-or-theirs-preference-when-merging">Ours or theirs preference when merging</h2>
+
+<p>When merging you can use the -Xours or -Xtheirs options to git merge to tell Git to to prefer either their or your version.  This means if there is a merge conflict the side you are specifying will win and you don’t need to manually do the merging.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git merge -Xours somebranch</code></p>
+
+<p>This option will also work on the merge-file command for individual file  merges.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git merge-file --ours</code></p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
