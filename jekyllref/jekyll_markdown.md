@@ -1,8 +1,8 @@
 # Linking to a section of a Jekyll page
 
-***Note:*** intentional typo in lnk vs link below to prevent build error
+***Note:*** slashes to escape special characters and not cause build errors
 
-`[topic branches]({% lnk gitref/definitions.md %}#topic-branch)`
+`[topic branches](\{\% link gitref/definitions.md \%\}#topic-branch)`
 
 # Comments in your Jekyll markdown
 
