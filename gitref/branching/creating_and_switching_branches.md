@@ -4,7 +4,7 @@ title: "Creating And Switching Branches"
 permalink: /gitref/creating_and_switching_branches/
 ---
 
-[comment]: <> (TODO: REV MARKER)
+[comment]: <> (TODO: Pull in the remote branch commands from later in your notes.)
 
 ## Listing local branches
 
@@ -12,7 +12,7 @@ permalink: /gitref/creating_and_switching_branches/
 
 `git brach -v` List local branches and show the last commit message on each branch.
 
-#### Filter for merged or non merged commits in branch listing.  
+### Filter for merged or non merged commits in branch listing.  
 
 `git branch --merged` or `git branch --merged [commit]` for a specific commit.
 
@@ -26,7 +26,7 @@ For example to see what has not been merged into the master branch you would use
 
 ## Creating a new branch
 
-#### Create new branch and switch to it
+### Create new branch and switch to it
  
 `git checkout -b <my_new_branch_name>` for example `git checkout -b my_new_feature`
 
@@ -34,7 +34,7 @@ if using Git version 2.23 or never you can also use the switch command.
 
 `git switch -c <new_branch_name>` -c stands for create and you can also use the --create flag
 
-#### Create new branch without switching to the new branch
+### Create new branch without switching to the new branch
 
 `git branch <new_branch_name>` for example `git branch my_new_feature`
 
@@ -48,11 +48,11 @@ When switching branches the content of your working directory will be updated to
 
 If Git cannot cleanly get the files in your working directory to have the content of the branch you are switching to, it won't let you switch.
 
-#### Return to your previously checked out branch 
+### Return to your previously checked out branch 
 
 `git switch -`
 
-# Deleting a branch
+## Deleting a branch
 
 To delete a local branch use the command
 `git branch -d <branch_name>`
@@ -61,7 +61,7 @@ If the branch has not been merged and you are certain you want to delete it use 
 
 `git branch -D <branch_name>`
 
-# Renaming a branch
+## Renaming a branch
 
 ***Note:*** Do not rename branches that are still in use by other collaborators.
 

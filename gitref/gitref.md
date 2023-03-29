@@ -14,19 +14,22 @@ permalink: /gitref/
 {% mermaid %}
  flowchart LR
     init([Create or clone repo])
-    branching([Brach based development])
-    work([Work on code locally])
+    branching([Branching])
+    work([Work locally])
+    stashing([Stashing ])
     history([View repository history])
-    commit([Commit your changes])
+    commit([Committing])
     remotes([Remote repositories])
     
 
     click init "{% link gitref/init.md %}"
-    click work "{% link gitref/work.md %}"
     click branching "{% link gitref/branching/branching.md %}"
+    click work "{% link gitref/work.md %}"
+    click stashing "{% link gitref/stashing.md %}"
     click history "{% link gitref/repo_history/repo_history.md %}"
     click commit "{% link gitref/commit.md %}"
     click remotes "{% link gitref/remotes.md%}"
+
 
 
     init-->branching
@@ -34,6 +37,8 @@ permalink: /gitref/
     branching-->work
     history<-->work
     work-->commit
+    work-->stashing
+    stashing-->commit
     commit-->remotes
     remotes-->init
     
