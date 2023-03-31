@@ -3,20 +3,20 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>About | My References</title>
+<title>Manual File Re-merging | My References</title>
 <meta name="generator" content="Jekyll v3.9.2" />
-<meta property="og:title" content="About" />
+<meta property="og:title" content="Manual File Re-merging" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://localhost:4000/about/" />
-<meta property="og:url" content="http://localhost:4000/about/" />
+<link rel="canonical" href="http://localhost:4000/gitref/branching/manual_file_remerge" />
+<meta property="og:url" content="http://localhost:4000/gitref/branching/manual_file_remerge" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="About" />
+<meta property="twitter:title" content="Manual File Re-merging" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"About","name":"My References","url":"http://localhost:4000/about/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Manual File Re-merging","url":"http://localhost:4000/gitref/branching/manual_file_remerge"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
@@ -39,21 +39,59 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">About</h1>
+    <h1 class="post-title">Manual File Re-merging</h1>
   </header>
 
   <div class="post-content">
-    <p>This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at <a href="https://jekyllrb.com/">jekyllrb.com</a></p>
+    <p>An alternative to conflict resolution markers is to get copies of the 3 states of conflicting files so they can be compared via diff or other means.  When you have a merge conflict in a file there are essentially 3 states of the conflicting file.</p>
 
-<p>You can find the source code for Minima at GitHub:
-<a href="https://github.com/jekyll">jekyll</a> /
-<a href="https://github.com/jekyll/minima">minima</a></p>
+<ul>
+  <li>The merge conflict state</li>
+  <li>The “my version” of the file (the one you are trying to check in after merge is complete)</li>
+  <li>The “their” version (the one you are trying to merge in)</li>
+</ul>
 
-<p>You can find the source code for Jekyll at GitHub:
-<a href="https://github.com/jekyll">jekyll</a> /
-<a href="https://github.com/jekyll/jekyll">jekyll</a></p>
+<p>Git gives you access to these files under stages that have a number associated with them.</p>
 
-<p>This is only a test</p>
+<ul>
+  <li>
+    <p>Stage <strong>1</strong> The common ancestor</p>
+  </li>
+  <li>
+    <p>Stage <strong>2</strong> is your version</p>
+  </li>
+  <li>
+    <p>Stage <strong>3</strong> is the MERGE_HEAD (the theirs version)</p>
+  </li>
+</ul>
+
+<p>To access these states you can use the commands below where hello.rb is the file with a merge conflict.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git show :1:hello.rb &gt; hello.common.rb</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git show :2:hello.rb &gt; hello.ours.rb</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git show :3:hello.rb &gt; hello.theirs.rb</code></p>
+
+<p>Once you have the 3 stages in your working directory you can modify them as needed and use the git merge-file command to do a 3 way merge on the 3 file states.  Below is an example of this scenario.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dos2unix hello.theirs.rb
+
+git merge-file -p hello.ours hello.common.rb hello.theirs.rb &gt; hello.rb
+</code></pre></div></div>
+
+<p>After you are done fixing the merge you can use git clean to clear our the files you added but no longer need.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git clean -f</code></p>
+
+<p>You an also use git diff to compare what is in your working directory that you’re about to commit as the result of the merge to ay of these stages.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git diff --ours
+
+git diff --theirs -b
+
+git diff --base -b
+</code></pre></div></div>
 
   </div>
 

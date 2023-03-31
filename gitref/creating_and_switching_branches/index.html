@@ -9,16 +9,16 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="https://xcomfan.github.io/gitref/creating_and_switching_branches/" />
-<meta property="og:url" content="https://xcomfan.github.io/gitref/creating_and_switching_branches/" />
+<link rel="canonical" href="http://localhost:4000/gitref/creating_and_switching_branches/" />
+<meta property="og:url" content="http://localhost:4000/gitref/creating_and_switching_branches/" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Creating And Switching Branches" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Creating And Switching Branches","url":"https://xcomfan.github.io/gitref/creating_and_switching_branches/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Creating And Switching Branches","url":"http://localhost:4000/gitref/creating_and_switching_branches/"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://xcomfan.github.io/feed.xml" title="My References" /></head>
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
@@ -50,7 +50,7 @@
 
 <p><code class="language-plaintext highlighter-rouge">git brach -v</code> List local branches and show the last commit message on each branch.</p>
 
-<h4 id="filter-for-merged-or-non-merged-commits-in-branch-listing">Filter for merged or non merged commits in branch listing.</h4>
+<h3 id="filter-for-merged-or-non-merged-commits-in-branch-listing">Filter for merged or non merged commits in branch listing.</h3>
 
 <p><code class="language-plaintext highlighter-rouge">git branch --merged</code> or <code class="language-plaintext highlighter-rouge">git branch --merged [commit]</code> for a specific commit.</p>
 
@@ -62,7 +62,7 @@
 
 <h2 id="creating-a-new-branch">Creating a new branch</h2>
 
-<h4 id="create-new-branch-and-switch-to-it">Create new branch and switch to it</h4>
+<h3 id="create-new-branch-and-switch-to-it">Create new branch and switch to it</h3>
 
 <p><code class="language-plaintext highlighter-rouge">git checkout -b &lt;my_new_branch_name&gt;</code> for example <code class="language-plaintext highlighter-rouge">git checkout -b my_new_feature</code></p>
 
@@ -70,7 +70,7 @@
 
 <p><code class="language-plaintext highlighter-rouge">git switch -c &lt;new_branch_name&gt;</code> -c stands for create and you can also use the –create flag</p>
 
-<h4 id="create-new-branch-without-switching-to-the-new-branch">Create new branch without switching to the new branch</h4>
+<h3 id="create-new-branch-without-switching-to-the-new-branch">Create new branch without switching to the new branch</h3>
 
 <p><code class="language-plaintext highlighter-rouge">git branch &lt;new_branch_name&gt;</code> for example <code class="language-plaintext highlighter-rouge">git branch my_new_feature</code></p>
 
@@ -84,11 +84,20 @@
 
 <p>If Git cannot cleanly get the files in your working directory to have the content of the branch you are switching to, it won’t let you switch.</p>
 
-<h4 id="return-to-your-previously-checked-out-branch">Return to your previously checked out branch</h4>
+<h3 id="return-to-your-previously-checked-out-branch">Return to your previously checked out branch</h3>
 
 <p><code class="language-plaintext highlighter-rouge">git switch -</code></p>
 
-<h1 id="renaming-a-branch">Renaming a branch</h1>
+<h2 id="deleting-a-branch">Deleting a branch</h2>
+
+<p>To delete a local branch use the command
+<code class="language-plaintext highlighter-rouge">git branch -d &lt;branch_name&gt;</code></p>
+
+<p>If the branch has not been merged and you are certain you want to delete it use the command.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch -D &lt;branch_name&gt;</code></p>
+
+<h2 id="renaming-a-branch">Renaming a branch</h2>
 
 <p><strong><em>Note:</em></strong> Do not rename branches that are still in use by other collaborators.</p>
 

@@ -9,16 +9,16 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="https://xcomfan.github.io/gitref/branching/concepts" />
-<meta property="og:url" content="https://xcomfan.github.io/gitref/branching/concepts" />
+<link rel="canonical" href="http://localhost:4000/gitref/branching/concepts" />
+<meta property="og:url" content="http://localhost:4000/gitref/branching/concepts" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Branching Concepts" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Branching Concepts","url":"https://xcomfan.github.io/gitref/branching/concepts"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Branching Concepts","url":"http://localhost:4000/gitref/branching/concepts"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://xcomfan.github.io/feed.xml" title="My References" /></head>
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
@@ -48,7 +48,7 @@
 
 <p>To understand branching it is helpful to have an idea of how Git stores data.</p>
 
-<p>When you make a commit, Git stores a commit object that contains</p>
+<p>When you make a commit, Git stores a commit object that contains the following.</p>
 
 <ul>
   <li>A pointer to a snapshot of the content you staged</li>
@@ -72,6 +72,34 @@
 <h2 id="merged-vs-unmerged-commits">Merged vs unmerged commits</h2>
 
 <p>Note that non merged means branches that have not been merged into the named commit.  If named commit is missing HEAD is assumed.</p>
+
+<h2 id="branching-workflows">Branching workflows</h2>
+
+<h3 id="long-running-branches">Long running branches</h3>
+
+<ul>
+  <li>Only stable code in the master branch.  Possibly just code that has been released.</li>
+  <li>There is a parallel branch named develop or next that is used to test stability.
+    <ul>
+      <li>This branch is not necessarily always stable, but when it gets to stable state it can be merged into master.</li>
+      <li>This branch is used to pull in <a href="/gitref/definitions/#topic-branch">topic branches</a> and run them though testing.</li>
+    </ul>
+  </li>
+  <li>Some larger projects have a proposed or pu (proposed updates) branch that has integrated branches which may not be ready to go into the next or master branch yet.
+    <ul>
+      <li>The idea is that your branches have various levels of stability.  When they reach a stable level, they are merged into the branch above them.</li>
+    </ul>
+  </li>
+  <li>The multiple long running branches approach is helpful when you have very large or complex projects.</li>
+</ul>
+
+<h3 id="topic-branches">Topic Branches</h3>
+
+<ul>
+  <li>A topic branch is a short lived branch that you create and use for a single particular feature or related work.</li>
+  <li>You create a topic branch for whatever task you are working on and delete it after you merge it into the master branch.</li>
+  <li>This technique lets you context switch by separating your work into branches where all work in a branch is for the branch topic.</li>
+</ul>
 
   </div>
 
