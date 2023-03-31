@@ -4,9 +4,7 @@ title: "Starting a merge"
 permalink: /gitref/branching/starting_merge
 ---
 
-[comment]: <> (TODO: REV MARKER)
-
-Before attempting to merge a branch into a branch you are working on make sure your working tree is clean.  If you have work in progress either [stash]({% link gitref/stashing.md %}) the work or apply your changes to a temporary branch (stash your work and then [apply]({% link gitref/stashing.md %}#Retrieving_your_stashed_work) your stash on a branch).  This makes it so that you can undo things when you have to resolve conflicts.
+Before attempting to merge branches make sure your working tree is clean.  If you have work in progress either [stash]({% link gitref/stashing.md %}) the work or apply your changes to a temporary branch (stash your work and then [apply]({% link gitref/stashing.md %}#Retrieving_your_stashed_work) your stash on a branch).  This makes it easier to undo things if you run into issues resolving merge conflicts.
 
 [comment]: <> (TODO: Beyond stashing and applying your stash to a temporary branch you may be able to use cherry pick for this save to temporary branch.  Come back and update if that seems reasonable?)
 
@@ -32,12 +30,6 @@ A whitespace related conflict looks like every line being being removed on the l
 
 [comment]: <> (TODO: I need to actually try the arguments being discussed here to understand how they work.)
 
-When merging you can use the -Xours or -Xtheirs options to git merge to tell Git to to prefer either their or your version.  This means if there is a merge conflict the side you are specifying will win and you don't need to manually do the merging.
+When merging you can use the `-Xours` or `-Xtheirs` options to tell Git to to prefer either their or your version.  This means if there is a merge conflict the side you are specifying will win and you don't need to manually resolve merge conflicts.
 
-`git merge -Xours somebranch`
-
-This option will also work on the merge-file command for individual file  merges.
-
-[comment]: <> (TODO: Need to try this merge-file business)
-
-`git merge-file --ours`
+`git merge -Xours some_branch`

@@ -34,6 +34,8 @@ dos2unix hello.theirs.rb
 git merge-file -p hello.ours hello.common.rb hello.theirs.rb > hello.rb
 ```
 
+[comment]: <> (TODO: Need to try this merge file thing.  Also from notes in a different section you can use the ours of theirs option when doing the file merge (`git merge-file --ours`) need to test it and document)
+
 After you are done fixing the merge you can use git clean to clear our the files you added but no longer need.
 
 `git clean -f`

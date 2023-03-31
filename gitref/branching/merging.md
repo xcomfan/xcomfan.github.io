@@ -7,12 +7,12 @@ permalink: /gitref/branching/merging
 Click on the nodes for details of each workflow step.
 
 {% mermaid %}
- flowchart LR
+ flowchart TD
     start([Begin merging two branches])
     abort([Abort merge])
     resolve([Resolve merge conflicts])
     undo([Undo a completed merge])
-    finish([Merged code committed])
+    finish([Merge commit created])
     
     start-->abort
     start-->resolve
