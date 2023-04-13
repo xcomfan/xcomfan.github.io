@@ -8,7 +8,7 @@ permalink: /gitref/branching/
 
 [Branching concepts]({% link gitref/branching/branch_concepts.md %})
 
-[Listing, creating, deleting and switching branches]({% link gitref/branching/creating_and_switching_branches.md %})
+[Listing, creating, deleting, switching and renaming branches]({% link gitref/branching/creating_and_switching_branches.md %})
 
 [Merging branches]({% link gitref/branching/merging.md %})
 

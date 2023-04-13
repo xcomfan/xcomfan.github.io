@@ -6,8 +6,6 @@ permalink: /gitref/work_locally/
 
 [comment]: <> (TODO: REV MARKER)
 
-**[Back]({% link gitref/gitref.md %}#Workflow)**
-
 [comment]: <> (TODO: Sections of This page would work better as a mermaid diagram with you being able to click in to the stage un stage commit)
 
 ## The 3 states of your files in Git

@@ -4,9 +4,8 @@ title: "Git Reference"
 permalink: /gitref/
 ---
 
+[comment]: <> (TODO: Fix some of the metadata around the site and see if you can update the styling to have a breadcrumb or back at top instead of My References)
 [comment]: <> (TODO: Good idea to add table of contents at top of each page so you can jump to sections.)
-[comment]: <> (TODO: Fix some of the metadata around the site and see if you can update th styling to have a breadcrumb or back at top instead of "My References".)
-
 ## Workflow
 
 [comment]: <> (TODO: Once you build out the content may want to sue the subgraph option to make more granular pages.)
@@ -21,7 +20,6 @@ permalink: /gitref/
     commit([Committing])
     remotes([Remote repositories])
     
-
     click init "{% link gitref/init.md %}"
     click branching "{% link gitref/branching/branching.md %}"
     click work "{% link gitref/work.md %}"
@@ -29,8 +27,6 @@ permalink: /gitref/
     click history "{% link gitref/repo_history/repo_history.md %}"
     click commit "{% link gitref/commit.md %}"
     click remotes "{% link gitref/remotes.md%}"
-
-
 
     init-->branching
     init-->history

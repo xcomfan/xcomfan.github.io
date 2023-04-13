@@ -48,6 +48,18 @@ When you apply your stash it will not automatically re stage files that were sta
 
 `git stash apply stash@{2} --index`
 
+## Viewing your stash entries
+
+If you wish to see the difference between your stash content and the commit back when the stash entry was first created you can use the command 
+
+`git stash show -p`  or 
+
+`git stash show -p stash@{1}` if you wish to compare to a specific stash entry not the top one.  
+
+By default this will use the diffstat but you can configure it to use any format known to git diff.
+
+[comment]: <> (TODO: Link above to the config content once you write it.  For how to config it see man git stash page.)
+
 ## Removing entries from your stash
 
 To remove a specific entry
