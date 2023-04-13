@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Debugging Using Repository History | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Debugging Using Repository History" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="https://xcomfan.github.io/gitref/repo_history/debugging_using_repo_history" />
+<meta property="og:url" content="https://xcomfan.github.io/gitref/repo_history/debugging_using_repo_history" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Debugging Using Repository History" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Debugging Using Repository History","url":"https://xcomfan.github.io/gitref/repo_history/debugging_using_repo_history"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://xcomfan.github.io/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Debugging Using Repository History</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="file-annotation-git-blame">File annotation (git blame)</h2>
+
+<p>File annotations is the best tool if you want to track down when something such as a bug was introduced to the code and why.  File annotations will show you what commit was the last to modify each line of any file.  So for example if you see a method in your code is buggy you can annotate it with git blame to determine which commit was responsible for the introduction fo that line.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git blame -L 69,82 problemfile.txt</code></p>
+
+<p>The -L option allows you to specify a range of lines to display the git blame output for.</p>
+
+<p>The resulting output will show.</p>
+
+<ul>
+  <li>partial SHA-1 of the commit in first column.</li>
+  <li>committer and commit date followed by line number in second column</li>
+  <li>a carat (^) symbol at the beginning of the commit SHA-1 indicates that the content was there from the initial commit.</li>
+</ul>
+
+<p>You can use git blame with the -C option to try and figure our where snippets of the code withing it originally came from.  This is useful if there was a code refactor.  Git will not just find where the line are but the history of the original location they came from.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git blame -C -L 123, 145 somefile.txt</code></p>
+
+<h2 id="binary-search-git-bisect">Binary Search (git bisect)</h2>
+
+<p>The bisect command does a binary search though your commit history to help you identify as quickly as possible which commit introduced an issue.</p>
+
+<p>The workflow is that you use git bisect to start things off then mark the current version as bad.  Then you tell Git the last good commit.  Git will then binary search though the commits in between to help you identify which commit  was the bad one.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git bisect start
+git bisect bad
+git bisect good v1.0
+</code></pre></div></div>
+
+<p>You can keep using <code class="language-plaintext highlighter-rouge">git bisect good</code> and <code class="language-plaintext highlighter-rouge">git bisect bad</code> to test the various commits Git rolls you back to in the binary search.</p>
+
+<p>When you are done with your search, you can use <code class="language-plaintext highlighter-rouge">git bisect reset</code> to reset your HEAD to where it was before you started.</p>
+
+<p>If you have a script that will exist with a 0 if your project is good or non zero if bad you can automate the process.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git bisect start HEAD v1.0
+git bisect run test-error.sh
+</code></pre></div></div>
+
+<p>Doing this automatically runs test-error.sh on each checked out commit until Git finds the first broken commit.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

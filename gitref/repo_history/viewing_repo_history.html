@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Viewing Repository History | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Viewing Repository History" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="https://xcomfan.github.io/gitref/repo_history/viewing_repo_history" />
+<meta property="og:url" content="https://xcomfan.github.io/gitref/repo_history/viewing_repo_history" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Viewing Repository History" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Viewing Repository History","url":"https://xcomfan.github.io/gitref/repo_history/viewing_repo_history"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://xcomfan.github.io/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Viewing Repository History</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="viewing-the-commit-history">Viewing the Commit History</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">git log</code> command command will show you the history below are some useful modifiers to the git log command.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">git log [--name-only | --name-status  ]</code> - Shows the list of files modified after displaying basic commit information.  name-status adds information for each file of whether the file was added, modified, or deleted in the commit.</li>
+</ul>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">git log -p</code> or <code class="language-plaintext highlighter-rouge">git log --patch</code> will show the patch output introduced in each commit.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">git log --pretty</code> changes the log output to formats other than the default.  There are some predefined options available.</p>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">git log --pretty=oneline</code> will print each commit on a single line.</p>
+
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">git log --pretty=oneline --graph</code> Adding the graph option will add an ASCII graph showing the branch and merge history which combines well with the –pretty=oneline modifier.</li>
+        </ul>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">git log --pretty=format:"%h - %an, %ar : %s"</code> lets you customize the output format where…</p>
+
+        <ul>
+          <li>
+            <table>
+              <thead>
+                <tr>
+                  <th>Specifier</th>
+                  <th>Description of Output</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>%H , %h</td>
+                  <td>Commit hash, abbreviated commit hash</td>
+                </tr>
+                <tr>
+                  <td>%T , %t</td>
+                  <td>Tree hash, abbreviate tree has</td>
+                </tr>
+                <tr>
+                  <td>%P , %p</td>
+                  <td>Parent hashes, abbreviated parent hashes</td>
+                </tr>
+                <tr>
+                  <td>%an , %ae</td>
+                  <td>Author name, Author email</td>
+                </tr>
+                <tr>
+                  <td>%ad , %ar</td>
+                  <td>Author date (format respects the –date=option), Author date, relative</td>
+                </tr>
+                <tr>
+                  <td>%cn , %ce</td>
+                  <td>Committer name, Committer email</td>
+                </tr>
+                <tr>
+                  <td>%cd , %cr</td>
+                  <td>Committer date, Committer date relative</td>
+                </tr>
+                <tr>
+                  <td>%s</td>
+                  <td>Subject</td>
+                </tr>
+              </tbody>
+            </table>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">git log --pretty=format:"%h %cd %cn %s" --graph</code> - A useful example of using custom formats.  May be a good idea to alias this version.</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">git log --pretty=[short |full | fuller]</code> lets you see various amounts of information. (Author, Date, Commit Date, Author Date etc.)</p>
+      </li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">git log --stat</code> will show the commit stats (number of changes etc)
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">git log --shortstat</code> Displays only the changed/insertion/deletions line from the –stat command.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">git log --relative-date</code> Show the “2 weeks ago” format instead of the full date.</li>
+</ul>
+
+<h2 id="git-log-and-branching">Git log and branching</h2>
+
+<p>By default git log will only show history for the branch you are currently working on.  To see the history for another branch you can explicitly specify it.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git log &lt;some_branch_name&gt;</code></p>
+
+<p>You can also have Git show you the history for all branches</p>
+
+<p><code class="language-plaintext highlighter-rouge">git log --all</code></p>
+
+<h2 id="limiting-and-filtering-git-log-output">Limiting and Filtering git log Output</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Option</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>-n</td>
+      <td>Shows only the last n commits</td>
+      <td><code class="language-plaintext highlighter-rouge">git log -2</code></td>
+    </tr>
+    <tr>
+      <td>–since, –after, –until, –before</td>
+      <td>Limit commits to those after a specific date</td>
+      <td><code class="language-plaintext highlighter-rouge">git log --since=2.weeks</code>, <code class="language-plaintext highlighter-rouge">git log --since="2022-01-01"</code>,  <code class="language-plaintext highlighter-rouge">git log --since="2 years 1 day 3 minutes ago"</code></td>
+    </tr>
+    <tr>
+      <td>–author, –committer</td>
+      <td>Only shows commits in which author or committer matches</td>
+      <td><code class="language-plaintext highlighter-rouge">git log --author="John Doe"</code></td>
+    </tr>
+    <tr>
+      <td>–grep</td>
+      <td>Only show commits with a commit message containing the string.  You can have multiple –grep arguments and you can use the –all-match or –invert-grep option to control if you match on all or one.</td>
+      <td><code class="language-plaintext highlighter-rouge">git log --grep="testing"</code> ,  <code class="language-plaintext highlighter-rouge">git log --grep="Some String" --regexp-ignore-case</code></td>
+    </tr>
+    <tr>
+      <td>-S</td>
+      <td>Only show commits adding or removing code matching the string.  Referred to as the “Pickaxe” feature</td>
+      <td><code class="language-plaintext highlighter-rouge">git log -S my_function</code></td>
+    </tr>
+    <tr>
+      <td>–no-merges</td>
+      <td>Prevent the display of merge commits</td>
+      <td><code class="language-plaintext highlighter-rouge">git log --no-merge</code></td>
+    </tr>
+    <tr>
+      <td>– path/to/file</td>
+      <td>Limit output to commit that introduced changes to those files</td>
+      <td><code class="language-plaintext highlighter-rouge">git log -- a.c</code>, <code class="language-plaintext highlighter-rouge">git log -- *.c</code></td>
+    </tr>
+  </tbody>
+</table>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

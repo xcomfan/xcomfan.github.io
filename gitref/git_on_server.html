@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Git Reference | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Git Reference" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="https://xcomfan.github.io/gitref/git_on_server" />
+<meta property="og:url" content="https://xcomfan.github.io/gitref/git_on_server" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Git Reference" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Git Reference","url":"https://xcomfan.github.io/gitref/git_on_server"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://xcomfan.github.io/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Git Reference</h1>
+  </header>
+
+  <div class="post-content">
+    
+<p>Git on the Server - The Protocols</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The Protocols
+
+	Local Protocol
+	
+		§ The most basic protocol supported by Git in which the remote repository is in another directory on the same host. 
+		§ This is used if everyone has access to a shared directory such as an NFS mount
+		§ To clone such a repository you can use either of the two commands bellow.
+			□ $ git clone /srv/git/project.git
+			□ $ git clone file:///srv/git/project.git
+		§ If you just specify the path, Git tried to use hard links or directly copy the files it needs.  If you use the file:/// approach Git fires up the processes that it normally uses to transfer data over a network, which is generally much less efficient.
+			□ Reason to sue file:// is if you want a clean copy of the repository with extraneous references left out.
+		§ To add a local repository to an existing Git project with the command below.  After running this command you can push and pull using the remote name local_proj.
+			□ git remote add local_proj /srv/git/project.git
+		
+		The Pros
+			□ file based repos are simple and use existing file permissions and network access.
+			□ This is also a nice option for quickly grabbing work form someone else's working repository.
+		The Cons
+			□ Shared access is generally more difficult to set up and reach from multiple locations than basic network access.
+			□ Local repo is only fast if you have fast access to the data.
+			□ Every user has full shell access to the "remote" directory, and there is nothing preventing them from changing or removing internal Git files and corrupting the repository.
+		
+	The HTTP Protocols
+	
+		§ Git post version 1.6.6 uses what is referred to as Smart HTTP protocol which negotiates data transfer similar to how it does over SSH.  The old approach is referred to as Dumb HTTP.
+			
+			Smart HTTP
+				• Operates very similarly to the SSH or Git protocols, but runs over standard HTTPS ports and can use various HTTP authentication mechanisms
+					◊ This is often easier for the user since you can use username/passwords instead of having to set up SSH keys.
+				• This has become the most popular protocol for Git since it can be set up to server both anonymously like git:// and can also be pushed over with authentication and encryption like the SSH protocol without having to set up different URLs for these things.
+					◊ If you push to a repo that requires authentication the server can prompt for a username and password.  Same applies for read access.
+			Dumb HTTP
+				• If server does not respond to the new Smart HTTP protocol Git will try to fail back to the dumb one.
+				• Dumb protocol expects the bare Git repository to be served like normal files from a web server.
+				• Dumb HTTP is very simple to set up.  You just put the bare files under your HTTP document root and set up a specific post-update hook and you are done.  (hooks we will cover later)
+					◊ To allow read access to your repository over HTTP do something like this:
+						} 
+						} The post-update hook that comes with Git by default will run the appropireat command (git update-server-info) to make HTP fetching and cloning work properly.
+							– This command is run when you push to this repository.
+			The Pros
+				• With smart HTTP protocol you can have a single URL for all types of access and have the server prompt only when authentication is needed.
+				• Being able to authenticate with username/password is also a big advantage over SSH since no keys are needed.
+				• You can also server your repositories read-only over HTTPS, which means you can encrypt the content transfer; or you can go so far as to make the clients use specific signed SSL certificates.
+				• HTTP and HTTPS is usually allowed on corporate firewalls so no tinkering needed.
+			The Cons
+				• Can be a bit tricky to set up HTTS over SSH on some servers.  Other than that there is very little advantage that other protocols have over Smart HTTP for serving Git content.
+				• providing credentials can be cumbersome, but you can use Keychain access on Macs or Credential Manager on Windows.  There is a section on credential management later in the book.
+			
+	The SSH Protocol
+		§ Common set up when self hosting.
+		§ To cline a repo using SSH use ssh://
+			□ git clone ssh://[user@]server/project.git
+			□ or…
+			□ git clone [user@]server:project.git
+			□ In both cases if you don't specify a user git assumes your currently logged in user.
+		Pros
+			□ Easy to set up and SSH is widely used with admins knowing it well.
+			□ Access over SSH is secure everything is encrypted
+			□ SSH makes data compact before transferring it.
+		Cons
+			□ Does not support anonymous access to your Git repository.  If you are using SSH people must have SSH access to your machine even for read only.
+		
+	The Git Protocol
+		§ Git protocol is a special daemon that comes packaged with Git.
+		§ It listens on a dedicated port (9418) that provides a service similar to the SSH protocol, but with absolutely no authentication.
+		§ to server over Git protocol you must create a git-daemon0export-ok file. 
+			□ The deamon won't serve a repo without this file in it.  This is the only security.  
+			□ Pushing is not allowed by deafult but can be configured (everyone with access to the URL will have access)
+		Pros
+			□ Git protocol is often the fastest network protocol available.  If you are serving a lot of traffic for a public project or serving a very large project that doesn't require user authentication for read access you want to use this approach.
+		Cons
+			□ Lack of authentication.  
+			□ Generally you would use Git protocol for the masses downloading your repo, but use SSH or HTTPs for your developers.
+</code></pre></div></div>
+
+<p>Git on the Server - Getting Git on a Server</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>• In order to initially set up any Git server, you have to export an existing repository into a new bare repository -- a repository that doesn't contain a working directory.
+• you use the --bare option for this.  By convention bare repository names end with suffix .git like so…
+	○ $ git clone --bare my_project, my_project.git
+	○ After this command you should now have a copy of the Git directory in your my_project.git directory.
+
+Putting the Bare Repository on a Server
+
+	○ Once you have the bare repository you can place it on a server where people will have access via SSH or a web server setup.
+	○ A simple set up for small operations is to create a single git user on a host and have all your devs sent you their public keys to be added to the authorized_keys file of the git user.
+		§ This does not effect the commit data in any way.
+	○ You can also use LDAP auth to the host.
+</code></pre></div></div>
+
+<p>Git on the Server - Setting Up the Server</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>• You can set up a bare repository using git init --bare for exampel…
+	$ cd /srv/git
+    $ mkdir project.git
+    $ cd project.git
+    $ git init --bare
+
+• If you are using SSH access you can restrict the git user account to only Git-related activities with a limited shell tool called git-shell that comes with Git.  
+	○ If you set this as the git user account's login shell instead of bash or csh then the account can't have normal access to yoru server.
+		§ To do this you must first add the full pathname of the git-shell command to /etc/shells if its not already there.
+	○ This will block the git user from being able to SSH to the machine.
+</code></pre></div></div>
+
+<p>Git on the Server - Git Deamon</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>• One use case for Git Deamon is to hast a repo that is used by continuous integrations servers within yoru network.  Since no authentication is requried you don't have to add permissiosn for each host and Git Daemon is very efficient.
+• Not needed here, but in the book hey cover how to start and daemonize the Git Daemon 
+</code></pre></div></div>
+
+<p>Git on the Server Smart HTTP</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>• Setting up Smart HTTP is basically just enabling a CGI script that is provided with Git called git-http-backend on the server.
+	○ This CGI will read the path and headers sent by a git fetch or git push to an HTTP URL and determine if the client can communicate over HTTP (true for any client over version 1.6.6)
+</code></pre></div></div>
+
+<p>Git on the Server - GitWeb</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>• Git comes with a CGI script called GitWeb that lets you set up a basic web-based visualizer.
+• If you want to see what GitWeb would look like for your project, Git comes with a command to fire up a temporary instance if you have a lightweight web server on yoru system like lighthttpd or webrick.
+	○ On Linux machines lighthttpd is often installed
+• The command is …
+	○ $ git instaweb --httpd=webrick
+	○ To stop the temporary server use command …
+		§ $ git instaweb -httpd=webrick --stop
+• To run this on a webserver you will need to set up the CGI script on a webserver.
+</code></pre></div></div>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

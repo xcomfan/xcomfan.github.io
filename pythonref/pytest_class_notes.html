@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Intro | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Intro" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="https://xcomfan.github.io/pythonref/pytest_class_notes.html" />
+<meta property="og:url" content="https://xcomfan.github.io/pythonref/pytest_class_notes.html" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Intro" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Intro","url":"https://xcomfan.github.io/pythonref/pytest_class_notes.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://xcomfan.github.io/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Intro</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="intro">Intro</h1>
+
+<ul>
+  <li>What make a good framework?
+    <ul>
+      <li>Fun</li>
+      <li>Fast</li>
+      <li>Minimally complex</li>
+      <li>Actionable reporting</li>
+    </ul>
+  </li>
+  <li>Popular Python testing frameworks
+    <ul>
+      <li>Unittest - Bare bones build into python by default.</li>
+      <li>Nose - built on top of unittest extends some of the missing bits.</li>
+      <li>Behave -</li>
+      <li>Robot</li>
+      <li>Pytest - Compatible with unit test so you can still run your unit tests.  The one this course will cover.</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="environment-setup">Environment Setup</h1>
+
+<ul>
+  <li>
+    <p>You just have a virutal environment at <code class="language-plaintext highlighter-rouge">/home/boris/udemy_pytest_course/framework_venv/bin</code> in your WSL.</p>
+  </li>
+  <li>
+    <p>Run <code class="language-plaintext highlighter-rouge">pip install pytest</code> in your venv to install pytest</p>
+  </li>
+  <li>
+    <p>just call <code class="language-plaintext highlighter-rouge">pytest</code> or <code class="language-plaintext highlighter-rouge">pytest -v</code> to run your tests.</p>
+  </li>
+  <li>
+    <p>moudule and functions that test need to start with test_</p>
+  </li>
+  <li>
+    <p>You can manually create a <code class="language-plaintext highlighter-rouge">pytest.ini</code> file to configure pytest.</p>
+  </li>
+  <li>
+    <p>“test search” is the logic of how the tests you write are found.  What the modules should be named, the test function and the test classes.</p>
+  </li>
+</ul>
+
+<h1 id="marking-tests">Marking tests</h1>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from pytest import mark
+
+@mark.engine
+def test_engine_functions as expected():
+    assert True
+</code></pre></div></div>
+<p>Then you can run <code class="language-plaintext highlighter-rouge">pytest -m engine</code> to just run engine test instead of running all of the tests.</p>
+
+<p>You can also have two markers as in example below.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from pytest import mark
+
+@mark.smoke
+@mark.engine
+def test_engine_functions as expected():
+    assert True
+</code></pre></div></div>
+
+<p>Markers are basically just tags.</p>
+
+<p>To run test for multiples tags/markers you can do something like</p>
+
+<p><code class="language-plaintext highlighter-rouge">pytest -m "body or engine"</code> or <code class="language-plaintext highlighter-rouge">pytest -m "body and engine"</code></p>
+
+<p>Also a valid option for everything but a certain marker.</p>
+
+<p><code class="language-plaintext highlighter-rouge">pytest -m "not entertainment"</code></p>
+
+<p>In the scenario that you have all tests ina module as body tests instead of marking them all as @mark.body you can put them in  a class as in the example below.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@mark.body
+class BodyTests:
+  @mark.door
+  def test_body_functions_as_expected(self):
+    assert True
+
+  def test_bumper(self):
+    assert True
+</code></pre></div></div>
+
+<p>To define the markers for the project you can make an entry in your pytest.ini file similar to the one below.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>marker =
+    smoke: All critical smoke tests
+    body: All car body tests
+    entertainment: nav system tests
+</code></pre></div></div>
+
+<p>You will then see them when you run the command pytest –markers</p>
+
+<h1 id="fixtures">Fixtures</h1>
+
+<ul>
+  <li>Any fixture you create in <code class="language-plaintext highlighter-rouge">conftest.py</code> becomes available in any file and directory from where you created the fixture down where you are writing test cases and you don’t actually need to import them.</li>
+</ul>
+
+<h1 id="display-test-runs">Display test runs</h1>
+
+<ul>
+  <li>You can <code class="language-plaintext highlighter-rouge">pip install pytest-html</code> and then run your test with <code class="language-plaintext highlighter-rouge">pytest --html="results.html"</code> to generate a nice report that can be shown to people.  You can also use this library to get an XMl output that Jenkins or other tools can parse rand give you a nice organized display of your test runs.</li>
+</ul>
+
+<h1 id="customize-test-runs-with-command-line-and-config-files">Customize test runs with command line and config files</h1>
+
+<p>You can create a config fixture that has al of your environment specific configuration values and you can pass that Config class as an argument to your tests so they can have the necessary environment settings.</p>
+
+<h1 id="handling-spikes-and-expected-failures">Handling spikes and expected failures</h1>
+
+<h2 id="to-skip-a-testa-but-mark-that-its-being-skipped">To skip a testa but mark that its being skipped</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from pytest import mark
+@mark.skip or @mark.skip(reason="Your reason here")
+def this_is_my_test(some_fixture):
+...
+</code></pre></div></div>
+
+<ul>
+  <li>You can use an xfail marker if you expect the test to fail.  This is kind of like asserting false but test failing means OK.  Kind of a possible edge case that may be handy.</li>
+</ul>
+
+<h2 id="parametarization">Parametarization</h2>
+
+<ul>
+  <li>Parametrization means running the same test with different inputs without copying that test many times.</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>from pytest import mark
+
+@mark.parametrize('tv_brand',[
+    ('Samsung'),
+    ('Sony'),
+    ('Vizio')
+])
+def test_television_turns_on(tv_brand):
+    print(f"{tv_brand} turns on)
+</code></pre></div></div>
+
+<ul>
+  <li>The above example will run</li>
+  <li>An issue with example above is that your data is coupled to the test.  You can avoid this issue with the approach below…</li>
+</ul>
+
+<p>when defining your fixture you can pass a parameter argument, and the test will run for each parameter.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@fixture(params=[webdriver.Chrome, webdriver.Firefox, webdriver.Edge])
+def browser(request):
+    driver = request.param
+    drvr = driver()
+    yield drvr
+    drvr.quit()
+</code></pre></div></div>
+
+<h1 id="running-your-tests-in-parallel">Running your tests in parallel</h1>
+
+<p>You can pip install the pytest-xdist package and call pytest -n # of cores which will run the number of threads yo specify and make things run faster.</p>
+
+<ul>
+  <li>for threading to work you need to write your tets to be isolated so that them running in parallel does not make them interfere with each other.</li>
+</ul>
+
+<h1 id="unit-testing">Unit Testing</h1>
+
+<ul>
+  <li>If you have your test cases in a module you may have issues with Python pathing picking up that modules.  One way to fix this is to do a dummy pip install of your current work area.  This can be done with the command below which will install current directory as a package.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">pip install -e .</code></p>
+
+<h1 id="tox-tool-that-helps-you-separate-concerns-between-library-you-are-testing-and-your-tests">Tox (Tool that helps you separate concerns between library you are testing and your tests)</h1>
+
+<ul>
+  <li>see the docs and re-watch the video for this one.  Too much info to get all context here.</li>
+</ul>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

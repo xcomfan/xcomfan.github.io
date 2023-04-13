@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Committing Your Changes | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Committing Your Changes" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="https://xcomfan.github.io/gitref/commit/" />
+<meta property="og:url" content="https://xcomfan.github.io/gitref/commit/" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Committing Your Changes" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Committing Your Changes","url":"https://xcomfan.github.io/gitref/commit/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://xcomfan.github.io/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Committing Your Changes</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="basic-commit">Basic Commit</h2>
+
+<p>Use default editor to write your commit message (Git will bring up the editor when you run the command).</p>
+
+<p><code class="language-plaintext highlighter-rouge">git commit</code></p>
+
+<p>Commit and comment in single command.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git commit -m "My commit message"</code></p>
+
+<p><strong>Good Commit Messages</strong></p>
+
+<h2 id="updating-amending-a-commit">Updating (amending) a Commit</h2>
+
+<p>If you mess up a commit and want to change or add a file use <code class="language-plaintext highlighter-rouge">git commit --amend</code> as in the example below.  Your configured editor will pop up to allow you to modify the commit message.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git commit -m 'My commit message'
+git add forgotten_or_updated_file
+git commit --amend
+</code></pre></div></div>
+
+<p><strong><em>WARNING:</em></strong> <em>Only amend commits that are in your local repository and have not been pushed to a remote repository.  Amending previously pushed commits and force pushing the branch will cause problems for your collaborators.</em></p>
+
+<h2 id="rewriting-commit-history">Rewriting commit history</h2>
+
+<h3 id="interactive-rebase">Interactive rebase</h3>
+
+<p>If your want practice with interactive rebase go to <a href="https://git-rebase.io">git-rebase.io</a></p>
+
+<h3 id="changing-the-last-commit">Changing the last commit</h3>
+
+<p>If you just want to change your commit message (in your local working directory) the command below will bring up the editor for you to do so if you have no changes staged.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git commit --amend</code></p>
+
+<p>If you have changes staged, the command above will modify your last commit again in your local working directory with the staged changes and allow you to modify your commit message.</p>
+
+<p>If you want to modify the code of your last commit with the staged changes, but not the commit message use the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git commit --amend --no-edit</code></p>
+
+<p><strong><em>Note:</em></strong> Amending a commit changes the SHA-1 of the commit.  <strong>DO NOT AMEND YOUR LAST COMMIT IF YOU ALREADY PUSHED IT.</strong></p>
+
+<h3 id="squashing-commits">Squashing Commits</h3>
+
+<p>You can use the interactive rebase to take a series of commits and squash them into a single commit.</p>
+
+<p>First run the rebase command to go back the desired amount of commits</p>
+
+<p><code class="language-plaintext highlighter-rouge">git rebase -i HEAD~3</code></p>
+
+<p>In the interactive rebase editor replace the <code class="language-plaintext highlighter-rouge">pick</code> keyword with <code class="language-plaintext highlighter-rouge">squash</code> and Git will apply both that change and the change directly before it and have you merge the commit message.</p>
+
+<h3 id="splitting-commits">Splitting Commits</h3>
+
+<p>Splitting a commit undoes a commit and then partially stages and commits as many times as commits you want to end up with.  For example if you want to split the middle commit of the three commits in the example below you can do that with the rebase -i script.</p>
+
+<p>In the script generated by the <code class="language-plaintext highlighter-rouge">rebase -i</code> command change the instruction on the commit you wish to split to <code class="language-plaintext highlighter-rouge">edit</code>.</p>
+
+<p>When the script drops you to the command line, you reset that commit, take the changers that have been reset, and create multiple commits out of them.</p>
+
+<p>When you save and exit the editor, Git will rewind to the parent of the fist commit in your list, apply the first commit, apply the second and drop you to the console.  Then you can do…</p>
+
+<p><code class="language-plaintext highlighter-rouge">git reset HEAD^</code> - resets the second commit (the one you want to split)</p>
+
+<p><code class="language-plaintext highlighter-rouge">git add README</code> - first of your split up changes</p>
+
+<p><code class="language-plaintext highlighter-rouge">git commit -m 'Update README formatting</code> - first of your split commits</p>
+
+<p><code class="language-plaintext highlighter-rouge">git add lib/simplegit.rb</code> - second of your split up changes</p>
+
+<p><code class="language-plaintext highlighter-rouge">git commit -m 'Add blame'</code> - second of your split up commits</p>
+
+<p><code class="language-plaintext highlighter-rouge">git rebase --continue</code> - apply the third commit from the rebase script</p>
+
+<p><strong><em>Note:</em></strong> Do not do this with commits you already pushed</p>
+
+<h3 id="deleting-a-commit">Deleting a Commit</h3>
+
+<p>Interactive rebase can also delete a commit.</p>
+
+<p>In the script that interactive rebase has you edit, put the word drop before the commit you want to delete.</p>
+
+<p>Because of the way Git builds commit objects, deleting a commit will cause the rewriting of all the commits that follow it.  The further back you go, the more commits need to be created which can cause lots of merge conflicts.  If you get partway through a change like this and want to abort you can use the command below to return your repo to its state before you attempted the rebase.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git rebase --abort</code></p>
+
+<p>If you finish a rebase and decide its not what you want, you can use git reflog to recover an earlier version of your branch.</p>
+
+<h3 id="changing-multiple-commit-messages">Changing multiple commit messages</h3>
+
+<p>Git does not have a modify history tool, but you can use the rebase tool to rebase a series of commits onto the HEAD that they were originally based on.</p>
+
+<p>With the interactive rebase tool you can stop after each commit you want to modify and change the message, add files or do whatever you wish.</p>
+
+<p>For example if you want to change the last 3 commits you would use the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git rebase -i HEAD~3</code></p>
+
+<p>The -i option is for interactive rebase</p>
+
+<p><strong><em>Note:</em></strong> This is a rebase command so <strong>DO NOT</strong> modify commits you already pushed.</p>
+
+<p>Once you run the above command will bring up an editor with a list of commits you selected listed newest first. The editor shows a script the rebase will run as well as some hint information.</p>
+
+<p>You need to edit this script replacing the word <code class="language-plaintext highlighter-rouge">pick</code> with <code class="language-plaintext highlighter-rouge">edit</code> on the commits you wish to stop at.</p>
+
+<p>When you save and exit the editor, Git will rewind you to the last commit in the list and drops you at the command line with some hint information displayed.</p>
+
+<p>As the hint says, you can now use <code class="language-plaintext highlighter-rouge">git commit --amend</code> to modify the commit you landed on or <code class="language-plaintext highlighter-rouge">git rebase --continue</code> to move on to the next commit you marked with the <code class="language-plaintext highlighter-rouge">edit</code> word in the script.</p>
+
+<p>Once you are done modifying all the selected commits you will have a rewritten history.</p>
+
+<h3 id="reordering-commits">Reordering Commits</h3>
+
+<p>Similar to rewriting multiple commits, you can use interactive rebase to reorder or remove commits entirely.  In the example below if you want to remove the “Add cat file” commit and reorder the other two you would take the below interactive rebase script</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pick f7f3f6d Change my name a bit
+pick 310154e Update README formatting and add blame
+pick a5f4a0d Add cat-file
+</code></pre></div></div>
+
+<p>and change it to</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pick 310154e Update README formatting and add blame
+pick f7f3f6d Change my name a bit
+</code></pre></div></div>
+
+<p>When you save and exit the editor, Git rewinds your branch to the parent of these commits, applies 310154e and then f7f3f6d and then stops.</p>
+
+<p>At this point you effectively changed the order of those commits and remove the “Add-cat-file” commit completely.</p>
+
+<p><strong><em>Note:</em></strong> This is a rebase command so <strong>DO NOT</strong> modify commits you already pushed.</p>
+
+<h2 id="the-nuclear-option-filter-branch">The Nuclear Option: filter-branch</h2>
+
+<p>The filter-branch option will rewrite huge swathes of your commit history.  <strong>Do not use it unless your project is not public or is worked on by a few people</strong></p>
+
+<p>There is an alternative to filter-branch which you can find <a href="https://github.com/newren/git-filter-repo">here</a></p>
+
+<p>If you are going to use filter-branch it is recommended you try is a backup copy of your repository.</p>
+
+<h3 id="removing-a-file-from-every-commit">Removing a file from every commit</h3>
+
+<p>This is useful if someone commits a giant binary file by mistake, or if someone commits a file with a password and you want to make the project public.</p>
+
+<p>To remove a file called password.txt you would use the command below.  This command will remove the file passwords.txt from every commit whether it exists or not.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git filter-branch --tree-filter 'rm -f passwords.txt' HEAD</code></p>
+
+<p>The <code class="language-plaintext highlighter-rouge">--tree-filter</code> option runs the specified command after each checkout of the project and then recommits the result.</p>
+
+<p>If you want to run filter-branch on all of your branches you can pass the <code class="language-plaintext highlighter-rouge">--all</code> command.</p>
+
+<h3 id="changing-email-address-globally">Changing email address globally</h3>
+
+<p>The command below can globally update your email address.  You need to be careful to change only the email addresses that are yours so use the <code class="language-plaintext highlighter-rouge">--commit-filter</code>.  <strong>This command will change every single commit in your history not just those that hve the matching email address.</strong></p>
+
+<h3 id="making-a-subdirectory-the-new-root">Making a subdirectory the new root</h3>
+
+<p>Suppose you have imported from another source control system and have subdirectories that make no sense (trunk, tags, etc.).  If you want to make the trunk subdirectory the new project root for every commit you can use the below command.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git filter-branch --subdirectory-filter trunk HEAD</code></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git filter-branch --commit-filter '
+        if [ "$GIT_AUTHOR_EMAIL" = "myemail@mydomain" ];
+        then
+            GIT_AUTHOR_NAME="Your Name";
+            GIT_AUTHOR_EMAIL="myemail@mydomain";
+            git commit-tree "$@";
+        else
+            git commit-tree "$@";
+        fi' HEAD
+</code></pre></div></div>
+
+<p>Now your new project root is what was in the trunk subdirectory.  Git will also automatically remove commits that did not effect the subdirectory.</p>
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

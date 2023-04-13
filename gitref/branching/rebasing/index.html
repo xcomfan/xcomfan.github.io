@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Branching | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Branching" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="https://xcomfan.github.io/gitref/branching/rebasing/" />
+<meta property="og:url" content="https://xcomfan.github.io/gitref/branching/rebasing/" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Branching" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Branching","url":"https://xcomfan.github.io/gitref/branching/rebasing/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://xcomfan.github.io/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Branching</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="rebasing">Rebasing</h2>
+
+<p>Rebasing is an alternative approach to merging for integrating changes from one branch to another.  Rebasing replays changes from one line of work onto another in the order they were introduced, whereas merging takes the endpoints merges them together.</p>
+
+<h3 id="rebasing-explained">Rebasing explained</h3>
+
+<p>In the diagram below there is worked that diverged and there are commits on two different branches.</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"></script>
+<div class="mermaid">
+ flowchart RL
+
+    C3([C3])--&gt;C2([C2])--&gt;C1([C1])--&gt;C0([C0])
+    C4([C4])--&gt;C2
+    experiment[experiment]-.-C4
+    master[master]-.-C3
+
+</div>
+
+<p>The easiest way to integrate the branches is to merge them.  A merge will perform a three way merge between the two latest branches C4 and C3 and their most common ancestor C2, creating a new snapshot as in the diagram below.</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"></script>
+<div class="mermaid">
+ flowchart RL
+
+    C5([C5])--&gt;C3([C3])--&gt;C2([C2])--&gt;C1([C1])--&gt;C0([C0])
+    C4([C4])--&gt;C2
+    C5--&gt;C4
+    experiment[experiment]-.-C4
+    master[master]-.-C5
+
+</div>
+
+<p>Rebasing lets you do this integration of changes without creating the merge commit C5.  Rebasing will take the patch of the change that was introduced in C4 and reapply it on top of C3.</p>
+
+<p>Rebasing lets you take all of the changes that were committed on one branch and replay them on a different branch.  In the above example above you would rebase with the commands below.  This sequence of commands will check out the experiment branch and then rebase it onto the master branch.</p>
+
+<p>This operation works by going to the common ancestor of the two branches (the one you are on and the one you are rebasing onto), getting the diff introduced by each commit  of the branch you are on, saving those diffs to temporary files, resetting the current branch to the same commit as the branch you are rebasing onto, and finally applying each change in turn.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout experiment</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git rebase master</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout master</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git merge experiment</code> This merge will just be a fat forward merge as the changes are already integrated.</p>
+
+<p>At this point your history will look like as the diagram below.  Note that the commit C4 is exactly the same as the C5 commit from the resulting history when we used merge.</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"></script>
+<div class="mermaid">
+ flowchart RL
+
+    C4([C4])--&gt;C3([C3])--&gt;C2([C2])--&gt;C1([C1])--&gt;C0([C0])
+    experiment[experiment]-.-C4
+    master[master]-.-C4
+
+</div>
+
+<h3 id="why-use-reabasing">Why use reabasing?</h3>
+
+<p>Rebasing makes for a cleaner history.  If you look at the log of a rebased branch, it looks like a liner history.  It appears that the work happened in series when it actually happened in parallel.</p>
+
+<p>Rebasing is often used to make sure that your commits apply cleanly on a remote branch - perhaps in a project to which you’re trying to contribute but that you don’t maintain.  In this use case you would work in a branch and then rebase your work onto origin/master when you are ready to submit your patches to the main project.  This way the maintainer does not need to do any integration work.  Just a fast forward for a clean apply</p>
+
+<h3 id="other-users-for-rebase">Other users for Rebase</h3>
+
+<p>You can use rebase to apply topic branches that were created from another topic branch onto your mainline.  The diagram below has a client branch that was created from the server branch. (client branch was created off of the server branch)</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"></script>
+<div class="mermaid">
+ flowchart RL
+
+    C6([C6])--&gt;C5([C5])--&gt;C2([C2])--&gt;C1([C1])
+    C10([C10])--&gt;C4([C4])--&gt;C3([C3])
+    C9([C9])--&gt;C8([C8])
+    C3--&gt;C2
+    C8--&gt;C3
+    server[server]-.-C10
+    master[master]-.-C6
+    client[client]-.-C9
+
+</div>
+
+<p>If you wish to apply to master the changes you made on the client branch, but you are not ready to integrate the changes from server.  You can do this with the command.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git rebase --onto master server client</code></p>
+
+<p>This command basically says “Take the client branch, figure out the patches since it diverged from the server branch, and replay these patches in the client branch as it was based directly off the master branch instead.  After this command your history tree will look like the below.</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"></script>
+<div class="mermaid">
+ flowchart RL
+
+    C9([C9])--&gt;C8([C8])--&gt;C6([C6])--&gt;C5([C5])--&gt;C2([C2])--&gt;C1([C1])
+    C10([C10])--&gt;C4([C4])--&gt;C3([C3])
+    C3--&gt;C2
+    master[master]-.-C6
+    client[client]-.-C9
+    server[server]-.-C10
+
+</div>
+
+<p>At this point you just need to fast forward master with the commands</p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout master</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git merge client</code></p>
+
+<p>At this point your history looks like</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"></script>
+<div class="mermaid">
+ flowchart RL
+
+    C9([C9])--&gt;C8([C8])--&gt;C6([C6])--&gt;C5([C5])--&gt;C2([C2])--&gt;C1([C1])
+    C10([C10])--&gt;C4([C4])--&gt;C3([C3])
+    C3--&gt;C2
+    master[master]-.-C9
+    client[client]-.-C9
+    server[server]-.-C10
+
+</div>
+
+<p>At this point you can pull in your server branches by rebasing the server branch onto the master branch without having to check it out first by running the command.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git rebase &lt;basebranch&gt; &lt;topicbranch&gt;</code>  in this case <code class="language-plaintext highlighter-rouge">git rebase master server</code></p>
+
+<p>This will replay your server work on top of your master work.  And once the replay is complete your history will be in the state below so you just need to merge in the serer branch to fast forward the master branch.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout master</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git merge server</code></p>
+
+<p>At this point its safe to remove the client and server branches since their changes have been integrated and they are no longer needed.</p>
+
+<h3 id="perils-of-rebasing">Perils of rebasing</h3>
+
+<p><strong><em>Do not rebase commits that exist outside of your repository and that people may have based their work on</em></strong></p>
+
+<p>When you rebase you are abandoning existing commits and creating new ones that are similar but different.  If you push commits somewhere and others pull them down and base work on them, and then you rewrite those commits with git rebase and push them again, your collaborators will have to re merge their work an things will get messy when you try to pull their work back into yours.</p>
+
+<h3 id="rebase-vs-merge">Rebase vs. merge</h3>
+
+<p>When you merge branches you see the full history of your repository.  ALl the experimental and dead end branches will be visible in the repository history.  Rebasing lets you have a cleaner history.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

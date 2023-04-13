@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Creating And Switching Branches | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Creating And Switching Branches" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="https://xcomfan.github.io/gitref/creating_and_switching_branches/" />
+<meta property="og:url" content="https://xcomfan.github.io/gitref/creating_and_switching_branches/" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Creating And Switching Branches" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Creating And Switching Branches","url":"https://xcomfan.github.io/gitref/creating_and_switching_branches/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://xcomfan.github.io/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Creating And Switching Branches</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="listing-local-branches">Listing local branches</h2>
+
+<p><code class="language-plaintext highlighter-rouge">git branch</code> The * symbol in the output indicates the branch you currently have checked out.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git brach -v</code> List local branches and show the last commit message on each branch.</p>
+
+<h3 id="filter-for-merged-or-non-merged-commits-in-branch-listing">Filter for merged or non merged commits in branch listing.</h3>
+
+<p><code class="language-plaintext highlighter-rouge">git branch --merged</code> or <code class="language-plaintext highlighter-rouge">git branch --merged [commit]</code> for a specific commit.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch --no-merged</code> or <code class="language-plaintext highlighter-rouge">git branch --no-merged [commit]</code> for a specific commit.</p>
+
+<p>For example to see what has not been merged into the master branch you would use the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch --no-merged master</code></p>
+
+<h2 id="creating-a-new-branch">Creating a new branch</h2>
+
+<h3 id="create-new-branch-and-switch-to-it">Create new branch and switch to it</h3>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout -b &lt;my_new_branch_name&gt;</code> for example <code class="language-plaintext highlighter-rouge">git checkout -b my_new_feature</code></p>
+
+<p>if using Git version 2.23 or never you can also use the switch command.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git switch -c &lt;new_branch_name&gt;</code> -c stands for create and you can also use the –create flag</p>
+
+<h3 id="create-new-branch-without-switching-to-the-new-branch">Create new branch without switching to the new branch</h3>
+
+<p><code class="language-plaintext highlighter-rouge">git branch &lt;new_branch_name&gt;</code> for example <code class="language-plaintext highlighter-rouge">git branch my_new_feature</code></p>
+
+<h2 id="switching-between-branches">Switching between branches</h2>
+
+<p>To switch branches it is a good practice to have a clean working tree.  You may need to <a href="/gitref/stashing/">stash</a> your work in order to switch to a different branch.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout &lt;existing_branch_name&gt;</code> or <code class="language-plaintext highlighter-rouge">git switch &lt;branch_name&gt;</code></p>
+
+<p>When switching branches the content of your working directory will be updated to reflect the state of the last commit to the branch you are switching to.</p>
+
+<p>If Git cannot cleanly get the files in your working directory to have the content of the branch you are switching to, it won’t let you switch.</p>
+
+<h3 id="return-to-your-previously-checked-out-branch">Return to your previously checked out branch</h3>
+
+<p><code class="language-plaintext highlighter-rouge">git switch -</code></p>
+
+<h2 id="deleting-a-branch">Deleting a branch</h2>
+
+<p>To delete a local branch use the command
+<code class="language-plaintext highlighter-rouge">git branch -d &lt;branch_name&gt;</code></p>
+
+<p>If the branch has not been merged and you are certain you want to delete it use the command.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch -D &lt;branch_name&gt;</code></p>
+
+<h2 id="renaming-a-branch">Renaming a branch</h2>
+
+<p><strong><em>Note:</em></strong> Do not rename branches that are still in use by other collaborators.</p>
+
+<p>Rename a branch locally</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch --moved bad_branch_name corrected_branch_name</code></p>
+
+<p>To let others see the corrected branch on the remote, push it.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push --set-upstream origin corrected-branch-name</code></p>
+
+<p>Delete the old branch (you can run the <code class="language-plaintext highlighter-rouge">git branch --all</code> command to see that old branch still exists)</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push origin --delete bad_branch_name</code></p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
