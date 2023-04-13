@@ -84,6 +84,16 @@
 
 <p><code class="language-plaintext highlighter-rouge">git stash apply stash@{2} --index</code></p>
 
+<h2 id="viewing-your-stash-entries">Viewing your stash entries</h2>
+
+<p>If you wish to see the difference between your stash content and the commit back when the stash entry was first created you can use the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git stash show -p</code>  or</p>
+
+<p><code class="language-plaintext highlighter-rouge">git stash show -p stash@{1}</code> if you wish to compare to a specific stash entry not the top one.</p>
+
+<p>By default this will use the diffstat but you can configure it to use any format known to git diff.</p>
+
 <h2 id="removing-entries-from-your-stash">Removing entries from your stash</h2>
 
 <p>To remove a specific entry</p>
