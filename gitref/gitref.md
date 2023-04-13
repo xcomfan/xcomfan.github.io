@@ -4,8 +4,9 @@ title: "Git Reference"
 permalink: /gitref/
 ---
 
-[comment]: <> (TODO: Fix some of the metadata around the site and see if you can update the styling to have a breadcrumb or back at top instead of MyReferences)
+[comment]: <> (TODO: Fix metadata around the site and see if you can update the styling to have a breadcrumb at the top.)
 [comment]: <> (TODO: Good idea to add table of contents at top of each page so you can jump to sections.)
+
 ## Workflow
 
 [comment]: <> (TODO: Once you build out the content may want to sue the subgraph option to make more granular pages.)
@@ -41,6 +42,3 @@ permalink: /gitref/
 {% endmermaid %}
 
 [comment]: <> (TODO: May want to add some quick links so that someone who does not know which mermaid bubble to look to can jump to info.)
-
-## Configuration
-[comment]: <> (TODO: Need to fill out this section.)
