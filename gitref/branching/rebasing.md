@@ -4,15 +4,15 @@ title: "Branching"
 permalink: /gitref/branching/rebasing/
 ---
 
-[comment]: <> (TODO: REV MARKER)
+[comment]: <> (TODO: Need to have a section here on what can go wrong and how to recover)
 
 ## Rebasing
 
-Rebasing is an alternative approach to merging for integrating changes from one branch to another.  Rebasing replays changes from one line of work onto another in the order they were introduced, whereas merging takes the endpoints merges them together.
+Rebasing is an alternative approach to merging for integrating changes from one branch to another.  Rebasing replays changes from one line of work onto another in the order they were introduced, whereas merging takes the endpoints and merges them together.
 
 ### Rebasing explained
 
-In the diagram below there is worked that diverged and there are commits on two different branches.
+In the diagram below there is work that diverged and there are commits on two different branches.
 
 {% mermaid %}
  flowchart RL
@@ -76,6 +76,7 @@ Rebasing is often used to make sure that your commits apply cleanly on a remote 
 
 You can use rebase to apply topic branches that were created from another topic branch onto your mainline.  The diagram below has a client branch that was created from the server branch. (client branch was created off of the server branch)
 
+[comment]: <> (TODO: I seem to be missing a commit 7 here need to go back to the book and validate.)
 
 {% mermaid %}
  flowchart RL

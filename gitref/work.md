@@ -4,9 +4,10 @@ title: "Working on your code"
 permalink: /gitref/work_locally/
 ---
 
-[comment]: <> (TODO: REV MARKER)
 
 [comment]: <> (TODO: Sections of This page would work better as a mermaid diagram with you being able to click in to the stage un stage commit)
+
+[comment]: <> (TODO: Need to break up this section into smaller subsection.)
 
 ## The 3 states of your files in Git
 
@@ -166,11 +167,12 @@ By default git clean will not operate on files that are in teh .gitingore file. 
 
 #### The three trees
 
-An easier way to think about rest and checkout is though the mental model of Git managing three different trees.  Trees here refer to a collection of files not the data structure.
+An easier way to think about reset and checkout is though the mental model of Git managing three different trees.  Trees here refer to a collection of files not the data structure.
 
 ##### The HEAD
 
 * The HEAD "tree" is the last commit snapshot and the next parent.
+[comment]: <> (TODO: Parent of what?)
 * HEAD is the pointer to the current branch reference, which is in turn a pointer to the last commit made on that branch.
 * You can think of HEAD as the snapshot of your last commit on your current branch
 
@@ -189,7 +191,7 @@ An easier way to think about rest and checkout is though the mental model of Git
 
 ##### Git workflow of the "three trees"
 
-Gits typical workflow is to record snapshots of your project in successively better states, by manipulating the states of the three trees.
+Git's typical workflow is to record snapshots of your project in successively better states, by manipulating the states of the three trees.
 
 Lets say we start with a new directory which is not yet a Git repository with a single file in it.  If we run the `git init` command this will create a Git repository with a **HEAD** references pointing to the unborn *master* branch.  At this point only the **working directory** has any content.
 
@@ -243,6 +245,8 @@ You don't have to pull the file from HEAD you can specify the commit to pull tha
 You can use the --patch option with git reset to un-stage content on a hunk by hunk basis.
 
 ### Using git reset for squashing
+
+[comment]: <> (TODO: Link this section to the interactive rebase squashing section and we probably need a mermaid section fro squashing in some workflow.)
 
 Lets say you have a project where...
 

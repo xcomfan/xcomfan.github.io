@@ -4,8 +4,6 @@ title: "Repository History"
 permalink: /gitref/repo_history
 ---
 
-[comment]: <> (TODO: REV MARKER)
-
 [comment]: <> (TODO: Write up some text so its obvious what these links lead to?)
 
 [Viewing commit history]({% link gitref/repo_history/viewing_repo_history.md %})

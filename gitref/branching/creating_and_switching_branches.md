@@ -67,7 +67,7 @@ If the branch has not been merged and you are certain you want to delete it use 
 
 Rename a branch locally
 
-`git branch --moved bad_branch_name corrected_branch_name`
+`git branch --move bad_branch_name corrected_branch_name`
 
 To let others see the corrected branch on the remote, push it.
 

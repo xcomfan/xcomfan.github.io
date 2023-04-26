@@ -10,6 +10,7 @@ permalink: /gitref/
 ## Workflow
 
 [comment]: <> (TODO: Once you build out the content may want to sue the subgraph option to make more granular pages.)
+[comment]: <> (TODO: Now that I am working my way through I think this chart needs a complete overhaul and most of the content is in a working locally sub-graph)
 
 {% mermaid %}
  flowchart LR

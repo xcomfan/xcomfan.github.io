@@ -27,7 +27,7 @@ This is essentially the Git [Integration Manager workflow]({% link gitref/distri
 
 ### Creating a Pull Request
 
-1. Clone the fork of the you want to contribute to locally.
+1. Clone the fork of the project you want to contribute to locally.
 2. Create a descriptive topic branch.
 3. Make your changes to the code.
 4. Check that the change is good.
@@ -49,6 +49,8 @@ The project owner can make comments on the diff of the pull request.  Once the m
 
 Now you just need to commit to your topic branch and push.  This will automatically update the Pull Request.  Adding commits to an existing Pull Request doesn't trigger a notification.  You can communicate and trigger a notification via comments in the pull request.
 
+[comment]: <> (TODO: For most people they would be working in a project they have write access to so makes sense to write up this section from perspective of here is how you do it for your day job, and here is the open source contribute workflow.)
+
 It is important to note that you can also open a Pull Request between two branches in the same repository.  If you have write access you can push a topic branch to the repository and open a Pull Request on it to the master branch fo that same project to initiate a code review and discuss process.
 
 ### Keeping up with Upstream
@@ -58,7 +60,7 @@ If your Pull Request becomes out of date or otherwise doesn't merge cleanly you 
 You have two main option to fix a non clean pull request merge.
 
 * You can rebase your branch on top of whatever the target branch is (normally the master branch of the repository you forked).  Rebasing will get you a cleaner history, but its more error prone thus the option below is chosen by most developers on GitHub.
-* You can merge teh target branch into your branch.
+* You can merge the target branch into your branch.
 
 If you want to merge the target branch into your Pull Request to make it mergeable, you would take the following steps.
 

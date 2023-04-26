@@ -4,8 +4,6 @@ title: "Branching"
 permalink: /gitref/branching/
 ---
 
-[comment]: <> (TODO: REV MARKER)
-
 [Branching concepts]({% link gitref/branching/branch_concepts.md %})
 
 [Listing, creating, deleting, switching and renaming branches]({% link gitref/branching/creating_and_switching_branches.md %})

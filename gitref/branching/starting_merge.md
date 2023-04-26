@@ -4,17 +4,25 @@ title: "Starting a merge"
 permalink: /gitref/branching/starting_merge
 ---
 
+## Cleaning up your working tree
+
 Before attempting to merge branches make sure your working tree is clean.  If you have work in progress either [stash]({% link gitref/stashing.md %}) the work or apply your changes to a temporary branch (stash your work and then [apply]({% link gitref/stashing.md %}#Retrieving_your_stashed_work) your stash on a branch).  This makes it easier to undo things if you run into issues resolving merge conflicts.
 
 [comment]: <> (TODO: Beyond stashing and applying your stash to a temporary branch you may be able to use cherry pick for this save to temporary branch.  Come back and update if that seems reasonable?)
+
+## Starting the merge workflow
 
 The merge command merges a specified branch into the branch you are currently on.  To initiate a merge use the command below.
 
 `git merge <branch_to_merge_from>`
 
+[comment]: <> (TODO: merge commit below is a good candidate for a definition entry.)
+
 If the branches you are merging are not diverged (one branch is just ahead of another) when merging, Git can just move pointers around (fast forward).  If however, there was a divergence then Git does a 3 way merge between the two branch tips and the common ancestor of the branches being merged.  When this happens git will create a new commit for the merge known as a merge commit.
 
 [comment]: <> (TODO: Still need to figure out how to tell the difference between regular and merge commit)
+
+## Deleting the merged in branch.
 
 To delete a branch you no longer need (once you have merged it into another branch for example) use the -d option
 

@@ -4,7 +4,7 @@ title: "Working with remote repositories"
 permalink: /gitref/remotes/
 ---
 
-[comment]: <> (TODO: REV MARKER)
+[comment]: <> (TODO: Already read though this section so no REV MARKER, but it needs better organization once I figure out what that will look like.)
 
 [comment]: <> (TODO: Go over this section and see if you can organize it more as a workflow than just a list of commands)
 
@@ -22,7 +22,7 @@ see the shortnames and the url of the remote
 
 `git remote -v`
 
-[comment]: <> (TODO: Explain the fetch and push you see int his display)
+[comment]: <> (TODO: Explain the fetch and push you see in this display.  I get what the push and pull do, but how to you set each?)
 
 # Adding remote repositories
 
@@ -32,7 +32,7 @@ To add a remote repository use the command below.  Once added you can refer to t
 
 # Fetching and pulling from your remotes
 
-To get data from your remote projects you run the command below.  This command goes to the remote project and pull down all the data from that remote project that you don't have yet.  After you do this, you should have references to all the branches from that remote which you can merge in or inspect at any time.
+To get data from your remote projects you run the command below.  This command goes to the remote project and pulls down all the data from that remote project that you don't have yet.  After you do this, you should have references to all the branches from that remote which you can merge in or inspect at any time.
 
 `git fetch <remote>`
 
@@ -44,7 +44,7 @@ To get data from your remote projects you run the command below.  This command g
 
 * By default the `git clone` command automatically sets up your local master branch to track the remote master branch (or whatever the master branch is called) on the server you are cloning from.  
 
-* Running git pull generally fetches data from the server you originally cloned from and automatically tires to merge it into the code yo're currently working on.
+* Running git pull generally fetches data from the server you originally cloned from and automatically tries to merge it into the code yo're currently working on.
 
 # Pushing to your remotes
 
@@ -52,7 +52,7 @@ When your project is at a point that you want to share, you need to push it upst
 
 [comment]: <> (TODO: Make a definitions entry for upstream and downstream)
 
-`git push <remote> <branch>` 
+`git push <remote> <branch>`
 
 for example
 
@@ -62,7 +62,7 @@ This command will only work if you have write permissions to the remote reposito
 
 If you and someone else clone at the same time and they push upstream and then you push upstream, your changes will be rejected.  You will need to fetch their work first and incorporate it into yours before you will be allowed to push.  This is covered in branching.
 
-[comment]: <> (TODO: Need to add a link above for branching.)
+[comment]: <> (TODO: Need to add a link above for branching and make sure we actually cover this bit that you need to update your rejected code.)
 
 # Inspecting a remote
 
