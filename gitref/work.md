@@ -9,17 +9,62 @@ permalink: /gitref/work_locally/
 
 [comment]: <> (TODO: Need to break up this section into smaller subsection.)
 
-## The 3 states of your files in Git
+## Basic Concepts
 
-As you are working locally the files in your working directory can be in one of the 3 states below.
+### The three trees of Git
 
-| State | Description |
-| ----- | ----------- |
-| modified | You have changed the file, but have not yet committed it to the database |
-| staged | You have marked a file in its current version to go into your next commit snapshot |
-| committed | The file state is safely stored in your Git database |
+ A Git project has three trees (tree here means a collection of files not the data structure) that it manages.  
 
-[comment]: <> (TODO: Someone reading here may not know what a working tree is.)
+#### The working directory (working tree)
+
+The working directory (also called the working tree) is a single checkout of one version of the project.  You can think of the working directory as a sandbox where you can try changes before promoting them to the staging area (index) and eventually committing them.  Internally Git stores files in a compressed format, but for the working directory it extracts them onto the disk for you and makes them available in the working so that they can be easily modified.
+
+#### The staging area (index)
+
+The index/staging area is where you place your changes in order to commit them.  When you use the Git commit command, Git converts the changes that you staged (place in staging area) into a commit.
+
+[comment]: <> (TODO: Good idea to take some of the content from the internals section and cover exactly what a commit is here.)
+
+#### The HEAD
+
+The HEAD "tree" is a pointer to the current branch reference, which in turn is a pointer to the last commit on that branch.  You can think of HEAD as the snapshot of your last commit on the branch you are currently working on.
+
+### The 3 states of your files in Git
+
+As you are working locally in your Git project, the files in your working directory can be in one of the 3 states below.  These 3 states correspond to one of the three trees of Git above.
+
+| State | Description | Corresponding Tree |
+| ----- | ----------- | ------------------ |
+| modified | You have changed the file, but have not yet committed it to the database | working tree |
+| staged | You have marked a file in its current version to go into your next commit snapshot | index |
+| committed | The file state is safely stored in your Git database | HEAD |
+
+## Git local workflow
+
+{% mermaid %}
+
+flowchart TD
+
+modify([Modify files])
+undo_mod([restore modified file to last committed state])
+stage([Stage changes for next commit])
+unstage([Un-stage a file])
+commit([Commit files in the staging area])
+undo_committ([Undo commit and keep changes])
+reset_hard([Undo commit and discard changes])
+
+modify-->stage
+modify-.optional.->undo_mod
+undo_mod-->modify
+stage-->commit
+stage-.optional.->unstage
+unstage-->modify
+commit-.optional.->undo_committ
+undo_committ-->modify
+commit-.optional.->reset_hard
+reset_hard-->modify
+
+{% endmermaid %}
 
 ## Viewing the status of your working tree
 
@@ -165,35 +210,13 @@ By default git clean will not operate on files that are in teh .gitingore file. 
 
 ### Git concepts to help understand git reset command
 
-#### The three trees
 
-An easier way to think about reset and checkout is though the mental model of Git managing three different trees.  Trees here refer to a collection of files not the data structure.
-
-##### The HEAD
-
-* The HEAD "tree" is the last commit snapshot and the next parent.
-[comment]: <> (TODO: Parent of what?)
-* HEAD is the pointer to the current branch reference, which is in turn a pointer to the last commit made on that branch.
-* You can think of HEAD as the snapshot of your last commit on your current branch
-
-##### The Index
-
-* The index is your proposed next commit.  Its also referred to as the "staging area"
-* The index is what Git looks at when your run the git commit command.
-* Git populates the index with a list of all the file contents that were last checked out into your working directory and what they looked like when they were originally checked out.
-    * You then replace some of these files with new versions and the git commit command converts them into a new commit.
-
-##### The working directory
-
-* Think of the working directory as a sandbox where you can try changes before committing them to the index/staging area.
-* The other two trees store their content in an efficient, but inconvenient manner.  The working tree unpacks them into actual files making them easier to edit.
-* Working directory is commonly called the "working tree"
 
 ##### Git workflow of the "three trees"
 
 Git's typical workflow is to record snapshots of your project in successively better states, by manipulating the states of the three trees.
 
-Lets say we start with a new directory which is not yet a Git repository with a single file in it.  If we run the `git init` command this will create a Git repository with a **HEAD** references pointing to the unborn *master* branch.  At this point only the **working directory** has any content.
+Lets say we start with a new directory which is not yet a Git repository with a single file in it.  If we run the `git init` command this will create a Git repository with a **HEAD** reference pointing to the unborn *master* branch.  At this point only the **working directory** has any content.
 
 Now we want to commit our single file, so we use the `git add` command.  This will take the content in our **working directory** and copy it to the **index**.
 

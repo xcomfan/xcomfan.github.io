@@ -14,12 +14,18 @@ permalink: /gitref/
 
 {% mermaid %}
  flowchart LR
+    
+    subgraph work_local_sub [Work Locally]
+        direction LR
+        history([View repository history])
+        branching([Create a topic branch])
+        work([Work on your branch])
+        stashing([Stashing])
+        commit([Committing])
+    end
+
     init([Create or clone repo])
-    branching([Branching])
-    work([Work locally])
-    stashing([Stashing ])
-    history([View repository history])
-    commit([Committing])
+    
     remotes([Remote repositories])
     
     click init "{% link gitref/init.md %}"
@@ -30,15 +36,8 @@ permalink: /gitref/
     click commit "{% link gitref/commit.md %}"
     click remotes "{% link gitref/remotes.md%}"
 
-    init-->branching
-    init-->history
-    branching-->work
-    history<-->work
-    work-->commit
-    work-->stashing
-    stashing-->commit
-    commit-->remotes
-    remotes-->init
+    init-->work_local_sub
+    work_local_sub-->remotes
     
 {% endmermaid %}
 
