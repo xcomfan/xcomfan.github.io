@@ -4,52 +4,11 @@ title: "Viewing Repository History"
 permalink: /gitref/repo_history/viewing_repo_history
 ---
 
-[comment]: <> (TODO: REV MARKER)
-
 [comment]: <> (TODO: This file is a bit big.  Need to split it up into more manageable chunks?)
 
 ## Viewing the Commit History
 
 The `git log` command command will show you the history below are some useful modifiers to the git log command.
-
-* `git log [--name-only | --name-status  ]` - Shows the list of files modified after displaying basic commit information.  name-status adds information for each file of whether the file was added, modified, or deleted in the commit.
-
-[comment]: <> (TODO: This file is a bit big.  Need to link to chunk explanation here?)
-
-* `git log -p` or `git log --patch` will show the patch output introduced in each commit.
-
-* `git log --pretty` changes the log output to formats other than the default.  There are some predefined options available.
-
-    * `git log --pretty=oneline` will print each commit on a single line.
-
-        * `git log --pretty=oneline --graph` Adding the graph option will add an ASCII graph showing the branch and merge history which combines well with the --pretty=oneline modifier.
-
-    * `git log --pretty=format:"%h - %an, %ar : %s"` lets you customize the output format where...
-
-        * | Specifier | Description of Output|
-          | --------- | -------------------- |
-          | %H , %h| Commit hash, abbreviated commit hash |
-          | %T , %t | Tree hash, abbreviate tree has | 
-          | %P , %p | Parent hashes, abbreviated parent hashes |
-          | %an , %ae | Author name, Author email |
-          | %ad , %ar | Author date (format respects the --date=option), Author date, relative |
-          | %cn , %ce | Committer name, Committer email |
-          | %cd , %cr | Committer date, Committer date relative |
-          | %s | Subject |
-
-    *  `git log --pretty=format:"%h %cd %cn %s" --graph` - A useful example of using custom formats.  May be a good idea to alias this version.
-
-    * `git log --pretty=[short |full | fuller]` lets you see various amounts of information. (Author, Date, Commit Date, Author Date etc.)
-
-* `git log --stat` will show the commit stats (number of changes etc)
-    * `git log --shortstat` Displays only the changed/insertion/deletions line from the --stat command.
-
-* `git log --relative-date` Show the "2 weeks ago" format instead of the full date.
-
-[comment]: <> (TODO: What is a tree hash?)
-[comment]: <> (TODO: Make a pass over this section and see if there is a better way to organize it.)
-[comment]: <> (TODO: Some of the tables on this page are not adjusting to page width see if you can fix that in Jekyll options)
-[comment]: <> (TODO: Clarify how to distinguish between a merge commit and a regular commit)
 
 ## Git log and branching
 
@@ -60,6 +19,54 @@ By default git log will only show history for the branch you are currently worki
 You can also have Git show you the history for all branches
 
 `git log --all`
+
+## See which files were changed in each commit
+
+`git log [--name-only | --name-status  ]` - Shows the list of files modified after displaying basic commit information.  name-status adds information for each file of whether the file was added, modified, or deleted in the commit.
+
+[comment]: <> (TODO: This file is a bit big.  Need to link to chunk explanation here?)
+
+## See the changes made (the patch) in each commit
+
+`git log -p` or `git log --patch` will show the patch output introduced in each commit.
+
+if you want to see the changes for a specific file use
+
+`git log -p -- filename`
+
+If you want to see relative dates ("2 weeks ago" for example) instead of full dates use the --relative-date flag.
+
+`git log --relative-date`
+
+## Alternate ways to display git log infromation (--pretty option)
+
+`git log --pretty` changes the log output to formats other than the default.  There are some predefined options available.
+
+`git log --pretty=oneline` will print each commit on a single line.
+
+`git log --pretty=oneline --graph` Adding the graph option will add an ASCII graph showing the branch and merge history which combines well with the --pretty=oneline modifier.
+
+### Customize the format of --pretty modifier output
+
+`git log --pretty=format:"%h - %an, %ar : %s"` lets you customize the output format where...
+
+| Specifier | Description of Output|
+| --------- | -------------------- |
+| %H , %h| Commit hash, abbreviated commit hash |
+| %T , %t | Tree hash, abbreviate tree has | 
+| %P , %p | Parent hashes, abbreviated parent hashes |
+| %an , %ae | Author name, Author email |
+| %ad , %ar | Author date (format respects the --date=option), Author date, relative |
+| %cn , %ce | Committer name, Committer email |
+| %cd , %cr | Committer date, Committer date relative |
+| %s | Subject |
+
+`git log --pretty=format:"%h %cd %cn %s" --graph` - A useful example of using custom formats.  It may be a good idea to create an alias for this format.
+
+`git log --pretty=[short |full | fuller]` lets you see various amounts of information. (Author, Date, Commit Date, Author Date etc.)
+
+[comment]: <> (TODO: Some of the tables on this page are not adjusting to page width see if you can fix that in Jekyll options)
+[comment]: <> (TODO: Clarify how to distinguish between a merge commit and a regular commit)
 
 ## Limiting and Filtering git log Output
 
@@ -72,3 +79,9 @@ You can also have Git show you the history for all branches
 | -S | Only show commits adding or removing code matching the string.  Referred to as the "Pickaxe" feature | `git log -S my_function` |
 | --no-merges | Prevent the display of merge commits | `git log --no-merge` |
 | -- path/to/file | Limit output to commit that introduced changes to those files | `git log -- a.c`, `git log -- *.c`|
+
+## Show commit stats
+
+`git log --stat` will show the commit stats (number of changes etc)
+
+`git log --shortstat` Displays only the changed/insertion/deletions line from the --stat command.
