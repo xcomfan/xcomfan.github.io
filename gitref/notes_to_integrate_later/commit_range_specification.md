@@ -1,3 +1,9 @@
+---
+layout: page
+title: "Range Spec"
+permalink: /gitref/notes_to_integrate_later/rangespec
+---
+
 ## Revision Selection
 
 Git allows you to refer to a single commit, set of commits, or range of commits in a number of ways.
