@@ -69,13 +69,14 @@ If you have a lot of branches, you can use Git's range specification to answer q
 Given the commit history below 
 
 {% mermaid %}
- flowchart RL
+ 
+flowchart RL
 
-    F([F])-->E([E])-->B([B])-->A([A])
-    D([D])-->C([C])
-    C-->B
-    experiment[experiment]-.-D
-    master[master]-.-F
+F([F])-->E([E])-->B([B])-->A([A])
+D([D])-->C([C])
+C-->B
+experiment[experiment]-.-D
+master[master]-.-F
 
 {% endmermaid %}
 
