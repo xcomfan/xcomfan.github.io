@@ -43,18 +43,17 @@
   </header>
 
   <div class="post-content">
-    
-<h2 id="git-log-searching">Git log searching</h2>
+    <h2 id="git-log-searching">Git log searching</h2>
 
-<p>If you are not looking for where a term exists, but when it existed or was introduce you want to use git log searching.</p>
+<p>Git log search is usefull when you are looking for when a something got introduced or existed in your Git project instead of where.</p>
 
-<p>If for example you want to find when the ZLIB_BUF_MAX constant was originally introduced, we can use the -S option to git log.  The output of the command will be the commit details of the commit that introduced the variable. If you need to be more specific you can use the -G option to provide a regular expression.</p>
+<p>If for example you want to find when the ZLIB_BUF_MAX constant was originally introduced, you can use the -S option to git log.  The output of the command will be the commit details of the commit that introduced the variable. If you need to be more specific you can use the -G option to provide a regular expression.</p>
 
 <p><code class="language-plaintext highlighter-rouge">git log -S ZLIB_BUG_MAX --oneline</code></p>
 
 <h3 id="line-log-search">Line Log Search</h3>
 
-<p>you can use Line Log Search to check the history of a function or a line of code.  Just use the -L option with git log.  For example, if we want to see every change made to the function git_deflate_bound in the zlib.c file we would do similar to the following command.  This will try to figure out what the bounds of that function are and then look though the history and show us every change that was made to the function as a series of patches.</p>
+<p>you can use Line Log Search to check the history of a function or a line of code.  Just use the -L option with git log.  For example, if we want to see every change made to the function git_deflate_bound in the zlib.c file we would use the command below.  This command will try to figure out what the bounds of that function are and then look though the history and show us every change that was made to the function as a series of patches.</p>
 
 <p><code class="language-plaintext highlighter-rouge">git log -L :git_deflate_bound:zlib.c</code></p>
 
@@ -62,130 +61,25 @@
 
 <p><code class="language-plaintext highlighter-rouge">git log -L '/unsigned long git_deflate_bound/',/^}/:zlib.c</code></p>
 
-<h2 id="revision-selection">Revision Selection</h2>
+<h2 id="file-annotation-git-blame">File annotation (git blame)</h2>
 
-<p>Git allows you to refer to a single commit, set of commits, or range of commits in a number of ways.</p>
+<p>File annotations is the best tool if you want to track down when something such as a bug was introduced to the code and why.  File annotations will show you what commit was the last to modify each line of any file.  So for example if you see a method in your code is buggy you can annotate it with git blame to determine which commit was responsible for the introduction fo that line.</p>
 
-<h3 id="single-revisions">Single Revisions</h3>
+<p><code class="language-plaintext highlighter-rouge">git blame -L 69,82 problemfile.txt</code></p>
 
-<p>You can refer to a commit using the full 40 character SHA-1 of the commit, but typically the first few characters of the sha are needed.  4 is the minimum, but 8 to 10 characters will be enough to make sure your selection is unique.</p>
+<p>The -L option allows you to specify a range of lines to display the git blame output for.</p>
 
-<h3 id="branch-references">Branch References</h3>
+<p>The resulting output will show.</p>
 
-<p>If a commit is the tip of a branch, you can use teh branch name in any git command that expects a reference</p>
+<ul>
+  <li>partial SHA-1 of the commit in first column.</li>
+  <li>committer and commit date followed by line number in second column</li>
+  <li>a carat (^) symbol at the beginning of the commit SHA-1 indicates that the content was there from the initial commit.</li>
+</ul>
 
-<p><code class="language-plaintext highlighter-rouge">git show ca82a6dff812ec44f44442008202890a8989033</code></p>
+<p>You can use git blame with the -C option to try and figure our where snippets of the code within it originally came from.  This is useful if there was a code refactor.  Git will not just find where the lines are but the history of the original location they came from.</p>
 
-<p><code class="language-plaintext highlighter-rouge">git show topic1</code></p>
-
-<p>To get the commit hash of a branch you can use the rev-parse command.</p>
-
-<p><code class="language-plaintext highlighter-rouge">git rev-parse topic1</code></p>
-
-<h3 id="reflog-shortnames">Reflog Shortnames</h3>
-
-<p>As you are working, Git keeps a “reflog” a log of where your HEAD and branch references have been.  Every time your branch tip is updated for any reason, Git will store that information for you in this temporary history.  <strong><em>Note:</em></strong> reflog information is strictly local.  Reflog will only contain information for what you have done in your local repository.  Think of reflos as Git’s version of the Linux shell history.</p>
-
-<p>To see this history use the command</p>
-
-<p><code class="language-plaintext highlighter-rouge">git reflog</code></p>
-
-<p>You can use reflog data to refer to older commits.</p>
-
-<p>If you want to see the 5th prior commit</p>
-
-<p><code class="language-plaintext highlighter-rouge">git show HEAD@{5}</code></p>
-
-<p>You can also look back days, months etc</p>
-
-<p><code class="language-plaintext highlighter-rouge">git show HEAD@{2.months.ago}</code></p>
-
-<p>To see reflog information formatted like the git log output use the -g option to git log</p>
-
-<p><code class="language-plaintext highlighter-rouge">git log -g master</code></p>
-
-<h3 id="ancestry-references">Ancestry References</h3>
-
-<p>You can specify commits via their ancestry.  If you place a ^ (caret) symbol at the end fo a reference, Git resolves it to mean the parent of that commit.  You can also specify a number after the ^ at the end of a reference to identify which parent you want.  For example d921970^2 means the second parent of commit d921970.</p>
-
-<p>The other ancestry specification is the ~ (tilde) symbol.  This reference also refers to the parent, so HEAD~ and HEAD^ are equivalent.  HEAD~2 means the first parent of the fist parent.</p>
-
-<p>You can combine the two references to do something like HEAD~3^2</p>
-
-<h3 id="commit-ranges">Commit Ranges</h3>
-
-<p>If you have a lot of branches, you can use Git’s range specification to answer questions such as “What work is on this branch that I haven’t yet merged into my main branch?”</p>
-
-<h4 id="double-dot-range-specification">Double Dot range specification</h4>
-
-<p>Given the commit history below</p>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"></script>
-<div class="mermaid">
- flowchart RL
-
-    F([F])--&gt;E([E])--&gt;B([B])--&gt;A([A])
-    D([D])--&gt;C([C])
-    C--&gt;B
-    experiment[experiment]-.-D
-    master[master]-.-F
-
-</div>
-
-<p>Say you want to see what is in your experiment branch that has not yet been merged into your master branch.  You can ask git to show you a lof of just those commits with the master..experiment range.</p>
-
-<p><code class="language-plaintext highlighter-rouge">git log master..experiment</code></p>
-
-<p>This command means all commits reachable from experiment that aren’t reachable from master. So for the above example you would have D and C as the result.</p>
-
-<p>If on the other hand you wanted to see the opposite: all commits in master that are not in experiment you reverse the double dot range.</p>
-
-<p><code class="language-plaintext highlighter-rouge">git log experiment..master</code></p>
-
-<p>This would yield the F and E commits.</p>
-
-<p>A useful take on this command is if you want to check what you are about to push.  The command below will give you a summary of what you are about to push if your branch is tracking origin/master</p>
-
-<p><code class="language-plaintext highlighter-rouge">git log origin/master..HEAD</code></p>
-
-<h4 id="multiple-points-range-specification">Multiple points range specification</h4>
-
-<p>If you want to see what commits are in any of several branches that aren’t in the branch you are currently on, Git allows you to do this by suing either the ^ or the –not before any reference from which you don’t want to see reachable commits.  The following commands are equivalent.</p>
-
-<p><code class="language-plaintext highlighter-rouge">git log refA..refB</code></p>
-
-<p><code class="language-plaintext highlighter-rouge">git log ^refA refB</code></p>
-
-<p><code class="language-plaintext highlighter-rouge">git log refB --not refA</code></p>
-
-<p>This syntax can specify more than two references in your query which you cannot do with double dot syntax.  For example if you want to see commits that are reachable from refA or refB but not from refC you can use either of the commands below.</p>
-
-<p><code class="language-plaintext highlighter-rouge">git log refA refB ^refC</code></p>
-
-<p><code class="language-plaintext highlighter-rouge">git log refA refB --not refC</code></p>
-
-<h4 id="triple-dot-range-specification">Triple Dot range specification</h4>
-
-<p>The triple dot range selection syntax specifies all the commits that are reachable by either of two references but not by both of them.</p>
-
-<p>If you want to see what is in master or experiment but not any common references you can run the command</p>
-
-<p><code class="language-plaintext highlighter-rouge">git log master...experiment</code></p>
-
-<p>This command will give you the normal git log output.  You can modify that with –left-right option which will show which side of the range each commit is in and make the output easier to read.</p>
-
-<p><code class="language-plaintext highlighter-rouge">git log --left-right master...experiment</code></p>
-
-<p>In your sample history this would yield</p>
-
-<p>&lt; F</p>
-
-<p>&lt; E</p>
-
-<p>&gt; D</p>
-
-<p>&gt; C</p>
-
+<p><code class="language-plaintext highlighter-rouge">git blame -C -L 123, 145 somefile.txt</code></p>
 
   </div>
 

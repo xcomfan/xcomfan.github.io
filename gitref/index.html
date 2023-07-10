@@ -52,11 +52,11 @@
     
     subgraph work_local_sub [Work Locally]
         direction LR
-        history([View repository history])
-        branching([Create a topic branch])
-        work([Work on your branch])
-        stashing([Stashing])
-        commit([Committing])
+        history([Work with repository history])
+        branching([Create and work with branches])
+        work([Work on your local branch])
+        stashing([Stashing your work])
+        commit([Committing your work])
     end
 
     init([Create or clone repo])
@@ -64,10 +64,10 @@
     remotes([Remote repositories])
     
     click init "/gitref/init/"
+    click history "/gitref/repo_history"
     click branching "/gitref/branching/"
     click work "/gitref/work_locally/"
     click stashing "/gitref/stashing/"
-    click history "/gitref/repo_history"
     click commit "/gitref/commit/"
     click remotes "/gitref/remotes/"
 
