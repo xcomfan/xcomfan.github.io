@@ -62,6 +62,10 @@ A remote branch that is being tracked by a local [tracking branch]({% link gitre
 
 When you are working in a Git repository the working copy is the copy on your disk actively being worked on.
 
+# working directory
+
+Also called the workint tree is a single checkout of one version of a Git project.  The working directory is where you modify your files before staging them for a commit.  Internally Git stores files in a compressed format, but for the working directory it extract them onot the diks so they can be easily modified.
+
 # working tree
 
 A single checkout of one version of the project.  These files are extracted from the Git directory and placed on disk for you to use or modify.

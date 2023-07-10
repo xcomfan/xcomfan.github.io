@@ -17,11 +17,11 @@ permalink: /gitref/
     
     subgraph work_local_sub [Work Locally]
         direction LR
-        history([View repository history])
-        branching([Create a topic branch])
-        work([Work on your branch])
-        stashing([Stashing])
-        commit([Committing])
+        history([Work with repository history])
+        branching([Create and work with branches])
+        work([Work on your local branch])
+        stashing([Stashing your work])
+        commit([Committing your work])
     end
 
     init([Create or clone repo])
@@ -29,11 +29,11 @@ permalink: /gitref/
     remotes([Remote repositories])
     
     click init "{% link gitref/init.md %}"
-    click branching "{% link gitref/branching/branching.md %}"
-    click work "{% link gitref/work.md %}"
-    click stashing "{% link gitref/stashing.md %}"
     click history "{% link gitref/repo_history/repo_history.md %}"
-    click commit "{% link gitref/commit.md %}"
+    click branching "{% link gitref/branching/branching.md %}"
+    click work "{% link gitref/work/work.md %}"
+    click stashing "{% link gitref/stashing.md %}"
+    click commit "{% link gitref/committing/commit.md %}"
     click remotes "{% link gitref/remotes.md%}"
 
     init-->work_local_sub

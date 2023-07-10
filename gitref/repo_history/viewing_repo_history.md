@@ -4,11 +4,9 @@ title: "Viewing Repository History"
 permalink: /gitref/repo_history/viewing_repo_history
 ---
 
-[comment]: <> (TODO: This file is a bit big.  Need to split it up into more manageable chunks?)
-
 ## Viewing the Commit History
 
-The `git log` command command will show you the history below are some useful modifiers to the git log command.
+The `git log` command command shows you the repository history.  This page outlines the usage and options of this Git command.
 
 ## Git log and branching
 
@@ -22,9 +20,7 @@ You can also have Git show you the history for all branches
 
 ## See which files were changed in each commit
 
-`git log [--name-only | --name-status  ]` - Shows the list of files modified after displaying basic commit information.  name-status adds information for each file of whether the file was added, modified, or deleted in the commit.
-
-[comment]: <> (TODO: This file is a bit big.  Need to link to chunk explanation here?)
+`git log [--name-only | --name-status  ]` - Shows the list of files modified after displaying basic commit information.  The name-status option adds information for each file of whether the file was added, modified, or deleted in the commit.
 
 ## See the changes made (the patch) in each commit
 
@@ -38,13 +34,13 @@ If you want to see relative dates ("2 weeks ago" for example) instead of full da
 
 `git log --relative-date`
 
-## Alternate ways to display git log infromation (--pretty option)
+## Alternate ways to display git log infromation (the pretty option)
 
 `git log --pretty` changes the log output to formats other than the default.  There are some predefined options available.
 
 `git log --pretty=oneline` will print each commit on a single line.
 
-`git log --pretty=oneline --graph` Adding the graph option will add an ASCII graph showing the branch and merge history which combines well with the --pretty=oneline modifier.
+`git log --pretty=oneline --graph` Adding the graph option will add an ASCII graph showing the branch and merge history which combines well with the `--pretty=oneline` modifier.
 
 ### Customize the format of --pretty modifier output
 

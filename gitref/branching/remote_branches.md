@@ -12,8 +12,6 @@ permalink: /gitref/branching/remotes
 
 [comment]: <> (TODO: I don't love this explanation maybe rewrite it in a way that makes sense to me.)
 
-[comment]: <> (TODO: I think I may want to move this content to the remote section.)
-
 Remote-tracking branches are local references to the state of remote branches.  You cannot move these references; Git moves them for you whenever you do any network communication to make sure they accurately represent the state of the remote repository.  Think of them as bookmarks to remind you where the branches in your remote repositories were the last time you connected to them.
 
 Remote tracking branch names take the form \<remote\>/\<branch\> for example if you wanted to see what the master branch on your remote origin looks like as of the last time you communicated with it you can check out the origin/master branch.

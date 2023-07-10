@@ -4,156 +4,40 @@ title: "Searching Repository History"
 permalink: /gitref/repo_history/searching_repo_history
 ---
 
-[comment]: <> (TODO: REV MARKER)
-
-
 ## Git log searching
 
-If you are not looking for where a term exists, but when it existed or was introduce you want to use git log searching.
+Git log search is usefull when you are looking for when a something got introduced or existed in your Git project instead of where.
 
-If for example you want to find when the ZLIB_BUF_MAX constant was originally introduced, we can use the -S option to git log.  The output of the command will be the commit details of the commit that introduced the variable. If you need to be more specific you can use the -G option to provide a regular expression.
+If for example you want to find when the ZLIB_BUF_MAX constant was originally introduced, you can use the -S option to git log.  The output of the command will be the commit details of the commit that introduced the variable. If you need to be more specific you can use the -G option to provide a regular expression.
 
 `git log -S ZLIB_BUG_MAX --oneline`
 
 ### Line Log Search
 
-you can use Line Log Search to check the history of a function or a line of code.  Just use the -L option with git log.  For example, if we want to see every change made to the function git_deflate_bound in the zlib.c file we would do similar to the following command.  This will try to figure out what the bounds of that function are and then look though the history and show us every change that was made to the function as a series of patches.
+you can use Line Log Search to check the history of a function or a line of code.  Just use the -L option with git log.  For example, if we want to see every change made to the function git_deflate_bound in the zlib.c file we would use the command below.  This command will try to figure out what the bounds of that function are and then look though the history and show us every change that was made to the function as a series of patches.
 
 `git log -L :git_deflate_bound:zlib.c`
-
-[comment]: <> (TODO: Play around with this feature to get a better write up and understand it better?)
 
 If Git can't figure out hwo to match a function or method in your programming language, you can also provide it with a regular expression as in the example below.
 
 `git log -L '/unsigned long git_deflate_bound/',/^}/:zlib.c`
 
-## Revision Selection
+## File annotation (git blame)
 
-Git allows you to refer to a single commit, set of commits, or range of commits in a number of ways.
+File annotations is the best tool if you want to track down when something such as a bug was introduced to the code and why.  File annotations will show you what commit was the last to modify each line of any file.  So for example if you see a method in your code is buggy you can annotate it with git blame to determine which commit was responsible for the introduction fo that line.
 
-### Single Revisions
+`git blame -L 69,82 problemfile.txt`
 
-You can refer to a commit using the full 40 character SHA-1 of the commit, but typically the first few characters of the sha are needed.  4 is the minimum, but 8 to 10 characters will be enough to make sure your selection is unique.
+The -L option allows you to specify a range of lines to display the git blame output for.
 
-### Branch References
+The resulting output will show.
 
-If a commit is the tip of a branch, you can use teh branch name in any git command that expects a reference
+* partial SHA-1 of the commit in first column.
+* committer and commit date followed by line number in second column
+* a carat (^) symbol at the beginning of the commit SHA-1 indicates that the content was there from the initial commit.
 
-`git show ca82a6dff812ec44f44442008202890a8989033`
+[comment]: <> (TODO: Experiment with the bit below to better understand it)
 
-`git show topic1`
+You can use git blame with the -C option to try and figure our where snippets of the code within it originally came from.  This is useful if there was a code refactor.  Git will not just find where the lines are but the history of the original location they came from.
 
-To get the commit hash of a branch you can use the rev-parse command.
-
-`git rev-parse topic1`
-
-### Reflog Shortnames
-
-As you are working, Git keeps a "reflog" a log of where your HEAD and branch references have been.  Every time your branch tip is updated for any reason, Git will store that information for you in this temporary history.  ***Note:*** reflog information is strictly local.  Reflog will only contain information for what you have done in your local repository.  Think of reflos as Git's version of the Linux shell history.
-
-To see this history use the command 
-
-`git reflog`
-
-You can use reflog data to refer to older commits.
-
-If you want to see the 5th prior commit
-
-`git show HEAD@{5}`
-
-You can also look back days, months etc
-
-`git show HEAD@{2.months.ago}`
-
-To see reflog information formatted like the git log output use the -g option to git log
-
-`git log -g master`
-
-### Ancestry References
-
-[comment]: <> (TODO: This explanation sucks play around with these commands and write a better one.?)
-
-You can specify commits via their ancestry.  If you place a ^ (caret) symbol at the end fo a reference, Git resolves it to mean the parent of that commit.  You can also specify a number after the ^ at the end of a reference to identify which parent you want.  For example d921970^2 means the second parent of commit d921970.
-
-The other ancestry specification is the ~ (tilde) symbol.  This reference also refers to the parent, so HEAD~ and HEAD^ are equivalent.  HEAD~2 means the first parent of the fist parent.
-
-You can combine the two references to do something like HEAD~3^2
-
-### Commit Ranges
-
-If you have a lot of branches, you can use Git's range specification to answer questions such as "What work is on this branch that I haven't yet merged into my main branch?"
-
-#### Double Dot range specification
-
-Given the commit history below 
-
-{% mermaid %}
- flowchart RL
-
-    F([F])-->E([E])-->B([B])-->A([A])
-    D([D])-->C([C])
-    C-->B
-    experiment[experiment]-.-D
-    master[master]-.-F
-
-{% endmermaid %}
-
-Say you want to see what is in your experiment branch that has not yet been merged into your master branch.  You can ask git to show you a lof of just those commits with the master..experiment range.
-
-`git log master..experiment`
-
-This command means all commits reachable from experiment that aren't reachable from master. So for the above example you would have D and C as the result.
-
-[comment]: <> (TODO: Try this in an actual repo and update notes with your findings)
-
-If on the other hand you wanted to see the opposite: all commits in master that are not in experiment you reverse the double dot range.
-
-`git log experiment..master`
-
-This would yield the F and E commits.
-
-A useful take on this command is if you want to check what you are about to push.  The command below will give you a summary of what you are about to push if your branch is tracking origin/master
-
-`git log origin/master..HEAD`
-
-#### Multiple points range specification
-
-If you want to see what commits are in any of several branches that aren't in the branch you are currently on, Git allows you to do this by suing either the ^ or the --not before any reference from which you don't want to see reachable commits.  The following commands are equivalent.
-
-[comment]: <> (TODO: Another crappy explanation that needs some experimenting and updating)
-
-`git log refA..refB`
-
-`git log ^refA refB`
-
-`git log refB --not refA`
-
-This syntax can specify more than two references in your query which you cannot do with double dot syntax.  For example if you want to see commits that are reachable from refA or refB but not from refC you can use either of the commands below.
-
-`git log refA refB ^refC`
-
-`git log refA refB --not refC`
-
-#### Triple Dot range specification
-
-The triple dot range selection syntax specifies all the commits that are reachable by either of two references but not by both of them.
-
-If you want to see what is in master or experiment but not any common references you can run the command
-
-`git log master...experiment`
-
-This command will give you the normal git log output.  You can modify that with --left-right option which will show which side of the range each commit is in and make the output easier to read.
-
-`git log --left-right master...experiment`
-
-In your sample history this would yield
-
-< F
-
-< E
-
-\> D
-
-\> C
-
-[comment]: <> (TODO: Need to play around with this feature as well)
+`git blame -C -L 123, 145 somefile.txt`

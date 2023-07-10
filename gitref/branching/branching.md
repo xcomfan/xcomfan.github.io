@@ -6,6 +6,8 @@ permalink: /gitref/branching/
 
 [Branching concepts]({% link gitref/branching/branch_concepts.md %})
 
+[Branching workflows]({% link gitref/branching/branching_workflows.md %})
+
 [Listing, creating, deleting, switching and renaming branches]({% link gitref/branching/creating_and_switching_branches.md %})
 
 [Merging branches]({% link gitref/branching/merging.md %})
@@ -13,12 +15,3 @@ permalink: /gitref/branching/
 [Working with remote branches]({% link gitref/branching/remote_branches.md %})
 
 [Rebasing]({% link gitref/branching/rebasing.md %})
-
-
-
-
-
-
-
-
-
