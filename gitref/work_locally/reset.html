@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Working with Git reset | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Working with Git reset" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/gitref/work_locally/reset" />
+<meta property="og:url" content="http://localhost:4000/gitref/work_locally/reset" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Working with Git reset" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Working with Git reset","url":"http://localhost:4000/gitref/work_locally/reset"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Working with Git reset</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="git-concepts-to-help-understand-git-reset-command">Git concepts to help understand git reset command</h2>
+
+<h3 id="git-workflow-of-the-three-trees">Git workflow of the “three trees”</h3>
+
+<p>Git’s typical workflow is to record snapshots of your project in successively better states, by manipulating the states of the three <a href="/gitref/definitions/#tree">trees</a></p>
+
+<p>Lets say we start with a new directory which is not yet a Git repository with a single file in it.  If we run the <code class="language-plaintext highlighter-rouge">git init</code> command this will create a Git repository with a <em>HEAD</em> reference pointing to the unborn master branch.  At this point only the <a href="/gitref/definitions/#working_directory">working directory</a> has any content.</p>
+
+<p>Now we want to commit our single file, so we use the <code class="language-plaintext highlighter-rouge">git add</code> command.  This will take the content in our <em>working directory</em> and copy it to the <a href="/gitref/definitions/#index"><em>index</em></a>.</p>
+
+<p>We then run <code class="language-plaintext highlighter-rouge">git commit</code>, which takes the contents of the <em>index**and saves it as a permanent snapshot, creates a commit object which points to that snapshot, and updates *master</em> to point to that commit.  At this point if you run <code class="language-plaintext highlighter-rouge">git status</code> you will see no change because all three trees are the same.</p>
+
+<p>Switching  branches or cloning goes though a similar process. When you checkout a branch, it changes <em>HEAD</em> to point to the new branch ref, populates your <em>index</em> with the snapshot of that commit, then copies the contents of the <em>index</em> into your <em>working directory</em>.</p>
+
+<h3 id="the-role-of-the-reset">The role of the reset</h3>
+
+<p>When you run the <code class="language-plaintext highlighter-rouge">git reset</code> command, Git manipulates the three trees doing up to three operations depending on the options specified.</p>
+
+<h3 id="step-1-move-the-head-soft">Step 1: Move the HEAD (–soft)</h3>
+
+<p>The first thing reset will do is move what <em>HEAD</em> points to.  This is not the same as changing HEAD itself (which is what checkout does); reset moves the branch that <em>HEAD</em> is pointing to.</p>
+
+<p>All calls to git reset have this as the first step.  If you specify the <strong>–soft</strong> argument, git reset will stop here.  This essentially undoes the last commit.  At this stage if you run <code class="language-plaintext highlighter-rouge">git commit</code>, Git creates a new commit and moves the branch that HEAD points to up to it.  When you reset back to HEAD~ (the parent of HEAD), you are moving the branch back to where it was, without changing the index or working directory (The working directory and index stay the same, but you won’t see the previous commit in <code class="language-plaintext highlighter-rouge">git log</code>).</p>
+
+<p>At this point you can run <code class="language-plaintext highlighter-rouge">git commit</code> again to accomplish what <code class="language-plaintext highlighter-rouge">git commit --amend</code> would have done.</p>
+
+<h3 id="step-2-updating-the-index-mixed">Step 2: Updating the index (–mixed)</h3>
+
+<p>Step two is the default for git reset.  If you run git reset without any argument it will stop at this step 2.  In step 2 reset will update the index with the contents of whatever snapshot HEAD points to.  The –mixed argument is optional.</p>
+
+<p>At this step your last commit is still undone, but it will also un-stage everything. In other words <code class="language-plaintext highlighter-rouge">git reset HEAD~</code> will undo your last commit and add commands.</p>
+
+<h3 id="step-3-updating-the-working-directory-hard">Step 3: Updating the working directory (–hard)</h3>
+
+<p>The third ting that reset will do (if you specify the –hard) option is to make the working directory look like the index.</p>
+
+<p>In other words git <code class="language-plaintext highlighter-rouge">reset --hard HEAD~</code> will undo the git commit command your for your prior commit, the git add command for your prior commit, and eliminate any changes you made to the files in your working directory.</p>
+
+<h3 id="git-reset-with-a-path">Git reset with a path</h3>
+
+<p>You can also provide git reset with a path to act on.</p>
+
+<p>If you specify a path, reset will skip step 1 and limit the remainder of its actions to a specific file or set of files.  This makes sense because HEAD is a pointer and you can’t point to a part of a commit, but index and working directory can be partially updated.</p>
+
+<p>If you run the command <code class="language-plaintext highlighter-rouge">git reset file.txt</code> (this command is essentially a short hand for <code class="language-plaintext highlighter-rouge">git reset --mixed file.txt</code>) git reset will</p>
+
+<ol>
+  <li>skip moving the branch HEAD points to</li>
+  <li>make the index look like HEAD</li>
+</ol>
+
+<p>In other words it copies file.txt from HEAD to index.  This has the practical effect of unstaging the file.</p>
+
+<p>You don’t have to pull the file from HEAD you can specify the commit to pull that version from.  <code class="language-plaintext highlighter-rouge">git reset eb43b4 file.txt</code></p>
+
+<p>You can use the –patch option with git reset to un-stage content on a hunk by hunk basis.</p>
+
+<h2 id="using-git-reset-for-squashing">Using git reset for squashing</h2>
+
+<p>Lets say you have a project where…</p>
+
+<ul>
+  <li>The first commit has one file.</li>
+  <li>The second commit added a new file and changed the first.</li>
+  <li>The third commit changed the first file again.</li>
+</ul>
+
+<p>If the second commit was a work in progress and you want to squash it down you can…</p>
+
+<p>run the command <code class="language-plaintext highlighter-rouge">git reset --soft HEAD~2</code> to move the HEAD branch back to an older commit (the most recent commit you want to keep)</p>
+
+<p>then simply runt <code class="language-plaintext highlighter-rouge">git commit</code> again.</p>
+
+<p>This would remove the second commit from your reachable history (the history you would push)</p>
+
+<h2 id="reset-versus-checkout">Reset versus checkout</h2>
+
+<h3 id="without-path-specified">Without path specified</h3>
+
+<p>Running <code class="language-plaintext highlighter-rouge">git checkout [branch]</code> is pretty similar to running <code class="language-plaintext highlighter-rouge">git reset --hard [branch]</code> in that it updates all 3 trees for you to look like <code class="language-plaintext highlighter-rouge">[branch]</code>.</p>
+
+<p>There are two important differences however.</p>
+
+<ol>
+  <li>
+    <p>Unlike <code class="language-plaintext highlighter-rouge">reset --hard</code>, <code class="language-plaintext highlighter-rouge">checkout</code> is working directory safe.  It will check to make sure its not blowing away files that have changes to them.  It actually tries to do a trivial merge in the working director so that all the files you have not changed will be updated.  <code class="language-plaintext highlighter-rouge">reset hard</code> on the other hand, will simply replace everything across the board without checking.</p>
+  </li>
+  <li>
+    <p>The way HEAD is updated is different.  <code class="language-plaintext highlighter-rouge">reset</code> will move the branch that HEAD points to, <code class="language-plaintext highlighter-rouge">checkout</code> will move HEAD itself to point to another branch.  So for instance if we have master and develop branches which point to different commits, and we are currently on the develop branch (so HEAD points to it).  If we run <code class="language-plaintext highlighter-rouge">git reset master</code>, develop itself will now point to the same commit that master does.  If we instead run <code class="language-plaintext highlighter-rouge">git checkout master</code> develop does not move, HEAD itself does.  HEAD will now point to master.  In both cases we are moving HEAD to point to commit A, but how we do so is very different.  <code class="language-plaintext highlighter-rouge">reset</code> moves the branch HEAD points to, <code class="language-plaintext highlighter-rouge">checkout</code> moves HEAD itself.</p>
+  </li>
+</ol>
+
+<h3 id="with-path-specified">With path specified</h3>
+
+<p>If you run <code class="language-plaintext highlighter-rouge">checkout</code> with a file path.  Like <code class="language-plaintext highlighter-rouge">reset</code> this does not move HEAD.  <code class="language-plaintext highlighter-rouge">checkout</code> will update the index with that file at that commit, but it will also overwrite the file in the working directory.</p>
+
+<p>You can use the –patch option with checkout to select hunks you wish to check out.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
