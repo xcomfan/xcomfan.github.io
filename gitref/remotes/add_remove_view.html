@@ -3,20 +3,20 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Contents | My References</title>
+<title>Working With Remote Repositories | My References</title>
 <meta name="generator" content="Jekyll v3.9.2" />
-<meta property="og:title" content="Contents" />
+<meta property="og:title" content="Working With Remote Repositories" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://localhost:4000/" />
-<meta property="og:url" content="http://localhost:4000/" />
+<link rel="canonical" href="http://localhost:4000/gitref/remotes/add_remove_view" />
+<meta property="og:url" content="http://localhost:4000/gitref/remotes/add_remove_view" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Contents" />
+<meta property="twitter:title" content="Working With Remote Repositories" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Contents","name":"My References","url":"http://localhost:4000/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Working With Remote Repositories","url":"http://localhost:4000/gitref/remotes/add_remove_view"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
@@ -39,15 +39,45 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Contents</h1>
+    <h1 class="post-title">Working With Remote Repositories</h1>
   </header>
 
   <div class="post-content">
-    
-<h2 id="git"><a href="/gitref/">Git</a></h2>
-<h2 id="javascript"><a href="/javascript/">Javascript</a></h2>
-<h2 id="jekyll"><a href="/jekyllref/">Jekyll</a></h2>
-<h2 id="windows"><a href="/windows/terminal/">Windows</a></h2>
+    <h2 id="list-your-remote-repositories">List your remote repositories</h2>
+
+<p>see the shortnames for remote repositories you have defined</p>
+
+<p><code class="language-plaintext highlighter-rouge">git remote</code></p>
+
+<p>see the shortnames and the url of the remote repositories</p>
+
+<p><code class="language-plaintext highlighter-rouge">git remote -v</code></p>
+
+<h2 id="inspect-a-remote-repository">Inspect a remote repository</h2>
+
+<p>To see the URL for a remote repository as well as tracking information, and a list of branches available on the remote you can use the command.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git remote show &lt;remote&gt;</code></p>
+
+<p>This command is useful to seeing which branch you would be pulling from and pushing to.</p>
+
+<h2 id="add-a-remote-repository">Add a remote repository</h2>
+
+<p>To add a remote repository use the command below.  Once added you can refer to the repository with the short name.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git remote add &lt;shortname&gt; &lt;url&gt;</code></p>
+
+<h2 id="change-shortname-for-a-remote-repository">Change shortname for a remote repository</h2>
+
+<p><code class="language-plaintext highlighter-rouge">git remote rename &lt;old_shortname&gt; &lt;new_shortname&gt;</code> for example <code class="language-plaintext highlighter-rouge">git remote rename abc xyz</code></p>
+
+<p><strong><em>Note</em></strong> This will change your remote-tracking branch names as well.  What used to be at abc/master will now be at xyz/master</p>
+
+<h2 id="remove-a-remote-repository">Remove a remote repository</h2>
+
+<p>If a server was moved, or are no longer using a particular mirror, or a contributor is no longer contributing and you need to delete a remote use the command.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git remote remove &lt;shortname&gt;</code> for example <code class="language-plaintext highlighter-rouge">git remote remove xyz</code></p>
 
   </div>
 

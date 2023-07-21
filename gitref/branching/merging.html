@@ -45,6 +45,8 @@
   <div class="post-content">
     <p>Click on the nodes for details of each workflow step.</p>
 
+<p>Dotted lines indicate optional path</p>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"></script>
 <div class="mermaid">
  flowchart TD
@@ -52,15 +54,15 @@
     abort([Abort merge])
     resolve([Resolve merge conflicts])
     undo([Undo a completed merge])
-    finish([Merge commit created])
+    merge_commit[Merge commit created]
+    finish[Merge completed]
     
-    start--&gt;abort
-    start--&gt;resolve
+    start-.-&gt;abort
+    start--&gt;|If branches are diverged need to resolve conflict|resolve
     start--&gt;|If branches are not diverged fast forward merge|finish
-    abort--&gt;start
-    undo--&gt;start
-    resolve--&gt;finish
-    finish--&gt;undo
+    resolve--&gt;merge_commit
+    finish-.-&gt;undo
+    merge_commit--&gt;finish
 
     click start "/gitref/branching/starting_merge"
     click abort "/gitref/branching/abort_merge"

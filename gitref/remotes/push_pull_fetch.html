@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pushing, Pulling Fetching With Remote Repositories | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Pushing, Pulling Fetching With Remote Repositories" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/gitref/remotes/push_pull_fetch" />
+<meta property="og:url" content="http://localhost:4000/gitref/remotes/push_pull_fetch" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pushing, Pulling Fetching With Remote Repositories" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Pushing, Pulling Fetching With Remote Repositories","url":"http://localhost:4000/gitref/remotes/push_pull_fetch"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Pushing, Pulling Fetching With Remote Repositories</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="synchronizing-your-local-repository-with-remote">Synchronizing your local repository with remote</h2>
+
+<p>To get get the latest content from the remote repository use the command below.  This command will update your tracking branches and downlaod any new ones created on the remote repository which are not in your local repository yet.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git fetch &lt;remote&gt;</code> for example <code class="language-plaintext highlighter-rouge">git fetch origin</code></p>
+
+<h2 id="checkout-a-remote-branch">Checkout a remote branch</h2>
+
+<p>When you do a fetch that brings down remote tracking branches, you don’t automatically have local, editable copies of them.  For example if you want a local copy of the bugfix branch, you would run the command.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout -b &lt;local_branch_name&gt; remote/remote_branch_name</code></p>
+
+<p>for example</p>
+
+<p><code class="language-plaintext highlighter-rouge">git checkout -b bugfix origin/serverfix</code></p>
+
+<h2 id="pushing-to-your-remotes">Pushing to your remotes</h2>
+
+<p>When your project is at a point that you want to share, you need to push it upstream.  The command for that is</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push &lt;remote&gt; &lt;branch&gt;</code></p>
+
+<p>for example</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push origin master</code></p>
+
+<p>If you want the remote name to be different you can use the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push origin bugfix:newremotename</code></p>
+
+<p>This command will only work if you have write permissions to the remote repository.</p>
+
+<p>If you and someone else clone at the same time and they push upstream and then you push upstream, your changes will be rejected.  You will need to fetch their work first and incorporate it into yours before you will be allowed to push.  This is covered in branching section.</p>
+
+<h1 id="deleting-a-remote-branch">Deleting a remote branch</h1>
+
+<p>To delete a remote branch use the command below.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push origin --delete &lt;branchname&gt;</code></p>
+
+<h1 id="changing-the-master-branch-name">Changing the master branch name</h1>
+
+<p><strong><em>Note:</em></strong> <em>Changing a branch such as master/main/mainline/default can break scripts and integrations. Make sure you know what you are doing.</em></p>
+
+<p>Rename your local master branch to main with the following command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch --move master main</code></p>
+
+<p>To let others see the new main branch, you need to push it to the remote with the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push --set-upstream origin main</code></p>
+
+<p>In the current state the master branch is gone and replaced with the main branch.  The main branch is present on the remote, however the old master branch is still present on the remote, and collaborators will continue to use the master as the base of their work until you make the following changes.</p>
+
+<ul>
+  <li>Any project that depends on this one will need to update their code and/or configuration.</li>
+  <li>Update any test-runner configuration files</li>
+  <li>Adjust build and release scripts</li>
+  <li>Redirect settings on your rep host for things like the repo’s default merge rules and other things that match branch names</li>
+  <li>Update references to the old branch in documentation</li>
+  <li>Close and merge any pull requests that target the old branch</li>
+</ul>
+
+<p>After you have done the above tasks and are certain the main branch performs just as the master branch, you can delete the master brach with teh command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git push origin --delete master</code></p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
