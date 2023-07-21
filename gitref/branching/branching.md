@@ -12,6 +12,6 @@ permalink: /gitref/branching/
 
 [Merging branches]({% link gitref/branching/merging.md %})
 
-[Working with remote branches]({% link gitref/branching/remote_branches.md %})
+[Working with remote branches]({% link gitref/remotes/remotes.md %})
 
 [Rebasing]({% link gitref/branching/rebasing.md %})

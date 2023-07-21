@@ -23,7 +23,7 @@ permalink: /gitref/working_on_github
 7. The project owner merges or closes the Pull Request
 8. Sync the updated master back to your fork
 
-This is essentially the Git [Integration Manager workflow]({% link gitref/distributed_workflow/distributed_workflow.md %}#integration-manager-workflow) but using GitHub tooling instead of email.
+This is essentially the Git [Integration Manager workflow]({% link gitref/remotes/distributed_workflow.md %}#integration-manager-workflow) but using GitHub tooling instead of email.
 
 ### Creating a Pull Request
 

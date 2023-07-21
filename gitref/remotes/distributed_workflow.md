@@ -4,9 +4,7 @@ title: "Distributed Work"
 permalink: /gitref/distributed_work
 ---
 
-[comment]: <> (TODO: REV MARKER)
-
-## Summaries of common distributed workflows
+## Summaries of common distributed Git workflows
 
 ### Centralized workflow
 
@@ -34,7 +32,6 @@ This workflow is generally used by huge projects such as the Linux kernel.
 Various integration managers are in charge of certain parts of the repository.  They are called lieutenants.  All lieutenants have one integration manager known as the benevolent dictator.  The benevolent dictator pushes from their directory to a reference repository from which all the collaborators need to pull.  The process has the following flow.
 
 1. Regular developers work on their topic branch and rebase their work on top of master.  The master branch is that of the reference repository to which the dictator pushes.
-2. Lieutenants merge the developers topic
 2. Lieutenants merge the developers topic branches into their master branch.
 3. The dictator merges the lieutenants master branches into the dictator's master branch.
 4. Finally, the dictator pushes that master branch to the reference repository so the other developers can rebase on it.

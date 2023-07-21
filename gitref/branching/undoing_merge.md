@@ -4,8 +4,6 @@ title: "Undoing/reverting a merge"
 permalink: /gitref/branching/undoing_merge
 ---
 
-[comment]: <> (TODO: REV MARKER)
-
 Lets say you started work on a topic branch, accidentally merged it to master and want to undo the error.
 
 There are two ways to approach this problem.  
@@ -18,7 +16,7 @@ In most cases you can follow the problematic git merge command with `git reset -
 
 The downside of this approach is that you are rewriting history which is problematic for a shared repository.  It also does not work if you made commits after making the mistake.  
 
-## Reverse the commit
+## Revert the commit
 
 Git gives you the option of making a new commit that undoes all the changes from an existing one.  Git calls this option a "revert"
 

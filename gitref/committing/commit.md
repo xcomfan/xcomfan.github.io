@@ -8,4 +8,4 @@ permalink: /gitref/commit/
 
 [Create a commit]({% link gitref/committing/create_commit.md %})
 
-[Rewrtiting commit history](% link gitfref/comitting/rewrite_commits.md%)
+[Rewrtiting commit history]({% link gitref/committing/rewrite_commits.md %})
