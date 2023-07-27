@@ -144,6 +144,18 @@ let text = "";
 for (let i = 0; i < 5; i++>) {
     text += "The number is " + i + "<br>";
 }
+
+for (let i = 0, len = cars.length, text = ''; i < len; i++){
+    text += cars[i] + "<br>"
+}
+
+let i = 0;
+let len = cars.length;
+let text = "";
+for (; i < len; ){
+    text += cars[i] + "<br>";
+    i ++;
+}
 ```
 
 ### for in

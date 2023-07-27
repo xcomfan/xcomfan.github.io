@@ -6,15 +6,15 @@ permalink: /javascript/typescript
 
 [comment]: <> (TODO: Need to break this down into easier to GROC sections)
 
-# Intro
+## Intro
 
-* Typescript is a compoiled language that compiles down to Javascript
+* Typescript is a compiled language that compiles down to Javascript
 * Typescript adds strong static typing on top of Javascript so that its able to provide compile time code checking.
 * Typescript is a superset of Javascript
 * For more infro and references got to typesriptlang.org
 * [GitHub repo for ourse](https://github.com/LinkedInLearning/typescript-EssT-2428199)
 
-## Installing Typescrit and adding it to your project
+## Installing Typescript and adding it to your project
 
 * In the course we are using node and then installing typescript you can install it locally or globally.  Node is just the package manager.
 
@@ -31,11 +31,11 @@ Command I used to install TypeScript into my project directory
 
 `npm install typescript --save-dev`
 
-**NOTE:** *You will need to mess with your PATH variable to get the tsc executable in the path.  The tsc executalbe is in the node modules directory*
+**NOTE:** *You will need to mess with your PATH variable to get the tsc executable in the path.  The tsc executable is in the node modules directory*
 
 You configure how typescript will behave with the `tsconfig.json` file in the root of your project directory.  There is an example in the sample project from the class.  
 
-include is where you set the paths to serach that typescript should be transpiling
+include is where you set the paths to search that typescript should be transpiling
 
 compilerOptions directive is for the compile options
 
@@ -68,7 +68,7 @@ async function getContact(contactId){
 
 ## Importing third-party types
 
- If typescript does not have build in support for some library you are using you need to add the type defintion.  You can write it yourself or if its an open source library add the one they provide. 
+ If typescript does not have build in support for some library you are using you need to add the type definition.  You can write it yourself or if its an open source library add the one they provide. 
 
  The type definitions live in the [DefinitelyTyped GitHub repo](https://github.com/definitelytypes/definitelytypes).  This can hard to navigate though so you want to go to [NPM repository](https://www.npmjs.com) and search for `@types package_name`` for example `@types jquery`
 
@@ -80,80 +80,11 @@ async function getContact(contactId){
 
  # Basic Typescript Usage
 
- ## Primatives and built-in types
 
- If you just assign a variable for exmaple `let x = 5`, Typescirpt will infer the type and make it a number.  If ou want to specify what type variable should be you use the :type notation such as in the examples below.
 
- `let x: number`
- `let y: string`
- `let z: boolean`
- `let a: Date`
- `let b: string[]` 
 
-If you actually want to be able to change variable types you can use the `any` type when defining the variable.
 
-`let b: any`
 
-You can also cast to any type.
-
-`b = "Hello" as any`
-
-Using any type kind of goes against using Typescript in the first place.
-
-## Creating custom types with interfaces
-
-The syntax for defining an interface is the keyword interface followed by the custom type name and the properties of the type as in the examle below...
-
-```
-interface Contact{
-    id: number;
-    name: string;
-    birthDate: Date;
-}
-```
-
-Interface are only use for Typescript type checking and are never included in your runtime code.
-
-To declare a variable as a custom type you would use the following...
-
-`let primaryContact: Contact;`
-
-If a field is optional you can appen a question to the fields name as in example below.
-
-```
-interface Contact{
-    id: number;
-    name: string;
-    birthDate?: Date;
-}
-```
-
-This means that you can omit the birhtDate field, but if you include it; it must be a Date type.
-
-You can also you an interface inside an interface using the `extends` keyword as in the example below...
-
-```
-interface Contact extends Address{
-    id: number;
-    name: string;
-    birthDate?: Date;
-}
-
-interface Address{
-    line1: string;
-    line2: string;
-    province: string;
-    region: string;
-    postalCode: string;
-}
-
-let primaryContact = {
-    birthDate: new Date("01-01-1980"),
-    id: 12345,
-    name: "Jamie Johnson",
-    postalCode: "94044"
-}
-```
 
 ## Defining types using type aliases
 
@@ -175,133 +106,7 @@ You can use them to give a little more meaning to the field you are assigning.  
 
 It also allows you to change all the types in a single location rather then multipl locations in yoru code.
 
-## Defining enumerable types
 
-Enums are a type that has a hard coded list of values and is defined like this...
-
-```
-enum ContactStatus{
-    Active,
-    Inactive,
-    New
-}
-
-interface Contact{
-    id: number;
-    name: string;
-    birthDate?: Date;
-    status: ContactStatus;
-}
-
-let primaryContact = {
-    birthDate: new Date("01-01-1980"),
-    id: 12345,
-    name: "Jamie Johnson",
-    status: ContactStatus.Active
-}
-```
-
-enums do make it into your runtime code.  
-
-By defulat the Enum value will evaluate to a number (based on position in enum) if you want them to evaluate to a string value you would do the following...
-
-```
-enum ContactStatus{
-    Active = "active",
-    Inactive = inactive",
-    New = new
-}
-```
-
-You can use any values you like as long as they are all of the same type.
-
-## Typing Functions
-
-```
-function clone(source: Contact): Contact{
-    return Object.apply({}, source);
-}
-```
-
-The argument here is type to Contact and the return value is as well.  Note that you can leave off the return type and Typescript will figure it out, but you may not get what you expect.  In this example the apply function woudl rerurn the any type, so if you don't specify the return type it will be any in this case.
-
-You can also have a function passed as a variable as in example below...
-
-```
-function clone(source: Contact, func: (source:Contact) => Contact): Contact{
-    return Object.apply({}, source);
-}
-```
-
-If you want to define a method on an interface you would...
-
-```
-interface Contact extends Address{
-    id: number;
-    name: ContactName;
-    clone(name: string): Contact
-}
-```
-
-## Defining a metatype using generics
-
-A generic type is a metatatype (a type that represents any other type you may want to substitue in)
-
-For example we will use our clone function again.
-
-```
-function clone<T>(source: T): T{
-    return Object.appply({}, source);
-}
-```
-
-T here is just a convention.  You can use any valid type name.  What we are saying here is whatever type gets passed in, is the type that will be returned.  This is what typescript will enforce.
-
-You can use multipel generic type parameters.
-
-```
-function clone<T1, T2>(source: T1): T2 {
-    return Object.appply({}, source);
-}
-```
-
-Since in the example above Typescript cannot infer what the types are we need to specify when calling the function as in the example below...
-
-```
-const b = clone<Contact, Contact>(a)
-```
-
-Generic contraints allow you to put more restictive rules on genric type parameters.  For example if you wanted to make sure that your return type is same as the input type you would...
-
-```
-function clone<T1, T2 extends T1>(source: T1): T2{
-    return Object.apply({}, source);
-}
-```
-
-If you are trying ot add a constraint on something that is not defined you can inline the constaid as in ...
-
-```
-function getNextId<T extends { id: number}>(items: T[]): number{
-    return items.reduce((max, x) => x.id > max ? max : x.id, 0) + 1
-}
-```
-
-In this example whatever you apss in to the function needs to be an array of object that must have an id attribute.
-
-In the above example whatever type you return (T2) must have the same fields as the input type (T1).  It does not have to extne the origin type just have same properties and add it whatever other properties it wants.
-
-Generics are not limited to functions they can be used in interfaces and classes as well.
-
-```
-interface UserContact<TExternalId>{
-    id: number,
-    name: string,
-    username: string,
-    externalId: TExternalId,
-    loadExternalId(): Task<TexternalId>
-}
-```
 
 # Defining More Complex Types
 
@@ -425,7 +230,7 @@ With the above code Typescript during compilation will enforc that the type you 
 You can use an index into an object to define a type.  For example...
 
 ```
-type Awesome = Contact["id]
+type Awesome = Contact["id"]
 
 interface ContactEvent {
     contactId: Contact["id]
@@ -530,7 +335,7 @@ type ContactQuery = Omit<
 
 If you want to not omit but limit to only a list of properties you would use the `Pick` utility class.
 
-```
+```typescript
 type ContactQuery = 
     Partial<
         Pick<
@@ -550,3 +355,124 @@ type RequiredContactQuery = Required<ContactQuery>
 
 ## Extracting metadata from existing types
 
+Below is an example of using a **mapped** type.  The benefit of using the 
+
+```typescript
+type ContactQuery = {
+    [TProp in keyof Contact]?: Query<Contact[TProp]>
+}
+
+function searchContacts(contacts: Contact[], query: ContactQuery){
+    return contacts.filter(contact => {
+        for (const property of Object.keys(contact) as (keyof Contact)[]){
+            // get the query object ofr this property
+            // here propertyQuery will be some type from the properties of the properties on contact.
+            const propertyQuery = query[property] as Query<Contact[keyof Contact]>;
+            // check to see if it matches
+            if (propertyQuery && propertyQuery.matches(contact[property])) {
+                return true;
+            }
+        }
+
+        return false;
+    })
+}
+
+```
+
+## Adding Dynamic Behavior with Decorators
+
+### What are decorators and why are they helpful?
+
+Decorators here are same as Python lets you modify a function/class etc.  Probably need to flash this out.  Decorators are a proposed enhancements to JavaScript.  In the meantime you can use the TypeScript syntax to let it compile down to JavaScript.
+
+To use decorators you need to open your tsconfig file and in compilerOptions set `"experimentalDecorators": true`.  You will also need to set in tsconfig file `"emitDecoratorMetadata: true"` and install reflect metadata library via `npm i reflect-metadata --save`
+
+[comment]: <> (TODO: I opted to not take notes on rest of section for time being since I am lacking context wil neeed to come back and re-visit.)j
+
+## Working with Modules
+
+### Module basics
+
+Modules is a JavaScript feature not specific to TypeScript.
+
+With modules each module has its own memory space so each variable or function defined in a module stays in its memory space and does not leak out (for example if you import two files and both have same function defined one won't over write the other.)
+
+Modules can import other modules.
+
+Browser know to load what is being loaded as requested, so you don't need to load everything up front.
+
+### Share code with imports and exports
+
+Before something can be imported by a module it must first be exported.
+
+Example below is form file `utils.tx`
+
+```typescript
+export function formatDate(date) {
+    return date.toLocaleDateString("en-US", {
+        dateStyle: "medium"
+    })
+}
+```
+
+Then you can do the import.  Below is an example form a different file (app.ts)
+
+```typescript
+import { formatDate } from "./utils"
+
+const formattedDate = formatDate(new Date());
+console.log(formattedDate);
+```
+
+### Defining global types with ambient modules
+
+The sample code below is from a file `globals.d.ts` and the file needs to have the `.d.ts` extension.
+
+Notice that we are just showing declaration of function and not the implementation.  You would still need the implementation and to make sure that the code is available at runtime.  This is useful when integrating TypeScript code with existing JavaScript code bases.
+
+```typescript
+declare global {
+    /** this formats a date value to a human-readable value **/
+    function formatDate(date: Date): string
+}
+
+export {}
+```
+
+
+### Declaration merging
+
+This is essentially extending a type that Typescript is not aware of.
+
+Imagine that the save call below save is from a third party library and you want to have typescript not complain about it...
+
+
+```typescript
+class Customer {}
+
+const customer = new Customer()
+customer.save = function() {}
+```
+
+To extend the class defintion weather you own the class definition or now you can define an interface with the same name as the class as in the example below...
+
+```typescript
+interface Customer {
+    /** saves the customer somewhere **/
+    save(): void
+}
+
+class Customer {}
+
+const customer = new Customer()
+customer.save = function() {}
+```
+
+Typescript considers every class definition to be an interface. 
+
+This is commonly used to strongly type global variable references in a web app.
+
+### Executing modular code
+
+If you are using node you will need to set compiler option in tsconfig.json `"module: "CommonJS"` in order to have Typescript compile your code to the type of module that node uses.

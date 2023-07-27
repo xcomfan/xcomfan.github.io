@@ -6,4 +6,6 @@ permalink: /javascript/
 
 [General Syntax]({% link javascript/general_syntax.md %})
 
-[Typescript]({% link javascript/typescript.md %})
+[Typescript]({% link javascript/typescript/typescript.md %})
+
+[Web UI Libraries]({% link javascript/web_ui_libraries/web_ui_libraries.md %})
