@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>React | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="React" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/web_ui_libraries/react" />
+<meta property="og:url" content="http://localhost:4000/web_ui_libraries/react" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="React" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"React","url":"http://localhost:4000/web_ui_libraries/react"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">React</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="jsx">JSX</h2>
+
+<h3 id="what-is-it">What is it?</h3>
+
+<p>JSX is a syntax extension of JavaScript that allows you to write HTML directly within Javascript.  This lets you use the full programmatic powers of JavaScript within HTML.</p>
+
+<h3 id="how-it-works">How it works</h3>
+
+<p>Since JSX is not a valid JavaScript, JSX code must be compiled into JavaScript  The transpiler Babel is a popular tool for this.</p>
+
+<h3 id="syntax">Syntax</h3>
+
+<p>To include JavaScript in HTML using JSX you include the code you want to be treated as JavaScript in curly braces.</p>
+
+<p><code class="language-plaintext highlighter-rouge">{'this is treaded as JavaScript code}</code></p>
+
+<p>To put comments inside JSX, you use the syntax <code class="language-plaintext highlighter-rouge">{/**/}</code></p>
+
+<p>JSX elements can be nested, but must return a single top level element.</p>
+
+<p>Below is an example of valid JSX</p>
+
+<pre><code class="language-JSX">&lt;div&gt;
+    &lt;p&gt;Paragraph One&lt;/p&gt;
+    &lt;p&gt;Paragraph Two&lt;/p&gt;
+    &lt;p&gt;Paragraph Three&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>Below is an example of <em>invalid</em> JSX</p>
+
+<pre><code class="language-JSX">    &lt;p&gt;Paragraph One&lt;/p&gt;
+    &lt;p&gt;Paragraph Two&lt;/p&gt;
+    &lt;p&gt;Paragraph Three&lt;/p&gt;
+</code></pre>
+
+<h4 id="jsx-differences-from-html">JSX differences from HTML</h4>
+
+<p>In JSX you can no longer use the world <em>class</em> to define HTML classes.  This is because class is a reserved word in JavaScript.  Instead of class JSX uses <strong>className</strong>.</p>
+
+<p>The naming convention for all HTML attribute and event references in JSX become <em>camelCase</em>.  Fore example…</p>
+<ul>
+  <li>onclick becomes onClick</li>
+  <li>onchange becomes onChange</li>
+</ul>
+
+<p>Self closing tag rules are different in JSX.  In HTML you can have certain tags such as <br /> that do not require a closing tag since they never have any content.  In JSX any JSX element can be written with a self closing tag, and every element must be closed.</p>
+
+<ul>
+  <li>The line break tag for example must alwasy be written as <code class="language-plaintext highlighter-rouge">&lt;br /&gt;</code> in order to be valid JSX that can be transpiled.</li>
+  <li>A <code class="language-plaintext highlighter-rouge">&lt;div&gt;</code> which may or may not contain content can be written in JSX as either <code class="language-plaintext highlighter-rouge">&lt;div /&gt;</code> or <code class="language-plaintext highlighter-rouge">&lt;div&gt;&lt;/div&gt;</code></li>
+</ul>
+
+<h2 id="components">Components</h2>
+
+<h3 id="what-are-they">What are they?</h3>
+
+<p>Components are the core of React.  Everything in React is a component.</p>
+
+<p>There are two ways to create a component.</p>
+
+<p>The first is to use a Javascript function.  Defining a component this way creates a <strong>stateless functional component</strong></p>
+
+<pre><code class="language-JSX">const DemoComponent = function(){
+    return (
+        &lt;div className='customClass' /&gt;
+    );
+}
+</code></pre>
+
+<p>The second way is to use the ES6 <code class="language-plaintext highlighter-rouge">class</code> syntax.</p>
+
+<pre><code class="language-JSX">class Kitten extends React.Component {
+    constructor(props){
+        super(props);
+    }
+
+    render(){
+        return (
+            &lt;h1&gt;Hi!&lt;/h1&gt;
+        );
+    }
+}
+</code></pre>
+
+<h3 id="component-props">Component props</h3>
+
+<h3 id="props-with-a-stateless-functional-component">Props with a stateless functional component</h3>
+
+<p>Its a standard practice to call this value props when dealing with stateless functional components.  You basically consider it as an argument to a function which returns JSX.  You can access the value of the argument in the function body.</p>
+
+<pre><code class="language-JSX">const Welcome = (props) =&gt; &lt;h1&gt;Hello, {props.user}!&lt;/h1&gt;
+
+&lt;App&gt;
+    &lt;Welcome user='Mark' /&gt;
+&lt;/App&gt;
+</code></pre>
+
+<p>Passing an array as a prop</p>
+
+<pre><code class="language-JSX">&lt;ParentComponent&gt;
+    &lt;ChildComponent colors={['green','blue','red']}&gt;
+&lt;/ParentComponent&gt;
+</code></pre>
+
+<h3 id="props-with-class-components">Props with class components</h3>
+
+<p>Access component props using the syntax this.props.myprop</p>
+
+<h3 id="default-props">Default props</h3>
+
+<p>You can assign default props to a component as a property on the component itself and React assigns the default prop if necessary.  This allows you to specify what a prop value should be if no value is explicitly provided.</p>
+
+<p><code class="language-plaintext highlighter-rouge">MyComponent.defaultProps = { location: 'San Francisco' }</code></p>
+
+<h3 id="you-an-use-proptypes-to-define-the-props-you-expect">You an use PropTypes to Define the props you expect.</h3>
+
+<p>React provide a type checking feature to verity that components receive props of the correct type.  For example you can use propTypes on your component to require the data to be of type array.  This will throw a useful warning when data is of any other type.  Its considered best practice to set propTypes when you know the type of a prop ahead of time.</p>
+
+<p><code class="language-plaintext highlighter-rouge">MyCoomponent.propTypes = { handleClick: PropTypes.func.isRequired }</code></p>
+
+<ul>
+  <li>func represents function</li>
+  <li>Among the seven JavaScript primitive types, function and boolean (bool) are the only two that use unusual spelling.</li>
+  <li>As of React v15.5.0 you need to import propTypes independently</li>
+</ul>
+
+<h2 id="state">State</h2>
+
+<h3 id="what-is-state">What is state?</h3>
+
+<p>State consists of any data your application needs to know about tha can change over time.</p>
+
+<p>You want your apps to respond to state changes and present an updated UI when necessary.</p>
+
+<p>Stat is one of the most powerful features of components in React.  It allows you to track important data in your app and render a UI in response to changes in this data.  <strong>If you data changes, your UI will change.</strong></p>
+
+<h3 id="how">How?</h3>
+
+<p>You create state in a React component by declaring a state property on the components class in its constructor.  This initializes the component with state when it is created.  The state property must be set to a JavaScript object.</p>
+
+<p>You have access to the sate object throughout the life of your component.  You an update it, render it in your UI, and pass it as props to a child components.</p>
+
+<p>Note that you must create a class component by extending React.Component in order to create state like this.</p>
+
+<p>React uses what is called a virtual DOM to keep track of changed behind the scenes.  When state data updates, it triggers a re-render of the components using the data (including child components that received data as a prop.)  React updates the actual DOM, but only where necessary.  This means you don’t need to worry about updating the DOM.  You simply declare what the UI should look like.</p>
+
+<p>Note that if you make a component stateful, no other components are aware of its state.  Its state is completely encapsulated (local to that component) unless you pass state data to a child component as props.  This notion of encapsulated state is very important because it allows you to write certain logic, then have that logic contained and isolated in one place in your code.</p>
+
+<pre><code class="language-JSX">class StatefulComponent extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            "name": "Boris"
+        }
+    }
+
+    render(){
+        return(
+            &lt;div&gt;
+                &lt;h1&gt;{this.state.name}&lt;/h1&gt;
+            &lt;/div&gt;
+        );
+    }
+};
+</code></pre>
+
+<h3 id="modifying-state">Modifying state</h3>
+
+<p>React provides a method for updating component state called <code class="language-plaintext highlighter-rouge">setState</code></p>
+
+<p>You call the <code class="language-plaintext highlighter-rouge">setState</code> method within your component passing in an object with key-value pairs.  The keys are your state properties and the values are the updated state data.</p>
+
+<p><strong>React expects you to <em>NEVER</em> modify state directly</strong> instead you always use <code class="language-plaintext highlighter-rouge">this.setState()</code>. React may batch multiple state updates to improve performance thus the setState calls may be asynchronous.</p>
+
+<pre><code class="language-JSX">this.setState({
+    username: 'Lewis'
+});
+</code></pre>
+
+<h3 id="accessing-the-state-of-a-stateful-component">Accessing the state of a stateful component</h3>
+
+<p>You can access the state of a stateful component using <code class="language-plaintext highlighter-rouge">this.state</code>.</p>
+
+<p>Before the return call you can access it using straight Javascript without using the curly braces.</p>
+
+<p>Once you define a component’s initial state, you can display any port of it in the UI that is rendered.  If a component is stateful, it will always have access tot he data in the state in its <code class="language-plaintext highlighter-rouge">render()</code> method.</p>
+
+<pre><code class="language-JSX">class MyComponent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: 'Boris'
+        }
+    }
+
+    render(){
+        const name = this.state.name;
+        return (
+            &lt;div&gt;
+                &lt;h1&gt;{name}&lt;h1&gt;
+            &lt;/div&gt;
+        );
+    }
+}
+</code></pre>
+
+<p>sometimes you may need to know the previous state before you update state (toggles, and counter are an example of this scenario).  State updates may be asynchronous.  This means that you can’t rely on the previous value of <code class="language-plaintext highlighter-rouge">this.state</code> or <code class="language-plaintext highlighter-rouge">this.props</code>.  To solve this issue you need to pass setState a function that will allow you to access state and props.</p>
+
+<p>note that you need to wrap the object literal in parenthesis or Javascript thinks its a block of code.</p>
+
+<pre><code class="language-JSX">// with props passed
+this.setState((state, props) =&gt; {
+    counter: state.counter + props.increment
+})
+
+// without props passed
+this.setState(state =&gt; ({
+    counter: state.counter + 1
+}));
+
+// example used in a component
+class MyComponent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            visibility: false
+        };
+        this.toggleVisibility = this.toggleVisibility.bind(this);
+    }
+
+    toggleVisibility(){
+        this.setState(state =&gt; ({
+            visibility: !state.visibility
+        }));
+    }
+
+    render(){
+        if (this.state.visibility){
+            return(
+                &lt;div&gt;
+                    &lt;button onClick={this.toggleVisibility}&gt;Click Me&lt;/button&gt;
+                    &lt;h1&gt;Now you see me!&lt;/h1&gt;
+                &lt;/div&gt;
+            );
+        }
+        else {
+            return (
+                &lt;div&gt;
+                    &lt;button onClick={this.toggleVisibility}&gt;Click Me&lt;/button&gt;
+                &lt;/div&gt;
+            )
+        }
+    }
+}
+</code></pre>
+
+<h3 id="binding-this-to-a-class-method">Binding this to a class method</h3>
+
+<p>A class method typically needs to use the <code class="language-plaintext highlighter-rouge">this</code> keyword so it can access properties on the class such as state and props inside the scope of the method.  There are a few ways to allow your class method to access <code class="language-plaintext highlighter-rouge">this</code>.  One common way is to explicitly bind <code class="language-plaintext highlighter-rouge">this</code> in the constructor so that <code class="language-plaintext highlighter-rouge">this</code> becomes bound to the class methods when the component is initialized.</p>
+
+<pre><code class="language-JSX">class MyComponent extends React.Component {
+    constructor(props){
+        super(props){
+            this.state = {
+                text: "Hello"
+            };
+        }
+        // doing the binding to this in the constructor
+        this.handleClick = this.handleClick.bind(this)
+    }
+
+    handleClick(){
+        // because we did the bind we are able to use this.handleClick.
+        return(
+            &lt;div&gt;
+                &lt;button onClick={this.handleClick}&gt;Click Me&lt;/button&gt;
+                &lt;h1&gt;{this.state.text}&lt;/h1&gt;
+            &lt;/div&gt;
+        );
+    }
+};
+</code></pre>
+
+<h3 id="rendering">Rendering</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">render()</code> method of a component is what you use to return the JSX that the component will display to the user in the UI.</p>
+
+<h4 id="use--for-a-more-concise-conditional-rendering">Use &amp;&amp; for a More Concise Conditional Rendering</h4>
+
+<p>If based on state/logic of your component some portions should or should not be rendered, this is a clean way to accomplish this.</p>
+
+<pre><code class="language-JSX">{ this.state.display &amp;&amp; &lt;h1&gt;Displayed!&lt;/h1&gt; }
+</code></pre>
+
+<h4 id="ternary-expressions-for-conditional-rendering">Ternary Expressions for Conditional Rendering</h4>
+
+<p>You can use the ternary operator as a shortcut for if/else statements in JavaScript.</p>
+
+<p>The below example shows a chain of ternary operations and the logic is we load one button upon fresh load where the value is not set, and one of two buttons based on the input once user click the first button.</p>
+
+<pre><code class="language-JSX">{
+    this.state.userAge === ''
+    ? buttonOne 
+    : this.state.userAge &gt;= 18
+        ? buttonTwo
+        : buttonThree
+}
+</code></pre>
+
+<h3 id="composition">Composition</h3>
+
+<p>Composition is just the ability to have a component be used in another component.  In other words you can compose a component form other components.  This allows for re use of components as well as makes it easier to break up your application for maintenance.</p>
+
+<h2 id="lifecycle-methods">Lifecycle Methods</h2>
+
+<h3 id="what-is-it-1">What is it?</h3>
+
+<p>React components have special methods that provide opportunities to perfrom actions at specific points in the lifecycle of a component.  These are called <strong>lifecycle methods</strong> or <strong>lifecycle hooks</strong>.</p>
+
+<p>Some of the main lifecycle methods are</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">componentDidMount()</code>
+    <ul>
+      <li>This method is called after a component is mounted to the DOM. It is best practice to place API calls into this lifecycle method. Any calls to <code class="language-plaintext highlighter-rouge">setState()</code> in this method will trigger a re-rendering of your component.  Thus if you call an API in this method, and set the state of your component based on the API call results it will trigger an update once you receive the data.</li>
+      <li>The <code class="language-plaintext highlighter-rouge">componentDidMount()</code> method is also the best place to attach any event listeners you need to add for specific functionality.
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">onClick</code> is an example of one of these synthetic event handlers.</li>
+          <li>React provides a synthetic event system which wraps the native event system present in browsers.  This means that the synthetic event system behaves the same regardless of the users’s browser.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">shouldComponentUpdate()</code>
+    <ul>
+      <li>takes <code class="language-plaintext highlighter-rouge">nextProps</code> and <code class="language-plaintext highlighter-rouge">nextState</code> as parameters.  You can compare the next props and next state to current using <code class="language-plaintext highlighter-rouge">this.props</code>.  This method must return a boolean that tells React if the component should update or not.</li>
+      <li>This method is useful for optimizing performance.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">componentDidUpdate()</code></li>
+  <li><code class="language-plaintext highlighter-rouge">componentWillUnmount()</code>
+    <ul>
+      <li>It is a good practice to use this method to do any cleanup such as removing event listeners.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="controlled-inputs-and-controlled-form">Controlled Inputs and Controlled Form</h2>
+
+<p>A controlled input is a React component that takes input and uses the component state to track the value of the input.</p>
+
+<p>A controlled form is the same idea, but you have a form instead of a single field and have the state managed in the form.</p>
+
+<p>Note that you must call event.preventDefault() on a form submit so that the default HTML behavior is bypassed.</p>
+
+<h2 id="inline-styles">Inline Styles</h2>
+
+<p>To style a JSX element you can either assign it a class if you are importing styles from a stylesheet or you can use Inline Styles.</p>
+
+<p>JSX elements use the style attribute, but because of the way JSX is transpiled, you can’t set the value to a string.  Instead you set it equal to a JavaScript object.</p>
+
+<pre><code class="language-JSX">&lt;div style=&gt;Mellow Yellow&lt;/div&gt; 
+</code></pre>
+
+<p>Notice that we used fontSize instead of the css font-size.  In React you go camel case as the hyphenated version is invalid syntax for JavaScript.</p>
+
+<p>All property value length units (like height, width, and fontSize) are assumed to be in px</p>
+
+<p>If you want to use <code class="language-plaintext highlighter-rouge">em</code> use <code class="language-plaintext highlighter-rouge">""</code> for example <code class="language-plaintext highlighter-rouge">{fontSize: "4em"}</code></p>
+
+<h2 id="render-react-on-the-server-with-rendertostring">Render React on the Server with renderToString</h2>
+
+<p>Since React is a JavaScrip view library you can run JavaScript on a server with Node.</p>
+
+<p>You can use the  ReactDOMServer.renerToString() method to render on the server.</p>
+
+<p>There are two key reasons why rendering on the server may be used in a real world app.</p>
+
+<p>Without doing this your React app would be a small HTML file and a large bundle of JavaScript when it’s initially loaded to the browser.  This may not be ideal for search engines that are trying to index the content on your page.  If you render the initial HTML markup on the server and send it to the client, the initial page load contains all of the page’s markup which can be crawled.</p>
+
+<p>This also make the initial page load faster.  Rendered HTML is smaller than the JavaScript code fo the entire app.  React will be able to recognize your app and mange it after the initial load.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
