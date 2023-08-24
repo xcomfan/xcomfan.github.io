@@ -15,7 +15,7 @@ JSX is a syntax extension of JavaScript that allows you to write HTML directly w
 ### How it works
 
 Since JSX is not a valid JavaScript, JSX code must be compiled into JavaScript  The transpiler Babel is a popular tool for this.
-
+-
 ### Syntax
 
 To include JavaScript in HTML using JSX you include the code you want to be treated as JavaScript in curly braces.
@@ -49,6 +49,7 @@ Below is an example of *invalid* JSX
 In JSX you can no longer use the world *class* to define HTML classes.  This is because class is a reserved word in JavaScript.  Instead of class JSX uses **className**.
 
 The naming convention for all HTML attribute and event references in JSX become *camelCase*.  Fore example...
+
 * onclick becomes onClick
 * onchange becomes onChange
 
