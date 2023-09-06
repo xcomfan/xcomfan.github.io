@@ -44,13 +44,13 @@ If you and someone else clone at the same time and they push upstream and then y
 
 [comment]: <> (TODO: Make a link to section where above is addrssed)
 
-# Deleting a remote branch
+## Deleting a remote branch
 
 To delete a remote branch use the command below. 
 
 `git push origin --delete <branchname>`
 
-# Changing the master branch name
+## Changing the master branch name
 
 ***Note:*** *Changing a branch such as master/main/mainline/default can break scripts and integrations. Make sure you know what you are doing.*
 

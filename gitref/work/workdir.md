@@ -36,6 +36,12 @@ This command will display the following details
 
 ***Note:*** Git stages files exactly as they are at the moment of staging.  This means that if you `git add` a file and then modify it you will see it in both "Changes to be committed" and "Changes not staged for commit" sections when you run the `git status` command.
 
+### See what changed in staged files.
+
+If you staged a file and want to see what was changed in the file instead of a regular `git diff` you need to use the `--cached` option of git diff.
+
+`git dif --cached mystagedfile.txt`
+
 ### Interactive staging
 
 Interactive staging is useful if you want to stage parts of files to make a more logical commit.

@@ -4,7 +4,7 @@ title: "Javascript Reference"
 permalink: /javascript/
 ---
 
-[General Syntax]({% link javascript/general_syntax.md %})
+[Basic Syntax]({% link javascript/general_syntax/general_syntax.md %})
 
 [Typescript]({% link javascript/typescript/typescript.md %})
 
