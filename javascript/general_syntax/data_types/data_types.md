@@ -12,13 +12,14 @@ permalink: /javascript/data_types
 
 [Boolean]({% link javascript/general_syntax/data_types/boolean.md %})
 
-[Function]({% link javascript/general_syntax/comments.md %})
-
 ## Object types
 
-[Object]({% link javascript/general_syntax/comments.md %})
-[Date]({% link javascript/general_syntax/comments.md %})
-[Array]({% link javascript/general_syntax/comments.md %})
+[Object]({% link javascript/general_syntax/object_types/object.md %})
+
+[Array]({% link javascript/general_syntax/object_types/array.md %})
+
+[Date]({% link javascript/general_syntax/object_types/date.md %})
+
 
 ## Types that cannot contain values
 
