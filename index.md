@@ -10,6 +10,6 @@ title: Contents
 
 ## [Git]({% link gitref/gitref.md %}) ##
 [comment]: <> (TODO: Move Javascript to programming languages catagory that fans out when you write your python reference)
-## [Javascript]({% link javascript/javascript.md %})
+## [JavaScript]({% link javascript/javascript.md %})
 ## [Jekyll]({% link jekyllref/jekyllref.md %}) ##
 ## [Windows]({% link windows/windows_terminal.md %})
