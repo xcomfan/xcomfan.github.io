@@ -4,6 +4,23 @@ title: "JavaScript Arrays"
 permalink: /javascript/arrays
 ---
 
+## Declaring an array
+
+```javascript
+let myArray = [] // An empty array no expression inside brackets means no values
+
+let matrix = [[1,2,3],[4,5,6],[7,8,9]];
+
+let a = new Array(); // declare using Array constructor
+let a = new Array(10); // specify a length of 10 
+```
+[comment]: <> (TODO: Test our what new Array(10) will initialize the values to)
+
+### Sparse arrays
+
+You can have an array that has values omitted.  `let sparseArray = [1,,,,5];`  The omitted values will have value of undefined.
+
+
 ## Adding and removing data to an array
 
 To append data to the end of an array use the `push()` function.  To remove data from the end (and get the value) use the `pop()` function.  To remove value from front of array and get its value use the `shift()` function.  To insert a value at the beginning of an array use the `unshift()` function.
@@ -17,6 +34,27 @@ let first = arr1.shift()
 
 arr1.unshift(last);
 ```
+
+### splice method
+
+`splice()` is the general purpose method for inserting, deleting or replacing array elements.  It will update length and shift array elements to higher or lower indexes as needed.
+
+The first argument to splice specifies the index at which insertion or deletion occurs.  The second argument specifies the number of elements that should be deleted.  If second argument is omitted all elements after the fist argument are deleted.
+
+`splice()` returns an array of the deleted elements or an empty array if no elements were deleted.  
+
+The first two arguments can be followed by any number of additional arguments that specify elements to be inserted into the array starting at the position specified by the first argument.
+
+```javascript
+let a = [1,2,3,4,5,6,7,8];
+a.splice(4); // returns [5,6,7,8]; a is [1,2,3,4]
+
+let a = [1,2,3,4,5];
+a.splice(2,0,'a','b') // returns [] a is [1,2,"a","b",3,4,5]
+a.splice(2,2,[1,2],3) // returns ['a','b']; a is [1,2,[1,2],3,3,4,5]
+```
+
+## Getting length of an array.
 
 To get the length of an array use the length property. `len = myArr.length`
 
@@ -56,3 +94,39 @@ const [a, b, ...arr] = [1,2,3,4,5,7];
 console.log(a,b); // Will display as 1, 2
 console.log(arr); // Will display [3,4,5,7]
 ```
+
+## Useful array methods
+
+### Converting array elements to a string with join()
+
+`join()` converts all the elements of an array to strings and concatenates them returning the resulting string.  You can specify an optional string that separates the elements in the resulting string.
+
+[comment]: <> (TODO: Test to check if comma is the default if no separator is specified)
+
+```javascript
+let a = [1,2,3];
+a.join() // returns "1,2,3"
+a.join(" ") // returns "1 3 4"
+```
+
+### reverse()
+
+Reverses the order of the elements of an array and returns the reversed array.  It does this in place a new array is not created.
+
+[comment]: <> (TODO: Test to verify if it is in place and if array is returned or if it just reverses the array)
+
+### sort()
+
+Sorts the elements of an array in place and returns the sorted array.  If sort() is called with no arguments it sorts the array elements in alphabetical order based on what they convert to string as.  Undefined elements are sorted to the end of the array.  
+
+To sort in non alphabetical order pass a comparison function.  If the first argument of the compare function should appear before the second return a number less than 0 if after more than 0 if tye are the same return 0.
+
+```javascript
+let a = [33, 4, 1111, 222];
+a.sort() // alphabetical order: 1111, 222, 33, 4
+
+a.sort(function(a,b){return a-b;}); // reverse numerical order 
+```
+
+### concat()
+

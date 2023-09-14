@@ -24,4 +24,3 @@ permalink: /javascript/compare
 ## Greater and less than operators
 
 The `<`, `<=`, `>`, `>=` operators all do not have a strict counterpart and will try to convert to a common type for the comparison.
-

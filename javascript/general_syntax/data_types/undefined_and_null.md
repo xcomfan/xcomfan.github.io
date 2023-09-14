@@ -16,3 +16,5 @@ person = null; // Now the value is null but type is an object.
 ```
 
 The difference between undefined and null is that null is an Object and `typeof` undefined is undefined.  In other words `null` is for objects and `undefined` is for variables, properties and methods.
+
+Both `null` and `undefined` are falsy values.
