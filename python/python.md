@@ -14,4 +14,6 @@ permalink: /python/
 
 [Loops]({% link python/loops.md %})
 
+[Lists and Tuples]({% link python/lists_and_tuples.md %})
+
 [Objects]({% link python/objects.md %})
