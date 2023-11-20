@@ -3299,3 +3299,1385 @@ else:
 ```
 
 ## Chapter 19 Concurrency Model in Python.
+
+The main challenge with concurrnency is when you start a thread you need some way to track it for it to be usable in code.  Also starting a thread is expensive so you want to be mindfull of how much work you have the thread doing.
+
+### A bit of Jargon/Core concepts.
+
+**Concurrency** - The ability to handle multiple tasks, making progress one at a time or in parallel (if possible) so that each of them eventually succeeds or fails.  A single core CPU is capable of concurrency if it runs an OS scheduler that interleaves the execution of the pending tasks.  Also known as multitasking.
+
+**Parallelism** - The ability to execute multiple computations at the same time.  This requires a multicore CPU, multiple CPUs or a GPU or multiple computers in a cluster.
+
+**Execution Unit** - A genral term for objects that execute code conccurrenlty, each with independent state and call stack.  Python natively supports 3 kinds of execution units: processes, threads and coroutines.
+
+**Process** - An instance of a computer program while it is running, using memory and a slice of the CPU time.  Processes communicate via pipes, sockets, or memory mapped files - all of which can only carry raw bytes.  Python bytes must be serialized (converted to raw bytes) to be passed from one process to another.  
+
+**Thread** - An execution unit within a single process.  When a process starst it uses a single thread but can create more threads to operate concurrently.  Threads wihthin a process hold the same memory space, which holds live Python objects.  This allows easy data sharing between threads.  Like proceses threads also enable preemptive multi tasking under the supervision of the OS scheduler.  A thread consumes less resources than a process doing the same job.
+
+**Coroutine** - A function that can suspend itself and resume later.  In Python classic coroutines are built from generator functions, and native coroutines are defined with `async def`.  Python coroutines usually run wihin a single thread udner the supervision of an event looop, also in the same thread.  Asynchronous programming frameowrks such as asyncio, Curio, or Trio provide an event loop and supporting libraries for nonblocking coroutine based I/O.  Coroutines support cooperative multitasking.  Each coroutine must explicitly seed control with the `yield` or `await` keyword so that anothe rmay proceed concurrently (but not in parallel).  This means that any blocking code in a coroutine blocks the execution of the event loop and all other coroutines.  In Contrast with the preemptive multitasking supported by processes and threads.  On the other hand, each coroutines consumes less resources than a thread or process doing the same job.
+
+
+### Processes, Threads, and Python's Infamous GIL
+
+Here are the 10 points of how the concepts above Apply to Python.
+
+1. Each instance of the Python interpreter is a process.  You can start additional Python processes usin the `multiprocessing` or `concurrent.futures` libraries.  Python's `subprocess` library is designed to launch processes to run external programs, regardless of the languages used to write them.
+
+2. The Python interpreter uses a single thread to run the user's program and the memory garbage colector.  You can start additional Python threads using the `threading` or `concurrent.futures` libraries.
+
+3. Access to object reference counts and other internal interpretr state is controlled by a lock, the Global Interpreter Lock (GIL).  Only one Python thread can hold the GIL at any time.  This means that only one thread can execute Python code at any time, regardless of the number of CPU cores.
+
+4. To prevent a Python thread from holding the GIL indefinitely, Python's bytecode interpreter pauses the current Python thread every 5ms by default, releasing the GIL.  The thread can try to reacquire the GIL, but if there are other threads waiting for it, the OS scheduler may pick one of them to proceed.
+
+5. When we write Python code, we have no control over the GIL.  A build-in funciton or an extension written in C or any language that interfaces at the Python/C API level - can release the GIL while running time consuming tasks.
+
+6. Every Python standard library function taht makes a syscall releases the GIL.  This includes all functions that perfrm disk I/O, network I/O and `time.sleep()`.  
+
+7. Extensiosn that integrate at the Python/C API level can also launch other non-Python threads that are not effected by the GIL.  Such GIL-free threads generally cannot change Python objects, but they can read from and write to the memory underlying objects that support the buffer protocol such as `bytearray`, and `array.array`
+
+8. Effect of the GIL on network programming with Python threads is relatively small, because the I/O functions release the GIL and reading or writing to the network always implies high latency comared to reading and writing in memory.  
+
+9. Contention over GIL slows donw compute intensive Python threads.  Sequential single threaded code is simpler and faster for such tasks.
+
+10. To run CPU-intensive Python coe on multiple cores, you must use multiple Python processes.
+
+Threading is OK if you are running mutltiple I/O bound tasks but if you need to compute in parallel run multiple Pyton Processes.
+ 
+### A Concurrent Hello World
+
+Each of the examples below will start a function that blocks for 3 seconds while animating characters in the terminal to let the user know that the program is "thinking" and not stalled.  The script makes an nimated spinner displaying each echarecter in the string "\|/-" in the same screen position.  When the slow computation finishes, the line with the spinner is cleared and ansser of 42 is shown.
+
+
+```python
+import itertools
+import time
+from threading import Thread, Event
+
+# This function will run in a separate thread.  The done argument is an instance of threading.Event a simple object to synchronize threads.
+def spin(msg: str, done: Event) -> None:  
+    # This is an infinite loop because itertools.cyle yields one character at a time, cycling through the string forever.
+    for char in itertools.cycle(r'\|/-'):
+        # The trick for text-mode animation: move the cursor back to the start of the line with the carriage return ASCII control character '\r'  
+        status = f'\r{char} {msg}'  
+        print(status, end='', flush=True)
+        # The Event.wait(timeout=None) method returns True when the event is set by another thread; if the timeout elapses, it returns False.  The .1s timeout sests the "frame rate" of the animation to 10 FPS.  
+        if done.wait(.1):  
+            break # Exit the infinite loop 
+    blanks = ' ' * len(status)
+    print(f'\r{blanks}\r', end='') # Clear the status line by overwriting with spacesa nd moving the cursor back to the beginning. 
+
+def slow() -> int:
+    # slow() will be called by the main thread.  Imagine this is a slow API call over the network.  Calling sleep blocks the main thread, but the GIL is released so the spinner thread can proceed.
+    time.sleep(3)  
+    return 42
+```
+
+The first important insight of this example is that `time.sleep()` bloks the calling thread but releases the GIL, allowing other python threads to run.
+
+The `spin` and `slow` functions will execute concurrently.  The main thread - thre only thread when the program starts - will start a new thread to run `spin` and then call `slow`.  By desing, there is no API for terminating a thread in Python.  You must send it a message to shut down.
+
+The `threading.Event` class is Python's simplest signalling mechanism to coordinate threads.  An `Event` instance has an internal boolean flag that starts as `False`.  Calling `Event.set()` sets the flag to `True`.  While the flag is false, if a thread calls `Event.wait()`, it is blocked until another thread calls `Event.set()`, at which time `Event.wait()` returns `True`.  If a timeout in seconds is given to `Event.wait(s)`, this call returns `False` when the timeout elapses, or returns `True` as soon as `Event.set()` is called by another thread.
+
+The `supervisor` function listed in example below uses an `Event` to signal the `spin` function to exit.
+
+```python
+def supervisor() -> int:  # supervisor will return the result of slow
+    done = Event()  # The threading.Event instance is the key to coordinate the activities of the main thread and the spinner thread as expained further down.
+    # To create new Thread, provide a function as the target keyword argument, and positional arguments to the target as a tuple passed via args.
+    spinner = Thread(target=spin, args=('thinking!', done))
+    # Display the spinner object.  The output if <Thread(Thread-1, initial)> where initial is the state of the thread meaning it has not started.
+    print(f'spinner object: {spinner}')
+    spinner.start()  # start the spinner thread
+    result = slow()  # Call slow which blocks the main thread.  Meanwhile, the secondary thread is running the spinner animation.
+    done.set()  # Set the Event flag to True; this will terminat the for loop inside the spin function.
+    spinner.join()  # Wait until the spinner thread finishes
+    return result
+
+def main() -> None:
+    result = supervisor()  # Run the supervisor function.  
+    print(f'Answer: {result}')
+
+if __name__ == '__main__':
+    main()
+# WHen the main thread sets the done event, the spinner thread will eventually notice and exit cleanly.
+```
+
+### Spinner with Processes
+
+The `multiprocessing` package supports running concurent tasks in separate Python processes instead of threads.  When you create a `multiprocess.Process` instance, a whole new Python interpreter is started as a child process in the background.  Since each process has its own GIL, this allows your prgram to use all available CPU cores.  There will be a better example of this later (home grown process pool) but the simple example is below.
+
+```python
+import itertools
+import time
+# The basic multiprocessing API imitates the threading API, but type hints and Mypy expose the difference:
+# multiprocessing.Event is a function (not a class like threading.Event) which returns a synchronize.Event instance
+# forcing us to import multiprocessing.synchronize
+from multiprocessing import Process, Event  
+from multiprocessing import synchronize     
+
+def spin(msg: str, done: synchronize.Event) -> None:  
+
+# [snip] the rest of spin and slow functions are unchanged from spinner_thread.py
+
+def supervisor() -> int:
+    done = Event()
+    # Basic usage of the Process class is similar to Thread
+    spinner = Process(target=spin,               
+                      args=('thinking!', done))
+    print(f'spinner object: {spinner}')          
+    spinner.start()
+    result = slow()
+    done.set()
+    spinner.join()
+    return result
+
+# [snip] main function is unchanged as well
+```
+
+### Spinner with Coroutines
+
+Chapter 21 will do a deep dive into asynchronous programming with coroutines.  This is just a high level introduction to contrast this approach with the threads and processes approach.
+
+Unlike threads and processes where the OS does the scheduling of resources coroutines are driven by an application-level event lopp that manages a queue of pending coroutines, drives them one by one, monitors events triggered by I/O operations initiated by coroutines, and passes control back to the corresponding coroutine when each event happens.  The event loop and the library coroutines and the user coroutines all execute in a single thread therefor any time spend in a coroutine slows down the event loop and all other coroutines.
+
+Coroutine version of spinner program is below...
+
+Note that spin and slow coroutines are further down in the notes because this book sucks a building on things.
+
+```python
+def main() -> None:  # main is the only regular function in this program the rest are coroutines.
+    # The asyncio.run function start the event loop to drive the coroutine that will eventually set the other coroutines in motion.
+    # The main function will stay blocked until supervisor returns.The return value of supervisor will bet the return value of asyncio.run
+    result = asyncio.run(supervisor()) 
+    print(f'Answer: {result}')
+
+async def supervisor() -> int:  # native corourines are defined with async def
+    # asyncio.create_task shedules the eventual execution of spin, immediately returning an instance of asyncio.Task.
+    spinner = asyncio.create_task(spin('thinking!'))
+    print(f'spinner object: {spinner}')  
+    # The await keyword calls slow blocking supervisor until slow returns.  The return value of slow will be assigned to result.
+    result = await slow()  
+    # The Task.cancel method raises a CancelledError exception inside the spin coroutine
+    spinner.cancel()  
+    return result
+
+if __name__ == '__main__':
+    main()
+```
+
+The above example demonstrates the three ways of running a coroutine:
+
+`asyncio.run(coro())` - Called from a regular function to drive a coroutine object that usually is the entry point for all the asynchronous code in the program, like the `supervisor` in this example.  This call blocks until the body of `coro` returns.  The return value of the `run()` call is whatever the body of the `coro` returns.
+
+`asyncio.create_task(coro())` - Called from a coroutine to shedule another coroutine to execute eventually.  This call does not susupend the current coroutine.  It returns a Task instance, an object that wraps the coroutine object and provides methods to control and query its state.
+
+`await coro()` - Called from a coroutine to transfer control to the coroutine object returned by `coro()`.  This suspends the current coroutine until the body of the `coro` returns.  The value of the await expression is whatever the body of the coro returns.
+
+Below are the spin and slow coroutines which were called on in the exmple above.
+
+```python
+import asyncio
+import itertools
+
+# We don't need the Event argument that was used to signal that slow had completed its job in thread based spinner.
+async def spin(msg: str) -> None:  
+    for char in itertools.cycle(r'\|/-'):
+        status = f'\r{char} {msg}'
+        print(status, flush=True, end='')
+        try:
+            # use await asyncio.sleep(.1) instead of time.sleep(.1), to pause without blocking other coroutines.  
+            await asyncio.sleep(.1)  
+        # asyncio.CancelledError is raised when the cancel method is called on the Task controlling this coroutine.  Time to exit the loop.
+        except asyncio.CancelledError:  
+            break
+    blanks = ' ' * len(status)
+    print(f'\r{blanks}\r', end='')
+
+async def slow() -> int:
+    # The slow coroutine also uses await asyncio.sleep instead of time.sleep.
+    await asyncio.sleep(3)  
+    return 42
+```
+
+An expriment the book suggests is to import time and instead of await asyncio.sleep(3) call time.sleep(3) as in code below.
+
+```python
+async def slow() -> int:
+    time.sleep(3)
+    return 42
+```
+
+What you should see is that the spinner never appears, the program waits for 3 seconds and returns the 42 answer.  To understand why we see this behaviour recall that `asyncio` has only one flow of execution, unless you explicitly start additional threads or processes.  That means only one coroutine executes at any point in time.  Concurrency is achieved by control passing from one coroutine to another.
+
+Never use `time.sleep` in `asyncio` coroutines unless you want to pause your whole program.  If a coroutine needs to spend some time doing nothing, it should `await asyncio.sleep(DELAY)`.  This yields control back to the `asyncio` event loop, which can drive other pending coroutines.
+
+There is a `greenlet` package that has been around for many years and used at scale.  It supports cooperative multitasking though lightweight corroutines called `greenlets` that don't requrie specail syntax such as `yield` or `await`, and is therefor easier to integrate into existing, sequential codebases. (SQL Alchemy 1.4 uses greenlets) internally to implement its asynchronous API compatible with `asyncio`
+
+The `gevent` networking library monkey patches Python's standard `socket` module making it nonblocking by replacing some of its code with `greenlets`.  To a large extend `gevent` is transparent to the surrouning code making it easier to adapt sequential applicaitons and libraries to perform concurrent networki I/O.  Gunicorn uses gevent.
+
+With coroutines you have to call `await` give up control and let the rest of the program run.  By definition a coroutine can only be cancelled when its suspended at an `await` expression, so you can perform cleanup by handling the `CancelledError` exception.
+
+### A Homegrown Process Pool
+
+Code below is a good exampel of how to time the prime calcuation running.  No threading stuff yet other than this example being used later.
+
+```python
+#!/usr/bin/env python3
+
+"""
+sequential.py: baseline for comparing sequential, multiprocessing,
+and threading code for CPU-intensive work.
+"""
+
+from time import perf_counter
+from typing import NamedTuple
+
+from primes import is_prime, NUMBERS
+
+class Result(NamedTuple):  
+    prime: bool
+    elapsed: float
+
+def check(n: int) -> Result:  
+    t0 = perf_counter()
+    prime = is_prime(n)
+    return Result(prime, perf_counter() - t0)
+
+def main() -> None:
+    print(f'Checking {len(NUMBERS)} numbers sequentially:')
+    t0 = perf_counter()
+    for n in NUMBERS:  
+        prime, elapsed = check(n)
+        label = 'P' if prime else ' '
+        print(f'{n:16}  {label} {elapsed:9.6f}s')
+
+    elapsed = perf_counter() - t0  
+    print(f'Total time: {elapsed:.2f}s')
+
+if __name__ == '__main__':
+    main()
+```
+
+The example below shows the use of multiple processes to distribute the primality checks across multiple CPU cores.
+
+sample output...
+
+```bash
+$ python3 procs.py
+Checking 20 numbers with 12 processes:
+               2  P  0.000002s
+3333333333333333     0.000021s
+4444444444444444     0.000002s
+5555555555555555     0.000018s
+6666666666666666     0.000002s
+ 142702110479723  P  1.350982s
+7777777777777777     0.000009s
+ 299593572317531  P  1.981411s
+9999999999999999     0.000008s
+3333333333333301  P  6.328173s
+3333335652092209     6.419249s
+4444444488888889     7.051267s
+4444444444444423  P  7.122004s
+5555553133149889     7.412735s
+5555555555555503  P  7.603327s
+6666666666666719  P  7.934670s
+6666667141414921     8.017599s
+7777777536340681     8.339623s
+7777777777777753  P  8.388859s
+9999999999999917  P  8.117313s
+20 checks in 9.58s
+```
+
+Because we are delegating to threads/processes our code does not call the worker function directly and thus we can't just get a return value.  Instead the working is driven by the thread process library, and it eventually produces a result that needs to be stored somewhere.  Coordinating workers and collecting results are common uses of queues in concurrent programming and distrubuted systems.
+
+Much of the cod in example below deals with setting up and using queues.
+
+The `worker` function in example below follows a common pattern in concurrent programming: looping indefinitely while taking items from a queue and processing each with a function that does the actual work. The loop ends when the queue produces a sentinel value. In this pattern, the sentinel that shuts down the worker is often called a “poison pill.”  Other vible options for sentinal values are None, `Ellipsis` build in object (a.k.a `...`) which can survive being serialized without loosing its identity as object if pickled.dumped and pickle.loadd will be different from original object and not pass an equality check.
+
+If the main process exits before all subprocesses are done, you may see confusing tracebacks on FileNotFoundError exceptions caused by an internal lock in multiprocessing. Debugging concurrent code is always hard, and debugging multiprocessing is even harder because of all the complexity behind the thread-like façade. Fortunately, the ProcessPoolExecutor we’ll meet in Chapter 20 is easier to use and more robust.
+
+```python
+import sys
+from time import perf_counter
+from typing import NamedTuple
+from multiprocessing import Process, SimpleQueue, cpu_count  
+from multiprocessing import queues  # queues has the SimpleQueue class we need for type hints
+
+from primes import is_prime, NUMBERS
+
+class PrimeResult(NamedTuple):  
+    n: int
+    prime: bool
+    elapsed: float
+
+# This is a type alias for SimpleQueue that that the main function will use to send numbers to the processes
+# that will do the work.
+JobQueue = queues.SimpleQueue[int]
+# Type alias for a second SimpleQueu that will collect the results in main.  
+# The values in the queue will be tuples made of the number to be tested for primality and a Result tuple.
+ResultQueue = queues.SimpleQueue[PrimeResult]  
+
+def check(n: int) -> PrimeResult:  
+    t0 = perf_counter()
+    res = is_prime(n)
+    return PrimeResult(n, res, perf_counter() - t0)
+
+# worker gets a queue with the numbers to be checked, and another to put results.
+def worker(jobs: JobQueue, results: ResultQueue) -> None:  
+    # In this code, 0 is a poison pill: a signal for the worker to finish if n is not 0 proceed with loop.
+    while n := jobs.get():  
+        results.put(check(n))  # invoke primality check and enqueue prime result.
+    # Send back a PrimeResult(0, False, 0.0) to le the main loop know that this worker is done.
+    results.put(PrimeResult(0, False, 0.0))  
+
+def start_jobs(
+    # procs is the number of processes that will compute the prime checks in parallel.
+    procs: int, jobs: JobQueue, results: ResultQueue  
+) -> None:
+    for n in NUMBERS:
+        jobs.put(n)  # Enqueue the numbers to be checked in jobs
+    for _ in range(procs):
+        # Fork a child process for each worker.  Each child will run the loop inside its own instance of the worker function, until it fetches a 0 from the jobs queue.
+        proc = Process(target=worker, args=(jobs, results))  
+        proc.start()  # start the child process
+        jobs.put(0) # Enqueue one 0 for each process, to terminate them.
+
+def main() -> None:
+    if len(sys.argv) < 2:  
+        procs = cpu_count()
+    else:
+        procs = int(sys.argv[1])
+
+    print(f'Checking {len(NUMBERS)} numbers with {procs} processes:')
+    t0 = perf_counter()
+    jobs: JobQueue = SimpleQueue()  
+    results: ResultQueue = SimpleQueue()
+    start_jobs(procs, jobs, results)  
+    checked = report(procs, results)  
+    elapsed = perf_counter() - t0
+    print(f'{checked} checks in {elapsed:.2f}s')  
+
+def report(procs: int, results: ResultQueue) -> int: 
+    checked = 0
+    procs_done = 0
+    while procs_done < procs:  
+        n, prime, elapsed = results.get()  
+        if n == 0:  
+            procs_done += 1
+        else:
+            checked += 1  
+            label = 'P' if prime else ' '
+            print(f'{n:16}  {label} {elapsed:9.6f}s')
+    return checked
+
+if __name__ == '__main__':
+    main()
+```
+
+### Some system design ways of bypassing GIL
+
+Use an applicaitons server such as mod wsgi, uWSGI, Gunicorn or NGINX Unit in front of the python app so that it sends the request to a Python thread and you don't deal with the asyncio stuff.
+
+WSGI is a synchronous API. It doesn’t support coroutines with async/await—the most efficient way to implement WebSockets or HTTP long polling in Python. The ASGI specification is a successor to WSGI, designed for asynchronous Python web frameworks such as aiohttp, Sanic, FastAPI, etc., as well as Django and Flask, which are gradually adding asynchronous functionality.
+
+Distributed Task Queues are another option.  Some example are Celery and RQ.
+
+## Chapter 20 Concurrent Executors
+
+This chapter focuses on `concurrent.futures.Executor` classes that encapsulate the pattern of "spawning a bunch of independent threads and collecting the results in a queue".
+
+The examples we will ocver will be a script that grabs pictures of country flags over the web.  The examples in this chapter will be the sequential version adn the much faster running threaded one using the futures library.  The asyncio version will be covered in the next chapter.  Two points being made here are that you will see much better performance in network I/O opertations if you use multiple processes and for HTTP processes that make multiple requests it does not matter much if you use coroutines or thrads.
+
+Below is the sequential download script
+
+```python
+import time
+from pathlib import Path
+from typing import Callable
+
+import httpx  
+
+POP20_CC = ('CN IN US ID BR PK NG BD RU JP '
+            'MX PH VN ET EG DE IR TR CD FR').split()  
+
+BASE_URL = 'https://www.fluentpython.com/data/flags'  
+DEST_DIR = Path('downloaded')                         
+
+def save_flag(img: bytes, filename: str) -> None:     
+    (DEST_DIR / filename).write_bytes(img)
+
+def get_flag(cc: str) -> bytes:  
+    url = f'{BASE_URL}/{cc}/{cc}.gif'.lower()
+    resp = httpx.get(url, timeout=6.1,       
+                     follow_redirects=True)  
+    resp.raise_for_status()  
+    return resp.content
+
+def download_many(cc_list: list[str]) -> int:  
+    for cc in sorted(cc_list):                 
+        image = get_flag(cc)
+        save_flag(image, f'{cc}.gif')
+        print(cc, end=' ', flush=True)         
+    return len(cc_list)
+
+def main(downloader: Callable[[list[str]], int]) -> None:  
+    DEST_DIR.mkdir(exist_ok=True)                          
+    t0 = time.perf_counter()                               
+    count = downloader(POP20_CC)
+    elapsed = time.perf_counter() - t0
+    print(f'\n{count} downloads in {elapsed:.2f}s')
+
+if __name__ == '__main__':
+    main(download_many)     
+```
+
+The `httpx` library is inspired by requests package, but it provides synchronous and asynchronous APIs so usable in the coming threaded examples.  
+
+The examples below is downloading flags using `concurrent.futures`
+
+The main features of the `concurrent.futures` package are the ThreadPoolExecutor and ProcessPoolExecutor classes, which implement an API to submit callables for execution in different threads or processes, respectively. The classes transparently manage a pool of worker threads or processes, and queues to distribute jobs and collect results. But the interface is very high-level, and we don’t need to know about any of those details for a simple use case like our flag downloads.
+
+```python
+from concurrent import futures
+
+from flags import save_flag, get_flag, main  
+
+def download_one(cc: str):  
+    image = get_flag(cc)
+    save_flag(image, f'{cc}.gif')
+    print(cc, end=' ', flush=True)
+    return cc
+
+def download_many(cc_list: list[str]) -> int:
+    # Instantiate the ThreadPoolExecutor as a context manager; the executer.__exit__ method will call executor.shutdown(wait=True)
+    # which will block untill all threads are done.
+    with futures.ThreadPoolExecutor() as executor:         
+        # The map method is similar to the map built-in except that the download_one function will be called concurrently
+        # from multiple threads; it returns a generator that you can iterate to retrieve the valeu returned by each function call.
+        # in this case, each call to download_one will return a country code.
+        res = executor.map(download_one, sorted(cc_list))  
+
+    return len(list(res))                                  
+
+if __name__ == '__main__':
+    main(download_many)
+```
+
+The `ThreadPoolExecutor` constructor takes several arguments not shown, but the first and most important one is `max_workers`, setting the maximum number of worker threads to be executed. When `max_workers` is None (the default), `ThreadPool​Executor` decides its value using the following expression—since Python 3.8: `max_workers = min(32, os.cpu_count() + 4)`
+
+### What are the Futures?
+
+Do not create futures.  They are meant to be instantiated exclusively by the concurrency framework be it `concurrent.futures` or `asyncio`.  The reason why is a `Future` represents something that is scheduled to run, therefore it must be scheduled to run, and that'the job of the framework.  
+
+Both type of `Future` have a `.done()` method that is nonblocking and returns a Boolean that tells you wheter the callable wrapped by that future has executed or not.  There is also the `add_done_callback()` so that you don't have to keep checking if the future is done.
+
+Below is a rewrid of the flag example using `concurrent.futures.as_completed`.  Only the download_many function needs to be updated so we display it here.
+
+```python
+def download_many(cc_list: list[str]) -> int:
+    cc_list = cc_list[:5]  
+    with futures.ThreadPoolExecutor(max_workers=3) as executor:  
+        to_do: list[futures.Future] = []
+        # sorting here just to make it clear that results will arrive out of order.
+        for cc in sorted(cc_list):
+            # executor.submit schedules the callable to be executed, and returns a future representing this pending operation.
+            future = executor.submit(download_one, cc)
+            # store each future so we can later retrieve it as completed.
+            to_do.append(future)  
+            print(f'Scheduled for {cc}: {future}')  
+
+        # as_completed yields futures as they are completed.
+        for count, future in enumerate(futures.as_completed(to_do), 1):  
+            res: str = future.result()  # get the result of the future
+            print(f'{future} result: {res!r}')  
+
+    return count
+```
+
+
+Below is the prime finder code from earlier rewritten with `ProcessPoolExecutor`
+
+```python
+import sys
+from concurrent import futures  
+from time import perf_counter
+from typing import NamedTuple
+
+from primes import is_prime, NUMBERS
+
+class PrimeResult(NamedTuple):  
+    n: int
+    flag: bool
+    elapsed: float
+
+def check(n: int) -> PrimeResult:
+    t0 = perf_counter()
+    res = is_prime(n)
+    return PrimeResult(n, res, perf_counter() - t0)
+
+def main() -> None:
+    if len(sys.argv) < 2:
+        workers = None      
+    else:
+        workers = int(sys.argv[1])
+
+    executor = futures.ProcessPoolExecutor(workers)  
+    actual_workers = executor._max_workers  # type: ignore  
+
+    print(f'Checking {len(NUMBERS)} numbers with {actual_workers} processes:')
+
+    t0 = perf_counter()
+
+    numbers = sorted(NUMBERS, reverse=True)  
+    with executor:  
+        for n, prime, elapsed in executor.map(check, numbers):  
+            label = 'P' if prime else ' '
+            print(f'{n:16}  {label} {elapsed:9.6f}s')
+
+    time = perf_counter() - t0
+    print(f'Total time: {time:.2f}s')
+
+if __name__ == '__main__':
+    main()
+```
+
+## Chapter 21 Asynchronous Programming
+
+This chapter covers Python's `async def`, `await`, `async with`, `async for` constructs. Asyncio and other asynchronous libraries.
+
+### Some definitions for the chapter
+
+**Native coroutine** - A couroutine function defined with async def.  You can delegate from a native coroutine to another native coroutine using the `await` keyword.  The `async def` statement aways defines a native coroutine, even if the `await` keyword is not used in its body.  The `await` keyword cannot be used outside of a native coroutine.
+
+**Classic coroutine** - A generator function that consumes data sent to it via `my_coro.send(data)` calls, and reads that data by using `yield` in an expression.  Classic coroutines can delegate to other classic coroutines using `yield from`.  Classic coroutines cannot be driven by `await`, and are no longer supported by asyncio.
+
+**Generator-based coroutine** - A generator funciton decorated with `@types.coroutine`.  That decorator makes the generator compatible with the `await` keyword.
+
+**Asynchronous generator** - A generator function defined with `async def` and using `yield` in its body.  It returns an asynchronous generator object that provides `__anext__`, a coroutine method to retrieve the next item.
+
+### An asyncio Example: Probing Domains
+
+Example below propbes domains to see if they can be resolved.
+
+Output looks something like this where + means domain was resolvable.
+
+```bash
+$ python3 blogdom.py
+  with.dev
++ elif.dev
++ def.dev
+  from.dev
+  else.dev
+  or.dev
+  if.dev
+  del.dev
++ as.dev
+  none.dev
+  pass.dev
+  true.dev
++ in.dev
++ for.dev
++ is.dev
++ and.dev
++ try.dev
++ not.dev
+
+```
+
+```python
+#!/usr/bin/env python3
+import asyncio
+import socket
+from keyword import kwlist
+
+MAX_KEYWORD_LEN = 4  
+
+
+async def probe(domain: str) -> tuple[str, bool]:  
+    loop = asyncio.get_running_loop()  
+    try:
+        # The loop.getaddrinfo(...) coroutine method returns a five part tuple of parameter sto connect to 
+        # the given address suing a socket.  In this example, we don't need the result.  If we got it means 
+        # the domain resolves otherwise it doesn't.
+        await loop.getaddrinfo(domain, None)  
+    except socket.gaierror:
+        return (domain, False)
+    return (domain, True)
+
+
+async def main() -> None:  
+    names = (kw for kw in kwlist if len(kw) <= MAX_KEYWORD_LEN)  
+    domains = (f'{name}.dev'.lower() for name in names)  
+    coros = [probe(domain) for domain in domains]  
+    for coro in asyncio.as_completed(coros):  
+        domain, found = await coro  
+        mark = '+' if found else ' '
+        print(f'{mark} {domain}')
+
+
+if __name__ == '__main__':
+    asyncio.run(main())  
+```
+
+### New Concept: Awaitable
+
+The `for` keyword works with *iterables* the `await` keyword works with *awaitables*
+
+As a user of asyncio the two awaitables you will see routines are either native coroutine objects which you get by calling native coroutine functions or an `asyncio.Task` which you usually get by passing a coroutine object o `asyncio.create_task()`
+
+## Chapter 22 Dynamic Attributes and Properties
+
+The examples in this chapter process/use the following json.  This is just a small sample of what the json structure is.
+
+```json
+{ "Schedule":
+  { "conferences": [{"serial": 115 }],
+    "events": [
+      { "serial": 34505,
+        "name": "Why Schools Don´t Use Open Source to Teach Programming",
+        "event_type": "40-minute conference session",
+        "time_start": "2014-07-23 11:30:00",
+        "time_stop": "2014-07-23 12:10:00",
+        "venue_serial": 1462,
+        "description": "Aside from the fact that high school programming...",
+        "website_url": "http://oscon.com/oscon2014/public/schedule/detail/34505",
+        "speakers": [157509],
+        "categories": ["Education"] }
+    ],
+    "speakers": [
+      { "serial": 157509,
+        "name": "Robert Lefkowitz",
+        "photo": null,
+        "url": "http://sharewave.com/",
+        "position": "CTO",
+        "affiliation": "Sharewave",
+        "twitter": "sharewaveteam",
+        "bio": "Robert ´r0ml´ Lefkowitz is the CTO at Sharewave, a startup..." }
+    ],
+    "venues": [
+      { "serial": 1462,
+        "name": "F151",
+        "category": "Conference Venues" }
+    ]
+  }
+}
+```
+
+Below is code for FrozenJSON which demos use of `__getattr__` to let you navigate the JSON with dot `.` notation.
+
+```python
+   >>> import json
+    >>> raw_feed = json.load(open('data/osconfeed.json'))
+    >>> feed = FrozenJSON(raw_feed)  
+    >>> len(feed.Schedule.speakers)  
+    357
+    >>> feed.keys()
+    dict_keys(['Schedule'])
+    >>> sorted(feed.Schedule.keys())  
+    ['conferences', 'events', 'speakers', 'venues']
+    >>> for key, value in sorted(feed.Schedule.items()): 
+    ...     print(f'{len(value):3} {key}')
+
+from collections import abc
+
+
+class FrozenJSON:
+    """A read-only façade for navigating a JSON-like object
+       using attribute notation
+    """
+
+    # The logic here is to add _ to any reserved keywords because that will break using the . notation sequence
+    def __init__(self, mapping):
+        self.__data = {}
+        for key, value in mapping.items():
+            if keyword.iskeyword(key):  
+                key += '_'
+            self.__data[key] = value  
+
+    def __getattr__(self, name):  
+        try:
+            return getattr(self.__data, name)  
+        except AttributeError:
+            return FrozenJSON.build(self.__data[name])  
+
+    def __dir__(self):  
+        return self.__data.keys()
+
+    # This is an alternate constructor a common use of the @classmetho decorator
+    @classmethod
+    def build(cls, obj):  
+        if isinstance(obj, abc.Mapping):  
+            return cls(obj)
+        elif isinstance(obj, abc.MutableSequence):  
+            return [cls.build(item) for item in obj]
+        else:  
+            return obj    
+```
+
+Recall that the `__getattr__` special method is only invoked by the interpreter when the usual process failt to retrieve an attribute (i.e when the named attribute cannot be found in class or inheritence chain)
+
+### Flexible Object Creation with __new__
+
+We often refer to `__init__` as the constructor method, but that’s because we adopted jargon from other languages. In Python, `__init__` gets self as the first argument, therefore the object already exists when `__init__` is called by the interpreter. Also, `__init__` cannot return anything. So it’s really an initializer, not a constructor.
+
+If necessary, the `__new__` method can also return an instance of a different class. When that happens, the interpreter does not call `__init__`. In other words, Python’s logic for building an object is similar to this pseudocode:
+
+```python
+# pseudocode for object construction
+def make(the_class, some_arg):
+    new_object = the_class.__new__(some_arg)
+    if isinstance(new_object, the_class):
+        the_class.__init__(new_object, some_arg)
+    return new_object
+
+# the following statements are roughly equivalent
+x = Foo('bar')
+x = make(Foo, 'bar')
+```
+
+Below is the FrozenJSON with the logic of build moved to `__new__`
+
+```python
+from collections import abc
+import keyword
+
+class FrozenJSON:
+    """A read-only façade for navigating a JSON-like object
+       using attribute notation
+    """
+
+    def __new__(cls, arg):  
+        if isinstance(arg, abc.Mapping):
+            return super().__new__(cls)  
+        elif isinstance(arg, abc.MutableSequence):  
+            return [cls(item) for item in arg]
+        else:
+            return arg
+
+    def __init__(self, mapping):
+        self.__data = {}
+        for key, value in mapping.items():
+            if keyword.iskeyword(key):
+                key += '_'
+            self.__data[key] = value
+
+    def __getattr__(self, name):
+        try:
+            return getattr(self.__data, name)
+        except AttributeError:
+            return FrozenJSON(self.__data[name])  
+
+    def __dir__(self):
+        return self.__data.keys()
+```
+
+### Computed Properties
+
+The Python standard library provides classes where each instance has an arbitrary set of attributes built from keyword arguments given to `__init__`: `types.SimpleNamespace`, `argparse.Namespace`, and `multiprocessing.managers.Namespace`.  Worth looking these up and experimenting.
+
+One use of the `@staticmethod` decorator is to make it exlicit that results of method are not implacted by state or data in the class.
+
+Below is an exmaple of a computed property.  Essentially you can use the `@property` decorator to create a function that will return a computed value instead of a class attribute.
+
+```python
+class Event(Record):  
+
+    def __repr__(self):
+        try:
+            return f'<{self.__class__.__name__} {self.name!r}>'  
+        except AttributeError:
+            return super().__repr__()
+
+    @property
+    def venue(self):
+        key = f'venue.{self.venue_serial}'
+        return self.__class__.fetch(key)
+```
+
+Its a common metaprogramming tickt to write to and access an objects `__dict__` as in `self.__dict__['speakers']` to bypass the Python inheritence recursion lookup for a method or attribute.
+
+### Bespoke Property Cache
+
+Python 3.8 introduced a `@functools.cached_property` decorator.  Its thread safe, but comes with some caveats.
+
+Just a rminder that `functools` comes with 3 decorators `@cache`, `@lru_cache` and `@cached_property`
+
+The `@cached_property` decorator caches the result of the method in an instance attribute with the same name.  For examle in the code below the value computed by venue will be store din a venua attribute and used instead of the method.
+
+```python
+@cached_property
+    def venue(self):
+        key = f'venue.{self.venue_serial}'
+        return self.__class__.fetch(key)
+```
+
+Some important limitations of `@cached_property` are ...
+
+* It cannot be used as a drop in replacment for `@property` if the decorated method already depends on an instance attribute with the same name.
+* It cannot be sued in a class that defines `__slots__`
+* It defeats the key-sharing optimizatio of the instance `__dict__`, because it creates an instance attribute after `__init__`
+
+An alternative solution is to stack `@cache` and `@property` Note that order of the stacking is importatn.
+
+```python
+@property  
+@cache  
+def speakers(self):
+    spkr_serials = self.__dict__['speakers']
+    fetch = self.__class__.fetch
+    return [fetch(f'speaker.{key}')
+            for key in spkr_serials]
+```
+
+### Using a property for Attriburte Validation
+
+Besides computing attribute values, properties area lso used to enforce business rules by changing a pub-lic attribute into an attribute protected by a getter and setter without affecting client code.
+
+```python
+class LineItem:
+
+    def __init__(self, description, weight, price):
+        self.description = description
+        self.weight = weight  # Here property setter is already in use making sure that weight can't be negative
+        self.price = price
+
+    def subtotal(self):
+        return self.weight * self.price
+
+    @property  # @property decorates the getter method
+    def weight(self):  
+        return self.__weight  # The actual value is store din private __weight
+
+    @weight.setter  # the decorated getter has a .setter attribute which ties the getter and setter together.
+    def weight(self, value):
+        if value > 0:
+            self.__weight = value
+        else:
+            raise ValueError('value must be > 0')
+```
+
+The full signature of the property constructor is `property(fget=None, fset=None, fdel=None, doc=None)`.  All arguments are optional and if a function is not provied for one of them, the corresponding operation is not allowed on the resulting property object.
+
+Below is an example of how to document a property so that docstrings can be picked up
+
+```python
+class Foo:
+
+    @property
+    def bar(self):
+        """The bar attribute"""
+        return self.__dict__['bar']
+
+    @bar.setter
+    def bar(self, value):
+        self.__dict__['bar'] = value
+```
+
+### Coding a Property Factory
+
+The problem we are trying to solve here is that we have weight protected to be non negative, but not price.  In order to not duplicate code we will make a factory.
+
+The use of the factory we will write is below.  The factory will be `quantity` in the example below.
+
+```python
+class LineItem:
+    weight = quantity('weight')  
+    price = quantity('price')  
+
+    def __init__(self, description, weight, price):
+        self.description = description
+        self.weight = weight  
+        self.price = price
+
+    def subtotal(self):
+        return self.weight * self.price
+```
+
+Recall that properties are class attributes.  When building each `quantity` property, we need to pass the name of the `LineItem` attribute that will be managed by that specific property.  Havin to type `weight` twice is unfortunate in  `weight = quantity('weight')` but avoiding that is comlicated because the property has no way of knowing which class attribute name will be bound to it.  This is a problem that will be solved in Chapter 23.
+
+Here is the quantity function ...
+
+```python
+def quantity(storage_name):  
+
+    # The first argument of the qty_getter could be named self, but that would be strange because this is not a class body; instance refers to the LineItem instance where the attribute will be stored.
+    def qty_getter(instance):
+        # qty_getter references storage_name, so it will be preserved in the closure of this function; 
+        # the value is retrieved directly from the instance.__dict__ to bypass the property and avoid an infinite recursion.
+        return instance.__dict__[storage_name]  
+
+    def qty_setter(instance, value):  
+        if value > 0:
+            instance.__dict__[storage_name] = value  
+        else:
+            raise ValueError('value must be > 0')
+
+    # build a custom property object then return it.
+    return property(qty_getter, qty_setter) 
+```
+
+In a real system some kind of validation may appear in many fields across several classes, and the `quantity` factory would be the place in a utilty module to be used over and over again.  Again this can also be doen with descriptor classes which we will cover in Chapter 23.
+
+### Handling Attribute Deletion
+
+The `del` statement can delete not only variables but also attributes.
+
+Here is a basic and silly example...
+
+```python
+class BlackKnight:
+
+    def __init__(self):
+        self.phrases = [
+            ('an arm', "'Tis but a scratch."),
+            ('another arm', "It's just a flesh wound."),
+            ('a leg', "I'm invincible!"),
+            ('another leg', "All right, we'll call it a draw.")
+        ]
+
+    @property
+    def member(self):
+        print('next member is:')
+        return self.phrases[0][0]
+
+    @member.deleter
+    def member(self):
+        member, text = self.phrases.pop(0)
+        print(f'BLACK KNIGHT (loses {member}) -- {text}')
+
+    >>> knight = BlackKnight()
+    >>> knight.member
+    next member is:
+    'an arm'
+    >>> del knight.member
+    BLACK KNIGHT (loses an arm) -- 'Tis but a scratch.
+    >>> del knight.member
+    BLACK KNIGHT (loses another arm) -- It's just a flesh wound.
+    >>> del knight.member
+    BLACK KNIGHT (loses a leg) -- I'm invincible!
+    >>> del knight.member
+    BLACK KNIGHT (loses another leg) -- All right, we'll call it a draw.
+```
+
+In the classic call syntax you would implement the `fdel` argument in `member = property(member_getter, fdel=member_deleter)`
+
+You can also code the `__delattr__` special method in your class.
+
+### Essential Attributes and Functions for Attribute Handling
+
+#### Special Attribute that Affect Attribute Handling
+
+`__class__` - A reference to the object’s class (i.e., `obj.__class__` is the same as type(obj)). Python looks for special methods such as `__getattr__` only in an object’s class, and not in the instances themselves.
+
+`__dict__` - A mapping that stores the writable attributes of an object or class. An object that has a __dict__ can have arbitrary new attributes set at any time. If a class has a __slots__ attribute, then its instances may not have a __dict__. See __slots__ (next).
+
+`__slots__` - An attribute that may be defined in a class to save memory. __slots__ is a tuple of strings naming the allowed attributes.13 If the '__dict__' name is not in __slots__, then the instances of that class will not have a __dict__ of their own, and only the attributes listed in __slots__ will be allowed in those instances
+
+#### Built-In Functions for Attribute Handling
+
+`dir([object])` - Lists most attributes of the object. The official docs say dir is intended for interactive use so it does not provide a comprehensive list of attributes, but an “interesting” set of names. dir can inspect objects implemented with or without a __dict__. The __dict__ attribute itself is not listed by dir, but the __dict__ keys are listed. Several special attributes of classes, such as __mro__, __bases__, and __name__, are not listed by dir either. You can customize the output of dir by implementing the __dir__ special method, as we saw in Example 22-4. If the optional object argument is not given, dir lists the names in the current scope.
+
+`getattr(object, name[, default])` - Gets the attribute identified by the name string from the object. The main use case is to retrieve attributes (or methods) whose names we don’t know beforehand. This may fetch an attribute from the object’s class or from a superclass. If no such attribute exists, getattr raises AttributeError or returns the default value, if given. One great example of using gettatr is in the Cmd.onecmd method in the cmd package of the standard library, where it is used to get and execute a user-defined command.
+
+`hasattr(object, name)` - Returns True if the named attribute exists in the object, or can be somehow fetched through it (by inheritance, for example). The documentation explains: “This is implemented by calling getattr(object, name) and seeing whether it raises an AttributeError or not.”
+
+`setattr(object, name, value)` - Assigns the value to the named attribute of object, if the object allows it. This may create a new attribute or overwrite an existing one.
+
+`vars([object])` - Returns the __dict__ of object; vars can’t deal with instances of classes that define __slots__ and don’t have a __dict__ (contrast with dir, which handles such instances). Without an argument, vars() does the same as locals(): returns a dict representing the local scope.
+
+#### Special Methods for Attribute Handling
+
+Attribute access using either dot notation or the built-in functions getattr, hasattr, and setattr triggers the appropriate special methods listed here. Reading and writing attributes directly in the instance __dict__ does not trigger these special methods—and that’s the usual way to bypass them if needed.
+
+In other words, assume that the special methods will be retrieved on the class itself, even when the target of the action is an instance. For this reason, special methods are not shadowed by instance attributes with the same name.
+
+In the following examples, assume there is a class named Class, obj is an instance of Class, and attr is an attribute of obj.
+
+For every one of these special methods, it doesn’t matter if the attribute access is done using dot notation or one of the built-in functions listed in “Built-In Functions for Attribute Handling”. For example, both obj.attr and getattr(obj, 'attr', 42) trigger Class.__getattribute__(obj, 'attr').
+
+`__delattr__(self, name)` - Always called when there is an attempt to delete an attribute using the del statement; e.g., del obj.attr triggers Class.__delattr__(obj, 'attr'). If attr is a property, its deleter method is never called if the class implements __delattr__.
+
+`__dir__(self)` - Called when dir is invoked on the object, to provide a listing of attributes; e.g., dir(obj) triggers Class.__dir__(obj). Also used by tab-completion in all modern Python consoles.
+
+`__getattr__(self, name)` - Called only when an attempt to retrieve the named attribute fails, after the obj, Class, and its superclasses are searched. The expressions obj.no_such_attr, getattr(obj, 'no_such_attr'), and hasattr(obj, 'no_such_attr') may trigger Class.__getattr__(obj, 'no_such_attr'), but only if an attribute by that name cannot be found in obj or in Class and its superclasses.
+
+`__getattribute__(self, name)` - Always called when there is an attempt to retrieve the named attribute directly from Python code (the interpreter may bypass this in some cases, for example, to get the __repr__ method). Dot notation and the getattr and hasattr built-ins trigger this method. __getattr__ is only invoked after __getattribute__, and only when __getattribute__ raises AttributeError. To retrieve attributes of the instance obj without triggering an infinite recursion, implementations of __getattribute__ should use super().__getattribute__(obj, name).
+
+`__setattr__(self, name, value)` - Always called when there is an attempt to set the named attribute. Dot notation and the setattr built-in trigger this method; e.g., both obj.attr = 42 and setattr(obj, 'attr', 42) trigger Class.__setattr__(obj, 'attr', 42).
+
+## Chapter 23 Attribute Descriptors
+
+Descriptors are a way of reusing the same access logic in multiple attributes.  For example filed types in SQLAlchemy are descritpors managing the flow of data from the fields in a databse record to Python object attributes and vice versa.
+
+A descriptor is a class that implements a dynamic protocol consisting of the `__get__`, `__set__`, and `__delete__` methods. The property class implements the full descriptor protocol. As usual with dynamic protocols, partial implementations are OK. In fact, most descriptors we see in real code implement only `__get__` and `__set__`, and many implement only one of these methods.
+
+In this chapter we use the same bulk food exaple from chapter 22.
+
+A descriptor class is the object oriented way of what we did with the functional programming approch in last chapter.
+
+You use a descriptro by decorating instances of it as class attributes of another class.
+
+### Terms to understand descriptors
+
+**Descriptor class** - A class implementing the descriptor protocol.
+
+**Managed class** - The class where the descriptor instances are declared as class attributes.
+
+**Descriptor instance** - Each instance of a descritpro class, declared as a class attribute of the managed class.
+
+**Managed instance** - One instance of the managed class
+
+**Storage attribute** - An attribute of the managed isntance that holds the value of a manged attribute for that particular instance.
+
+**Managed attribute** - A public attribute in the managed class that is handled by a descriptor instance, with values stored in storage attributes.  In other words, a descriptor instance and a storage attribute provide the infrastructure for a manged attribute.
+
+Below is the code for the `Quantity` descriptor class
+
+```python
+class Quantity:  # Descriptor is a protocol based feature.  No subclassing needed to implement one.
+
+    def __init__(self, storage_name):
+        # Each Quantity instance will have a storage_name attribute: that's the name of the storage attribute to hold the value in the managed instance.
+        self.storage_name = storage_name  
+
+    # __set__ is called when there is an attempt to assing to the managed attribute.  Here, self is the descrptor instance (i.e LineItem.weight or LineItem.price)
+    # insatnce is the managed instance (a LineItem instance), and value is being assigned.
+    def __set__(self, instance, value):  
+        if value > 0:
+            # We must store the attribute value directly into `__dict__`; calling setattr(instance, self.storage_name) would trigger the __set__ method again, leading to infinite recursion.
+            instance.__dict__[self.storage_name] = value  
+        else:
+            msg = f'{self.storage_name} must be > 0'
+            raise ValueError(msg)
+
+    # We need to implement __get__ because the name of the managed attribute may not be the same as the storage_name.  Owner is explained later
+    def __get__(self, instance, owner):  
+        return instance.__dict__[self.storage_name]
+```
+
+We need to implement the get method because the user can do somethin like ...
+
+```python
+class House:
+    rooms = Quantity('number_of_rooms')
+```
+
+In this case somethign like `chaos_manor.number_of_rooms` would bypass the descriptor.
+
+Note that `__get__` receives threee arguments: `self`, `instance`, `owner`.  The `owner` argument is a reference to the manged class (i.e LineItem), and its useful if you want the descriptor to support retrieving class a class attribute.  If a managed attribute such as `weight` is retrieve via the class like `LineItem.weight`, the descriptor `__get__` method receives `None` as the value for the `instance` argument.
+
+To support introspection and other metaprogramming tricks by the suer, its a good practive to make `__get__` return the descriptor instance when the managed attribute is accessed thought the class.  To do that we would code `__get__` like this.
+
+```python
+def __get__(self, instance, owner):
+        if instance is None:
+            return self
+        else:
+            return instance.__dict__[self.storage_name]
+```
+
+Here is the usage of the Quantity descriptor we wrote...
+
+```python
+class LineItem:
+    weight = Quantity('weight')  
+    price = Quantity('price')  
+
+    def __init__(self, description, weight, price):  
+        self.description = description
+        self.weight = weight
+        self.price = price
+
+    def subtotal(self):
+        return self.weight * self.price
+
+```
+
+One issue we still have is you have to write code similar to below.  Having to write weight and price twice is error prone as someone can easily make a copy paste mistake and have a hard to track down bug.  To addrress this issue you can use the `__set__name__` special method which was added to the protocol in Python 3.6.  The interpreter calls `__set_name__` on each descriptor it finds in a class body if the descriptor implements it.
+
+```python
+class LineItem:
+    weight = Quantity('weight')  
+    price = Quantity('price')
+```
+
+Here is the Quantity class with `__set_name__`
+
+```python
+class Quantity:
+
+    def __set_name__(self, owner, name):  
+        self.storage_name = name          
+
+    def __set__(self, instance, value):   
+        if value > 0:
+            # A note here not related to this example but important.
+            # Youw ant to set on the insatnce not the descriptor as you may have many instances
+            # but just one descritor and you don't want the shared state.
+            instance.__dict__[self.storage_name] = value
+        else:
+            msg = f'{self.storage_name} must be > 0'
+            raise ValueError(msg)
+
+    # no __get__ needed  
+
+class LineItem:
+    weight = Quantity()  
+    price = Quantity()
+
+    def __init__(self, description, weight, price):
+        self.description = description
+        self.weight = weight
+        self.price = price
+
+    def subtotal(self):
+        return self.weight * self.price
+```
+
+Another scenario we can have is that the product description may be blank.  This leads us to refactor an example where instead of having a bunch of similar descriptors we can inherit and have them implement a validate method so that each descriptor does the appropriate validation.
+
+```python
+import abc
+
+class Validated(abc.ABC):
+
+    def __set_name__(self, owner, name):
+        self.storage_name = name
+
+    def __set__(self, instance, value):
+        value = self.validate(self.storage_name, value)  
+        instance.__dict__[self.storage_name] = value  
+
+    @abc.abstractmethod
+    def validate(self, name, value):  
+        """return validated value or raise ValueError"""
+
+class Quantity(Validated):
+    """a number greater than zero"""
+
+    def validate(self, name, value):  
+        if value <= 0:
+            raise ValueError(f'{name} must be > 0')
+        return value
+
+
+class NonBlank(Validated):
+    """a string with at least one non-space character"""
+
+    def validate(self, name, value):
+        value = value.strip()
+        if not value:  
+            raise ValueError(f'{name} cannot be blank')
+        return value
+```
+
+and use of the code would look like below where client does not need to kow any of the details.
+
+```python
+import model_v5 as model  
+
+class LineItem:
+    description = model.NonBlank()  
+    weight = model.Quantity()
+    price = model.Quantity()
+
+    def __init__(self, description, weight, price):
+        self.description = description
+        self.weight = weight
+        self.price = price
+
+    def subtotal(self):
+        return self.weight * self.price
+```
+
+The example we saw above is an overriding descriptor because its `__set__` method overrides the setting of an instance attribute by the same name in the managed instance.  There are however also nonoveridding descriptors.
+
+### Overriding Versus Nonoverriding Descriptors
+
+Recall that there is an important asymmetry in the way Python handles attributes. Reading an attribute through an instance normally returns the attribute defined in the instance, but if there is no such attribute in the instance, a class attribute will be retrieved. On the other hand, assigning to an attribute in an instance normally creates the attribute in the instance, without affecting the class at all.
+
+This asymmetry also affects descriptors, in effect creating two broad categories of descriptors, depending on whether the __set__ method is implemented. If __set__ is present, the class is an overriding descriptor; otherwise, it is a nonoverriding descriptor.
+
+A descriptor that does not implement __set__ is a nonoverriding descriptor. Setting an instance attribute with the same name will shadow the descriptor, rendering it ineffective for handling that attribute in that specific instance. Methods and @functools.cached_property are implemented as nonoverriding descriptors.  The setting of attributes in the class cannot be controlled by descriptors attached to the same class. In particular, this means that the descriptor attributes themselves can be clobbered by assigning to the class.
+
+### Descriptor Usage Tips
+
+* Use `property` to keep it simple.  The `property` built in creates overriding descriptors implementing `__set__` and `__get__` even if you do not define a setter method.  The defult `__set__` of a property raises `AttributeError` so a property is the easiest way to implement a read only attribute.
+
+* Read-only descriptors require `__set__` - If you don't implement `__set__` setting a namesake attribute on an instanc will shadow the descriptor.  The `__set__` method on read only should raise an `AttributeError` which is why `property` above is the way to go.
+
+* Caching can be done efficiently with `__get__` only.  If you code just the __get__ method, you have a nonoverriding descriptor. These are useful to make some expensive computation and then cache the result by setting an attribute by the same name on the instance.9 The namesake instance attribute will shadow the descriptor, so subsequent access to that attribute will fetch it directly from the instance __dict__ and not trigger the descriptor __get__ anymore. The @functools.cached_property decorator actually produces a nonoverriding descriptor.
+
+* Nonspecial methods can be shadowed by instance attributes - Because functions and methods only implement __get__, they are nonoverriding descriptors. A simple assignment like my_obj.the_method = 7 means that further access to the_method through that instance will retrieve the number 7—without affecting the class or other instances. However, this issue does not interfere with special methods. The interpreter only looks for special methods in the class itself, in other words, repr(x) is executed as x.__class__.__repr__(x), so a __repr__ attribute defined in x has no effect on repr(x). For the same reason, the existence of an attribute named __getattr__ in an instance will not subvert the usual attribute access algorithm.
+
+## Chapter 24 Class Metaprogramming
+
+If for some reason you neeed to create a class at runtime here is the code for that...
+
+```python
+class MyClass(MySuperClass, MyMixin):
+    x = 42
+
+    def x2(self):
+        return self.x * 2
+
+MyClass = type('MyClass',
+               (MySuperClass, MyMixin),
+               {'x': 42, 'x2': lambda self: self.x * 2},
+          )
+```
+
+A metacalss is a class that creates other classes.  `type` in the example above is a metaclass.
+
+Below is an example of a clas factory and then a demo of that factory.
+
+
+The demo code for the class factory above
+
+```python
+from typing import Union, Any
+from collections.abc import Iterable, Iterator
+
+FieldNames = Union[str, Iterable[str]]  
+
+# we are returing a type i.e a class that behaves like a tuple. 
+# The type hing ->type[tuple] is saying we will return a subclass of type.
+def record_factory(cls_name: str, field_names: FieldNames) -> type[tuple]:  
+
+    slots = parse_identifiers(field_names)  
+
+    def __init__(self, *args, **kwargs) -> None:  
+        attrs = dict(zip(self.__slots__, args))
+        attrs.update(kwargs)
+        for name, value in attrs.items():
+            setattr(self, name, value)
+
+    def __iter__(self) -> Iterator[Any]:  
+        for name in self.__slots__:
+            yield getattr(self, name)
+
+    def __repr__(self):  
+        values = ', '.join(f'{name}={value!r}'
+            for name, value in zip(self.__slots__, self))
+        cls_name = self.__class__.__name__
+        return f'{cls_name}({values})'
+
+    cls_attrs = dict(  
+        __slots__=slots,
+        __init__=__init__,
+        __iter__=__iter__,
+        __repr__=__repr__,
+    )
+
+    return type(cls_name, (object,), cls_attrs)  
+
+
+def parse_identifiers(names: FieldNames) -> tuple[str, ...]:
+    if isinstance(names, str):
+        names = names.replace(',', ' ').split()  
+    if not all(s.isidentifier() for s in names):
+        raise ValueError('names must all be valid identifiers')
+    return tuple(names)
+```
+
+```python
+>>> Dog = record_factory('Dog', 'name weight owner')  
+>>> rex = Dog('Rex', 30, 'Bob')
+>>> rex  
+Dog(name='Rex', weight=30, owner='Bob')
+>>> name, weight, _ = rex  
+>>> name, weight
+('Rex', 30)
+>>> "{2}'s dog weighs {1}kg".format(*rex)  
+"Bob's dog weighs 30kg"
+>>> rex.weight = 32  
+>>> rex
+Dog(name='Rex', weight=32, owner='Bob')
+>>> Dog.__mro__  
+(<class 'factories.Dog'>, <class 'object'>)
+```
+
+### Enhancing Classes with a Class Decorator
+
+A class decorator behaves like a function decorator.  It is a callable that gets the decorated class as an argument, and should return a class to replace the decorate class.  Class decorators often return the same class after injecting more methods in it via attribute assignment.
+
+Here is code for a class decorator first how its used and then the code.
+
+```python
+ >>> @checked
+    ... class Movie:
+    ...     title: str
+    ...     year: int
+    ...     box_office: float
+    ...
+    >>> movie = Movie(title='The Godfather', year=1972, box_office=137)
+    >>> movie.title
+    'The Godfather'
+    >>> movie
+    Movie(title='The Godfather', year=1972, box_office=137.0)
+```
+
+```python
+# hints here suggest that we take class as arg and return a class becuase classes are instances of type
+def checked(cls: type) -> type:  
+    for name, constructor in _fields(cls).items():    
+        setattr(cls, name, Field(name, constructor))  
+
+    cls._fields = classmethod(_fields)  # type: ignore  
+
+    # module-level functions that will become instances methods of the decorated class
+    instance_methods = (  
+        __init__,
+        __repr__,
+        __setattr__,
+        _asdict,
+        __flag_unknown_attrs,
+    )
+
+    # Add each of the instance_methods to cls
+    for method in instance_methods:  
+        setattr(cls, method.__name__, method)
+
+    # return the decorated cls
+    return cls
+
+def _fields(cls: type) -> dict[str, type]:
+    return get_type_hints(cls)
+
+def __init__(self: Any, **kwargs: Any) -> None:
+    for name in self._fields():
+        value = kwargs.pop(name, ...)
+        setattr(self, name, value)
+    if kwargs:
+        self.__flag_unknown_attrs(*kwargs)
+
+def __setattr__(self: Any, name: str, value: Any) -> None:
+    if name in self._fields():
+        cls = self.__class__
+        descriptor = getattr(cls, name)
+        descriptor.__set__(self, value)
+    else:
+        self.__flag_unknown_attrs(name)
+
+def __flag_unknown_attrs(self: Any, *names: str) -> NoReturn:
+    plural = 's' if len(names) > 1 else ''
+    extra = ', '.join(f'{name!r}' for name in names)
+    cls_name = repr(self.__class__.__name__)
+    raise AttributeError(f'{cls_name} has no attribute{plural} {extra}')
+
+def _asdict(self: Any) -> dict[str, Any]:
+    return {
+        name: getattr(self, name)
+        for name, attr in self.__class__.__dict__.items()
+        if isinstance(attr, Field)
+    }
+
+def __repr__(self: Any) -> str:
+    kwargs = ', '.join(
+        f'{key}={value!r}' for key, value in self._asdict().items()
+    )
+    return f'{self.__class__.__name__}({kwargs})'
+```
+
+If you have not got it already in Python classes are instances of `type` and the class of `type` is `type` (to avoid infinite regress).  The classes `object` and `type` have a unique relationship: `object` is an instance of `type` and `type` is a subclass of `object`.  This relationship is "magic": it cannot be expressed in Python because either class would have to exit before the other could be defined.  The fact that `type` is an instanc eof itself is also magical.
+
