@@ -9,15 +9,21 @@ permalink: /python/
 
 [General Syntax]({% link python/general_syntax.md %})
 
-[Variables and assignment]({% link python/variables_and_assignment.md %})
-
-[Strings]({% link python/strings.md %})
+[Variables and assignment]({% link python/variables_and_assignment.md %}) 
+[Strings]({% link python/built_in_types/strings.md %})
 
 [Printing]({% link python/print.md %})
 
 [Loops]({% link python/loops.md %})
 
-[Lists and Tuples]({% link python/lists_and_tuples.md %})
+[Lists and Tuples]({% link python/built_in_types/lists_and_tuples.md %})
 
 [Objects]({% link python/objects.md %})
 
+[Functions]({% link python/functions.md %})
+
+[Exception Handling]({% link python/exception_handling.md %})
+
+[Functional Programming Tools]({% link python/functional_programming_tools.md %})
+
+[Function Decorators]({% link python/function_decorators.md %})
