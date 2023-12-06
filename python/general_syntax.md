@@ -70,3 +70,49 @@ To have a statement span multiple lines enclose it in brackets `()`, `[]`, or `{
 ... 
 hello
 ```
+
+## Scoping
+
+### Scoping of variables
+
+* If a variable is assigned inside a `def`, it is local to that function.
+* If a variable is assigned inside an enclosing def, it is non-local to nested functions.
+* If a variable is assigned outside all defs, it is global to the entire file.
+
+### LEGB Rule
+
+When you use an unqualified name inside a function, Python searches up to four scopes.
+
+**L** - Local scope
+
+**E** - Enclosing scope (def and lambdas)
+
+**G** - Global scope (module level scope)
+
+**B** - Built in scope (build in functions and exceptions)
+
+### The global statement
+
+The `global` statement tells Python that a function plans to change one or more global names (names in the enclosing scope).
+
+```python
+>>> x = 88
+>>> def func():
+...   global x
+...   x = 99
+...
+>>> x
+88
+>>> func()
+>>> x
+99
+```
+
+### You can redefine built in names (for better or worse)
+
+```python
+def hider():
+    open = 'hello world'
+    ...
+    open('data.txt') # error this no longer opens a file in this scope
+```
