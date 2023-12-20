@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Python Lists and Tuples | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Python Lists and Tuples" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/python/lists_and_tuples" />
+<meta property="og:url" content="http://localhost:4000/python/lists_and_tuples" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Python Lists and Tuples" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Python Lists and Tuples","url":"http://localhost:4000/python/lists_and_tuples"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Python Lists and Tuples</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="list-operations">List Operations</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="mi">123</span><span class="p">,</span> <span class="s">'spam'</span><span class="p">,</span> <span class="mf">1.23</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+<span class="mi">3</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">123</span><span class="p">,</span> <span class="s">'spam'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">+</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+<span class="p">[</span><span class="mi">123</span><span class="p">,</span> <span class="s">'spam'</span><span class="p">,</span> <span class="mf">1.23</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="c1"># Note that L did not change with the prior operation
+</span><span class="p">[</span><span class="mi">123</span><span class="p">,</span> <span class="s">'spam'</span><span class="p">,</span> <span class="mf">1.23</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="s">'Ni!'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span> <span class="c1"># Repetition
+</span><span class="p">[</span><span class="s">'Ni!'</span><span class="p">,</span> <span class="s">'Ni!'</span><span class="p">,</span> <span class="s">'Ni!'</span><span class="p">,</span> <span class="s">'Ni!'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="s">'NI'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span>
+<span class="p">[</span><span class="mi">123</span><span class="p">,</span> <span class="s">'spam'</span><span class="p">,</span> <span class="mf">1.23</span><span class="p">,</span> <span class="s">'NI'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># Removes L[2]
+</span><span class="mf">1.23</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span>
+<span class="p">[</span><span class="mi">123</span><span class="p">,</span> <span class="s">'spam'</span><span class="p">,</span> <span class="s">'NI'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">M</span> <span class="o">=</span> <span class="p">[</span><span class="s">'aa'</span><span class="p">,</span> <span class="s">'cc'</span><span class="p">,</span> <span class="s">'bb'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">M</span><span class="p">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">M</span>
+<span class="p">[</span><span class="s">'aa'</span><span class="p">,</span> <span class="s">'bb'</span><span class="p">,</span> <span class="s">'cc'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">M</span><span class="p">.</span><span class="n">reverse</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">M</span>
+<span class="p">[</span><span class="s">'cc'</span><span class="p">,</span> <span class="s">'bb'</span><span class="p">,</span> <span class="s">'aa'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># Add multiple items to the list
+</span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="nb">TypeError</span><span class="p">:</span> <span class="nb">list</span><span class="p">.</span><span class="n">extend</span><span class="p">()</span> <span class="n">takes</span> <span class="n">exactly</span> <span class="n">one</span> <span class="n">argument</span> <span class="p">(</span><span class="mi">3</span> <span class="n">given</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">.</span><span class="n">extend</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span> <span class="c1"># Add multiple items to the list
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span>
+<span class="p">[</span><span class="mi">123</span><span class="p">,</span> <span class="s">'spam'</span><span class="p">,</span> <span class="s">'NI'</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">.</span><span class="n">pop</span><span class="p">()</span> <span class="c1"># remove last item from list and return it
+</span><span class="mi">5</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="s">'spam'</span><span class="p">,</span> <span class="s">'eggs'</span><span class="p">,</span> <span class="s">'ham'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">.</span><span class="n">index</span><span class="p">(</span><span class="s">'eggs'</span><span class="p">)</span> <span class="c1"># get index of item.  Key error if its not there
+</span><span class="mi">1</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">.</span><span class="n">index</span><span class="p">(</span><span class="s">'boris'</span><span class="p">)</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="nb">ValueError</span><span class="p">:</span> <span class="s">'boris'</span> <span class="ow">is</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">list</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s">'toast'</span><span class="p">)</span> <span class="c1"># insert by position
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span>
+<span class="p">[</span><span class="s">'spam'</span><span class="p">,</span> <span class="s">'toast'</span><span class="p">,</span> <span class="s">'eggs'</span><span class="p">,</span> <span class="s">'ham'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="s">'eggs'</span><span class="p">)</span> <span class="c1"># Remove by value
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span>
+<span class="p">[</span><span class="s">'spam'</span><span class="p">,</span> <span class="s">'toast'</span><span class="p">,</span> <span class="s">'ham'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># remove by position and return value
+</span><span class="s">'toast'</span>
+<span class="p">[</span><span class="s">'spam'</span><span class="p">,</span> <span class="s">'ham'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="s">'spam'</span><span class="p">)</span>
+<span class="mi">1</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="s">'spam'</span><span class="p">,</span> <span class="s">'eggs'</span><span class="p">,</span> <span class="s">'ham'</span><span class="p">,</span> <span class="s">'toast'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">del</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Delete one item
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span>
+<span class="p">[</span><span class="s">'eggs'</span><span class="p">,</span> <span class="s">'ham'</span><span class="p">,</span> <span class="s">'toast'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">del</span> <span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="c1"># Delete section (same as L[1:] = []
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span>
+<span class="p">[</span><span class="s">'eggs'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L1</span> <span class="o">=</span> <span class="n">L</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L1</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">L1</span><span class="p">)</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h2 id="sorting-lists">Sorting lists</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="s">'abc'</span><span class="p">,</span> <span class="s">'ABD'</span><span class="p">,</span> <span class="s">'aBe'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="c1"># Notice that sort changes the list in place
+</span><span class="p">[</span><span class="s">'ABD'</span><span class="p">,</span> <span class="s">'aBe'</span><span class="p">,</span> <span class="s">'abc'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="nb">str</span><span class="p">.</span><span class="n">lower</span><span class="p">)</span> <span class="c1"># sort key can be very useful for sorting dictionaries
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span>
+<span class="p">[</span><span class="s">'abc'</span><span class="p">,</span> <span class="s">'ABD'</span><span class="p">,</span> <span class="s">'aBe'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="s">'abc'</span><span class="p">,</span> <span class="s">'ABD'</span><span class="p">,</span> <span class="s">'aBe'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">x</span><span class="p">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">L</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="c1"># pre transform before sort (you get different values in result than prior example)
+</span><span class="p">[</span><span class="s">'abe'</span><span class="p">,</span> <span class="s">'abd'</span><span class="p">,</span> <span class="s">'abc'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="sort-list-of-dictionaries-by-value-in-dictionary">Sort list of dictionaries by value in dictionary</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">list_of_dicts</span> <span class="o">=</span> <span class="p">[{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'Homer'</span><span class="p">,</span> <span class="s">'age'</span><span class="p">:</span> <span class="mi">39</span><span class="p">},</span> <span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'Bart'</span><span class="p">,</span> <span class="s">'age'</span><span class="p">:</span> <span class="mi">10</span><span class="p">}]</span>
+<span class="n">sorted_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">list_of_dicts</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="s">'name'</span><span class="p">])</span>
+</code></pre></div></div>
+
+<h2 id="list-comprehension">List Comprehension</h2>
+
+<p>List comprehension is a way to build a new list by running an expression on each item in a sequence one at a time.</p>
+
+<p>List comprehension is generally faster than using a loop because they are optimized for the Python interpreter.  In certain circumstances such as when you don’t need a list as the output loops can be faster.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">M</span> <span class="o">=</span> <span class="p">[</span>
+<span class="p">...</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+<span class="p">...</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span>
+<span class="p">...</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">]]</span> <span class="c1"># You can break up a list into multiple lines for easier reading.
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">M</span>
+<span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">col2</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">M</span><span class="p">]</span> <span class="c1"># use list comprehension to get row 2 of a matrix
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">col2</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">M</span> <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># Filter out odd elements
+</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[[</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span><span class="n">x</span><span class="o">**</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
+<span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">27</span><span class="p">]]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">]]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">res</span>
+<span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">201</span><span class="p">,</span> <span class="mi">301</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">202</span><span class="p">,</span> <span class="mi">302</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="n">x</span><span class="o">+</span><span class="n">y</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="s">'spam'</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="s">'sm'</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="s">'SPAM'</span> <span class="k">if</span> <span class="n">y</span> <span class="ow">in</span> <span class="p">(</span><span class="s">'P'</span><span class="p">,</span><span class="s">'A'</span><span class="p">)]</span>
+<span class="p">[</span><span class="s">'sP'</span><span class="p">,</span> <span class="s">'sA'</span><span class="p">,</span> <span class="s">'mP'</span><span class="p">,</span> <span class="s">'mA'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="generator-list-comprehension">Generator List Comprehension</h3>
+
+<p>List comprehension in square brackets produce the result list all at once in memory.  When they are enclosed in parenthesis instead, they have a similar meaning but do not produce the result list all at once.  Instead, generator expressions return a generator object, which yields one item in the result at a time when used in an iteration context.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">mygen</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10000000000</span><span class="p">))</span> <span class="c1"># will generate one element at a time instead all at once
+</span><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">mygen</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">generator</span> <span class="nb">object</span> <span class="o">&lt;</span><span class="n">genexpr</span><span class="o">&gt;</span> <span class="n">at</span> <span class="mh">0x7fdd86235460</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">ele</span> <span class="ow">in</span> <span class="n">mygen</span><span class="p">:</span>
+<span class="p">...</span>   <span class="k">print</span><span class="p">(</span><span class="n">ele</span><span class="p">)</span>
+<span class="p">...</span>   <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="k">if</span> <span class="n">counter</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+<span class="p">...</span>     <span class="k">break</span>
+<span class="p">...</span> 
+<span class="mi">0</span>
+<span class="mi">1</span>
+<span class="mi">2</span>
+<span class="mi">3</span>
+<span class="mi">4</span>
+<span class="mi">5</span>
+<span class="mi">6</span>
+<span class="mi">7</span>
+<span class="mi">8</span>
+<span class="mi">9</span>
+<span class="mi">10</span>
+</code></pre></div></div>
+
+<h2 id="map">Map</h2>
+
+<p>Map applies a function to each element of an iterable (list in this case) and returns a new iterable.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">abs</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]))</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="p">...</span>   <span class="k">return</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span>
+<span class="p">...</span> 
+<span class="o">&gt;&gt;&gt;</span> <span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">squared_numbers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">square</span><span class="p">,</span> <span class="n">numbers</span><span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">squared_numbers</span><span class="p">)</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">25</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h2 id="tuples">Tuples</h2>
+
+<p>Tuples are just like lists but are immutable.  It is a good practice to use tuples if you need a constant array so that its values cannot be modified by mistake.</p>
+
+<p>Because tuples are immutable they can be used as keys in a dictionary.  A key to a dictionary needs to be an immutable object.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">T</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># Declare a tuple
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">T</span>
+<span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="mi">4</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1"># Cannot modify a tuple
+</span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="nb">TypeError</span><span class="p">:</span> <span class="s">'tuple'</span> <span class="nb">object</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">support</span> <span class="n">item</span> <span class="n">assignment</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span> <span class="c1"># Repetition
+</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Indexing, slicing
+</span><span class="mi">1</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+<span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">T</span> <span class="o">=</span> <span class="p">(</span><span class="s">'cc'</span><span class="p">,</span> <span class="s">'aa'</span><span class="p">,</span> <span class="s">'dd'</span><span class="p">,</span> <span class="s">'bb'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="c1"># Sort a tuple
+</span><span class="p">[</span><span class="s">'aa'</span><span class="p">,</span> <span class="s">'bb'</span><span class="p">,</span> <span class="s">'cc'</span><span class="p">,</span> <span class="s">'dd'</span><span class="p">]</span>
+</code></pre></div></div>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Raw Notes | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Raw Notes" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/gitref/rawnotes/" />
+<meta property="og:url" content="http://localhost:4000/gitref/rawnotes/" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Raw Notes" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Raw Notes","url":"http://localhost:4000/gitref/rawnotes/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Raw Notes</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="git-internals">Git Internals</h2>
+
+<h3 id="git-internals---plumbing-and-porcelain">Git Internals - Plumbing and Porcelain</h3>
+
+<p>Below is what a freshly <code class="language-plaintext highlighter-rouge">git init</code> directory looks like.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ls -F1
+config
+description
+HEAD
+hooks/
+info/
+objects/
+refs/
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">description</code> file is used only by the GitWeb program so we don’t cover it.</li>
+  <li><code class="language-plaintext highlighter-rouge">config</code> file contains your project-specific options</li>
+  <li><code class="language-plaintext highlighter-rouge">info</code> directory keeps a global exclude file for ignored patterns that you don’t want to track in a .gitignore file.
+<a href="&lt;&gt; (TODO: Add the above to your definition list.)">comment</a>: &lt;&gt; (TODO: Link to hooks section here once you write that up.)</li>
+  <li><code class="language-plaintext highlighter-rouge">hooks</code> directory contains your client or server hook scripts.</li>
+</ul>
+
+<p>The 4 we don’t see yet and will cover later are</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">index</code> file where Git stores your staging area information.</li>
+  <li><code class="language-plaintext highlighter-rouge">objects</code> directory which stores all the content for your database</li>
+  <li><code class="language-plaintext highlighter-rouge">refs</code> directory which stores pointers into commit objects in the objects directory (branches, tags, remotes, etc.)</li>
+  <li><code class="language-plaintext highlighter-rouge">HEAD</code> file which points to the branch you currently have check out</li>
+</ul>
+
+<h3 id="git-internals---git-objects">Git Internals - Git Objects</h3>
+
+<p>Git is a content addressable filesystem.  This means that at its core Git is a key value store.  You can insert any content into a Git repository and Git will hand you back a unique key which you can later use to retrieve that content.</p>
+
+<p>The book goes though an example where the <code class="language-plaintext highlighter-rouge">git hash-object</code> command is used to store a file in the <code class="language-plaintext highlighter-rouge">objects</code> directory.  The key take away from this example is that if you have a file test.txt and use git hash-object to store it, each time you call git hash-object and pass it text.txt a new object is stored in the objects directory with the hash generated by the contents of the file.  In the object directory the hash is the filename for the content as it was when git hash-object is used.  The hashed stored object is called a <code class="language-plaintext highlighter-rouge">blob</code>.</p>
+
+<h4 id="tree-objects">Tree Objects</h4>
+
+<p>The <strong>tree</strong> object is used in Git internals to store the file name and allow you to store a group of files together.</p>
+
+<p>In Git internals everything as stored as tree and blob objects with trees corresponding to UNIX directory entries and blobs corresponding more or less to inode or file contents.</p>
+
+<p>A single tree object contains one or more entries, each of which is the SHA-1 hash of a blob or subtree with its associated mode, type, and filename.</p>
+
+<p>Git normally creates a tree by taking the state of your staging area or index and writing a series of tree objects from it.</p>
+
+<h4 id="commit-objects">Commit Objects</h4>
+
+<p>The tree object essentially stores a snapshot, but we don’t have an easy way of referencing that snapshot (SHA-1 values are hard to remember) and we have no information about the snapshot (who saved it or when they saved it).  This is the information that the commit object stores for you.</p>
+
+<p>A commit object stores the top level tree for the snapshot of the project at that point, the parent commits if any, the author/committer information, a timestamp, and after a blank line the commit message.</p>
+
+<p>The stored objects, tree objects and commit objects make up the history you see when you use the <code class="language-plaintext highlighter-rouge">git log</code> command.  This is essentially what Git does when you run the git add and git commit commands — it stores blobs for the files that have changed, updates the index, writes out trees, and writes commit objects that reference the top-level trees and the commits that came immediately before them.</p>
+
+<h4 id="object-storage">Object Storage</h4>
+
+<p>There is a header stored with every object you commit to your Git object database.  This header stores the type of object (blob or tree), the size in bytes of the content and a null byte at the end.</p>
+
+<p>Git concatenates the header and the original content and then calculates the SHA-1 checksum of that new content.  Git compresses the new content with zlib and writes the zlib-deflated content to an object on disk.  The file is stored in objects directory with first 2 chars of the sha1 being the subdirectory and the remaining 38 the filename.  All Git objects are stored this way.</p>
+
+<h2 id="git-internals---git-references">Git Internals - Git References</h2>
+
+<p>Within the .git directory there is a refs directory.  This directory contains files which store the SHA-1 for the commits in your projects that are the HEADs for your local and remote branches.  For example the HEAD file you see in your .git directory refers to .git/refs/heads/main if you are on the main branch.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat HEAD
+ref: refs/heads/main
+</code></pre></div></div>
+
+<p>When you are in a detached head state (if you check out a tag, commit or remote branch) the value in the HEAD file will be a specific SHA-1 of a commit.</p>
+
+<h3 id="tags">Tags</h3>
+
+<p>In addition to blobs, trees and commits; tags are the fourth object type in Git.  Like the commit objects, a tag contains a tagger, a date, a message, and a pointer.  The main difference is that a tag object generally points to a commit object instead of a tree.  Its like a branch reference but it never moves.  It always points to the same commit but gives it a friendlier name.</p>
+
+<h3 id="remotes">Remotes</h3>
+
+<p>The third type of reference is the remote reference.  If you add a remote and push to it, Git stores the commit SHA-1 value you last pushed to that remote for each branch in the refs/remotes directory.</p>
+
+<p>Remote references are considered read only.  You can git checkout one, but Git won’t symbolically reference HEAD to one so you will never update it with a commit.  Git manages them as bookmarks of the last known state of where those branches were on those servers.</p>
+
+<h2 id="git-internals---packfiles">Git Internals - Packfiles</h2>
+
+<p>Packfiles are the Git mechanism for organizing files in stored in your commits to save disk space.  Instead of storing the copy of the file in each commit, packed files store and organize the deltas between those files.</p>
+
+<h2 id="git-internals---transfer-protocols">Git Internals - Transfer Protocols</h2>
+
+<p>Git can transfer data between two repositories via a dumb protocol or a smart one.  The dump protocol is used if you are setting up a read only repository to be read only over HTTP via GET requests.  The smart protocol needs Git code running on the server.  It can figure out what the client has and needs and generate the packfile for that request.</p>
+
+<h2 id="git-internals---maintenance-and-data-recovery">Git Internals - Maintenance and Data Recovery</h2>
+
+<h3 id="maintenance">Maintenance</h3>
+
+<p>Git periodically runs the git auto gc (garbage collection) call which you can trigger manually by running <code class="language-plaintext highlighter-rouge">git gc --auto</code>.  This usually does nothing as you need to have 7K loose files or more than 50 packfiles before this command takes action.  These limits can be adjusted via the <code class="language-plaintext highlighter-rouge">gc.auto</code> and <code class="language-plaintext highlighter-rouge">gc.autopacklimit</code> configuration settings.  When this call does act it will place the loose files into a packfile and consolidate the packfiles into one big packfile.  It also removes objects that are not accessible from any commit and are a few months old.</p>
+
+<h3 id="data-recovery">Data Recovery</h3>
+
+<p>If you force delete a branch that had work in it, or you hard reset a branch abandoning the commits there you may be able to recover the work.</p>
+
+<p>For example in the below scenario…</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git log --pretty=oneline
+ab1afef80fac8e34258ff41fc1b867c702daa24b Modify repo.rb a bit
+484a59275031909e19aadb7c92262719cfcdf19a Create repo.rb
+1a410efbd13591db07496601ebc7a059dd55cfe9 Third commit
+cac0cab538b970a37ea1e769cbbde608743bc96d Second commit
+fdf4fc3344e67ab068f836878b6c4951e3b15f3d First commit
+</code></pre></div></div>
+
+<p>If you run the command <code class="language-plaintext highlighter-rouge">git reset --hard 1a410efbd13591db07496601ebc7a059dd55cfe9</code>  You effectively loose the top two commits.  See blow…</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git log --pretty=oneline
+1a410efbd13591db07496601ebc7a059dd55cfe9 Third commit
+cac0cab538b970a37ea1e769cbbde608743bc96d Second commit
+fdf4fc3344e67ab068f836878b6c4951e3b15f3d First commit
+</code></pre></div></div>
+
+<p>One way to get your lost work back is via the <code class="language-plaintext highlighter-rouge">reflog</code> command.</p>
+
+<p>When you run <code class="language-plaintext highlighter-rouge">git reflog</code> it will show you the history of where you have been as in the example below.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git reflog
+1a410ef HEAD@{0}: reset: moving to 1a410ef
+ab1afef HEAD@{1}: commit: Modify repo.rb a bit
+484a592 HEAD@{2}: commit: Create repo.rb
+</code></pre></div></div>
+
+<p>You can use the git log format on your reflog data by using the -g argument on git log.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git log -g</code></p>
+
+<p>Once you identify the commit you lost you can create a new branch from that commit with the command below.  This will give you a new branch named recover-branch which will be where your master branch used to be making the lost commits reachable again.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git branch recover-branch ab1afef</code></p>
+
+<p>If for some reason you don’t have the lost work in your reflog history.  You can try using the git fsck utility.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git fsck --full</code></p>
+
+<p>When run with full option git fsck will show you all of the commits that are not reachable.  You can identify your lost commit from that output and create a branch from it as you did above.</p>
+
+<h3 id="removing-objects">Removing Objects</h3>
+
+<p>This is useful if someone committed a large binary file to your repo.</p>
+
+<p><strong><em>This technique is destructive to the commit history</em></strong>  It rewrites every commit object sine the earliest tree y ou have to modify to remove a large file reference.  If you do this when users have based their work on the commit you have to notify all users to rebase their work onto your new commits.</p>
+
+<p>Kind of a side note but you can use the below command to see how much space your repo is using.</p>
+
+<p>To find the large file you can use the Git plumbing command git verify-pack and sort ont he third field</p>
+
+<p><code class="language-plaintext highlighter-rouge">git verify-pack -v .git/objects/pack/pack-29…69.idx | sort -k 3 -n | tail -3</code></p>
+
+<p>Once you find the commit with the large file you can use rev-list command to find the file itself.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git rev-list --objects --all | grep 82c99a3</code></p>
+
+<p>Now you need to remove this file from all trees in your past.  You can see what commits modified this file with the command…</p>
+
+<p><code class="language-plaintext highlighter-rouge">git log --oneline --branches -- git.tgz</code></p>
+
+<p>Based on our example you must rewrite all commits downstream from 7b30847.  To do this we use filter-branch command.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git filter-branch --index-filter \
+  'git rm --ignore-unmatch --cached git.tgz' -- 7b30847^..
+Rewrite 7b30847d080183a1ab7d18fb202473b3096e9f34 (1/2)rm 'git.tgz'
+Rewrite dadf7258d699da2c8d89b09ef6670edb7d5f91b4 (2/2)
+Ref 'refs/heads/master' was rewritten
+</code></pre></div></div>
+
+<p>The –index-filter option is similar to the –tree-filter option used in Rewriting History except that instead of passing a command that modifies the files checkout on disk you are modifying your staging area or index each time.</p>
+
+<p>Rather than remove a specific file with <code class="language-plaintext highlighter-rouge">rm file</code> you have to remove it with git rm – cached.  You must remove it from the index, not from disk.  The reason to do it this way is speed because Git doesn’t have to check out each revision to disk before running your filter, the process can be much much faster.</p>
+
+<p>The –ignore-unmatch option to git rm tells it not to error out if the pattern you’re trying to remove isn’t there. Finally, you ask filter-branch to rewrite your history only from the 7b30847 commit up, because you know that is where this problem started. Otherwise, it will start from the beginning and will unnecessarily take longer.</p>
+
+<p>Your history no longer contains a reference to that file. However, your reflog and a new set of refs that Git added when you did the filter-branch under .git/refs/original still do, so you have to remove them and then repack the database. You need to get rid of anything that has a pointer to those old commits before you repack:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ rm -Rf .git/refs/original
+$ rm -Rf .git/logs/
+$ git gc
+Counting objects: 15, done.
+Delta compression using up to 8 threads.
+Compressing objects: 100% (11/11), done.
+Writing objects: 100% (15/15), done.
+Total 15 (delta 1), reused 12 (delta 0)
+</code></pre></div></div>
+
+<p>You can see from the size value that the big object is still in your loose objects, so it’s not gone; but it won’t be transferred on a push or subsequent clone, which is what is important. If you really wanted to, you could remove the object completely by running git prune with the –expire option:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git prune --expire now
+$ git count-objects -v
+count: 0
+size: 0
+in-pack: 15
+packs: 1
+size-pack: 8
+prune-packable: 0
+garbage: 0
+size-garbage: 0
+</code></pre></div></div>
+
+<h2 id="git-internals---environment-variables">Git Internals - Environment Variables</h2>
+
+<p>Git always runs inside a bash shell and uses environment variables to determine how it behaves.  Below are the most useful environment variables.</p>
+
+<h3 id="global-behavior-environment-variables">Global behavior environment variables</h3>
+
+<p><strong>GIT_EXEC_PATH</strong> - determines where Git looks for its sub-programs such as git-commit, git-diff etc.  You can check the current setting with the command <code class="language-plaintext highlighter-rouge">git --exec-path</code></p>
+
+<p><strong>HOME</strong> - Not usually customized as many things depend on it.  This variable is where Git looks for the global config file.</p>
+
+<p><strong>PREFIX</strong> - Similar to the HOME variable but for system-wide configuration file.</p>
+
+<p><strong>GIT_CONFIG_NOSYSTEM</strong> - if set, disabled use of the system wide configuration file.  This is useful if your system config is interfering with your commands, but you don’t have access to change or remove it.</p>
+
+<p><strong>GIT_PAGER</strong> - controls the program used to display multi-page output on the command line.  If this is not set PAGER will be used as the fallback.</p>
+
+<p><strong>GIT_EDITOR</strong> - The editor Git will launch when the user needs to edit text.  In a commit for example.</p>
+
+<h3 id="repository-location-environment-variables">Repository location environment variables</h3>
+
+<p><strong>GIT_DIR</strong> - The location of the .git folder.  If this directory is not specified Git will walk up directory tree till it finds or gets to ~ or / directories.</p>
+
+<p><strong>GIT_CEILING_DIRECTORY</strong> - Controls the behavior of searching for a .git directory.  If you have some slow loading directories such as a tape drive you may want to prevent Git from searching those directories.</p>
+
+<p><strong>GIT_ALTERNATE_OBJECTS_DIRECTORIES</strong> - Is a colon separated list which tells Git where to check for objects if they are not in GIT_OBJECT_DIRECTORY.  If you have a lot of projects with large files that have the exact same contents, this can be used to avoid storing too many copies of them.</p>
+
+<h3 id="pathspec-environment-variables">Pathspec environment variables</h3>
+
+<p>A “pathspec” refers to how you specify paths to things in Git, including the use of wildcards.  These are used in the .gitignore file as well as in command lines such as git add *.c.</p>
+
+<p><strong>GIT_GLOB_PATHSPECS and GIT_NOGLOB_PATHSPECS</strong> - control the default behavior of wildcards in pathspecs.  If GIT_GLOB_PATHSPECS is set to 1, wildcard characters act as wildcards (which is the default); if GIT_NOGLOB_PATHSPECS is set to 1, wildcard characters only match themselves, meaning something like *.c would only match a file named “*.c”, rather than any file whose name ends with .c. You can override this in individual cases by starting the pathspec with :(glob) or :(literal), as in :(glob)*.c.</p>
+
+<p><strong>GIT_LITERAL_PATHSPECS</strong> - Makes it so that no wildcard expansion works and override prefixes are disabled as well.</p>
+
+<p><strong>GIT_ICASE_PATHSPECS</strong> - sets all pathspecs tow ork in a case-insensitive manner.</p>
+
+<h3 id="committing-environment-variables">Committing environment variables</h3>
+
+<p>The final creation of a Git commit object is usually done by git-commit-tree which uses the following environment variables falling back on config values if not set.</p>
+
+<p><strong>GIT_AUTHOR_NAME</strong> - Human readable name in the “author” field</p>
+
+<p><strong>GIT_AUTHOR_DATE</strong> is the timestamp used for the “author” field.</p>
+
+<p><strong>GIT_COMMITTER_NAME</strong> sets the human name for the “committer” field.</p>
+
+<p><strong>GIT_COMMITTER_EMAIL</strong> is the email address for the “committer” field.</p>
+
+<p><strong>GIT_COMMITTER_DATE</strong> is used for the timestamp in the “committer” field.</p>
+
+<p><strong>EMAIL</strong> is the fallback email address in case the user.email configuration value isn’t set. If this isn’t set, Git falls back to the system user and host names.</p>
+
+<h3 id="networking-environment-variables">Networking environment variables</h3>
+
+<p><strong>GIT_CURL_VERBOSE</strong> - Git uses curl library to do network operations over HTTP.  This setting tells Git to emit all the messages generated by that library similar to <code class="language-plaintext highlighter-rouge">curl -v</code></p>
+
+<p><strong>GIT_SSL_NO_VERIFY</strong> - Tells Git not to verify SSL certificates.</p>
+
+<h3 id="diffing-and-merging-environment-variables">Diffing and merging environment variables</h3>
+
+<p><strong>GIT_DIFF_OPTS</strong> - The only valid values are <code class="language-plaintext highlighter-rouge">-u&lt;n&gt;</code> or <code class="language-plaintext highlighter-rouge">--unified=&lt;n&gt;</code>, which controls the number of context lines shown in a git diff command.</p>
+
+<p><strong>GIT_MERGE_VERBOSITY</strong> - controls the output for the recursive merge strategy. The allowed values are as follows:</p>
+<ul>
+  <li>0 outputs nothing, except possibly a single error message.</li>
+  <li>1 shows only conflicts.</li>
+  <li>2 also shows file changes.</li>
+  <li>3 shows when files are skipped because they haven’t changed.</li>
+  <li>4 shows all paths as they are processed.</li>
+  <li>5 and above show detailed debugging information.</li>
+</ul>
+
+<p>The default value is 2</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

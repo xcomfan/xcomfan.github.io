@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>JavaScript String | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="JavaScript String" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/javascript/string" />
+<meta property="og:url" content="http://localhost:4000/javascript/string" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="JavaScript String" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"JavaScript String","url":"http://localhost:4000/javascript/string"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">JavaScript String</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="declaring-strings">Declaring strings</h2>
+
+<p>Strings are defined using either single or double quotes.</p>
+
+<p><code class="language-plaintext highlighter-rouge">const myStr = 'This is my string'</code> or <code class="language-plaintext highlighter-rouge">const myStr = "This is my string"</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">"</code> and <code class="language-plaintext highlighter-rouge">'</code> characters in a string can be escaped with a <code class="language-plaintext highlighter-rouge">\</code></p>
+
+<h2 id="strings-are-immutable">Strings are immutable</h2>
+
+<p>JavaScript strings are immutable.  This means that once they are created they cannot be altered.  The only way to change a declared string is to assign it a new value.</p>
+
+<p>For example the code below is <strong>NOT</strong> valid</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">myStr</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">Bob</span><span class="dl">"</span><span class="p">;</span>
+<span class="nx">myStr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">J</span><span class="dl">"</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>The code below is correct however.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">myStr</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">Bob</span><span class="dl">"</span><span class="p">;</span>
+<span class="nx">myStr</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">Job</span><span class="dl">"</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>You can however use array notation to index into strings.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">firstName</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">Boris</span><span class="dl">"</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">firstLetter</span> <span class="o">=</span> <span class="nx">firstName</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>A call to <code class="language-plaintext highlighter-rouge">string.toUpperCase()</code> and <code class="language-plaintext highlighter-rouge">string.replace()</code> will return a new string not change the existing one in place.</p>
+
+<h2 id="concatenating-strings">Concatenating Strings</h2>
+
+<p>Strings can be concatenated with the <code class="language-plaintext highlighter-rouge">+</code> and <code class="language-plaintext highlighter-rouge">+=</code> operators.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">ourStr</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">I come first. </span><span class="dl">"</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">I come second.</span><span class="dl">"</span>
+
+<span class="kd">const</span> <span class="nx">anAdjective</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">awesome!</span><span class="dl">"</span><span class="p">;</span>
+<span class="kd">let</span> <span class="nx">ourStr</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">Pizza is</span><span class="dl">"</span><span class="p">;</span>
+<span class="nx">outStr</span> <span class="o">+=</span> <span class="nx">anAdjective</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>You can also concatenate a string as a mix of constants and variables.  For example <code class="language-plaintext highlighter-rouge">const ourStr = "Hello" + ourName + ", how are you?"</code></p>
+
+<h2 id="es6-template-literals">ES6 template literals</h2>
+
+<p>With Javascript ES6 you can create stings from template literals.  This is done by using the back-quote to surround the strings and the <code class="language-plaintext highlighter-rouge">${}</code> syntax for template values.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">person</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Boris</span><span class="dl">"</span>
+  <span class="na">age</span><span class="p">:</span> <span class="mi">40</span>
+<span class="p">};</span>
+
+<span class="kd">const</span> <span class="nx">greeting</span> <span class="o">=</span> <span class="s2">`Hello my name is </span><span class="p">${</span><span class="nx">person</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="s2">.  
+I am </span><span class="p">${</span><span class="nx">person</span><span class="p">.</span><span class="nx">age</span><span class="p">}</span><span class="s2"> years old.`</span><span class="p">;</span>
+
+<span class="c1">// Will print the greeting to console on two lines as we have newline in the template string.</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">greeting</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="string-properties">String Properties</h2>
+
+<p>You can use the <code class="language-plaintext highlighter-rouge">.length</code> property to get the length of a string <code class="language-plaintext highlighter-rouge">console.log("Some Text".length)</code></p>
+
+<p>To check if a string is empty use the expression <code class="language-plaintext highlighter-rouge">if (value === "")</code></p>
+
+<h2 id="some-useful-string-methods">Some Useful String Methods</h2>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">s</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">hello world</span><span class="dl">"</span><span class="p">;</span>
+<span class="nx">s</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1">// "h": the first character</span>
+<span class="nx">s</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">s</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1">// =&gt; "d" the last character</span>
+<span class="nx">s</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>      <span class="c1">// =&gt; "ell": the 2nd 3rd and 4th characters</span>
+<span class="nx">s</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>          <span class="c1">// =&gt; "ell": same thing as above</span>
+<span class="nx">s</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">).</span>          <span class="c1">// =&gt; "rld": last 3 characters</span>
+<span class="nx">s</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="dl">"</span><span class="s2">l</span><span class="dl">"</span><span class="p">)</span>        <span class="c1">// =&gt; 2: position of first letter l</span>
+<span class="nx">s</span><span class="p">.</span><span class="nx">lastIndexOf</span><span class="p">(</span><span class="dl">"</span><span class="s2">l</span><span class="dl">"</span><span class="p">)</span>    <span class="c1">// =&gt; 10: position of last letter l</span>
+<span class="nx">s</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="dl">"</span><span class="s2">l</span><span class="dl">"</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>      <span class="c1">// =&gt; 3: position of first "l" at or after 3</span>
+<span class="nx">s</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="dl">"</span><span class="s2">,</span><span class="dl">"</span><span class="p">)</span>          <span class="c1">// =&gt; ["hello","world"] split into substrings</span>
+<span class="nx">s</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="dl">"</span><span class="s2">h</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">H</span><span class="dl">"</span><span class="p">)</span>    <span class="c1">// =&gt; "Hello world": replaces all instances</span>
+<span class="nx">s</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">()</span>       <span class="c1">// =&gt; "HELLO WORLD"</span>
+</code></pre></div></div>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

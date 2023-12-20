@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>JavaScript Arrays | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="JavaScript Arrays" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/javascript/arrays" />
+<meta property="og:url" content="http://localhost:4000/javascript/arrays" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="JavaScript Arrays" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"JavaScript Arrays","url":"http://localhost:4000/javascript/arrays"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">JavaScript Arrays</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="general-info">General Info</h2>
+<p>Array indexing is 32 bit based so the largest possible value for an index is 2^32=2</p>
+
+<h2 id="declaring-an-array">Declaring an array</h2>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">myArray</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">// An empty array no expression inside brackets means no values</span>
+
+<span class="kd">let</span> <span class="nx">matrix</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],[</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">]];</span>
+
+<span class="kd">let</span> <span class="nx">a</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">();</span> <span class="c1">// declare using Array constructor</span>
+<span class="kd">let</span> <span class="nx">a</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span> <span class="c1">// specify a length of 10 </span>
+</code></pre></div></div>
+
+<h3 id="sparse-arrays">Sparse arrays</h3>
+
+<p>You can have an array that has values omitted.  <code class="language-plaintext highlighter-rouge">let sparseArray = [1,,,,5];</code>  The omitted values will have value of undefined.</p>
+
+<h2 id="adding-and-removing-data-to-an-array">Adding and removing data to an array</h2>
+
+<p>To append data to the end of an array use the <code class="language-plaintext highlighter-rouge">push()</code> function.  To remove data from the end (and get the value) use the <code class="language-plaintext highlighter-rouge">pop()</code> function.  To remove value from front of array and get its value use the <code class="language-plaintext highlighter-rouge">shift()</code> function.  To insert a value at the beginning of an array use the <code class="language-plaintext highlighter-rouge">unshift()</code> function.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">arr1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">];</span>
+<span class="nx">arr1</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="kd">let</span> <span class="nx">last</span> <span class="o">=</span> <span class="nx">arr1</span><span class="p">.</span><span class="nx">pop</span><span class="p">()</span>
+<span class="kd">let</span> <span class="nx">first</span> <span class="o">=</span> <span class="nx">arr1</span><span class="p">.</span><span class="nx">shift</span><span class="p">()</span>
+
+<span class="nx">arr1</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span><span class="nx">last</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>You can also use the delete operator.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">];</span>
+<span class="k">delete</span> <span class="nx">a</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+</code></pre></div></div>
+
+<h3 id="splice-method">splice method</h3>
+
+<p><code class="language-plaintext highlighter-rouge">splice()</code> is the general purpose method for inserting, deleting or replacing array elements.  It will update length and shift array elements to higher or lower indexes as needed.</p>
+
+<p>The first argument to splice specifies the index at which insertion or deletion occurs.  The second argument specifies the number of elements that should be deleted.  If second argument is omitted all elements after the fist argument are deleted.</p>
+
+<p><code class="language-plaintext highlighter-rouge">splice()</code> returns an array of the deleted elements or an empty array if no elements were deleted.</p>
+
+<p>The first two arguments can be followed by any number of additional arguments that specify elements to be inserted into the array starting at the position specified by the first argument.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">];</span>
+<span class="nx">a</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span> <span class="c1">// returns [5,6,7,8]; a is [1,2,3,4]</span>
+
+<span class="kd">let</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">];</span>
+<span class="nx">a</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="dl">'</span><span class="s1">a</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">b</span><span class="dl">'</span><span class="p">)</span> <span class="c1">// returns [] a is [1,2,"a","b",3,4,5]</span>
+<span class="nx">a</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="mi">3</span><span class="p">)</span> <span class="c1">// returns ['a','b']; a is [1,2,[1,2],3,3,4,5]</span>
+</code></pre></div></div>
+
+<h2 id="getting-length-of-an-array">Getting length of an array.</h2>
+
+<p>To get the length of an array use the length property. <code class="language-plaintext highlighter-rouge">len = myArr.length</code></p>
+
+<h2 id="using-the-spread-operator">Using the spread operator</h2>
+
+<p>Spread operator was added in ES6.  It allows us to expand arrays and other expressions in place where multiple parameters or elements are expected.</p>
+
+<p>The spread operator is denoted with the tripple dot <code class="language-plaintext highlighter-rouge">...</code> syntax, and it returns an unpacked array.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">arr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">89</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">45</span><span class="p">];</span>
+<span class="kd">const</span> <span class="nx">maximum</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(...</span><span class="nx">arr</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The spread operator only works in place, like in an argument to a function or in any literal.  The below code is will now work.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">spread</span> <span class="o">=</span> <span class="p">...</span><span class="nx">arr</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="destructuring-arrays">Destructuring Arrays</h2>
+
+<p>The spread operator unpacks all contents of an array in to a comma separated list, but it does not let you pick and choose which elements of that list you assign to variables.  Destructuring an array lets us do that.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="p">[</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">];</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">);</span> <span class="c1">// Will log a and b as 1 and 2</span>
+
+<span class="kd">const</span> <span class="p">[</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,,,</span> <span class="nx">c</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">];</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="nx">b</span><span class="p">,</span><span class="nx">c</span><span class="p">);</span> <span class="c1">// Will log a b and c as 1, 2 and 5 (,, skipped 2 entries)</span>
+</code></pre></div></div>
+
+<p>You can also collect results into a separate array…</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="p">[</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="p">...</span><span class="nx">arr</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">];</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="nx">b</span><span class="p">);</span> <span class="c1">// Will display as 1, 2</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">arr</span><span class="p">);</span> <span class="c1">// Will display [3,4,5,7]</span>
+</code></pre></div></div>
+
+<h2 id="useful-array-methods">Useful array methods</h2>
+
+<h3 id="converting-array-elements-to-a-string-with-join">Converting array elements to a string with join()</h3>
+
+<p><code class="language-plaintext highlighter-rouge">join()</code> converts all the elements of an array to strings and concatenates them returning the resulting string.  You can specify an optional string that separates the elements in the resulting string.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">];</span>
+<span class="nx">a</span><span class="p">.</span><span class="nx">join</span><span class="p">()</span> <span class="c1">// returns "1,2,3"</span>
+<span class="nx">a</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="dl">"</span><span class="s2"> </span><span class="dl">"</span><span class="p">)</span> <span class="c1">// returns "1 3 4"</span>
+</code></pre></div></div>
+
+<h3 id="reverse">reverse()</h3>
+
+<p>Reverses the order of the elements of an array and returns the reversed array.  It does this in place a new array is not created.</p>
+
+<h3 id="sort">sort()</h3>
+
+<p>Sorts the elements of an array in place and returns the sorted array.  If sort() is called with no arguments it sorts the array elements in alphabetical order based on what they convert to string as.  Undefined elements are sorted to the end of the array.</p>
+
+<p>To sort in non alphabetical order pass a comparison function.  If the first argument of the compare function should appear before the second return a number less than 0 if after more than 0 if tye are the same return 0.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">33</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1111</span><span class="p">,</span> <span class="mi">222</span><span class="p">];</span>
+<span class="nx">a</span><span class="p">.</span><span class="nx">sort</span><span class="p">()</span> <span class="c1">// alphabetical order: 1111, 222, 33, 4</span>
+
+<span class="nx">a</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="nx">b</span><span class="p">){</span><span class="k">return</span> <span class="nx">a</span><span class="o">-</span><span class="nx">b</span><span class="p">;});</span> <span class="c1">// reverse numerical order </span>
+</code></pre></div></div>
+
+<h3 id="concat">concat()</h3>
+
+<p>Creates and returns a new array that contains elements of the original array on which <code class="language-plaintext highlighter-rouge">concat()</code> was invoked followed by each of the arguments to <code class="language-plaintext highlighter-rouge">concat()</code>.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">];</span>
+<span class="nx">a</span><span class="p">.</span><span class="nx">concat</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">])</span> <span class="c1">// returns [1,2,3,4,5,6,7]</span>
+</code></pre></div></div>
+
+<h3 id="slice">slice()</h3>
+
+<p><code class="language-plaintext highlighter-rouge">slice()</code> returns a slice or sub array.  Its two arguments specify the start and end of the slice.  Includes the first element and all subsequent elements up to but not including the second element.  If just one argument is specified it returns all elements from the start position.  Negative value count from the back of the array.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+<span class="nx">a</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="c1">// returns [2,3,4]</span>
+</code></pre></div></div>
+
+<h2 id="build-in-functions-for-iterating-over-arrays">Build in Functions for iterating over arrays</h2>
+
+<h3 id="foreach">forEach()</h3>
+
+<p><code class="language-plaintext highlighter-rouge">forEach()</code> iterates over an array invoking a function you specify on each method.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">];</span>
+<span class="kd">let</span> <span class="nx">sumOfSquares</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nx">data</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">){</span>
+    <span class="nx">sumOfSquares</span> <span class="o">+</span> <span class="nx">x</span><span class="o">*</span><span class="nx">x</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="map">map()</h3>
+
+<p><code class="language-plaintext highlighter-rouge">map()</code> passes each element of the array on which it is invoked to the function you specify and returns an array containing the values returned by that function.  <code class="language-plaintext highlighter-rouge">map()</code> returns a new array.  It does not modify the array it was called on.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">];</span>
+<span class="nx">b</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">){</span><span class="k">return</span> <span class="nx">x</span><span class="o">*</span><span class="nx">x</span><span class="p">});</span> <span class="c1">// b will be [1, 4, 9]</span>
+</code></pre></div></div>
+
+<h3 id="filter">filter()</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">filter()</code> method returns an array containing a subset of elements of the array on which it is invokes.  The function passes to filter() needs to return true or false, and filter will iterate over the arrays similar to <code class="language-plaintext highlighter-rouge">forEach()</code>  It will return an array where the function evaluates the array values to true.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">];</span>
+<span class="kd">let</span> <span class="nx">smallvalues</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">){</span><span class="k">return</span> <span class="nx">x</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="o">&gt;</span><span class="p">});</span> <span class="c1">// [2,1]</span>
+<span class="kd">let</span> <span class="nx">everyother</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">){</span><span class="k">return</span> <span class="nx">i</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">});</span> <span class="c1">// [5,3,1]</span>
+</code></pre></div></div>
+
+<h3 id="every-and-some">every() and some()</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">every()</code> method is like a for all.  It returns true if and only if your predicate function returns true for all elements in the array.  <code class="language-plaintext highlighter-rouge">some()</code> is like a there exits.  It returns true if there exists at least one element in the array for which the predicate function returns true.   Both <code class="language-plaintext highlighter-rouge">every()</code> and <code class="language-plaintext highlighter-rouge">some()</code> stop iterating as soon as they have an answer.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">];</span>
+<span class="nx">a</span><span class="p">.</span><span class="nx">some</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">){</span> <span class="k">return</span> <span class="nx">x</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span> <span class="p">});</span> <span class="c1">// returns true because there are some even numbers</span>
+<span class="nx">a</span><span class="p">.</span><span class="nx">every</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">){</span> <span class="k">return</span> <span class="nx">x</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="p">});</span> <span class="c1">// returns true all value are less than 10.</span>
+</code></pre></div></div>
+
+<h3 id="reduce-and-reduceright">reduce() and reduceRight()</h3>
+
+<p><code class="language-plaintext highlighter-rouge">reduce()</code> takes two arguments.  One is a function that has to take two values and somehow make one value out of them.  The second is an option argument that is an initial second value passed to the function.  If no initial value is passed reduce will take the first two values of the array.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">];</span>
+<span class="kd">let</span> <span class="nx">sum</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span><span class="nx">y</span><span class="p">){</span> <span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span><span class="p">},</span><span class="mi">0</span><span class="p">)</span> <span class="c1">// sum of values</span>
+<span class="kd">let</span> <span class="nx">product</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span><span class="nx">y</span><span class="p">){</span> <span class="k">return</span> <span class="nx">x</span> <span class="o">*</span> <span class="nx">y</span> <span class="p">},</span><span class="mi">1</span><span class="p">)</span> <span class="c1">// product ov values</span>
+<span class="kd">let</span> <span class="nx">max</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span><span class="nx">y</span><span class="p">{</span> <span class="k">return</span> <span class="p">(</span><span class="nx">x</span><span class="o">&gt;</span><span class="nx">y</span><span class="p">)?</span><span class="nx">x</span><span class="p">:</span><span class="nx">y</span><span class="p">;}))</span> <span class="c1">// largest value</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">reduceRight()</code> works just like reduce, but from the largest array index to the lowest.</p>
+
+<h3 id="indexof-and-lastindexof">indexOf() and lastIndexOf()</h3>
+
+<p>returns =1 if not found.  The value is the value to search for, second value is optional and specifies at what index to start the search.</p>
+
+<h3 id="isarray">isArray</h3>
+
+<p><code class="language-plaintext highlighter-rouge">Array.isArray([])</code> will return true</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

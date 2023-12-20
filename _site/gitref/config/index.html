@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Git Configuration | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Git Configuration" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/gitref/config/" />
+<meta property="og:url" content="http://localhost:4000/gitref/config/" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Git Configuration" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Git Configuration","url":"http://localhost:4000/gitref/config/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Git Configuration</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="git-configuration">Git Configuration</h2>
+
+<h3 id="customizing-git---git-configuration">Customizing Git - Git Configuration</h3>
+
+<h4 id="git-configuration-1">Git Configuration</h4>
+
+<p>This section was just a review of the 3 config levels I already have in notes.</p>
+
+<h5 id="basic-client-configuration">Basic Client Configuration</h5>
+
+<p>Git configuration options fall into two catagories, client-side and server-side.  Majority of options are client-side.  There are many configuration options the common ones are covered here.   To see a list of all the options use the command below or <a href="link https://git-scm.com/docs/git-config">the reference here</a></p>
+
+<p><code class="language-plaintext highlighter-rouge">man git-config</code></p>
+
+<p><strong>core.editor</strong></p>
+
+<p>Sets your editor to a value that is not derived from the VISUAL or EDITOR shell environment variables.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global core.editor emacs</code></p>
+
+<p><strong>commit.template</strong></p>
+
+<p>If you set this to the path of a file on your system, Git will use that file as the default initial message when you commit.  You can use this to remind yourself or others the format and style when creating a commit message.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global commit.template ~/.gitmessage.txt</code></p>
+
+<p><strong>core.pager</strong></p>
+
+<p>This setting controls which pager is used when git pages output such as log or diff.  You can set it to <code class="language-plaintext highlighter-rouge">more</code> or your favorite pager (by default it uses less) or you can turn it off by setting a blank value.  If off git will page the entire output regardless of how long it is.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global core.pager ''</code></p>
+
+<p><strong>user.signinkey</strong></p>
+
+<p>This sets your GPG signing key for signed annotated tags.  You can set your key ID with the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global user.signinkey &lt;gpg-key-id&gt;</code></p>
+
+<p><strong>core.excludesfile</strong></p>
+
+<p>This setting is like the .gitignore file, but applies to all of your repositories.  This is a good place to put filenames such as .DS_Store (for Mac users) or .swp files.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global core.excludesfile ~/.gitignore_global</code></p>
+
+<p><strong>help.autocorrect</strong></p>
+
+<p>By default if you miss type a command git will suggest the command for you.  If you set this option to 1 it will actually run the command it thinks you intended.</p>
+
+<p>The value you actually set it to represents tenths of a second (10 means one second) and that is the amount of time Git will give you to change your mind if Git guesses the command wrong.</p>
+
+<h5 id="colors-in-git">Colors in Git</h5>
+
+<p><strong>color.ui</strong></p>
+
+<p>By default Git colors most of its output.  This lets you disable/enable that.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global color.ui false</code></p>
+
+<p>The default setting is auto which colors output if its going to terminal, but omits the color codes if its redirected to a pipe or file.  You can also set it to always to ignore the difference between terminal and pipes.  You can also pass –color to any Git command to force it to send the color codes ad hoc.</p>
+
+<p><strong>color.*</strong></p>
+
+<p>Git provides verb-specific color settings if you want to be more specific about which commands are colored.  Each of these can be set to <code class="language-plaintext highlighter-rouge">true</code>, <code class="language-plaintext highlighter-rouge">false</code> or <code class="language-plaintext highlighter-rouge">always</code></p>
+
+<ul>
+  <li>color.branch</li>
+  <li>color.diff</li>
+  <li>color.interactive</li>
+  <li>color.status</li>
+</ul>
+
+<p>In addition, each of these has a sub-setting you can use to set specific colors for parts of the output. For example to set the meta information in your diff output to blue foreground, black background and bold text use the command</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global color.diff.meta "blue black bold"</code></p>
+
+<p>You can set the color to any of the following values.  <code class="language-plaintext highlighter-rouge">normal</code>, <code class="language-plaintext highlighter-rouge">black</code>, <code class="language-plaintext highlighter-rouge">red</code>, <code class="language-plaintext highlighter-rouge">green</code>, <code class="language-plaintext highlighter-rouge">yellow</code>, <code class="language-plaintext highlighter-rouge">blue</code>, <code class="language-plaintext highlighter-rouge">magenta</code>, <code class="language-plaintext highlighter-rouge">cyan</code> or <code class="language-plaintext highlighter-rouge">white</code>.  For emphasis attributes you have the options <code class="language-plaintext highlighter-rouge">bold</code>, <code class="language-plaintext highlighter-rouge">dim</code>, <code class="language-plaintext highlighter-rouge">ul</code> (underline), <code class="language-plaintext highlighter-rouge">blink</code> and <code class="language-plaintext highlighter-rouge">reverse</code> (swap foreground and background)</p>
+
+<h5 id="external-merge-and-diff-tools">External Merge and Diff Tools</h5>
+
+<p>This section shows how to set up the Perforce merge tool (a free graphical merge-conflict tool) instead of the Git default merge tool.  The example here should work on Mac and Linux.  You will need to adjust the paths used for Windows.</p>
+
+<p>You can download the P4Merge tool <a href="https://www.perforce.com/product/components/perforce-visual-merge-and-diff-tools">here</a></p>
+
+<p>First create a merge wrapper script named <code class="language-plaintext highlighter-rouge">extMerge</code> as below.  Adjust the path to your binary.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!/bin/sh
+/Applications/p4merge.app/Contents/MacOS/p4merge $*
+</code></pre></div></div>
+
+<p>Next create the <code class="language-plaintext highlighter-rouge">extDiff</code> diff wrapper script as below.  This wrapper checks to make sure seven arguments are provided and passes two of them to your merge script.  By default git passes the following arguments to the diff program.</p>
+
+<p>path, old-file, old-hex, old-mode, new-file, new-hex, new-mode</p>
+
+<p>In our case we only want the old-file and new-file arguments so we have the wrapper script pass those.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!/bin/sh
+[ $# -eq 7 ] &amp;&amp; /usr/local/bin/extMerge "$2" "$5"
+</code></pre></div></div>
+
+<p>Make sure to give execute permission to both scripts.</p>
+
+<p>Now we can set up our Git config to use our custom merge resolution and diff tools.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config --global merge.tool extMerge
+git config --global mergetool.extMerge.cmd \
+  'extMerge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"'
+git config --global mergetool.extMerge.trustExitCode false
+git config --global diff.external extDiff
+</code></pre></div></div>
+
+<p>alternatively you can edit your ~/.gitconfig with the following changes</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[merge]
+  tool = extMerge
+[mergetool "extMerge"]
+  cmd = extMerge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+  trustExitCode = false
+[diff]
+  external = extDiff
+</code></pre></div></div>
+
+<p>With this changes when you run <code class="language-plaintext highlighter-rouge">git diff 32d1786b1^ 32d1786b1</code> instead of the Git output, Git will fire up P4Merge.  If you try to merge two branches and have a conflict.  Running <code class="language-plaintext highlighter-rouge">git mergetool</code> will now start P4Merge to let you resolve the conflicts through that GUI tool.</p>
+
+<p>Git comes preset to use a number of other merge-resolution tools without your having to set up the cmd configuration.  To see a list of supported tools run the below command.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git mergetool --tool-help</code></p>
+
+<p>If for example you are not interested in using KDiff3 for diff, but rather want to use it just for merge resolution, and the kdiff3 command is in your PATH, then you can run the command below.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global merge.tool kdiff3</code></p>
+
+<h5 id="formatting-and-whitespace">Formatting and Whitespace</h5>
+
+<p><strong>core.autocrlf</strong></p>
+
+<p>If you are working on Windows with people that are not you will probably run into line ending issues at some point.  Windows uses both carriage-return and linefeed characters for newlines while MacOS and Linux only use linefeed.  Many editors on Windows replace or append LF-style endings with CRLF.</p>
+
+<p>Git can handle this by auto-converting CRLF line endings into LF when you add a file to the index and vice versa when it checks out code onto your filesystem.  You can turn this on with the <code class="language-plaintext highlighter-rouge">core.autocrlf</code> setting.</p>
+
+<p>If you are on a Windows machine, set it to <code class="language-plaintext highlighter-rouge">true</code> - this will convert LF endings into CRLF when you check out code.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global core.autocrlf true</code></p>
+
+<p>if you’re on a Linux or MacOS system that uses LF line endings, you don’t want Git to automatically convert them when you check out files, however if a file with CRLF endings accidentally gets introduced, then you may want Git to fix it.  You can tell Git to convert CRLF to LF on commit but not the other way around by setting <code class="language-plaintext highlighter-rouge">core.autocrlf</code> to <code class="language-plaintext highlighter-rouge">input</code>.  This setup should leave you with CRLF endings in Windows checkout, but LF endings on macOS and Linux systems and in the repository.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global core.autocrlf input</code></p>
+
+<p>If you are a Windows programmer doing a Windows only project, then you can turn off this functionality, recording the carriage returns in the repository by setting <code class="language-plaintext highlighter-rouge">core.autocrlf</code> to <code class="language-plaintext highlighter-rouge">false</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --global core.autocrlf false</code></p>
+
+<p><strong>core.whitespace</strong></p>
+
+<p>Git has the ability to fix 6 types of whitespace issue.  3 are enabled by default and 3 are disabled by default.</p>
+
+<p>3 that are on by default are</p>
+
+<ul>
+  <li>blank-at-eol - looks for spaces at end of line</li>
+  <li>blank-at-eof - looks for spaces at end of a file</li>
+  <li>space-before-tab - looks for spaces before tabs at the beginning of a line</li>
+</ul>
+
+<p>3 that are disabled by default are</p>
+
+<ul>
+  <li>indent-with-non-tab - looks for lines tha begin with spaces instead of tabs (controlled by the <code class="language-plaintext highlighter-rouge">tabwidth</code> option)</li>
+  <li>tab-in-indent - watches for tabs in the indentation portion of a line</li>
+  <li>cr-at-eol - tells Git that carriage returns at the end of lines are OK.</li>
+</ul>
+
+<p>You can tell Git which of these you want enabled by setting <code class="language-plaintext highlighter-rouge">core.whitespace</code> to the values you want on or off.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config --global core.whitespace \
+    trailing-space,-space-before-tab,indent-with-non-tab,tab-in-indent,cr-at-eol
+</code></pre></div></div>
+
+<p>Git will detect these issues when you run <code class="language-plaintext highlighter-rouge">git diff</code> command and try to color them so that you can fix them before you commit.  It will also use these values when you apply patches with <code class="language-plaintext highlighter-rouge">git apply</code>  When you are applying patches you can ask Git to warn you if it’s applying patches with the specified whitespace issues:</p>
+
+<p><code class="language-plaintext highlighter-rouge">git apply --whitespace=warn &lt;path&gt;</code></p>
+
+<p>or you can have Git automatically fix the issue before applying the patch.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git apply --whitespace=fix &lt;path&gt;</code></p>
+
+<p>These options apply to <code class="language-plaintext highlighter-rouge">git rebase</code> as well.  If you committed whitespace issues, but haven’t pushed them upstream you can run <code class="language-plaintext highlighter-rouge">git rebase --whitespace=fix</code> to have Git automatically fix whitespace issues as it’s rewriting the patches.</p>
+
+<h5 id="server-configuration">Server Configuration</h5>
+
+<p><strong>receive.fsckObjects</strong></p>
+
+<p>Git has capability to make sure every object received during a push matches its SHA-1 checksum and points to valid objects.  This is disabled by default because it is an expensive operation especially on large repositories.  You an use <code class="language-plaintext highlighter-rouge">receive.fsckObjects</code> to enable this functionality.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --system receive.fsckObjects true</code></p>
+
+<p><strong>receive.denyNonFastForwards</strong></p>
+
+<p>This setting lets you prevent user from pushing changes that rewrite history by using the -f flag.  This is generally good policy.  <strong><em>Note:</em></strong> There is a way to do this with hooks that let you allow the force commit to a certain set of users.</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --system receive.denyNonFastForwards true</code></p>
+
+<p><strong>receive.denyDeletes</strong></p>
+
+<p>This setting will deny the deletion of branches.  If this setting is enabled to remove branches you would need to remove the ref files on the server manually.  There is a way to configure this on a per user basis via access control lists (ACLs)</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config --system receive.denyDeletes true</code></p>
+
+<h3 id="git-attributes">Git Attributes</h3>
+
+<p>Certain settings can be specified for a specific path so that Git only applies those settings for a subdirectory of files.  These path specific settings are called Git attributes, and they can be set either in a <code class="language-plaintext highlighter-rouge">.gitattributes</code> file in one of you directories (normally the root of your project) or in the <code class="language-plaintext highlighter-rouge">.git/info/attributes</code> file if you don’t want the attributes committed to your project.</p>
+
+<p>You can use Git attributes to specify separate merge strategies for individual files or directories, tell Git how to diff non-text files, or have Git filter content before you check it into or out of Git.</p>
+
+<h4 id="binary-files">Binary Files</h4>
+
+<p>You can use Git attributes to tell Git which files are binary in case it may not be able to figure it out, and how to handle those files.</p>
+
+<h5 id="identifying-binary-files">Identifying Binary Files</h5>
+
+<p>Some files such as lightweight database are written as UTF-8, but area not meant to be treated as text.  You can’t effectively diff or merge this kind of file.  To tell Git to treat a certain file extension as binary at an entry to your <code class="language-plaintext highlighter-rouge">.gitattributes</code> file similar to the one below.  By doing this Git won’t try to convert or fix CRLF issues nor will it try to compute and display changes for these files when you run <code class="language-plaintext highlighter-rouge">git show</code> or <code class="language-plaintext highlighter-rouge">git diff</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">.myextension binary</code></p>
+
+<h5 id="diffing-binary-files">Diffing Binary Files</h5>
+
+<p>You can use Git attributes to effectively diff binary file by telling Git how to convert binary files to text format that can be compared with a diff.</p>
+
+<h6 id="word-documents">Word documents</h6>
+
+<p>You can use this to let Git diff word documents.  To do this make an entry similar to the one below in your <code class="language-plaintext highlighter-rouge">.gitattributes</code> file.  You will also need to set up the “word” filter.</p>
+
+<p><code class="language-plaintext highlighter-rouge">.docx diff=word</code></p>
+
+<p>You will aso need to install the <a href="https://sourceforge.net/projects/docx2txt">doc2txt program</a> to convert Word documents into text files.  You will need the below wrapper script, and Git config entry to make Git use the doc2txt program.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!/bin/bash
+docx2txt.pl "$1" -
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">git config diff.word.textconv docx2txt</code></p>
+
+<h6 id="images">Images</h6>
+
+<p>You can run images though a program that extracts their EXIF information (metadata that is recorded with most image formats).  You can do this by installing the <code class="language-plaintext highlighter-rouge">exiftool</code> which you can use to convert you images into text about the metadata.</p>
+
+<p>Add the following to your <code class="language-plaintext highlighter-rouge">.gitattributes</code> file.</p>
+
+<p><code class="language-plaintext highlighter-rouge">*.png diff=exif</code></p>
+
+<p>And configure Git to use this tool</p>
+
+<p><code class="language-plaintext highlighter-rouge">git config diff.exif.textconv exiftool</code></p>
+
+<p>Not if you replace an image in your project git diff will show you the metadata changes.</p>
+
+<h4 id="clean-and-smudge-filters">Clean and smudge filters</h4>
+
+<p>Git has functionality that lets you set up a filter that runs when you check out a code to “smudge” it and when you stage it to “clean it”.  For example if you want to run the <code class="language-plaintext highlighter-rouge">indent</code> program on <code class="language-plaintext highlighter-rouge">c</code> files when you check them out and the <code class="language-plaintext highlighter-rouge">cat</code> program (does nothing but we are using it as an example) when you stage the files you would add the below line to your <code class="language-plaintext highlighter-rouge">.gitattributes</code> file.</p>
+
+<p><code class="language-plaintext highlighter-rouge">*.c filter=indent</code></p>
+
+<p>And se the following Git configuration for smudge and clean.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git config --global filter.indent.clean indent
+git config --global filter.indent.smudge cat
+</code></pre></div></div>
+
+<h4 id="exporting-your-repository">Exporting your repository</h4>
+
+<p>Git attributes allow you to do some interesting things when exporting an archive of your project</p>
+
+<h5 id="export-ignore">export-ignore</h5>
+
+<p>You can tell Git not to export certain files or directories when generating an archive.  For example if you don’t want file sin the test directory to be exported when creating an archive you would add the following to your <code class="language-plaintext highlighter-rouge">.gitattributes</code> file and those files would not be included when you run <code class="language-plaintext highlighter-rouge">git archive</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">test/ export-ignore</code></p>
+
+<h5 id="export-subset">export-subset</h5>
+
+<p>When exporting files for deployment you can apply formatting and keyword expansion from <code class="language-plaintext highlighter-rouge">git log</code> processing to selected portions of files marked with the <code class="language-plaintext highlighter-rouge">export-subset</code> attributes.</p>
+
+<p>For example if you want to include a file named LAST_COMMIT in your project, and have metadata about the last commit automatically injected into it when <code class="language-plaintext highlighter-rouge">git archive</code> runs you would add the below to your <code class="language-plaintext highlighter-rouge">.gitattributes</code> files.</p>
+
+<p><code class="language-plaintext highlighter-rouge">LAST_COMMIT export-subst</code></p>
+
+<p>and create the LAST_COMMIT template.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ echo 'Last commit date: $Format:%cd by %aN$' &gt; LAST_COMMIT
+$ git add LAST_COMMIT .gitattributes
+$ git commit -am 'adding LAST_COMMIT file for archives'
+</code></pre></div></div>
+
+<p>Now when you run <code class="language-plaintext highlighter-rouge">git archive</code> the contents of the archived file would show.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git archive HEAD | tar xCf ../deployment-testing -
+$ cat ../deployment-testing/LAST_COMMIT
+Last commit date: Tue Apr 21 08:38:48 2009 -0700 by Scott Chacon
+</code></pre></div></div>
+
+<h4 id="merge-strategies">Merge strategies</h4>
+
+<p>You can use Git attributes to tell Git to use different merge strategies for specific files in your project.  One useful option is to tell Git to not try to merge specific files when they have conflicts, but rather to use your side of the merge over someone else’s   For example if you have if you have a database.xml file and you want your settings to be preserved on a merge.  You would add the following to your <code class="language-plaintext highlighter-rouge">.gitattributes</code> file.</p>
+
+<p><code class="language-plaintext highlighter-rouge">database.xml merge=ours</code></p>
+
+<p>And then define a dummy ours merge strategy with</p>
+
+<p><code class="language-plaintext highlighter-rouge">$ git config --global merge.ours.driver true</code></p>
+
+<p>Now if you merge in another branch instead of having merge conflicts for database.xml you will see something like the below. and database.xml stays at whatever version you originally had it at.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git merge topic
+Auto-merging database.xml
+Merge made by recursive.
+</code></pre></div></div>
+
+<h3 id="git-hooks">Git Hooks</h3>
+
+<p>Git Hooks is a way to fire off custom scripts when certain actions occur.  There are client-side and server-side Git hooks.  Client side hooks are triggered by operations such as committing and merging while server side hooks run on network operations such as receiving pushed commits.</p>
+
+<h4 id="installing-a-hook">Installing a hook</h4>
+
+<p>Hooks are installed in the <code class="language-plaintext highlighter-rouge">hooks</code> subdirectory of the Git directory.  In most projects that will git <code class="language-plaintext highlighter-rouge">.git/hooks</code>.  When you initialize a new project with <code class="language-plaintext highlighter-rouge">git init</code>, Git populates the hooks directory with a bunch of example scripts.  If you want to use the bundled in scripts you will need to rename them to remove the <code class="language-plaintext highlighter-rouge">.sample</code> extension.</p>
+
+<p>For a hook script to be enabled, it needs bo be in the hooks directory, appropriately named and have execute permission.  You are free to use any scripting you want to write the scripts.  Use the sample scripts as a reference for naming and what arguments scripts are expecting.</p>
+
+<h4 id="client-side-hooks">Client-side hooks</h4>
+
+<h5 id="committing-workflow-hooks">Committing-Workflow Hooks</h5>
+
+<p><strong>pre-commit</strong> - This hook runs before you get prompted for a commit message.  It is used to inspect the snapshot that is about to be committed.  Exiting non zero from this hook aborts the commit.  This is a good place to run linters, check for trailing white spaces etc.  You can skip the execution of this hook if you use the –no-verify argument to git commit (`git commit –no-verify)</p>
+
+<p><strong>prepare-commit-msg</strong> - This hook runs before the commit message editor is fired up, but after the default message is created.  It lets you edit the default message before the commit author sees it.  This hook is not generally useful for normal commits; rather it’s good for commits where the default message is auto generated, such as templated commit messages, merge commits, squashed commits, and amended commits.  You can use it in combination with a commit template to programmatically insert information.</p>
+
+<p><strong>commit-msg</strong> - This hook is useful for validating the content of a commit message.  The script for this hook gets a single argument that is the path to the temporary file with the commit message written by the author.  If this script exits non zero than the commit is aborted.</p>
+
+<p><strong>post-commit</strong> - This script does not receive any arguments, but you can get the last commit by running <code class="language-plaintext highlighter-rouge">git log -1 HEAD</code>.  It is generally used for notifications.</p>
+
+<h5 id="other-client-hooks">Other Client Hooks</h5>
+
+<p><strong>pre-rebase</strong> - This hook runs before you rebase, and can halt the process by exiting non-zero.  You can use this hook to block rebasing any commits tha have already been pushed.  The example pre-rebase hood provided by Git does this.</p>
+
+<p><strong>post-rewrite</strong> - This hook is run by commands that replace commits, such as <code class="language-plaintext highlighter-rouge">git commit --amend</code> and <code class="language-plaintext highlighter-rouge">git rebase</code>.  Its single argument is the command that triggered the rewrite, and it gets the list of rewrites on stdin.  This hook has many of the same uses as the post-checkout and post-merge hooks.</p>
+
+<p><strong>post-checkout</strong> - This hook runs after you run a successful <code class="language-plaintext highlighter-rouge">git checkout</code>.  You can use this hook to set up your working directory properly for your project environment.  Examples are moving in large binary files that you don’t want source managed or auto generating documentation.</p>
+
+<p><strong>post-merge</strong> - This hook runs after a successful merge command.  You can use it to restore data in the working that that Git can’t truck such as permissions data.</p>
+
+<p><strong>pre-push</strong> - This hook runs during git push, after the remote refs have been updated but before any objects have been transferred.  It receives the name and location of the remote as parameters, and a list of to be updated refs through stdin.  You can use this hook to validate a set of ref updates before a push occurs.  A non zero exit code in this hook will abort the push.</p>
+
+<p><strong>pre-auto-gc</strong> - This hook is invoked just before Git does garbage collection (by calling <code class="language-plaintext highlighter-rouge">git gc --auto</code>).  You an use it to abort the garbage collection.</p>
+
+<h4 id="server-side-hooks">Server-Side Hooks</h4>
+
+<p>Server side hooks can be used to enforce project policy.  These scripts run before and after pushes to the server.  The pre hooks can exit with a non zero to reject a push and print an error message back to the client.</p>
+
+<p><strong>pre-receive</strong> - This hook gets a list of references being pushed on stdin.  If it exists non zero, none of the references are accepted.  You can use this hook to make sure none of the updated references are non-fast-forwards, or to do access control for all the refs and files they’re modifying with the push.</p>
+
+<p><strong>update</strong> - This hook is similar to pre-receive, but it is run once for each branch the push is trying to update.  This script takes 3 arguments: the name of the reference (branch), the SHA-1 that reference pointed to before the push, and the SHA-1 the uer is trying to push.  If the update script exits non-zero, only that reference is rejected.
+<a href="&lt;&gt; (TODO: I wonder if GitHub has ability for you to run these)">comment</a>: &lt;&gt; (TODO: How do you push to multiple branches?)</p>
+
+<p><strong>post-receive</strong> - This hook runs after the entire process is completed, and can be used to update other services or notify users.  It takes the same stdin data s pre-receive hook.  Uses for this hook include emailing a list, notifying a continuous integration server, or updating a ticket tracking system.  You can even parse the commit message to see if any ticket need to be opened, modified or closed.  This script can’t stop the push process, but the client doesn’t disconnect until it has completed so its not a good place for long running actions.</p>
+
+<h3 id="customizing-git---an-example-git-enforced-policy">Customizing Git - An example Git enforced policy</h3>
+
+<p>The Git Pro book has an example of using hooks to set up a policy that is a good reference.  It can be found <a href="https://git-scm.com/book/en/v2/Customizing-Git-An-Example-Git-Enforced-Policy">here</a></p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

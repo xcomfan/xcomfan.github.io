@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Goroutines | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Goroutines" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/go/goroutines" />
+<meta property="og:url" content="http://localhost:4000/go/goroutines" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Goroutines" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Goroutines","url":"http://localhost:4000/go/goroutines"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Goroutines</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="goroutines">Goroutines</h2>
+
+<p>Goroutines use CSP which stands for communicating sequential processes and its what concurrency in Go is based on.</p>
+
+<p>Goroutines are lightweight processes managed by the Go runtime.</p>
+
+<p>The Go runtime schedules goroutines across threads automatically.</p>
+
+<p>Goroutines are faster to create, more efficient with memory, and faster to switch.</p>
+
+<p>Can have tens of thousands of goroutines in a single process</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"sync"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">runMe</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Hello from a goroutine"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// You need to use a wait group to wait for Goroutines to finish</span>
+    <span class="k">var</span> <span class="n">wg</span> <span class="n">sync</span><span class="o">.</span><span class="n">WaitGroup</span>
+    <span class="c">// Tell wait group we are adding 1 go routine to run</span>
+    <span class="n">wg</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+    <span class="c">// Launch a closure as a go routine and in the closure call runMe and Done</span>
+    <span class="c">// method of wait group.</span>
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">runMe</span><span class="p">()</span>
+        <span class="n">wg</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span>
+    <span class="p">}()</span>
+
+    <span class="c">// Outside of closure back in main we wait for wg</span>
+    <span class="c">// will pause main till wg count reaches 0.</span>
+    <span class="n">wg</span><span class="o">.</span><span class="n">Wait</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Note that in the example above the runMe method does not need to do anything to be concurrent.  Concurrency logic should be separate from your business logic.</p>
+
+<p>Now lets look at an example of passing data to a Go routine</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"sync"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">runMe</span><span class="p">(</span><span class="n">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Hello to"</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="s">"from a goroutine"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// You need to use a wait group to wait for Goroutines to finish</span>
+    <span class="k">var</span> <span class="n">wg</span> <span class="n">sync</span><span class="o">.</span><span class="n">WaitGroup</span>
+    <span class="c">// Tell wait group we are adding 1 go routine to run</span>
+    <span class="n">wg</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+    <span class="c">// Launch a closure as a go routine and in the closure call runMe and Done</span>
+    <span class="c">// method of wait group.</span>
+    <span class="k">go</span> <span class="k">func</span><span class="p">(</span><span class="n">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">runMe</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">wg</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span>
+    <span class="p">}(</span><span class="s">"Bob"</span><span class="p">)</span>
+
+    <span class="c">// Outside of closure back in main we wait for wg</span>
+    <span class="c">// will pause main till wg count reaches 0.</span>
+    <span class="n">wg</span><span class="o">.</span><span class="n">Wait</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Note that you can access the variables from the outside as you are doing with wg, but if variable is changed before go routine runs you own’t get value that you expect.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"sync"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">wg</span> <span class="n">sync</span><span class="o">.</span><span class="n">WaitGroup</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">wg</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+        <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="c">// if you do this all go routines will share the same i</span>
+            <span class="c">// and you will get unpredictable results.</span>
+            <span class="n">wg</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span>
+            <span class="p">}()</span>
+    <span class="p">}</span>
+
+    <span class="n">wg</span><span class="o">.</span><span class="n">Wait</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>correct way is</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"sync"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">wg</span> <span class="n">sync</span><span class="o">.</span><span class="n">WaitGroup</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">wg</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+        <span class="k">go</span> <span class="k">func</span><span class="p">(</span><span class="n">localI</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">localI</span><span class="p">)</span> <span class="c">// if you do this all go routines will share the same i</span>
+            <span class="c">// and you will get unpredictable results.</span>
+            <span class="n">wg</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span>
+        <span class="p">}(</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">wg</span><span class="o">.</span><span class="n">Wait</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="notes-from-learn-go-in-3-hours-class">Notes from Learn Go in 3 hours class</h1>
+
+<p><strong>NOTE:</strong> Go does not consider a zero value to be false.</p>
+
+<h2 id="channels">Channels</h2>
+
+<p>Channels are used to send data to and from a Goroutine while it is running.</p>
+
+<p>One or more Goroutines write to a channel and one or more Goroutines read from the same channel.</p>
+
+<p>Data on channels is typed.</p>
+
+<p>By default, channel reads and writes are synchronous.</p>
+
+<p>Putting a value in a channel is just like passing a value to a function.  If its not a reference type a copy is made and sent to the reading Goroutine</p>
+
+<p>Be careful when passing reference types over a channel.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// declare our in and out channels</span>
+    <span class="n">in</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">string</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">string</span><span class="p">)</span>
+    <span class="c">// launch our goroutine</span>
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c">// read from the in channel</span>
+        <span class="c">// &lt;- is the receive operator.</span>
+        <span class="n">name</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">in</span>
+        <span class="n">out</span> <span class="o">&lt;-</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"Hello, "</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
+    <span class="p">}()</span>
+    <span class="c">// write string to the in channel.</span>
+    <span class="n">in</span> <span class="o">&lt;-</span> <span class="s">"Bob"</span>
+    <span class="c">// close the channel</span>
+    <span class="nb">close</span><span class="p">(</span><span class="n">in</span><span class="p">)</span>
+    <span class="c">// read from out</span>
+    <span class="c">// notice that we did not need a wait group</span>
+    <span class="c">// this is because the main function is waiting to read from the out channel</span>
+    <span class="c">// which has nothing on it till the goroutine completes</span>
+    <span class="c">// if you don't want to wait for a channel to be read after we write to it use</span>
+    <span class="c">// buffer channel.</span>
+    <span class="n">message</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">out</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>Buffer channels are not infinite and when full Goroutines will pause till the channel is read from.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// create a buffer channel with room for 10 items of type int.</span>
+    <span class="n">out</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="m">10</span><span class="p">)</span>
+    <span class="c">// loop passing each value to a go routine</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">go</span> <span class="k">func</span><span class="p">(</span><span class="n">localI</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">out</span> <span class="o">&lt;-</span> <span class="n">localI</span> <span class="o">*</span> <span class="m">2</span>
+        <span class="p">}(</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">var</span> <span class="n">result</span> <span class="p">[]</span><span class="kt">int</span>
+    <span class="c">// read from the out channel and append it to our results</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">val</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">out</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This is one of the uses of buffer channel gather data from a number of workers when you know how many to expect.</p>
+
+<p>In the example below we are going to get a deadlock when it runs.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">in</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">int</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">int</span><span class="p">)</span>
+
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c">// for loop runs forever reading from in and writing the double to out</span>
+        <span class="k">for</span> <span class="p">{</span>
+            <span class="n">i</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">in</span>
+            <span class="n">out</span> <span class="o">&lt;-</span> <span class="n">i</span> <span class="o">*</span> <span class="m">2</span>
+        <span class="p">}</span>
+    <span class="p">}()</span>
+
+    <span class="n">in</span> <span class="o">&lt;-</span> <span class="m">1</span>
+    <span class="n">in</span> <span class="o">&lt;-</span> <span class="m">2</span>
+    <span class="n">o1</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">out</span>
+    <span class="n">o2</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">out</span>
+
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">o1</span><span class="p">,</span> <span class="n">o2</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>You need to make sure that a Goroutine is not blocked reading from or writing to a channel.  Fix for the deadlock above is to write read write read not write, write, read read.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">in</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">int</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">int</span><span class="p">)</span>
+
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c">// for loop runs forever reading from in and writing the double to out</span>
+        <span class="k">for</span> <span class="p">{</span>
+            <span class="n">i</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">in</span>
+            <span class="n">out</span> <span class="o">&lt;-</span> <span class="n">i</span> <span class="o">*</span> <span class="m">2</span>
+        <span class="p">}</span>
+    <span class="p">}()</span>
+
+    <span class="n">in</span> <span class="o">&lt;-</span> <span class="m">1</span>
+    <span class="n">o1</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">out</span>
+    <span class="n">in</span> <span class="o">&lt;-</span> <span class="m">2</span>
+    <span class="n">o2</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">out</span>
+
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">o1</span><span class="p">,</span> <span class="n">o2</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Closing channels</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">in</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="m">10</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">int</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">in</span> <span class="o">&lt;-</span> <span class="n">i</span>
+    <span class="p">}</span>
+    <span class="c">// closing channel means no more values written to it, but contents are not wiped out</span>
+    <span class="c">// any values in buffer still available to be read.</span>
+    <span class="c">// reading from closed channel with no data remaining will give the 0 value.</span>
+    <span class="nb">close</span><span class="p">(</span><span class="n">in</span><span class="p">)</span>
+
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">{</span>
+        <span class="c">// ok is for us to be able to tell diff between closed channel and just 0</span>
+        <span class="n">i</span><span class="p">,</span> <span class="n">ok</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">in</span>
+            <span class="k">if</span> <span class="o">!</span><span class="n">ok</span> <span class="p">{</span>
+                <span class="nb">close</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="p">}</span>
+            <span class="n">out</span> <span class="o">&lt;-</span> <span class="n">i</span> <span class="o">*</span> <span class="m">2</span>
+        <span class="p">}</span>
+    <span class="p">}()</span>
+
+    <span class="c">// you can have a for range loop with channels</span>
+    <span class="c">// the v will be the latest value that was written to the channel.</span>
+    <span class="c">// when channel closed and there are no more values to be read the for loop</span>
+    <span class="c">// will exit.</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">out</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>Be sure to not write to a closed channel or to try to close a closed channel or you will get a panic.</p>
+
+<p>The zero value for a channel is <code class="language-plaintext highlighter-rouge">nil</code>.  Writing to a <code class="language-plaintext highlighter-rouge">nil</code> channel makes your go routine hang forever.  Closing a <code class="language-plaintext highlighter-rouge">nil</code> channel will cause a panic.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Op</th>
+      <th>unbuffered</th>
+      <th>buffered</th>
+      <th>nil</th>
+      <th>closed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>read</td>
+      <td>Pause until something is written</td>
+      <td>Pause if buffer is empty</td>
+      <td>Hang forever</td>
+      <td>Return immediately w/zero value (use comma-ok to see if it is closed)</td>
+    </tr>
+    <tr>
+      <td>write</td>
+      <td>Pause until something is read</td>
+      <td>Pause only if buffer full</td>
+      <td>Hang forever</td>
+      <td>PANIC</td>
+    </tr>
+    <tr>
+      <td>close</td>
+      <td>Works</td>
+      <td>Works</td>
+      <td>PANIC</td>
+      <td>PANIC</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="select">Select</h2>
+
+<p>What if yo had multiple channels.  You would want to read the ready channels and skip the ones that are blocked.  Also what if you want to only write to a channel that is not blocked.  This is possible with select.</p>
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

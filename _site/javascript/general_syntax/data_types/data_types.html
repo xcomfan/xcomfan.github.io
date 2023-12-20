@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Types that can contain values | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Types that can contain values" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/javascript/general_syntax/data_types/data_types.html" />
+<meta property="og:url" content="http://localhost:4000/javascript/general_syntax/data_types/data_types.html" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Types that can contain values" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Types that can contain values","url":"http://localhost:4000/javascript/general_syntax/data_types/data_types.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Types that can contain values</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="types-that-can-contain-values">Types that can contain values</h2>
+
+<p><a href="/javascript/string">String</a></p>
+
+<p><a href="/javascript/number">Number</a></p>
+
+<p><a href="/javascript/boolean">Boolean</a></p>
+
+<h2 id="object-types">Object types</h2>
+
+<p><a href="/javascript/objects">Object</a></p>
+
+<p><a href="/javascript/arrays">Array</a></p>
+
+<p><a href="/javascript/date">Date</a></p>
+
+<h2 id="types-that-cannot-contain-values">Types that cannot contain values</h2>
+
+<p><a href="/javascript/undefined_and_null">Null</a></p>
+
+<p><a href="/javascript/undefined_and_null">Undefined</a></p>
+
+<h2 id="type-operator">Type Operator</h2>
+
+<p><code class="language-plaintext highlighter-rouge">typeof</code> - Returns the type of a variable</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typeof</span> <span class="dl">"</span><span class="s2">John</span><span class="dl">"</span> <span class="c1">// Returns "string"</span>
+<span class="k">typeof</span> <span class="mf">3.14</span> <span class="c1">// Returns "number"</span>
+<span class="k">typeof</span> <span class="nx">Nan</span> <span class="c1">// Returns "number"</span>
+<span class="k">typeof</span> <span class="kc">false</span> <span class="c1">// Returns "boolean"</span>
+<span class="k">typeof</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="c1">// Returns "object"</span>
+<span class="k">typeof</span> <span class="p">{</span><span class="na">name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">John</span><span class="dl">"</span><span class="p">,</span> <span class="na">age</span><span class="p">:</span> <span class="mi">34</span><span class="p">}</span> <span class="c1">// Returns "object"</span>
+<span class="k">typeof</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{}</span> <span class="c1">// Returns "function"</span>
+<span class="k">typeof</span> <span class="nx">myThing</span> <span class="c1">// Returns "undefined"</span>
+<span class="k">typeof</span> <span class="kc">null</span> <span class="c1">// Returns "object"</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">instanceof</code> -  Returns true if an instance of an object type.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">cars</span> <span class="o">=</span> <span class="p">[</span><span class="dl">"</span><span class="s2">Pontiac</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">BMW</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Nissan</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Ford</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Lexus</span><span class="dl">"</span><span class="p">];</span>
+
+<span class="p">(</span><span class="nx">cars</span> <span class="k">instanceof</span> <span class="nb">Array</span><span class="p">)</span> <span class="c1">// Returns true</span>
+<span class="p">(</span><span class="nx">cars</span> <span class="k">instanceof</span> <span class="nb">Object</span><span class="p">)</span> <span class="c1">// Returns true</span>
+<span class="p">(</span><span class="nx">cars</span> <span class="k">instanceof</span> <span class="nb">String</span><span class="p">)</span> <span class="c1">// Returns false</span>
+<span class="p">(</span><span class="nx">cars</span> <span class="k">instanceof</span> <span class="nb">Number</span><span class="p">)</span> <span class="c1">// Returns false</span>
+</code></pre></div></div>
+
+<h2 id="type-conversions">Type Conversions</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Converted to String</th>
+      <th>Converted to Number</th>
+      <th>Converted to Boolean</th>
+      <th>Converted to Object</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>undefined</td>
+      <td>“undefined”</td>
+      <td>NaN</td>
+      <td>false</td>
+      <td><em>throws TypeError</em></td>
+    </tr>
+    <tr>
+      <td>null</td>
+      <td>“null”</td>
+      <td>0</td>
+      <td>false</td>
+      <td><em>throws TypeError</em></td>
+    </tr>
+    <tr>
+      <td>true</td>
+      <td>“true”</td>
+      <td>1</td>
+      <td> </td>
+      <td>new Boolean(true)</td>
+    </tr>
+    <tr>
+      <td>false</td>
+      <td>“false”</td>
+      <td>0</td>
+      <td> </td>
+      <td>new Boolean(false)</td>
+    </tr>
+    <tr>
+      <td>”” (empty string)</td>
+      <td> </td>
+      <td>0</td>
+      <td>false</td>
+      <td>new String(“”)</td>
+    </tr>
+    <tr>
+      <td>“1.2” (nonempty numeric)</td>
+      <td> </td>
+      <td>NaN</td>
+      <td>true</td>
+      <td>new String(“1.2”)</td>
+    </tr>
+    <tr>
+      <td>“one” (nonempty, non-numeric)</td>
+      <td> </td>
+      <td>NaN</td>
+      <td>true</td>
+      <td>new String(“one”)</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>“0”</td>
+      <td> </td>
+      <td>false</td>
+      <td>new Number(0)</td>
+    </tr>
+    <tr>
+      <td>-0</td>
+      <td>“0”</td>
+      <td> </td>
+      <td>false</td>
+      <td>new Number(-1)</td>
+    </tr>
+    <tr>
+      <td>NaN</td>
+      <td>“NaN”</td>
+      <td> </td>
+      <td>false</td>
+      <td>new Number(NaN)</td>
+    </tr>
+    <tr>
+      <td>Infinity</td>
+      <td>“Infinity”</td>
+      <td> </td>
+      <td>true</td>
+      <td>new Number(Infinity)</td>
+    </tr>
+    <tr>
+      <td>-Infinity</td>
+      <td>“-Infinity”</td>
+      <td> </td>
+      <td>true</td>
+      <td>new Number(-Infinity)</td>
+    </tr>
+    <tr>
+      <td>1 (finite, non-zero)</td>
+      <td>“1”</td>
+      <td> </td>
+      <td>true</td>
+      <td>new Number(1)</td>
+    </tr>
+    <tr>
+      <td>{} (any object)</td>
+      <td>???</td>
+      <td>???</td>
+      <td>true</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>[] (empty array)</td>
+      <td>””</td>
+      <td>0</td>
+      <td>true</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>[9] (1 numeric elt)</td>
+      <td>“9”</td>
+      <td>9</td>
+      <td>true</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>[‘a’] (any other array)</td>
+      <td>*use join() method”</td>
+      <td>NaN</td>
+      <td>true</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>function(){} (any function)</td>
+      <td>???</td>
+      <td>NaN</td>
+      <td>true</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="explicitly-converting-types">Explicitly Converting Types</h3>
+
+<p>If you want to explicitly convert to a type use the <code class="language-plaintext highlighter-rouge">Boolean()</code>, <code class="language-plaintext highlighter-rouge">Number()</code>, <code class="language-plaintext highlighter-rouge">String()</code> or <code class="language-plaintext highlighter-rouge">Object()</code> functions.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">Number</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1">// 3</span>
+<span class="nb">String</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span> <span class="c1">// "false"</span>
+<span class="nb">Boolean</span><span class="p">([])</span> <span class="c1">// true</span>
+<span class="nb">Object</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1">// new Number(3)</span>
+</code></pre></div></div>
+<h4 id="object-to-primative-conversions">Object to Primative Conversions</h4>
+
+<h5 id="object-to-boolean">Object to Boolean</h5>
+
+<p>All objects will convert to the boolean value of <code class="language-plaintext highlighter-rouge">true</code></p>
+
+<h5 id="object-to-string">Object to String</h5>
+
+<p>All bojects inherit a <code class="language-plaintext highlighter-rouge">toString()</code> and <code class="language-plaintext highlighter-rouge">valueOf()</code> method.</p>
+
+<p>To convert to string the <code class="language-plaintext highlighter-rouge">toString()</code> method is called.  If that returns a primitive, that primitive is converted to a string.</p>
+
+<p>If the object has no <code class="language-plaintext highlighter-rouge">toString()</code> method, the <code class="language-plaintext highlighter-rouge">valueOf()</code> method is called and coverts the primitive from that result to a string.</p>
+
+<p>If both of these options do not work JavaScript will throw a TypeError.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

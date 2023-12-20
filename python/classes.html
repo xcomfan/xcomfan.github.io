@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Python Classes | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Python Classes" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/python/classes" />
+<meta property="og:url" content="http://localhost:4000/python/classes" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Python Classes" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Python Classes","url":"http://localhost:4000/python/classes"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Python Classes</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="class-syntax">Class syntax</h2>
+
+<ul>
+  <li>Superclasses are listed in parentheses in a class header</li>
+  <li>Classes inherit attributes from their superclasses</li>
+  <li>Instances inherit attributes from all accessible classes</li>
+  <li>Each object.attribute reference invokes a new, independent search.</li>
+  <li>Logic changes are made by subclassing not by changing superclasses.</li>
+  <li>Methods named with double underscores (dunders) are special hooks.  Such methods are called automatically when instances appear in built in operations.</li>
+  <li>Classes may override most built in type operations.</li>
+  <li>Classes may be used like dictionaries but with embedded logic.</li>
+</ul>
+
+<h3 id="syntax-examples">Syntax examples</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">FirstClass</span><span class="p">:</span> <span class="c1"># Define a class object
+</span><span class="p">...</span>   <span class="k">def</span> <span class="nf">setData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span> <span class="c1"># Define a class method
+</span><span class="p">...</span>     <span class="bp">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">value</span> <span class="c1"># self is the instance
+</span><span class="p">...</span>   <span class="k">def</span> <span class="nf">display</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="p">...</span>     <span class="k">print</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">data</span><span class="p">)</span> <span class="c1"># self.data per instance
+</span><span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">FirstClass</span><span class="p">()</span> <span class="c1"># Make two instances
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">y</span> <span class="o">=</span> <span class="n">FirstClass</span><span class="p">()</span> <span class="c1"># Each is a new namespace
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">setData</span><span class="p">(</span><span class="s">"Mungo Jerry"</span><span class="p">)</span> <span class="c1"># self.data differs in each instances
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">y</span><span class="p">.</span><span class="n">setData</span><span class="p">(</span><span class="mi">12345</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">display</span><span class="p">()</span>
+<span class="n">Mungo</span> <span class="n">Jerry</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">y</span><span class="p">.</span><span class="n">display</span><span class="p">()</span>
+<span class="mi">12345</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="s">"Thurston Harris"</span> <span class="c1"># Can get/set attributes outside the class too.
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">display</span><span class="p">()</span>
+<span class="n">Thurston</span> <span class="n">Harris</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">another</span> <span class="o">=</span> <span class="s">"John Monty"</span> <span class="c1"># can set new attributes here too
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">another</span>
+<span class="s">'John Monty'</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">z</span> <span class="o">=</span> <span class="n">SecondClass</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">z</span><span class="p">.</span><span class="n">setData</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span> <span class="c1"># finds setData on the first class.
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">z</span><span class="p">.</span><span class="n">display</span><span class="p">()</span> <span class="c1"># finds overriden method in SecondClass
+</span><span class="n">Current</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">42</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">ThirdClass</span><span class="p">(</span><span class="n">SecondClass</span><span class="p">):</span>
+<span class="p">...</span>   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="p">...</span>     <span class="bp">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">value</span>
+<span class="p">...</span>   <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="p">...</span>     <span class="k">return</span> <span class="n">ThirdClass</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">data</span> <span class="o">+</span> <span class="n">other</span><span class="p">)</span>
+<span class="p">...</span>   <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="p">...</span>     <span class="k">return</span> <span class="sa">f</span><span class="s">"[ThirdClass: </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">data</span><span class="si">}</span><span class="s">]"</span>
+<span class="p">...</span>   <span class="k">def</span> <span class="nf">mul</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="p">...</span>     <span class="bp">self</span><span class="p">.</span><span class="n">data</span> <span class="o">*=</span> <span class="n">other</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">ThirdClass</span><span class="p">(</span><span class="s">'abc'</span><span class="p">)</span> <span class="c1"># __init__ is called
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">.</span><span class="n">display</span><span class="p">()</span>
+<span class="n">Current</span> <span class="n">value</span> <span class="o">=</span> <span class="n">abc</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="c1"># __str__ called
+</span><span class="p">[</span><span class="n">ThirdClass</span><span class="p">:</span> <span class="n">abc</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="s">'xyz'</span> <span class="c1"># __add__ makesa a new instance
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="p">.</span><span class="n">display</span><span class="p">()</span>
+<span class="n">Current</span> <span class="n">value</span> <span class="o">=</span> <span class="n">abcxyz</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># mul changes instance in place
+</span><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="p">[</span><span class="n">ThirdClass</span><span class="p">:</span> <span class="n">abcabcabc</span><span class="p">]</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">rec</span><span class="p">:</span> <span class="k">pass</span> <span class="c1"># empty namespace object
+</span><span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">rec</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">'Bob'</span> <span class="c1"># Just objects with attributes
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">rec</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">40</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">rec</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+<span class="n">Bob</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">rec</span><span class="p">()</span> <span class="c1"># Instances inherit class names
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">y</span> <span class="o">=</span> <span class="n">rec</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">y</span><span class="p">.</span><span class="n">name</span> <span class="c1"># name is stored on the class only
+</span><span class="p">(</span><span class="s">'Bob'</span><span class="p">,</span> <span class="s">'Bob'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">'Sue'</span> <span class="c1"># but assignment changes x only
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">rec</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">x</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">y</span><span class="p">.</span><span class="n">name</span>
+<span class="p">(</span><span class="s">'Bob'</span><span class="p">,</span> <span class="s">'Sue'</span><span class="p">,</span> <span class="s">'Bob'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">rec</span><span class="p">.</span><span class="n">__dict__</span><span class="p">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="p">[</span><span class="s">'__module__'</span><span class="p">,</span> <span class="s">'__dict__'</span><span class="p">,</span> <span class="s">'__weakref__'</span><span class="p">,</span> <span class="s">'__doc__'</span><span class="p">,</span> <span class="s">'name'</span><span class="p">,</span> <span class="s">'age'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">rec</span><span class="p">.</span><span class="n">__dict__</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">'__'</span><span class="p">))</span>
+<span class="p">[</span><span class="s">'name'</span><span class="p">,</span> <span class="s">'age'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">__dict__</span><span class="p">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="p">[</span><span class="s">'name'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="n">__dict__</span><span class="p">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="p">[]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">x</span><span class="p">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">'name'</span><span class="p">]</span> <span class="c1">#
+</span><span class="p">(</span><span class="s">'Sue'</span><span class="p">,</span> <span class="s">'Sue'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">x</span><span class="p">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">'name'</span><span class="p">]</span> <span class="c1"># Attributes present here are dict keys
+</span><span class="p">(</span><span class="s">'Sue'</span><span class="p">,</span> <span class="s">'Sue'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">age</span> <span class="c1"># But attribute fetch checks classes too
+</span><span class="mi">40</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">'age'</span><span class="p">]</span> <span class="c1"># Indexing dict does not do inheritence
+</span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="nb">KeyError</span><span class="p">:</span> <span class="s">'age'</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">uppername</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span> <span class="c1"># Still needs a self argument (obj)
+</span><span class="p">...</span>   <span class="k">return</span> <span class="n">obj</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">upper</span><span class="p">()</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">uppername</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="s">'SUE'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">rec</span><span class="p">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">uppername</span> <span class="c1"># now its a class's method!
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">method</span><span class="p">()</span>
+<span class="s">'SUE'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">rec</span><span class="p">.</span><span class="n">method</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="s">'SUE'</span>
+</code></pre></div></div>
+
+<h2 id="inheritance">Inheritance</h2>
+
+<h3 id="linking-multiple-super-classes-to-a-single-class">Linking multiple super classes to a single class</h3>
+
+<p>If more than one class is listed in parenthesis in a class statement the left to right order gives the order in which super classes will be searched during inheritance search.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">C2</span><span class="p">:</span> <span class="p">...</span> <span class="c1"># make class objects
+</span><span class="k">class</span> <span class="nc">C3</span><span class="p">:</span> <span class="p">...</span>
+<span class="k">class</span> <span class="nc">C1</span><span class="p">(</span><span class="n">C2</span><span class="p">,</span><span class="n">C3</span><span class="p">)</span> <span class="p">...</span> <span class="c1"># link to super classes in order listed.
+</span></code></pre></div></div>
+
+<h3 id="calling-superclass-constructors">Calling superclass constructors</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Super</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="p">...</span> <span class="n">default</span> <span class="n">code</span> <span class="p">...</span>
+
+<span class="k">class</span> <span class="nc">Sub</span><span class="p">(</span><span class="n">Super</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">selc</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">Super</span><span class="p">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">x</span><span class="p">)</span> <span class="c1"># Run superclass init method
+</span>        <span class="p">...</span> <span class="n">custom</span> <span class="n">code</span><span class="p">...</span>
+
+<span class="n">I</span> <span class="o">=</span> <span class="n">Sub</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="abstract-superclass">Abstract Superclass</h3>
+
+<p>A class that expects parts of its behavior to be provided by its subclasses.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#ABC is abstract base classes
+</span><span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span> 
+
+<span class="k">class</span> <span class="nc">Super</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="o">@</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="err">…</span><span class="p">):</span>
+        <span class="k">pass</span>
+</code></pre></div></div>
+
+<h3 id="extending-types-by-subclassing">Extending types by subclassing</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">MyList</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+<span class="p">...</span>   <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+<span class="p">...</span>     <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"indexing </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s"> at </span><span class="si">{</span><span class="n">offset</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="p">...</span>     <span class="k">return</span> <span class="nb">list</span><span class="p">.</span><span class="n">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="s">'abc'</span><span class="p">))</span>
+<span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">MyList</span><span class="p">(</span><span class="s">'abc'</span><span class="p">)</span> <span class="c1"># #__init__ inherited from list
+</span><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1">#__repr__ inherited from list
+</span><span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># MyList.__getitem__ Customized list superclass method
+</span><span class="n">indexing</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">]</span> <span class="n">at</span> <span class="mi">1</span>
+<span class="n">a</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">indexing</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">]</span> <span class="n">at</span> <span class="mi">3</span>
+<span class="n">c</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="s">'yeti'</span><span class="p">);</span> <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c1"># attributes from list superclass
+</span><span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'yeti'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">reverse</span><span class="p">();</span> <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="p">[</span><span class="s">'yeti'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'a'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="diamond-inheritance-search-order">Diamond inheritance search order</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">:</span> <span class="n">attr</span> <span class="o">=</span> <span class="s">'from A'</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">B</span><span class="p">(</span><span class="n">A</span><span class="p">):</span> <span class="k">pass</span> <span class="c1"># B and C both lead to A
+</span><span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">A</span><span class="p">):</span> <span class="n">attr</span> <span class="o">=</span> <span class="s">'from C'</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">D</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">C</span><span class="p">):</span> <span class="k">pass</span> <span class="c1"># Tries C before A
+</span><span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">D</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">attr</span>
+<span class="s">'from C'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">A</span><span class="p">:</span> <span class="n">attr</span> <span class="o">=</span> <span class="s">'from A'</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">B</span><span class="p">(</span><span class="n">A</span><span class="p">):</span> <span class="k">pass</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">A</span><span class="p">):</span> <span class="k">pass</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">D</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">C</span><span class="p">):</span> <span class="k">pass</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">D</span><span class="p">()</span> <span class="c1"># Get sto A after checking C and D
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">attr</span>
+<span class="s">'from A'</span>
+</code></pre></div></div>
+
+<h2 id="operator-overloading">Operator overloading</h2>
+
+<h3 id="constructors-and-expressions-subtraction-in-this-example">Constructors and expressions (subtraction in this example)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Number</span><span class="p">:</span>
+<span class="p">...</span>   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">):</span> <span class="c1"># On Number(start)
+</span><span class="p">...</span>     <span class="bp">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">start</span>
+<span class="p">...</span>   <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span> <span class="c1"># On instance - other
+</span><span class="p">...</span>     <span class="k">return</span> <span class="n">Number</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">data</span> <span class="o">-</span> <span class="n">other</span><span class="p">)</span> <span class="c1"># Return a new instance
+</span><span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">X</span> <span class="o">=</span> <span class="n">Number</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <span class="mi">2</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Y</span><span class="p">.</span><span class="n">data</span> <span class="c1"># Y is an instance of Number
+</span><span class="mi">3</span>
+</code></pre></div></div>
+
+<h3 id="comparisons-let-gt-and-others">Comparisons: <strong>let</strong>, <strong>gt</strong> and others</h3>
+
+<p>Unlike <code class="language-plaintext highlighter-rouge">__add__</code>/<code class="language-plaintext highlighter-rouge">__radd__</code> pairings, there are no right side variants of comparison methods.  Instead reflective methods are used whe only one operand supports comparison(e.g. <code class="language-plaintext highlighter-rouge">__lt__</code> and <code class="language-plaintext highlighter-rouge">__gt__</code> are each other’s reflection).</p>
+
+<p>There is no implicit relationship amon the comparison operators.  The truth of <code class="language-plaintext highlighter-rouge">==</code> does not imply that <code class="language-plaintext highlighter-rouge">!=</code> is false, so both <code class="language-plaintext highlighter-rouge">__eq__</code> and <code class="language-plaintext highlighter-rouge">__ne__</code> should be defined to ensure that both operators behave correctly.</p>
+
+<h3 id="attribute-access-getattr-and-setattr">Attribute access: <strong>getattr</strong> and <strong>setattr</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Empty</span><span class="p">:</span>
+<span class="p">...</span>   <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrname</span><span class="p">):</span> <span class="c1"># On self.undefined
+</span><span class="p">...</span>     <span class="k">if</span> <span class="n">attrname</span> <span class="o">==</span> <span class="s">'age'</span><span class="p">:</span>
+<span class="p">...</span>       <span class="k">return</span> <span class="mi">40</span>
+<span class="p">...</span>     <span class="k">else</span><span class="p">:</span>
+<span class="p">...</span>       <span class="k">raise</span> <span class="nb">AttributeError</span><span class="p">(</span><span class="n">attrname</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">X</span> <span class="o">=</span> <span class="n">Empty</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">X</span><span class="p">.</span><span class="n">age</span>
+<span class="mi">40</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">X</span><span class="p">.</span><span class="n">name</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+  <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">6</span><span class="p">,</span> <span class="ow">in</span> <span class="n">__getattr__</span>
+<span class="nb">AttributeError</span><span class="p">:</span> <span class="n">name</span>
+</code></pre></div></div>
+
+<p>In the same department the <strong>setattr</strong> intercepts all attribute assignments.  If this method is defined or inherited, <code class="language-plaintext highlighter-rouge">self.setattr = value</code> becomes <code class="language-plaintext highlighter-rouge">self.__setattr__('attr',value)</code> like get attribute this allows you to intersect attribute changes and validate or transform as needed.</p>
+
+<h3 id="string-representation-repr-and-str">String Representation <strong>repr</strong> and <strong>str</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">adder</span><span class="p">:</span>
+<span class="p">...</span>   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="p">...</span>     <span class="bp">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">value</span>
+<span class="p">...</span>   <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="p">...</span>     <span class="bp">self</span><span class="p">.</span><span class="n">data</span> <span class="o">+=</span> <span class="n">other</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">addrepr</span><span class="p">(</span><span class="n">adder</span><span class="p">):</span>
+<span class="p">...</span>   <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="p">...</span>     <span class="k">return</span> <span class="sa">f</span><span class="s">"addrepr(</span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">data</span><span class="si">}</span><span class="s">)"</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">addrepr</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span>
+<span class="n">addrepr</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">addrepr</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">repr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="p">(</span><span class="s">'addrepr(3)'</span><span class="p">,</span> <span class="s">'addrepr(3)'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="why-two-display-methods">Why two display methods?</h4>
+
+<p><code class="language-plaintext highlighter-rouge">__str__</code> is tried first for the print operation and the <code class="language-plaintext highlighter-rouge">str</code> built in function.  It generally should return a user friendly display.</p>
+
+<p><code class="language-plaintext highlighter-rouge">__repr__</code> is used in all other contexts: for interactive echoes, the repr function and nested appearances as well as by print and str if no <code class="language-plaintext highlighter-rouge">__str__</code> is present.</p>
+
+<h3 id="indexing-and-slicing">Indexing and slicing</h3>
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

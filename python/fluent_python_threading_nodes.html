@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Terms and concepts | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Terms and concepts" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/python/fluent_python_threading_nodes.html" />
+<meta property="og:url" content="http://localhost:4000/python/fluent_python_threading_nodes.html" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Terms and concepts" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Terms and concepts","url":"http://localhost:4000/python/fluent_python_threading_nodes.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Terms and concepts</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="terms-and-concepts">Terms and concepts</h1>
+
+<p><em>Concurrency</em> is single CPU hopping between tasks to make it look like they are all running at once.</p>
+
+<p><em>Parallelism</em> is multiple CPUs/Cores doing multiple computations at the same time.</p>
+
+<p><em>Execution Unit</em> is a general term for objects that execute code concurrently each with independent state and call stack.  Python natively supports three kinds of execution units with its core packages  <code class="language-plaintext highlighter-rouge">threading</code>, <code class="language-plaintext highlighter-rouge">multiprocessing</code> and <code class="language-plaintext highlighter-rouge">asyncio</code>.</p>
+
+<p><em>Process</em> OS processes as you know them.</p>
+
+<p><em>Thread</em> An execution unit within a single process.</p>
+
+<p><em>Coroutine</em> A function that can suspend itself and resume later.</p>
+
+<p>Threading is a good option if you are dealing with IO stuff if you need compute you should be doing <code class="language-plaintext highlighter-rouge">multiprocessing</code> or <code class="language-plaintext highlighter-rouge">concurrent.futures.ProcessPoolExecutor</code></p>
+
+<h2 id="concepts-above-as-they-apply-to-python-programming">Concepts above as they apply to Python Programming</h2>
+
+<ol>
+  <li>
+    <p>Each instance of the Python interpreter is a process.  You can start additional Python processes using the <code class="language-plaintext highlighter-rouge">multiprocessing</code> of <code class="language-plaintext highlighter-rouge">concurrent.futures</code> libraries.  Python <code class="language-plaintext highlighter-rouge">subprocess</code> library is designed to launch processes to run external programs, regardless of teh languages used to write them.</p>
+  </li>
+  <li>
+    <p>The Python interpreter uses a single thread to run the user’s program and the memory garbage collector.  You can start additional Python threads using the <code class="language-plaintext highlighter-rouge">threading</code> or <code class="language-plaintext highlighter-rouge">concurrent.futures</code> libraries.</p>
+  </li>
+  <li>
+    <p>Access to object reference counts and other internal interpreter state is controlled by a lock, (the Global Interpreter Lock (GIL)).  Only one python thread can hold the GIL at any time, which means that only one thread can execute Python code at any time, regardless of the number of CPU cores.</p>
+  </li>
+  <li>
+    <p>To prevent a Python thread from holding the GIL indefinitely, Python’s bytecode interpreter pauses the current Python thread every 5ms by default,4 releasing the GIL. The thread can then try to reacquire the GIL, but if there are other threads waiting for it, the OS scheduler may pick one of them to proceed.</p>
+  </li>
+  <li>
+    <p>When we write Python code, we have no control over the GIL. But a built-in function or an extension written in C—or any language that interfaces at the Python/C API level—can release the GIL while running time-consuming tasks.</p>
+  </li>
+  <li>
+    <p>Every Python standard library function that makes a syscall5 releases the GIL. This includes all functions that perform disk I/O, network I/O, and time.sleep().</p>
+  </li>
+  <li>
+    <p>Extensions that integrate at the Python/C API level can also launch other non-Python threads that are not affected by the GIL. Such GIL-free threads generally cannot change Python objects, but they can read from and write to the memory underlying objects that support the buffer protocol, such as bytearray, array.array, and NumPy arrays.</p>
+  </li>
+  <li>
+    <p>The effect of the GIL on network programming with Python threads is relatively small, because the I/O functions release the GIL, and reading or writing to the network always implies high latency—compared to reading and writing to memory.</p>
+  </li>
+  <li>
+    <p>Contention over the GIL slows down compute-intensive Python threads. Sequential, single-threaded code is simpler and faster for such tasks</p>
+  </li>
+  <li>
+    <p>To run CPU-intensive Python code on multiple cores, you must use multiple Python processes.</p>
+  </li>
+</ol>
+
+<p>Summary of above from documentation…</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code> In CPython, due to the Global Interpreter Lock, only one thread can execute Python code at once (even though certain performance-oriented libraries might overcome this limitation). If you want your application to make better use of the computational resources of multicore machines, you are advised to use multiprocessing or concurrent.futures.ProcessPoolExecutor. However, threading is still an appropriate model if you want to run multiple I/O-bound tasks simultaneously.
+</code></pre></div></div>
+
+<h2 id="spinner-program-thread-implementation">Spinner program thread implementation</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span><span class="p">,</span> <span class="n">Event</span>
+
+<span class="c1"># This function runs in a separate thread.  The done argument is an instance of threading.Event,
+# a simple object to synchronize threads.
+</span><span class="k">def</span> <span class="nf">spin</span><span class="p">(</span><span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">done</span><span class="p">:</span> <span class="n">Event</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>  
+    <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">itertools</span><span class="p">.</span><span class="n">cycle</span><span class="p">(</span><span class="sa">r</span><span class="s">'\|/-'</span><span class="p">):</span>
+        <span class="c1"># Trick for text mode animation: move the cursor back to the start fo the line with 
+</span>        <span class="c1"># \r carriage return.  
+</span>        <span class="n">status</span> <span class="o">=</span> <span class="sa">f</span><span class="s">'</span><span class="se">\r</span><span class="si">{</span><span class="n">char</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s">'</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="c1"># The Event.wait(timeout=None) method returns True when the event is set by another thread;
+</span>        <span class="c1"># if the timeout elapses, it returns False.  The .1s timeout sets the "frame rate" of the animation
+</span>        <span class="c1"># to 10 FPS.
+</span>        <span class="k">if</span> <span class="n">done</span><span class="p">.</span><span class="n">wait</span><span class="p">(.</span><span class="mi">1</span><span class="p">):</span>  
+            <span class="k">break</span>  
+    <span class="n">blanks</span> <span class="o">=</span> <span class="s">' '</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'</span><span class="se">\r</span><span class="si">{</span><span class="n">blanks</span><span class="si">}</span><span class="se">\r</span><span class="s">'</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>  
+
+<span class="k">def</span> <span class="nf">slow</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="c1"># Imagine this function as being some sort of long call over a network.
+</span>    <span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  
+    <span class="k">return</span> <span class="mi">42</span>
+
+<span class="c1"># supervisor returns the result of slow function
+</span><span class="k">def</span> <span class="nf">supervisor</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="c1"># The threading.Event instances is the key to coordinate the activities of the main thread and the spinner
+</span>    <span class="c1"># thread.
+</span>    <span class="n">done</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span> 
+    <span class="c1"># To create a new thread, provide a function s the target keyword argument, and positional arguments to the 
+</span>    <span class="c1"># target as a tuple passed via args. 
+</span>    <span class="n">spinner</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">spin</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s">'thinking!'</span><span class="p">,</span> <span class="n">done</span><span class="p">))</span>  
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'spinner object: </span><span class="si">{</span><span class="n">spinner</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>  
+    <span class="c1"># start the spinner thread
+</span>    <span class="n">spinner</span><span class="p">.</span><span class="n">start</span><span class="p">()</span>  
+    <span class="c1"># call slow, which blocks the main thread.  Meanwhile, the secondary thread is running the spinner animation.
+</span>    <span class="n">result</span> <span class="o">=</span> <span class="n">slow</span><span class="p">()</span>  
+    <span class="c1"># Set the Event flag to True; this will terminate the for loop inside the spin function.
+</span>    <span class="c1"># When the main thread sets the done event, the spinner thread will eventually notice and exit cleanly.
+</span>    <span class="n">done</span><span class="p">.</span><span class="nb">set</span><span class="p">()</span>
+    <span class="c1"># Wait until the spinner thread finishes
+</span>    <span class="n">spinner</span><span class="p">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">supervisor</span><span class="p">()</span>  
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'Answer: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="spinner-program-implemented-with-processes">Spinner program implemented with Processes</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">multiprocessing</code> package supports running concurrent tasks in separate Python processes instead of threads.  When you create a <code class="language-plaintext highlighter-rouge">multiprocessing.Process</code> instance, a whole new Python interpreter is started as a child process.  Since each Python process has its own GIL, this allows your program to use all available CPU cores but ultimates relies on OS for scheduling.</p>
+
+<p>The basic API of threading and multiprocessing are similar, but their implementation is very different, and multiprocessing has a much larger API to handle the added complexity of multi-process programming. For example, one challenge when converting from threads to processes is how to communicate between processes that are isolated by the operating system and can’t share Python objects. This means that objects crossing process boundaries have to be serialized and deserialized, which creates overhead. In example below, the only data that crosses the process boundary is the Event state, which is implemented with a low-level OS semaphore in the C code underlying the multiprocessing module</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Event</span>  
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">synchronize</span> 
+
+<span class="k">def</span> <span class="nf">spin</span><span class="p">(</span><span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">done</span><span class="p">:</span> <span class="n">synchronize</span><span class="p">.</span><span class="n">Event</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span> 
+    <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">itertools</span><span class="p">.</span><span class="n">cycle</span><span class="p">(</span><span class="sa">r</span><span class="s">'\|/-'</span><span class="p">):</span>  
+        <span class="n">status</span> <span class="o">=</span> <span class="sa">f</span><span class="s">'</span><span class="se">\r</span><span class="si">{</span><span class="n">char</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s">'</span>  
+        <span class="k">print</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">done</span><span class="p">.</span><span class="n">wait</span><span class="p">(.</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">break</span>  
+    <span class="n">blanks</span> <span class="o">=</span> <span class="s">' '</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'</span><span class="se">\r</span><span class="si">{</span><span class="n">blanks</span><span class="si">}</span><span class="se">\r</span><span class="s">'</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>  
+
+<span class="k">def</span> <span class="nf">slow</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  
+    <span class="k">return</span> <span class="mi">42</span>
+
+<span class="k">def</span> <span class="nf">supervisor</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="n">done</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>
+    <span class="n">spinner</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">spin</span><span class="p">,</span>               
+                      <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s">'thinking!'</span><span class="p">,</span> <span class="n">done</span><span class="p">))</span>
+    <span class="c1"># The spinner object will display the pid of the child process in this implementation.
+</span>    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'spinner object: </span><span class="si">{</span><span class="n">spinner</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>          
+    <span class="n">spinner</span><span class="p">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">slow</span><span class="p">()</span>
+    <span class="n">done</span><span class="p">.</span><span class="nb">set</span><span class="p">()</span>
+    <span class="n">spinner</span><span class="p">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">supervisor</span><span class="p">()</span>  
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'Answer: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="spinner-implemented-with-coroutines">Spinner implemented with Coroutines</h2>
+
+<p>It is the job of OS schedulers to allocate CPU time to drive threads and processes. In contrast, coroutines are driven by an application-level event loop that manages a queue of pending coroutines, drives them one by one, monitors events triggered by I/O operations initiated by coroutines, and passes control back to the corresponding coroutine when each event happens. The event loop and the library coroutines and the user coroutines all execute in a single thread. Therefore, any time spent in a coroutine slows down the event loop—and all other coroutines.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">spin</span><span class="p">(</span><span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>  
+    <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">itertools</span><span class="p">.</span><span class="n">cycle</span><span class="p">(</span><span class="sa">r</span><span class="s">'\|/-'</span><span class="p">):</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="sa">f</span><span class="s">'</span><span class="se">\r</span><span class="si">{</span><span class="n">char</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s">'</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Use asyncio.sleep instead of time.sleep to pause without blocking other coroutines.
+</span>            <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(.</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># asyncio.CancelledError is raised when the cancel method is called on
+</span>        <span class="c1"># the Task controlling this coroutine indicating its time to exit the loop.
+</span>        <span class="k">except</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">CancelledError</span><span class="p">:</span>  
+            <span class="k">break</span>
+    <span class="n">blanks</span> <span class="o">=</span> <span class="s">' '</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'</span><span class="se">\r</span><span class="si">{</span><span class="n">blanks</span><span class="si">}</span><span class="se">\r</span><span class="s">'</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">slow</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="c1"># using await asyncio.sleep instead of time.sleep here as well.
+</span>    <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  
+    <span class="k">return</span> <span class="mi">42</span>
+
+<span class="c1"># main is the only regular function defined in this program.  All others are coroutines
+</span><span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="c1"># The asyncio.run function starts the event loop to drive the coroutine that will eventually set the other
+</span>    <span class="c1"># coroutines in motion.  The main function will stay blocked until supervisor returns. 
+</span>    <span class="c1"># The return value of supervisor will bet the return value of asyncio.run. 
+</span>    <span class="n">result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">supervisor</span><span class="p">())</span>  
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'Answer: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+
+<span class="c1"># Native coroutines are defined with async def.
+</span><span class="k">async</span> <span class="k">def</span> <span class="nf">supervisor</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="c1"># asyncio.create_task schedules the eventual execution of spin, immediately returning
+</span>    <span class="c1"># an instance of asyncio.Task.
+</span>    <span class="n">spinner</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">spin</span><span class="p">(</span><span class="s">'thinking!'</span><span class="p">))</span>  
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'spinner object: </span><span class="si">{</span><span class="n">spinner</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+    <span class="c1"># The await keyword calls slow, blocking supervisor until slow returns.  The return value of slow will be assigned to result.
+</span>    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">slow</span><span class="p">()</span>
+    <span class="c1"># The Task.cancel method raises a CancelledError exception inside the spin coroutine.   
+</span>    <span class="n">spinner</span><span class="p">.</span><span class="n">cancel</span><span class="p">()</span>  
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>The above example demonstrates the three main ways to run a coroutine…</p>
+
+<p><em>asyncio.run(coro())</em> - Called from a regular function to drive a coroutine object that usually is the entry point for all the asynchronous code in the program.  The call blocks until the body fo <code class="language-plaintext highlighter-rouge">coro</code> returns.  The return value of the <code class="language-plaintext highlighter-rouge">run()</code> call is whatever the body of the coro returns.</p>
+
+<p><em>asyncio.create_task(coro())</em> - Called from a coroutine to schedule another coroutine to execute eventually.  This call does not suspend the current coroutine.  It returns a <code class="language-plaintext highlighter-rouge">Task</code> instance, an object that wraps the coroutine object and provides methods to control and query its state.</p>
+
+<p><em>await coro()</em> - Called from a coroutine to transfer control to the coroutine object returned by <code class="language-plaintext highlighter-rouge">coro</code>.  The value of the await expression is whatever the <code class="language-plaintext highlighter-rouge">coro</code> returns.</p>
+
+<p><strong><em>Note</em></strong>: invoking a coroutine as <code class="language-plaintext highlighter-rouge">coro()</code> immediately returns a coroutine object, but does nto run the body of the <code class="language-plaintext highlighter-rouge">coro</code> function.  Driving the body of the coroutines is the job of the event loop.</p>
+
+<h2 id="summary-of-the-differences-and-similarities-to-note-between-threads-and-coroutines">Summary of the differences and similarities to note between threads and coroutines</h2>
+
+<p>An asyncio.Task is roughly the equivalent of a threading.Thread.</p>
+
+<p>A Task drives a coroutine object, and a Thread invokes a callable.</p>
+
+<p>A coroutine yields control explicitly with the await keyword.</p>
+
+<p>You don’t instantiate Task objects yourself, you get them by passing a coroutine to asyncio.create_task(…).</p>
+
+<p>When asyncio.create_task(…) returns a Task object, it is already scheduled to run, but a Thread instance must be explicitly told to run by calling its start method.</p>
+
+<p>In the threaded supervisor, slow is a plain function and is directly invoked by the main thread. In the asynchronous supervisor, slow is a coroutine driven by await.</p>
+
+<p>There’s no API to terminate a thread from the outside; instead, you must send a signal—like setting the done Event object. For tasks, there is the Task.cancel() instance method, which raises CancelledError at the await expression where the coroutine body is currently suspended.</p>
+
+<p>The supervisor coroutine must be started with asyncio.run in the main function.</p>
+
+<p>With coroutines you don’t have to worry about your thread being interrupted.  You must explicitly <code class="language-plaintext highlighter-rouge">await</code> to let the rest of the program run.  Instead of holding locks coroutines are synchronized by definition because only one of them can run at any given time.</p>
+
+<h2 id="concurrent-executors">Concurrent Executors</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">concurrent.futures.Executor</code> classes encapsulate the pattern of spawning a bunch of independent threads and collecting the results in a queue.</p>
+
+<p><code class="language-plaintext highlighter-rouge">futures</code> objects represent the asynchronous execution of an operation.  Similar to JavaScript promises.</p>
+
+<p>Here we will compare two script that download flag images.  One implemented with <code class="language-plaintext highlighter-rouge">concurrent.futures</code> and one with <code class="language-plaintext highlighter-rouge">asyncio</code></p>
+
+<p>Two notes from these examples..</p>
+
+<ol>
+  <li>
+    <p>Regardless of the concurrency constructs you use—threads or coroutines—you’ll see vastly improved throughput over sequential code in network I/O operations, if you code it properly.</p>
+  </li>
+  <li>
+    <p>For HTTP clients that can control how many requests they make, there is no significant difference in performance between threads and coroutines</p>
+  </li>
+</ol>
+
+<p>The main features of the <code class="language-plaintext highlighter-rouge">concurrent.futures</code> package are the <code class="language-plaintext highlighter-rouge">ThreadPoolExecutor</code> and <code class="language-plaintext highlighter-rouge">ProcessPoolExecutor</code> classes which implement an API to submit callables for execution in different threads or processes.  The classes transparently manage a pool of worker threads or processes and queues to distribute jobs and collect results.</p>
+
+<p>Note that the example below is using Threads.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">httpx</span>
+
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">concurrent</span> <span class="kn">import</span> <span class="n">futures</span>
+
+<span class="n">POP20_CC</span> <span class="o">=</span> <span class="p">(</span><span class="s">'CN IN US ID BR PK NG BD RU JP '</span>
+            <span class="s">'MX PH VN ET EG DE IR TR CD FR'</span><span class="p">).</span><span class="n">split</span><span class="p">()</span>  
+
+<span class="n">BASE_URL</span> <span class="o">=</span> <span class="s">'https://www.fluentpython.com/data/flags'</span>  
+<span class="n">DEST_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s">'downloaded'</span><span class="p">)</span>                         
+
+<span class="k">def</span> <span class="nf">save_flag</span><span class="p">(</span><span class="n">img</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>     
+    <span class="p">(</span><span class="n">DEST_DIR</span> <span class="o">/</span> <span class="n">filename</span><span class="p">).</span><span class="n">write_bytes</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">get_flag</span><span class="p">(</span><span class="n">cc</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>  
+    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">BASE_URL</span><span class="si">}</span><span class="s">/</span><span class="si">{</span><span class="n">cc</span><span class="si">}</span><span class="s">/</span><span class="si">{</span><span class="n">cc</span><span class="si">}</span><span class="s">.gif'</span><span class="p">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">httpx</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">6.1</span><span class="p">,</span>       
+                     <span class="n">follow_redirects</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>  
+    <span class="n">resp</span><span class="p">.</span><span class="n">raise_for_status</span><span class="p">()</span>  
+    <span class="k">return</span> <span class="n">resp</span><span class="p">.</span><span class="n">content</span>
+
+<span class="c1"># Function to download a single image; this is what each worker will execute.
+</span><span class="k">def</span> <span class="nf">download_one</span><span class="p">(</span><span class="n">cc</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>  
+    <span class="n">image</span> <span class="o">=</span> <span class="n">get_flag</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span>
+    <span class="n">save_flag</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">cc</span><span class="si">}</span><span class="s">.gif'</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">cc</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">' '</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cc</span>
+
+<span class="k">def</span> <span class="nf">download_many</span><span class="p">(</span><span class="n">cc_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="c1"># Instantiate the ThreadPoolExecutor as a context manager; the executor.__exit__ method will
+</span>    <span class="c1"># call executor.shutdown(wait=True)
+</span>    <span class="k">with</span> <span class="n">futures</span><span class="p">.</span><span class="n">ThreadPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+        <span class="c1"># The map method is similar to the map build-in, except that the download_one function will be 
+</span>        <span class="c1"># called concurrently from multiple threads.  It returns a generator that you can iterate to 
+</span>        <span class="c1"># retrieve the value returned by each function call.     
+</span>        <span class="n">res</span> <span class="o">=</span> <span class="n">executor</span><span class="p">.</span><span class="nb">map</span><span class="p">(</span><span class="n">download_one</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">cc_list</span><span class="p">))</span>  
+
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">res</span><span class="p">))</span>                                 
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">downloader</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>  
+    <span class="n">DEST_DIR</span><span class="p">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>                          
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span>                               
+    <span class="n">count</span> <span class="o">=</span> <span class="n">downloader</span><span class="p">(</span><span class="n">POP20_CC</span><span class="p">)</span>
+    <span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'</span><span class="se">\n</span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s"> downloads in </span><span class="si">{</span><span class="n">elapsed</span><span class="p">:.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">s'</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">download_many</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="launching-processes-with-concurrentfutures">Launching Processes with concurrent.futures</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">concurrent.futures</code> package enabled parallel computation on multi-core machines because it supports distributing work among multiple Python processes using the <code class="language-plaintext highlighter-rouge">ProcessPoolExecutor</code> class.</p>
+
+<p>Both <code class="language-plaintext highlighter-rouge">ProcessPoolExecutor</code> and <code class="language-plaintext highlighter-rouge">ThreadPoolExecutor</code> implement the <code class="language-plaintext highlighter-rouge">Executor</code> interface, making it easy to switch from thread based to process based.</p>
+
+<p>Essentially to use ProcessPool instead of a Thread Pool you change the line <code class="language-plaintext highlighter-rouge">with futures.ThreadPoolExecutor() as executor:</code> in example above to <code class="language-plaintext highlighter-rouge">with futures.ProcessPoolExecutor() as executor:</code> Everything else remains the same.</p>
+
+<p>In my WSL environment processes ran much faster than threads.  Will be interesting to tes this on Native Linux system as book says for I/O bound stuff Threads vs process should not make any difference and process approach is more expensive in using more memory and taking longer to start.</p>
+
+<p>Below is an example of using a process pool to compute prime numbers.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">concurrent</span> <span class="kn">import</span> <span class="n">futures</span>  
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">perf_counter</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">NamedTuple</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="n">NUMBERS</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50000</span><span class="p">)]</span>
+
+<span class="k">def</span> <span class="nf">is_prime</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="n">root</span> <span class="o">=</span> <span class="n">math</span><span class="p">.</span><span class="n">isqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">root</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">return</span> <span class="bp">True</span>
+
+<span class="k">class</span> <span class="nc">PrimeResult</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>  
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">flag</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">elapsed</span><span class="p">:</span> <span class="nb">float</span>
+
+<span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PrimeResult</span><span class="p">:</span>
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">is_prime</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">PrimeResult</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">workers</span> <span class="o">=</span> <span class="bp">None</span>      
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">workers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># Not using the with block here just so we can print the number of workers on the next line.
+</span>    <span class="n">executor</span> <span class="o">=</span> <span class="n">futures</span><span class="p">.</span><span class="n">ProcessPoolExecutor</span><span class="p">(</span><span class="n">workers</span><span class="p">)</span>  
+    <span class="c1"># Type ignore here because _max_workers is an undocumented internal variable
+</span>    <span class="n">actual_workers</span> <span class="o">=</span> <span class="n">executor</span><span class="p">.</span><span class="n">_max_workers</span>  <span class="c1"># type: ignore  
+</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'Checking </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">NUMBERS</span><span class="p">)</span><span class="si">}</span><span class="s"> numbers with </span><span class="si">{</span><span class="n">actual_workers</span><span class="si">}</span><span class="s"> processes:'</span><span class="p">)</span>
+
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span>
+
+    <span class="n">numbers</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">NUMBERS</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>  
+    <span class="c1"># use executor as context manager
+</span>    <span class="k">with</span> <span class="n">executor</span><span class="p">:</span>  
+        <span class="c1"># The executor.map call returns the PrimeResult instances returned by check in the same order as the 
+</span>        <span class="c1"># numbers argument.
+</span>        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">prime</span><span class="p">,</span> <span class="n">elapsed</span> <span class="ow">in</span> <span class="n">executor</span><span class="p">.</span><span class="nb">map</span><span class="p">(</span><span class="n">check</span><span class="p">,</span> <span class="n">numbers</span><span class="p">):</span>  
+            <span class="n">label</span> <span class="o">=</span> <span class="s">'P'</span> <span class="k">if</span> <span class="n">prime</span> <span class="k">else</span> <span class="s">' '</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">n</span><span class="p">:</span><span class="mi">16</span><span class="si">}</span><span class="s">  </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">elapsed</span><span class="p">:</span><span class="mf">9.6</span><span class="n">f</span><span class="si">}</span><span class="s">s'</span><span class="p">)</span>
+
+    <span class="n">time</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'Total time: </span><span class="si">{</span><span class="n">time</span><span class="p">:.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">s'</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>One note about the script above is that we are using map function which will return the results in same order as the numbers array.  This may not be what you want and you can get more flexibility with the combination of <code class="language-plaintext highlighter-rouge">executor.submit</code> and <code class="language-plaintext highlighter-rouge">futures.as_completed</code> because you can submit different callables and arguments while map is intended to run the same callable on different arguments.  An example of that is below…</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span><span class="p">,</span> <span class="n">strftime</span>
+<span class="kn">from</span> <span class="nn">concurrent</span> <span class="kn">import</span> <span class="n">futures</span>
+
+<span class="k">def</span> <span class="nf">display</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>  
+    <span class="k">print</span><span class="p">(</span><span class="n">strftime</span><span class="p">(</span><span class="s">'[%H:%M:%S]'</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s">' '</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+<span class="c1"># loiter does nothing except display a message when ti starts, sleep for n seconds, 
+# then display a message when it ends.  Tabs are used indent messages according to value of n
+</span><span class="k">def</span> <span class="nf">loiter</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>  
+    <span class="n">msg</span> <span class="o">=</span> <span class="s">'{}loiter({}): doing nothing for {}s...'</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">msg</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="s">'</span><span class="se">\t</span><span class="s">'</span><span class="o">*</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="n">sleep</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s">'{}loiter({}): done.'</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">msg</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="s">'</span><span class="se">\t</span><span class="s">'</span><span class="o">*</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="mi">10</span>  
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">display</span><span class="p">(</span><span class="s">'Script starting.'</span><span class="p">)</span>
+    <span class="n">executor</span> <span class="o">=</span> <span class="n">futures</span><span class="p">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  
+    <span class="c1"># submit 5 tasks to executor.  Since we have only 3 wokers 3 will start right away others wait.
+</span>    <span class="n">results</span> <span class="o">=</span> <span class="n">executor</span><span class="p">.</span><span class="nb">map</span><span class="p">(</span><span class="n">loiter</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>  
+    <span class="n">display</span><span class="p">(</span><span class="s">'results:'</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>  
+    <span class="n">display</span><span class="p">(</span><span class="s">'Waiting for individual results:'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>  
+        <span class="n">display</span><span class="p">(</span><span class="sa">f</span><span class="s">'result </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>The examples above have a lot of error handling omitted for brevity.  Lets cover the full versions.</p>
+
+<p>The repo before has full examples which you can find here and should do a read though here https://github.com/fluentpython/example-code-2e (you also cloned it to your machine)</p>
+
+<p>When reding though pay attention to…</p>
+
+<ul>
+  <li>The common file has the main function and arg handling.</li>
+  <li>There is a progress bar implemented with the <code class="language-plaintext highlighter-rouge">tqdm package</code></li>
+  <li>There is a help cli style screen</li>
+  <li>In order to make the tqdm package work we need to use the <code class="language-plaintext highlighter-rouge">futures.as_completed</code> function so there is another example of that there.</li>
+</ul>
+
+<h2 id="chapter-21-asynchronous-programming">Chapter 21. Asynchronous Programming</h2>
+
+<p>Python has 3 kinds of coroutines</p>
+
+<p><strong>Native coroutine</strong> - A coroutine function defined with <code class="language-plaintext highlighter-rouge">async def</code>.  You can delegate from a native coroutine to another native coroutine using the <code class="language-plaintext highlighter-rouge">await</code> keyword, similar to how classic coroutines use <code class="language-plaintext highlighter-rouge">yield from</code>.  The <code class="language-plaintext highlighter-rouge">async def</code> statement always defines a native coroutine, even if the <code class="language-plaintext highlighter-rouge">await</code> keyword is not used in its body.  The <code class="language-plaintext highlighter-rouge">await</code> keyword cannot be used outside of a native coroutine.</p>
+
+<p><strong>Classic coroutine</strong> - A generator function that consumes data sent to it via <code class="language-plaintext highlighter-rouge">my_coro.send(data)</code> calls, and reads that data by using <code class="language-plaintext highlighter-rouge">yield</code> in an expression.  Classic coroutines can delegate to other classic coroutines using <code class="language-plaintext highlighter-rouge">yield from</code>.  Classic coroutines cannot be driven by <code class="language-plaintext highlighter-rouge">await</code>, and are no longer supported by <em>asyncio</em>.</p>
+
+<p><strong>Generator-based coroutine</strong> - A generator function decorated with <code class="language-plaintext highlighter-rouge">@types.coroutine</code> introduced in Python 3.5.  That decorator makes the generator compatible with the new <code class="language-plaintext highlighter-rouge">await</code> keyword.</p>
+
+<p><strong>Asynchronous generator</strong> - A generator function defined with <code class="language-plaintext highlighter-rouge">async def</code> and using <code class="language-plaintext highlighter-rouge">yield</code> in its body.  It returns an asynchronous generator object that provides <code class="language-plaintext highlighter-rouge">__anext__</code>, a coroutine method to retrieve the next item.</p>
+
+<p>The example below will use DNS to lookup domain if they exist.  We are looking up keyword in python as potential domains.  If they do exist a + is prepended when they are printed out.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">asyncio.get_running_loop</code> function was added in Python 3.7 for use in coroutines as in the example below.  If there is no running loop, <code class="language-plaintext highlighter-rouge">asyncio.get_running_loop</code> raised <code class="language-plaintext highlighter-rouge">RuntimeError</code>.  Its implementation is simpler and faster than <code class="language-plaintext highlighter-rouge">asyncio.get_event_loop</code>, which may start an event loop if necessary.  Since python 3.10 <code class="language-plaintext highlighter-rouge">asyncio.get_event_loop</code> is deprecated and will eventually become an alias to <code class="language-plaintext highlighter-rouge">asyncio.get_running_loop</code></p>
+
+<p>In example below we start the event loop with <code class="language-plaintext highlighter-rouge">asyncio.run(main())</code></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
+</span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">from</span> <span class="nn">keyword</span> <span class="kn">import</span> <span class="n">kwlist</span>
+
+<span class="n">MAX_KEYWORD_LEN</span> <span class="o">=</span> <span class="mi">4</span>  
+
+<span class="c1"># probe returns a tuple with domain name and a boolean; True means domain resolved
+</span><span class="k">async</span> <span class="k">def</span> <span class="nf">probe</span><span class="p">(</span><span class="n">domain</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span> 
+    <span class="c1">#  Get a reference to the asyncio event loop so that we can use it.
+</span>    <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># the loop.getaddrinfo coroutine method returns a five part tuple of parameters to connect to
+</span>        <span class="c1"># the given address using a socket.  In this example we don't need the result.  If we got it domain resolved
+</span>        <span class="k">await</span> <span class="n">loop</span><span class="p">.</span><span class="n">getaddrinfo</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>  
+    <span class="k">except</span> <span class="n">socket</span><span class="p">.</span><span class="n">gaierror</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+
+
+<span class="c1"># main must be a coroutine so we can use await in it.
+</span><span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="c1"># generator to yield python keywords with length up to max len
+</span>    <span class="n">names</span> <span class="o">=</span> <span class="p">(</span><span class="n">kw</span> <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="n">kwlist</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kw</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">MAX_KEYWORD_LEN</span><span class="p">)</span>  
+    <span class="c1"># generator to yield domain names with .dev suffix
+</span>    <span class="n">domains</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">.dev'</span><span class="p">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">)</span>
+    <span class="c1"># build a list of coroutine objects by invoking the probe coroutine with each domain argument.
+</span>    <span class="n">coros</span> <span class="o">=</span> <span class="p">[</span><span class="n">probe</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span> <span class="k">for</span> <span class="n">domain</span> <span class="ow">in</span> <span class="n">domains</span><span class="p">]</span>  
+    <span class="c1"># async_io as_completed is a generator that yields coroutines that return the results of the coroutines
+</span>    <span class="c1"># passed to it in the order they are completed (not the order they were submitted)
+</span>    <span class="k">for</span> <span class="n">coro</span> <span class="ow">in</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">as_completed</span><span class="p">(</span><span class="n">coros</span><span class="p">):</span>  
+        <span class="c1"># At this point we know the coroutine is done because that' how as_completed works.  Therefore
+</span>        <span class="c1"># the await expression will not blcok but we need it to get the result from coro.  
+</span>        <span class="c1"># If coro raised an unhandled exception it would be re raised here.
+</span>        <span class="n">domain</span><span class="p">,</span> <span class="n">found</span> <span class="o">=</span> <span class="k">await</span> <span class="n">coro</span>  
+        <span class="n">mark</span> <span class="o">=</span> <span class="s">'+'</span> <span class="k">if</span> <span class="n">found</span> <span class="k">else</span> <span class="s">' '</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">mark</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">domain</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="c1"># asyncio.run starts the event loop and returns only when the event loop exists.
+</span>    <span class="c1"># this is a common patter for scripts that use asyncio: implement main as a coroutine, and drive it with
+</span>    <span class="c1"># asyncio.run inside the if __main__ == '__main__': block.
+</span>    <span class="n">asyncio</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span> 
+</code></pre></div></div>
+
+<p>You don’t have to wait for an awaitable (the <code class="language-plaintext highlighter-rouge">for</code> keyword works with iterables the <code class="language-plaintext highlighter-rouge">await</code> with awaitables) you can use <code class="language-plaintext highlighter-rouge">asyncio.create_task(one_coro())</code> to schedule <code class="language-plaintext highlighter-rouge">one_coro</code> for concurrent execution without awaiting its return.  If you don’t need to be able to cancel a task or you don’t need to wait for it there is no need to track it.</p>
+
+<p>In contrast you use <code class="language-plaintext highlighter-rouge">await other_coro</code> to run <code class="language-plaintext highlighter-rouge">other_coro</code> right now and wait for its completion because you need the result before we can proceed.  In the spinner_async.py example earlier we called <code class="language-plaintext highlighter-rouge">res = await slow()</code> to execute slow and get its result.</p>
+
+<p>Below is the asyncio implementation of the flag download example we have been working with.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">httpx</span> <span class="kn">import</span> <span class="n">AsyncClient</span>  
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+
+<span class="n">BASE_URL</span> <span class="o">=</span> <span class="s">'https://www.fluentpython.com/data/flags'</span>
+<span class="n">DEST_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s">'downloaded'</span><span class="p">)</span>
+<span class="n">POP20_CC</span> <span class="o">=</span> <span class="p">(</span><span class="s">'CN IN US ID BR PK NG BD RU JP '</span>
+            <span class="s">'MX PH VN ET EG DE IR TR CD FR'</span><span class="p">).</span><span class="n">split</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">save_flag</span><span class="p">(</span><span class="n">img</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>     
+    <span class="p">(</span><span class="n">DEST_DIR</span> <span class="o">/</span> <span class="n">filename</span><span class="p">).</span><span class="n">write_bytes</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+<span class="c1"># This needs to be a plain function not a coroutine so it can be passed to and called by the main function.
+</span><span class="k">def</span> <span class="nf">download_many</span><span class="p">(</span><span class="n">cc_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>    
+    <span class="c1"># Execute the event loop driving the supervisor(cc_list) coroutine object until it returns.
+</span>    <span class="c1"># This will block while the event loop runs.  The result of this line is whatever supervisor returns.
+</span>    <span class="k">return</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">supervisor</span><span class="p">(</span><span class="n">cc_list</span><span class="p">))</span>      
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">supervisor</span><span class="p">(</span><span class="n">cc_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="c1"># Asynchronous HTTP client operations in httpx are methods of AsyncClient, which is also an asynchronous
+</span>    <span class="c1"># context manager.
+</span>    <span class="k">async</span> <span class="k">with</span> <span class="n">AsyncClient</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>          
+        <span class="n">to_do</span> <span class="o">=</span> <span class="p">[</span><span class="n">download_one</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">cc</span><span class="p">)</span>
+                 <span class="k">for</span> <span class="n">cc</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">cc_list</span><span class="p">)]</span>
+        <span class="c1"># Wait for the asyncio.gather coroutine, which accepts one or more awaitable arguments and waits for all
+</span>        <span class="c1"># of them to complete, returning a list of results for the given awaitable in the order they wre submitted.
+</span>        <span class="n">res</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">to_do</span><span class="p">)</span>       
+
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>                          
+
+<span class="c1"># download_one needs to be a native coroutine, so it can await on get_flag which does the HTTP request.
+# Then it displays the code of the downloaded flag and saves the image.
+</span><span class="k">async</span> <span class="k">def</span> <span class="nf">download_one</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n">AsyncClient</span><span class="p">,</span> <span class="n">cc</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>  
+    <span class="n">image</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_flag</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">cc</span><span class="p">)</span>
+    <span class="n">save_flag</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">cc</span><span class="si">}</span><span class="s">.gif'</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">cc</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">' '</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cc</span>
+
+<span class="c1"># get_flag needs to receive the AsyncClient to make the request
+</span><span class="k">async</span> <span class="k">def</span> <span class="nf">get_flag</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n">AsyncClient</span><span class="p">,</span> <span class="n">cc</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>  
+    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">BASE_URL</span><span class="si">}</span><span class="s">/</span><span class="si">{</span><span class="n">cc</span><span class="si">}</span><span class="s">/</span><span class="si">{</span><span class="n">cc</span><span class="si">}</span><span class="s">.gif'</span><span class="p">.</span><span class="n">lower</span><span class="p">()</span>
+    
+    <span class="c1">#The get method of an httpx.AsyncClient instance returns a ClientResponse object that is also an 
+</span>    <span class="c1"># asynchronous context manager.
+</span>    <span class="n">resp</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">6.1</span><span class="p">,</span> <span class="n">follow_redirects</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>  
+    <span class="c1"># Network I/O operations are implemented as coroutine methods, so they are driven asynchronously by the 
+</span>    <span class="c1"># asyncio setup loop.
+</span>    <span class="k">return</span> <span class="n">resp</span><span class="p">.</span><span class="n">read</span><span class="p">()</span> 
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">downloader</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>  
+    <span class="n">DEST_DIR</span><span class="p">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>                          
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span>                               
+    <span class="n">count</span> <span class="o">=</span> <span class="n">downloader</span><span class="p">(</span><span class="n">POP20_CC</span><span class="p">)</span>
+    <span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'</span><span class="se">\n</span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s"> downloads in </span><span class="si">{</span><span class="n">elapsed</span><span class="p">:.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">s'</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">download_many</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Note that <code class="language-plaintext highlighter-rouge">get_flag</code> was rewritten here to be a coroutine to use the asynchronous API of HTTPX.  For peak performance with asyncio, we must replace every function that does I/O with an asynchronous version that is activate with <code class="language-plaintext highlighter-rouge">await</code> or <code class="language-plaintext highlighter-rouge">asyncio.create_task</code>, so that control is given back to the vent loop while the function waits for I/O.  If you can’t rewrite the blocking function as a coroutine, you should run it in a separate thread or process.</p>
+
+<h3 id="asynchronous-context-managers">Asynchronous Context Managers.</h3>
+
+<p>The regular <code class="language-plaintext highlighter-rouge">with</code> statement does not support coroutines.  that is why PEP 492 added an <code class="language-plaintext highlighter-rouge">async with</code> statement which does work with asynchronous context managers.  An asynchronous context manager is an object which implements the <code class="language-plaintext highlighter-rouge">__aenter__</code> and <code class="language-plaintext highlighter-rouge">__aexit__</code> methods as coroutines.</p>
+
+<p>There is an asyncio equivalent of the <code class="language-plaintext highlighter-rouge">as_completed</code> generator function we used in the thread pool example with progress bar.  As a reminder <code class="language-plaintext highlighter-rouge">as_completed</code> would run a set of threads and return as they are done.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">asyncio.to_thread</code> coroutine makes it easy to delegate file I/O to a thread pool provided by <em>asyncio</em>.</p>
+
+<p>A <strong>semaphore</strong> is a synchronization primative, more flexible than a lock.  A semaphore can be held by multiple coroutines, with a configurable maximum number.  This makes it ideal to throttle the number of active concurrent coroutines.  There are three <code class="language-plaintext highlighter-rouge">Semaphore</code> classes in Python’s standard library; one in <code class="language-plaintext highlighter-rouge">threading</code> one in <code class="language-plaintext highlighter-rouge">multiprocessing</code> and one in <code class="language-plaintext highlighter-rouge">asyncio</code>.</p>
+
+<p>An <code class="language-plaintext highlighter-rouge">asyncio.Semaphore</code> has an internal counter that is decremented whenever we <code class="language-plaintext highlighter-rouge">await</code> on the <code class="language-plaintext highlighter-rouge">.acquire()</code> coroutine method, and incremented when we call the <code class="language-plaintext highlighter-rouge">.release()</code> method which is not a coroutine because it never blocks.  The initial value of the <code class="language-plaintext highlighter-rouge">Semaphore</code> is set when the <code class="language-plaintext highlighter-rouge">Semaphore</code> is instantiated.  Awaiting on the <code class="language-plaintext highlighter-rouge">.acquire()</code> causes no delay when the counter is greater than zero, but if the counter is zero, <code class="language-plaintext highlighter-rouge">.acquire()</code> suspends the awaiting coroutine until some other coroutine call <code class="language-plaintext highlighter-rouge">.release()</code> on the same <code class="language-plaintext highlighter-rouge">Semaphore</code>, thus incrementing the counter.  Instead of using these methods directly you can use the <code class="language-plaintext highlighter-rouge">semaphore</code> as an asynchronous context manager.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">semaphore</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="n">concur_req</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">with</span> <span class="n">semaphore</span><span class="p">:</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_flag</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">base_url</span><span class="p">,</span> <span class="n">cc</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The Semaphore.<strong>aenter</strong> coroutine method awaits for .acquire(), and its <strong>aexit</strong> coroutine method calls .release(). That snippet guarantees that no more than concur_req instances of get_flags coroutines will be active at any time.</p>
+
+<p>Each of the Semaphore classes in the standard library has a BoundedSemaphore subclass that enforces an additional constraint: the internal counter can never become larger than the initial value when there are more .release() than .acquire() operations.</p>
+
+<p>Side note… Python is not a block-scoped language.  Statements such as <code class="language-plaintext highlighter-rouge">try/except</code> don’t create a local scope in the blocks they manage, but if an <code class="language-plaintext highlighter-rouge">except</code> clause binds an exception to a variable, like the exception variable the binding only exists within that particular <code class="language-plaintext highlighter-rouge">except</code> clause.</p>
+
+<h3 id="making-multiple-requests-for-each-download">Making Multiple Requests for Each Download</h3>
+
+<p>The idea hers is that you want to be able to call an async function such as download a flag or in the example we are working with here a json to get country codes from.  Think of how in Javascript you use await to let the code that does a call run for as long as it needs to and comes back.</p>
+
+<p>Below is the new get_country coroutine we are adding</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="k">def</span> <span class="nf">get_country</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n">httpx</span><span class="p">.</span><span class="n">AsyncClient</span><span class="p">,</span>
+                      <span class="n">base_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                      <span class="n">cc</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>    
+    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">base_url</span><span class="si">}</span><span class="s">/</span><span class="si">{</span><span class="n">cc</span><span class="si">}</span><span class="s">/metadata.json'</span><span class="p">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">3.1</span><span class="p">,</span> <span class="n">follow_redirects</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">resp</span><span class="p">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="n">resp</span><span class="p">.</span><span class="n">json</span><span class="p">()</span>  
+    <span class="k">return</span> <span class="n">metadata</span><span class="p">[</span><span class="s">'country'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>And here is the updated download_one which now makes two async calls one for the coutnry json and one for flag.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="k">def</span> <span class="nf">download_one</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n">httpx</span><span class="p">.</span><span class="n">AsyncClient</span><span class="p">,</span>
+                       <span class="n">cc</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                       <span class="n">base_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                       <span class="n">semaphore</span><span class="p">:</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">Semaphore</span><span class="p">,</span>
+                       <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DownloadStatus</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># hold the semaphore to await get_flg
+</span>        <span class="k">async</span> <span class="k">with</span> <span class="n">semaphore</span><span class="p">:</span>  
+            <span class="n">image</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_flag</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">base_url</span><span class="p">,</span> <span class="n">cc</span><span class="p">)</span>
+        <span class="c1"># and again hold the semaphore for country
+</span>        <span class="c1"># using separate semaphore becuase its good practice to hold semaphores for short time
+</span>        <span class="k">async</span> <span class="k">with</span> <span class="n">semaphore</span><span class="p">:</span>  
+            <span class="n">country</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_country</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">base_url</span><span class="p">,</span> <span class="n">cc</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">httpx</span><span class="p">.</span><span class="n">HTTPStatusError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">exc</span><span class="p">.</span><span class="n">response</span>
+        <span class="k">if</span> <span class="n">res</span><span class="p">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="n">HTTPStatus</span><span class="p">.</span><span class="n">NOT_FOUND</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="n">DownloadStatus</span><span class="p">.</span><span class="n">NOT_FOUND</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s">'not found: </span><span class="si">{</span><span class="n">res</span><span class="p">.</span><span class="n">url</span><span class="si">}</span><span class="s">'</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Use country name to create the file name (no spaces just for fun)
+</span>        <span class="n">filename</span> <span class="o">=</span> <span class="n">country</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">' '</span><span class="p">,</span> <span class="s">'_'</span><span class="p">)</span>  
+        <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">to_thread</span><span class="p">(</span><span class="n">save_flag</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s">.gif'</span><span class="p">)</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">DownloadStatus</span><span class="p">.</span><span class="n">OK</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s">'OK'</span>
+    <span class="k">if</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="n">msg</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">cc</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">status</span>
+</code></pre></div></div>
+
+<h2 id="delegating-tasks-to-executors">Delegating Tasks to Executors</h2>
+
+<p>In Python reading and writing to I/O blocks the main loop and can become a bottleneck.</p>
+
+<p>You can use the code below to write to a file asynchronously as a coroutine (I believe need to validate)</p>
+
+<p><code class="language-plaintext highlighter-rouge">await asyncio.to_thread(save_flag, image, f'{cc}.gif')</code></p>
+
+<p>Now this is only available with Python 3.9 and later prior you would need to replace the above with the following lines…</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># get reference to the event loop.
+</span><span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">get_running_loop</span><span class="p">()</span> 
+<span class="c1"># first argument is the executor to use.  Passing None select the default
+# ThreadPoolExecutor that is always available in the asyncio event loop.
+# You can pass positional arguments to the function to run.  KW is possibl
+# check functool.partial docs.        
+</span><span class="n">loop</span><span class="p">.</span><span class="n">run_in_executor</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">save_flag</span><span class="p">,</span><span class="n">image</span><span class="p">,</span> <span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">cc</span><span class="si">}</span><span class="s">.gif'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The main reason to pass an explicit <code class="language-plaintext highlighter-rouge">Executor</code> to <code class="language-plaintext highlighter-rouge">loop.run_in_executor</code> is to employ a <code class="language-plaintext highlighter-rouge">ProcessPoolExecutor</code> if the function to execute is CPU intensive so that it will run in a different process avoiding contention for the GIL.  Because of the high startup costs its better to start the <code class="language-plaintext highlighter-rouge">ProcessPoolExecutor</code> and pass it to coroutines that need to use it.  Generally the stuff that runs in <code class="language-plaintext highlighter-rouge">ProcessPoolExecutor</code> cannot be canceled.</p>
+
+<h3 id="asynchronous-generator-functions">Asynchronous Generator Functions</h3>
+
+<p>You can implement an asynchronous iterator by writing a class with <strong>anext</strong> and <strong>aiter</strong>, but there is a simpler way: write a function declared with async def and use yield in its body. This parallels how generator functions simplify the classic Iterator pattern.</p>
+
+<h3 id="experimenting-with-pythons-async-console">Experimenting with Python’s async console</h3>
+
+<p>You can start the python REPL with async features enabled with the command <code class="language-plaintext highlighter-rouge">python -m asyncio</code></p>
+
+<h3 id="implementing-an-asynchronous-generator">Implementing an asynchronous generator</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">AsyncIterator</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">Optional</span>
+
+
+<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>  
+    <span class="n">domain</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">found</span><span class="p">:</span> <span class="nb">bool</span>
+
+
+<span class="n">OptionalLoop</span> <span class="o">=</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="p">.</span><span class="n">AbstractEventLoop</span><span class="p">]</span>  
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">probe</span><span class="p">(</span><span class="n">domain</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">loop</span><span class="p">:</span> <span class="n">OptionalLoop</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>  
+    <span class="k">if</span> <span class="n">loop</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">loop</span><span class="p">.</span><span class="n">getaddrinfo</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">socket</span><span class="p">.</span><span class="n">gaierror</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">multi_probe</span><span class="p">(</span><span class="n">domains</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Result</span><span class="p">]:</span>  
+    <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+    <span class="n">coros</span> <span class="o">=</span> <span class="p">[</span><span class="n">probe</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">loop</span><span class="p">)</span> <span class="k">for</span> <span class="n">domain</span> <span class="ow">in</span> <span class="n">domains</span><span class="p">]</span>  
+    <span class="k">for</span> <span class="n">coro</span> <span class="ow">in</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">as_completed</span><span class="p">(</span><span class="n">coros</span><span class="p">):</span>  
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">coro</span>
+        <span class="c1"># yield the result this one line makes multi_probe an asynchronous generator.
+</span>        <span class="k">yield</span> <span class="n">result</span>  
+
+</code></pre></div></div>
+
+<p>The for loop in example above can be more consice</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">coro</span> <span class="ow">in</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">as_completed</span><span class="p">(</span><span class="n">coros</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="k">await</span> <span class="n">coro</span>
+</code></pre></div></div>
+
+<p>python parses that as <code class="language-plaintext highlighter-rouge">yield (await coro)</code> so it works.</p>
+
+<p>below is the code that uses the above…</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
+</span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">keyword</span> <span class="kn">import</span> <span class="n">kwlist</span>
+
+<span class="kn">from</span> <span class="nn">domainlib</span> <span class="kn">import</span> <span class="n">multi_probe</span>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">tld</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">tld</span> <span class="o">=</span> <span class="n">tld</span><span class="p">.</span><span class="n">strip</span><span class="p">(</span><span class="s">'.'</span><span class="p">)</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">(</span><span class="n">kw</span> <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="n">kwlist</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kw</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">)</span>  
+    <span class="n">domains</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">.</span><span class="si">{</span><span class="n">tld</span><span class="si">}</span><span class="s">'</span><span class="p">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">)</span>  
+    <span class="k">print</span><span class="p">(</span><span class="s">'FOUND</span><span class="se">\t\t</span><span class="s">NOT FOUND'</span><span class="p">)</span>  
+    <span class="k">print</span><span class="p">(</span><span class="s">'=====</span><span class="se">\t\t</span><span class="s">========='</span><span class="p">)</span>
+    <span class="c1"># Asynchronously iterate over multi_probe(domains)
+</span>    <span class="k">async</span> <span class="k">for</span> <span class="n">domain</span><span class="p">,</span> <span class="n">found</span> <span class="ow">in</span> <span class="n">multi_probe</span><span class="p">(</span><span class="n">domains</span><span class="p">):</span>  
+        <span class="n">indent</span> <span class="o">=</span> <span class="s">''</span> <span class="k">if</span> <span class="n">found</span> <span class="k">else</span> <span class="s">'</span><span class="se">\t\t</span><span class="s">'</span>  
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">indent</span><span class="si">}{</span><span class="n">domain</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="c1"># Run the main coroutine with the given command line argument.
+</span>        <span class="n">asyncio</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>  
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'Please provide a TLD.'</span><span class="p">,</span> <span class="sa">f</span><span class="s">'Example: </span><span class="si">{</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s"> COM.BR'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="asynchronous-generators-as-context-managers">Asynchronous generators as context managers</h3>
+
+<p>Writing our own asynchronous context managers is not a frequent programming task, but if you need to write one, consider using the @asynccontextmanager decorator added to the contextlib module in Python 3.7. That’s very similar to the @contextmanager decorator we studied in “Using @contextmanager”.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">asynccontextmanager</span>
+
+<span class="c1"># The decorated function must be an asynchronous generator
+</span><span class="o">@</span><span class="n">asynccontextmanager</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">web_page</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>  
+    <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+    <span class="c1"># Suppose download_webpage is a blocking function using the requests library; we 
+</span>    <span class="c1"># run it in a separate thread to avoid blocking the event loop. 
+</span>    <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">loop</span><span class="p">.</span><span class="n">run_in_executor</span><span class="p">(</span>  
+        <span class="bp">None</span><span class="p">,</span> <span class="n">download_webpage</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+    <span class="c1"># All lines before this yield expression will become the __aenter__ coroutine method
+</span>    <span class="c1"># of the asynchronous context manager built by the decorator.  The value of data will be
+</span>    <span class="c1"># bound to the data variable after the as clause in the async with statement below.
+</span>    <span class="k">yield</span> <span class="n">data</span>
+    <span class="c1"># Lines after the yield will beomce the __aexit__ coroutine method.
+</span>    <span class="c1"># Here, another blocking call is delegated tot he thread executor.                       
+</span>    <span class="k">await</span> <span class="n">loop</span><span class="p">.</span><span class="n">run_in_executor</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">update_stats</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>  
+
+<span class="c1"># use web page with async with.
+</span><span class="k">async</span> <span class="k">with</span> <span class="n">web_page</span><span class="p">(</span><span class="s">'google.com'</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>  
+    <span class="n">process</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="asynchronous-generators-versus-native-coroutines">Asynchronous generators versus native coroutines</h3>
+
+<ul>
+  <li>
+    <p>Both are declared with <code class="language-plaintext highlighter-rouge">async def</code></p>
+  </li>
+  <li>
+    <p>An asynchronous generator will have a <code class="language-plaintext highlighter-rouge">yield</code> expression in its body - that’s what makes it a generator.  A native coroutine never contains a <code class="language-plaintext highlighter-rouge">yield</code>.</p>
+  </li>
+  <li>
+    <p>A native coroutine may return some value other than <code class="language-plaintext highlighter-rouge">None</code>. An asynchronous generator can only use empty <code class="language-plaintext highlighter-rouge">return</code> statements.</p>
+  </li>
+  <li>
+    <p>Native coroutine are awaitable: they can be driven by <code class="language-plaintext highlighter-rouge">await</code> expressions or passed to one of the many <code class="language-plaintext highlighter-rouge">asyncio</code> functions that take awaitable arguments, such as <code class="language-plaintext highlighter-rouge">create_task</code>.  Asynchronous generators are not awaitable.  They are asynchronous iterables, driven by <code class="language-plaintext highlighter-rouge">async for</code> or by asynchronous comprehensions.</p>
+  </li>
+</ul>
+
+<h3 id="async-comprehension-and-async-generator-expressions">Async Comprehension and Async Generator Expressions</h3>
+
+<p>An asynchronous generator expression can be defined anywhere in your program, but it can only be consumed inside a native coroutine or asynchronous generator function.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># This is the multi_probe function we wrote in earlier example
+</span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">domainlib</span> <span class="kn">import</span> <span class="n">multi_probe</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">names</span> <span class="o">=</span> <span class="s">'python.org rust-lang.org golang.org no-lang.invalid'</span><span class="p">.</span><span class="n">split</span><span class="p">()</span>
+<span class="c1"># The use of async for makes this an asynchronous generator expression.
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">gen_found</span> <span class="o">=</span> <span class="p">(</span><span class="n">name</span> <span class="k">async</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">found</span> <span class="ow">in</span> <span class="n">multi_probe</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="k">if</span> <span class="n">found</span><span class="p">)</span>  
+<span class="o">&gt;&gt;&gt;</span> <span class="n">gen_found</span>
+<span class="c1"># The asynchronous generator expression builds an async_generator object - exactly the same
+# type of object returned by an asynchronous generator function like multi_probe.
+</span><span class="o">&lt;</span><span class="n">async_generator</span> <span class="nb">object</span> <span class="o">&lt;</span><span class="n">genexpr</span><span class="o">&gt;</span> <span class="n">at</span> <span class="mh">0x10a8f9700</span><span class="o">&gt;</span>  
+<span class="c1"># The asynchronous generator object is driven by async for statement, which in turn can
+# only appear inside an async def body or in the asynchronous REPL console.
+</span><span class="o">&gt;&gt;&gt;</span> <span class="k">async</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">gen_found</span><span class="p">:</span>  
+<span class="p">...</span>     <span class="k">print</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="n">golang</span><span class="p">.</span><span class="n">org</span>
+<span class="n">python</span><span class="p">.</span><span class="n">org</span>
+<span class="n">rust</span><span class="o">-</span><span class="n">lang</span><span class="p">.</span><span class="n">org</span>
+</code></pre></div></div>
+
+<h4 id="asynchronous-comprehensions">Asynchronous comprehensions</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">async</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">aiter</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">result</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+<span class="c1"># The above code can be written as...
+</span>
+<span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">async</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">aiter</span><span class="p">()</span> <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>Given a native coroutine <code class="language-plaintext highlighter-rouge">fun</code> we should be able to write <code class="language-plaintext highlighter-rouge">result = [await fun() for fun in funcs]</code></p>
+
+<p>Using <code class="language-plaintext highlighter-rouge">await</code> in a list comprehension is similar to using <code class="language-plaintext highlighter-rouge">asyncio.gather</code> but <code class="language-plaintext highlighter-rouge">gather</code> gives you more control over exception handling thanks to the special return exceptions argument.  Its recommended to always set <code class="language-plaintext highlighter-rouge">return_exceptions=True</code> (the default is False).</p>
+
+<p>You can use <code class="language-plaintext highlighter-rouge">async for</code> and <code class="language-plaintext highlighter-rouge">await</code> in list comprehension as well as for <code class="language-plaintext highlighter-rouge">dict</code> and <code class="language-plaintext highlighter-rouge">set</code>.</p>
+
+<p>Below is an example of dict comprehesnion.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">found</span> <span class="k">async</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">found</span> <span class="ow">in</span> <span class="n">multi_probe</span><span class="p">(</span><span class="n">names</span><span class="p">)}</span>
+<span class="p">{</span><span class="s">'golang.org'</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="s">'python.org'</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="s">'no-lang.invalid'</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+<span class="s">'rust-lang.org'</span><span class="p">:</span> <span class="bp">True</span><span class="p">}</span>
+</code></pre></div></div>
+
+<p>Here is another example not that you can use <code class="language-plaintext highlighter-rouge">await</code> before the <code class="language-plaintext highlighter-rouge">for</code> or <code class="language-plaintext highlighter-rouge">async for</code> and after the <code class="language-plaintext highlighter-rouge">if</code></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="p">{</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span> <span class="k">if</span> <span class="p">(</span><span class="k">await</span> <span class="n">probe</span><span class="p">(</span><span class="n">name</span><span class="p">)).</span><span class="n">found</span><span class="p">}</span>
+<span class="p">{</span><span class="s">'rust-lang.org'</span><span class="p">,</span> <span class="s">'python.org'</span><span class="p">,</span> <span class="s">'golang.org'</span><span class="p">}</span>
+</code></pre></div></div>
+
+<p>You may want to take a look into the <code class="language-plaintext highlighter-rouge">curio</code> library that makes some of these concepts easier to develop with.  It has features that allow it to run in a thread along with asyncio in another thread.</p>
+
+<h3 id="type-hinting-and-asynchronous-objects">Type Hinting and Asynchronous Objects</h3>
+
+<p>If you need to annotate a parameter that takes a coroutine object, then the generic type is:
+These were added in Python 3.5.  With Python 3.9 and newer use the collections.abc equivalents of these.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">typing</span><span class="p">.</span><span class="n">Coroutine</span><span class="p">(</span><span class="n">Awaitable</span><span class="p">[</span><span class="n">V_co</span><span class="p">],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T_co</span><span class="p">,</span> <span class="n">T_contra</span><span class="p">,</span> <span class="n">V_co</span><span class="p">]):</span>
+<span class="p">...</span>
+<span class="k">class</span> <span class="nc">typing</span><span class="p">.</span><span class="n">AsyncContextManager</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">T_co</span><span class="p">]):</span>
+    <span class="p">...</span>
+<span class="k">class</span> <span class="nc">typing</span><span class="p">.</span><span class="n">AsyncIterable</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">T_co</span><span class="p">]):</span>
+    <span class="p">...</span>
+<span class="k">class</span> <span class="nc">typing</span><span class="p">.</span><span class="n">AsyncIterator</span><span class="p">(</span><span class="n">AsyncIterable</span><span class="p">[</span><span class="n">T_co</span><span class="p">]):</span>
+    <span class="p">...</span>
+<span class="k">class</span> <span class="nc">typing</span><span class="p">.</span><span class="n">AsyncGenerator</span><span class="p">(</span><span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T_co</span><span class="p">],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T_co</span><span class="p">,</span> <span class="n">T_contra</span><span class="p">]):</span>
+    <span class="p">...</span>
+<span class="k">class</span> <span class="nc">typing</span><span class="p">.</span><span class="n">Awaitable</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">T_co</span><span class="p">]):</span>
+    <span class="p">...</span>
+</code></pre></div></div>
+
+<h3 id="how-async-works-and-how-it-doesnt">How Async Works and How It Doesn’t</h3>
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
