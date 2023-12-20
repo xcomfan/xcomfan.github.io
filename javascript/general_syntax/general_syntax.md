@@ -24,8 +24,6 @@ permalink: /javascript/general_syntax
 
 [Exception Handling]({% link javascript/general_syntax/exception_handling.md %})
 
-[Ternary Operator]({% link javascript/general_syntax/ternary.md %})
-
 [ES6 importing and exporting code blocks]({% link javascript/general_syntax/imports.md %})
 
 [Promises]({% link javascript/general_syntax/promises.md %})
