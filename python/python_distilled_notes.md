@@ -1748,3 +1748,395 @@ Traceback (most recent call last):
 RuntimeError: Dead
 >>>
 ```
+
+## Chapter 7: Classea and Object Oriented Programming
+
+### Attribute access
+
+If you wanted to look up an attribute that may or may not exist, you could do this (working on classes here)
+
+```python
+>>> a = Account('Guido', 1000.0)
+>>> getattr(s, 'balance', 'unknown')
+1000.0
+>>> getattr(s, 'creation_date', 'unknown')
+'unknown'
+>>>
+```
+
+When you access a method as an attribute you get an object known as a **bound method**.  A bound method is an object that contains both an instance (the `self`) and the function that implements the bound method.  When you call a bound method by adding parenthesis and arguments, it executes the method passing the attached intances as the first argument.
+
+```python
+>>> a = Account('Guido', 1000.0)
+>>> w = a.withdraw
+>>> w
+<bound method Account.withdraw of Account('Guido', 1000.0)>
+>>> w(100)
+>>> a
+Account('Guido', 900.0)
+>>>
+```
+
+### Inheritence
+
+Occasionally, a derived class would implement a method but also need to call the original implementation.  A method can explicitly call the orignal method using `super()`
+
+```python
+class EvilAccount(Account):
+    def inquiry(self):
+        if random.randint(0,4) == 1:
+           return 1.10 * super().inquiry()
+        else:
+           return super().inquiry()
+```
+
+Its less common but you can use this technique for setting attributes as well.  Note that is you are implementing your own `__init__()` method on a child class it is the responsibility of the new `__init__()` method to call the partent one with `super().__init__()` if you don't do this you will end up with a partially initialized object.
+
+```python
+class EvilAccount(Account):
+    def inquiry(self):
+        if random.randint(0,4) == 1:
+           return 1.10 * super().inquiry()
+        else:
+           return super().inquiry()
+```
+
+### Dynamic binding and duck typing
+
+**Duck typing** means that if you call `obj.name` Python will look for a name attribute without caring what type the object is.  What methods an object has in Pyton is used over what type of object somethign is.
+
+### The danger of inheriting from built in types
+
+Python's built in types aren't implemented like normal Python classes.  They are implemented in C.  For exaple `dict.update()` directly manipulates the dictioanry data without ever routing through the dunder method.
+
+The `collections` module has speical classes `UserDict`, `UserList`, and `UserString` that can be used to make safe subclasses of `dict`, `list`, and `str` types.
+
+```python
+class EvilAccount(Account):
+    def inquiry(self):
+        if random.randint(0,4) == 1:
+           return 1.10 * super().inquiry()
+        else:
+           return super().inquiry()
+
+>>> u = udict(name='Guido', num=37)
+>>> u.update(color='Blue')
+>>> u
+{'NAME': 'Guido', 'NUM': 37, 'COLOR': 'Blue'}
+>>> v = udict(u)
+>>> v['title'] = 'BDFL'
+>>> v
+{'NAME': 'Guido', 'NUM': 37, 'COLOR': 'Blue', 'TITLE': 'BDFL'}
+>>>
+```
+
+### Class variables and methods
+
+In a class definition, all functiosn are assumed to operate on an instance which is alwasy passed as the first parameter `self`.  However the class itself is also an object that can carry state and be manipulated as well.  Class variables are defined outside the normal `__init__()` method and to modify them use the class not the `self`.
+
+```python
+class Account:
+    num_accounts = 0
+
+    def __init__(self, owner, balance):
+        self.owner = owner
+        self.balance = balance
+        Account.num_accounts += 1
+
+    def __repr__(self):
+        return f'{type(self).__name__}({self.owner!r}, {self.balance!r})'
+
+    def deposit(self, amount):
+        self.balance += amount
+
+    def withdraw(self, amount):
+        self.deposit(-amount)    # Must use self.deposit()
+
+    def inquiry(self):
+        return self.balance
+
+>>> a = Account('Guido', 1000.0)
+>>> b = Account('Eva', 10.0)
+>>> Account.num_accounts
+2
+>>>
+```
+
+Its unusual but class variables can also be accessed witht he instance.  This works becaue attribute lookup on instnaces checks the associated class if there's not matching attribute on the instance itself.  This is the same mechanism by which Python normally finds methods.
+
+```python
+>>> a.num_accounts
+2
+>>> c = Account('Ben', 50.0)
+>>> Account.num_accounts
+3
+>>> a.num_accounts
+3
+>>>
+```
+
+Its also possible to define a **class method**.  A method applied to the class itself, not instances.  A common use of class methods is to define alternate instance constructors.  For example if you need to create Account instances from a legacy input format.  The first argument to a class method is alwasy the class itself and by convetnion its called `cls`.  If the class method is creating a new instance you need to take steps to do so.  In example below the call to`cls(...,...)` is same as calling `Account(...,...)`.
+
+```python
+class Account:
+    def __init__(self, owner, balance):
+        self.owner = owner
+        self.balance = balance
+
+    @classmethod
+    def from_xml(cls, data):
+        from xml.etree.ElementTree import XML
+        doc = XML(data)
+        return cls(doc.findtext('owner'),
+                   float(doc.findtext('amount')))
+
+# Example use
+
+data = '''
+<account>
+    <owner>Guido</owner>
+    <amount>1000.0</amount>
+</account>
+'''
+a = Account.from_xml(data)
+```
+
+Class variables and class methods are sometimes used together to con-figure how instances operte.  Configuration via class variables and inheritance like this is a common tool for adjusting the behavior of instances. The use of class methods is critical to making it work since they ensure that the proper kind of object gets created.  Alternate construction of instances is, by far, the most common use of class methods. A common naming convention for such methods is to include the word `from_` as a prefix, such as `from_timestamp()`. You will see this naming convention used in class methods throughout the standard library and in third-party packages. For example, dictionaries have a class method for creating a preinitialized dictionary from a set of keys
+
+```python
+import time
+
+class Date:
+    datefmt = '{year}-{month:02d}-{day:02d}'
+    def __init__(self, year, month, day):
+        self.year = year
+        self.month = month
+        self.day = day
+
+    def __str__(self):
+        return self.datefmt.format(year=self.year,
+                                   month=self.month,
+                                   day=self.day)
+
+    @classmethod
+    def from_timestamp(cls, ts):
+        tm = time.localtime(ts)
+        return cls(tm.tm_year, tm.tm_mon, tm.tm_mday)
+
+    @classmethod
+    def today(cls):
+        return cls.from_timestamp(time.time())
+
+class MDYDate(Date):
+    datefmt = '{month}/{day}/{year}'
+
+class DMYDate(Date):
+    datefmt = '{day}/{month}/{year}'
+
+# Example
+a = Date(1967, 4, 9)
+print(a)       # 1967-04-09
+
+b = MDYDate(1967, 4, 9)
+print(b)       # 4/9/1967
+
+c = DMYDate(1967, 4, 9)
+print(c)      # 9/4/1967
+```
+
+One caution about class methods is that Python does not manage them in a namespace separate from the instance methods. As a result, they can still be invoked on an instance. For example:
+
+```python
+d = Date(1967,4,9)
+b = d.today()          # Calls Date.now(Date)
+```
+
+This is potentially quite confusing because a call to `d.today()` doesn’t really have anything to do with the instance `d`. Yet, you might see `today()` listed as a valid method on `Date` instances in your IDE and in documentation.
+
+### Static Methods
+
+You can use static methods to organize a bundle of methods into a single namespace (the class).  Below is an excample of account where you can use the `policy` to choose which set of methods is applied.
+
+```python
+class StandardPolicy:
+    @staticmethod
+    def deposit(account, amount):
+        account.balance += amount
+
+    @staticmethod
+    def withdraw(account, amount):
+        account.balance -= amount
+
+    @staticmethod
+    def inquiry(account):
+        return account.balance
+
+class EvilPolicy(StandardPolicy):
+    @staticmethod
+    def deposit(account, amount):
+        account.balance += 0.95*amount
+
+    @staticmethod
+    def inquiry(account):
+        if random.randint(0,4) == 1:
+           return 1.10 * account.balance
+        else:
+           return account.balance
+
+class Account:
+    def __init__(self, owner, balance, *, policy=StandardPolicy):
+        self.owner = owner
+        self.balance = balance
+        self.policy = policy
+
+    def __repr__(self):
+        return f'Account({self.policy}, {self.owner!r}, {self.balance!r})'
+
+    def deposit(self, amount):
+        self.policy.deposit(self, amount)
+
+    def withdraw(self, amount):
+        self.policy.withdraw(self, amount)
+
+    def inquiry(self):
+        return self.policy.inquiry(self)
+```
+
+### Data encapsulation and private attributes
+
+Names starting with underscoe `_` indicate internal implementation.  This is convention only nothing will stop user from accessing the method or variable.
+
+If you really want to make an attriubte private have the name start with double underscores `__`.  All names such as `__name` are automatically renamed into a new name of the form `_Classname__name`.  This ensures that private names used in a superclass won't be overwriten by identical names in a child class.  Be aware that name mangling does not occur in functions such as `getattr()`, `hasattr()`, `setattr()`, or `delattr()` where the attribute name is specified as a string. For these functions, you would need to explicitly use the mangled name such as `_Classname__name` to access the attribute.
+
+```python
+class A:
+    def __init__(self):
+        self.__x = 3        # Mangled to self._A__x
+
+    def __spam(self):       # Mangled to _A__spam()
+        print('A.__spam', self.__x)
+
+    def bar(self):
+        self.__spam()       # Only calls A.__spam()
+
+class B(A):
+    def __init__(self):
+        A.__init__(self)
+        self.__x = 37       # Mangled to self._B__x
+
+    def __spam(self):       # Mangled to _B__spam()
+        print('B.__spam', self.__x)
+
+    def grok(self):
+        self.__spam()       # Calls B.__spam()
+
+>>> b = B()
+>>> b.bar()
+A.__spam 3
+>>> b.grok()
+B.__spam 37
+>>>
+
+>>> vars(b)
+{ '_A__x': 3, '_B__x': 37 }
+>>> b._A__spam()
+A.__spam 3
+>>> b._B__spam
+B.__spam 37
+>>>
+```
+
+### Properties
+
+Python places no runtime restrictions on attribute values or types.  Such enforcement is possible if you put an attribute under the manage of a so called **property**.  A property is a special kind of attribute that intercepts attribute access and handles it via user-defined methods.  These methods have complete freedeom to manage the attribute as they see fit.  A critical feature of properties is that the associated name such as `owner` in below example becomes "magical".  That is, any use of that attribute automatically routes though the getter/setter methods.  Since each access to a property attribute automatically invokes a method, the actual value needs to be stored under a different name. This is why _owner is used inside the getter and setter methods. You can’t use owner as the storage location because doing so would cause infinite recursion.
+
+```python
+import string
+class Account:
+    def __init__(self, owner, balance):
+        self.owner = owner
+        self._balance = balance
+
+    @property
+    def owner(self):
+        return self._owner
+
+    @owner.setter
+    def owner(self, value):
+        if not isinstance(value, str):
+            raise TypeError('Expected str')
+        if not all(c in string.ascii_uppercase for c in value):
+            raise ValueError('Must be uppercase ASCII')
+        if len(value) > 10:
+            raise ValueError('Must be 10 characters or less')
+        self._owner = value
+
+>>> a = Account('GUIDO', 1000.0)
+>>> a.owner = 'EVA'
+>>> a.owner = 42
+Traceback (most recent call last):
+...
+TypeError: Expected str
+>>> a.owner = 'Carol'
+Traceback (most recent call last):
+...
+ValueError: Must be uppercase ASCII
+>>> a.owner = 'RENÉE'
+Traceback (most recent call last):
+...
+ValueError: Must be uppercase ASCII
+>>> a.owner = 'RAMAKRISHNAN'
+Traceback (most recent call last):
+...
+ValueError: Must be 10 characters or less
+>>>
+```
+
+Below is how you implement property getter, setter and deleter
+
+```python
+class SomeClass:
+    @property
+    def attr(self):
+        print('Getting')
+
+    @attr.setter
+    def attr(self, value):
+        print('Setting', value)
+
+    @attr.deleter
+    def attr(self):
+        print('Deleting')
+
+# Example
+s = SomeClass()
+s.attr         # Getting
+s.attr = 13    # Setting
+del s.attr     # Deleting
+```
+
+Its common to use properties as read only common use properties for example
+
+```python
+class Box(object):
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+
+    @property
+    def area(self):
+        return self.width * self.height
+
+    @property
+    def perimeter(self):
+        return 2*self.width + 2*self.height
+
+# Example use
+b = Box(4, 5)
+print(b.area)       # -> 20
+print(b.perimeter)  # -> 18
+b.area = 5          # Error: can't set attribute
+```
+
+### Types, interfaces and abstract base classes
+

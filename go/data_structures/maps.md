@@ -1,0 +1,102 @@
+---
+layout: page
+title: "Go Maps"
+permalink: /go/data_structures/maps
+---
+
+[comment]: <> (TODO: I should rework this section to be more common operation on Maps focused)
+
+## Basic map usage
+
+Maps in Go allow you to map a key to a value.  The value can be anything, but keys cannot be slices, maps or functions.
+
+You cannot count on values in a map being in any sort of order.  It will be random.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    // make a map that maps from strings to ints
+    m := make(map[string]int) 
+    // insert into map
+    m["hello"] = 300
+    h := m["hello"]
+    fmt.Println("hello in m:", h)
+    // if not in map you will get a zero value for the value.
+    fmt.Println("a in m:", m["a"])
+
+    // use the comma ok idiom for checking if a key is in a map.  
+    // v is the value ok is a boolean by convention name should be ok for the bool.
+    if v, ok := m["hello"]; ok { 
+        fmt.Println("hello in m:", v)
+    }
+
+    // if you assign a new value it replaces the old value
+    m["hello"] = 20  
+    fmt.Println("hello in m:", m["hello"])
+}
+```
+
+## Defining a map literal and deleting from a map
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    // define using map literal format.
+    m2 := map[string]int{
+    "a": 1,
+    "b": 2,
+    // each line needs to end in a comma even the last one
+    "c": 50,
+    }
+
+    // you cannot count on values in a map being in any order its random each time
+    for k, v := range m2 {
+    fmt.Println(k, v)
+    }
+
+    fmt.Println("b in m2:", m2["b"])
+    // delete value from map
+    delete(m2, "b")
+    fmt.Println("b in m2:", m2["b"])
+}
+```
+
+## Nill maps and maps as reference types
+
+Nill maps if passed to delete will do nothing.  Reading from a `nill` map will give you the zero value.  Trying to add a value to a `nill` map will cause a program to panic.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    m := map[string]int{
+    "a": 1,
+    "b": 2,
+    }
+
+    // initialize a map to its zero value
+    var m3 map[string]int 
+
+    fmt.Println("goodbye in m:", m["goodbye"])
+    // maps are reference types so assigning one to another means they both pointing at same memory
+    m3 = m 
+    m3["goodbye"] = 300
+    fmt.Println("goodbye in m3:", m3["goodbye"])
+    fmt.Println("goodbye in m:", m["goodbye"])
+
+    modMap(m)
+    fmt.Println("cheese in m:", m["cheese"])
+    }
+
+    func modMap(m map[string]int) {
+    m["cheese"] = 20
+}
+```
