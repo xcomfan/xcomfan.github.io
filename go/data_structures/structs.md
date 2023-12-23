@@ -6,9 +6,11 @@ permalink: /go/data_structures/structs
 
 ## Structs are not objects
 
-There is no inheritance for structs or in Go in general.  There is however embedding and delegation.
+There is no inheritance for structs or in Go in general.  There is however embedding and delegation.  
 
 ## Declaring structs and assigning values
+
+A struct is a collection of fields.
 
 ```go
 package main
@@ -51,6 +53,57 @@ func main() {
     h.A = 1000
     fmt.Println(h.A)
     fmt.Println(h.b)
+}
+```
+
+## Reading values from a struct
+
+Struct fields are accessed using the `.` operator.
+
+Struct fields can be accessed through a struct pointer.  You can write `(*p).X` however that notation is cumbersome so Go lets you just write p.X without the explicit dereference.
+
+```go
+package main
+
+import "fmt"
+
+type Vertex struct {
+    X int
+    Y int
+}
+
+func main() {
+    v := Vertex{1, 2}
+    p := &v
+    p.X = 1e9
+    fmt.Println(v)
+}
+```
+
+## Struct Literals
+
+You can use a subset of fields using Name: syntax to define a struct literal.  Order of named fields is irrelevant.
+
+The prefix `&` returns a pointer to the struct.
+
+```go
+package main
+
+import "fmt"
+
+type Vertex struct {
+    X, Y int
+}
+
+var (
+    v1 = Vertex{1, 2}  // has type Vertex
+    v2 = Vertex{X: 1}  // Y:0 is implicit
+    v3 = Vertex{}      // X:0 and Y:0
+    p  = &Vertex{1, 2} // has type *Vertex
+)
+
+func main() {
+    fmt.Println(v1, p, v2, v3)
 }
 ```
 
@@ -246,3 +299,5 @@ func main() {
     fmt.Println(string(bob2))
 }
 ```
+
+## Methods from the Go Tour.

@@ -14,14 +14,38 @@ The format of declaration is that keyword `var` followed by the variable name fo
 var i int = 10
 ```
 
-## Declaring a variable with type inference
+If you are declaring multiple variables of the same type you can list the type at the end.
 
-If you are declaring and assigning a variable in one line Go can frequently guess the type of variable being declared.  While the expression `var i = 10` is valid in Go there is a shorthand that used the `:=` operator.
+```go
+// with type 
+var i, j int = 1, 2
+// with inferred type
+var c, python, java bool = true, false, "no!"
+```
 
-To declare a variable when type can be inferred you can use the expression `i := 10`.  ***Note:*** this is only allowed for function variables.  Package variables must use the `var` keyword for declaration.
+You can initialize variables a declaration.  If initialized the type can be omitted as it will be inferred.
 
-You cannot use `:=` operator on a variable that has already been assigned as the `:=` operator is assignment not declaration.
+```go
+var c, python, java 
+```
+
+## Short variable declaration
+
+If you are declaring a variable inside a function the `:=` shorthand can be used in place of a var declaration with implicit type.
+
+## Exported names
+
+In Go, a name is exported if it begins with a capital letter.  When a package is imported you can only access variables from the package which are exported.
 
 ## Variable zero values
 
 In Go variables that are declared but have no value assigned are assigned the **zero value** of that type.  For example numeric types will be default assigned the zero value of `0`.
+
+## Constants
+
+Constants are declared like variables, but with the `const` keyword
+
+Constants can be character, string, boolean, or numeric types.
+
+Constants cannot be declared using the `:=` syntax
+

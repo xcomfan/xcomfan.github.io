@@ -4,6 +4,10 @@ title: "Go Packages And Imports"
 permalink: /go/packages
 ---
 
+## Basic Info
+
+Every Go program is made up of packages.  Programs start running in the package `main`.  
+
 ## Using packages
 
 Go packages fall into 3 categories
@@ -16,15 +20,24 @@ Go packages fall into 3 categories
 
 You have to import entire packages.  You cannot import a single item from a package like you can in Python.
 
+You import packages into your code to use with the `import` statement.
+
+```go
+import (
+    "fmt"
+    "math"
+)
+```
+
 ## Creating and using your own packages
 
 Your own package should live in its own separate directory.
 
-For all packages other than `main` the package name at the top of the go file should match the directory name.
+For all packages other than `main` the package name at the top of the go file should match the directory name.  By convention the package name is the same as the last element of the import path.  For exmaple, "math/rand" package is made up of files that begin with the statement `package rand`.
 
 ### Variable scope
 
-You can declare variables at the package level.  These variables cannot be assigned with he `:=` operator, and need to be declared outside a function.  If declared this way they are accessible in the entire package.
+You can declare variables at the package level.  These variables cannot be assigned with the `:=` operator, and need to be declared outside a function.  If declared this way they are accessible in the entire package.
 
 ### Variable visibility
 

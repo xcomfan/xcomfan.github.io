@@ -32,3 +32,8 @@ In Go `byte`, `int`, and `uint` are aliases for the specific types to provide a 
 | byte | uint8 |
 | int | int32 or int64 |
 | uint | uint32 or uint64 |
+
+
+## Zero value for integers
+
+The zero value for integer types is zero `0`

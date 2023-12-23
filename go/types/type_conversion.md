@@ -19,7 +19,7 @@ func main(){
 }
 ```
 
-You need to use the conversion syntax such as `float32(i)` to convert to the desired types.  ***NOTE:*** if you are converting a float to an int the value will be truncated not rounders.
+You need to use the conversion syntax such as `float32(i)` to convert to the desired types.  ***NOTE:*** if you are converting a float to an int the value will be truncated not rounded
 
 You don't just need to convert between float and int but different int sizes (`int16` and `int32` for example) must also be converted.
 

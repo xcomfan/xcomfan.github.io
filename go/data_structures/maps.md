@@ -39,6 +39,26 @@ func main() {
 }
 ```
 
+```go
+package main
+
+import "fmt"
+
+type Vertex struct {
+    Lat, Long float64
+}
+
+var m map[string]Vertex
+
+func main() {
+    m = make(map[string]Vertex)
+    m["Bell Labs"] = Vertex{
+        40.68433, -74.39967,
+    }
+    fmt.Println(m["Bell Labs"])
+}
+```
+
 ## Defining a map literal and deleting from a map
 
 ```go
@@ -64,6 +84,100 @@ func main() {
     // delete value from map
     delete(m2, "b")
     fmt.Println("b in m2:", m2["b"])
+}
+```
+
+```go
+package main
+
+import "fmt"
+
+type Vertex struct {
+    Lat, Long float64
+}
+
+var m = map[string]Vertex{
+    "Bell Labs": Vertex{
+        40.68433, -74.39967,
+    },
+    "Google": Vertex{
+        37.42202, -122.08408,
+    },
+}
+
+func main() {
+    fmt.Println(m)
+}
+```
+
+If the top-level type is just a type name, you can omit it from the elements of the literal.
+
+```go
+package main
+
+import "fmt"
+
+type Vertex struct {
+    Lat, Long float64
+}
+
+var m = map[string]Vertex{
+    "Bell Labs": {40.68433, -74.39967},
+    "Google":    {37.42202, -122.08408},
+}
+
+func main() {
+    fmt.Println(m)
+}
+```
+
+## Operations you can do on a map
+
+### Insert and update
+
+`m[key] = elem`
+
+### Retrieve
+
+`elem = m[key]`
+
+### Delete
+
+`delete(m, key)`
+
+### Test that key is present
+
+Test that a key is present with a two-value assignment
+
+`elem, ok = m[key]`
+
+If `key` is in `m` `ok` is `true` if not `ok` is `false`
+
+If `key` is not in `m` then `elem` is the zero value for the map's element type.
+
+Note: if `elem` or `ok` have not been declared you can use the short declaration `elem, ok := m[key]`
+
+### Example of above ops
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    m := make(map[string]int)
+
+    m["Answer"] = 42
+    fmt.Println("The value:", m["Answer"])
+
+    m["Answer"] = 48
+    fmt.Println("The value:", m["Answer"])
+
+    delete(m, "Answer")
+    fmt.Println("The value:", m["Answer"])
+
+    v, ok := m["Answer"]
+    fmt.Println("The value:", v, "Present?", ok)
 }
 ```
 

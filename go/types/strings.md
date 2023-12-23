@@ -68,3 +68,7 @@ func main() {
     fmt.Println(len(s)) // prints 13 (number of bytes not chars)
 }
 ```
+
+## Zero value for stings
+
+The zero value for stings is the empty string `""`.

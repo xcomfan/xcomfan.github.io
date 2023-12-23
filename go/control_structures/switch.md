@@ -6,6 +6,8 @@ permalink: /go/control_structures/switch
 
 ## Basic switch usage
 
+The `switch` statement is a shorted way to write a sequence of `if else` statements.  In go unlike other languages you do not need a `break` in each case.  Go will run just the one case unless you use the `fallthrough` option.  Go will run the first case whose value is equal to the condition expression.
+
 ```go
 package main
 
@@ -109,6 +111,31 @@ The above code execution show below...
 go run string.go hi
 Very informal!
 Hi yourself
+```
+
+## Switch with no condition
+
+Switch without a condition is the same as `switch true`.  This construct can be a clean way to write long if-then-else chains
+
+```go
+package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+    t := time.Now()
+    switch {
+    case t.Hour() < 12:
+        fmt.Println("Good morning!")
+    case t.Hour() < 17:
+        fmt.Println("Good afternoon.")
+    default:
+        fmt.Println("Good evening.")
+    }
+}
 ```
 
 ## Case with no code

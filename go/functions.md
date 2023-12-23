@@ -16,7 +16,15 @@ func addNumbers(a int, b int) int {
 }
 ```
 
-## Functions can return multiple values
+When two or more consecutive named function parameters share a type, you can omit the ty ep from all but the last.  Thus the above example can be written as.
+
+```go
+func addNumbers(a, b int) int {
+    return a + b
+}
+```
+
+## Functions can return any number values
 
 ```go
 func divAndRemainder(a int, b int) (int, int){
@@ -27,6 +35,26 @@ div, remainder = divAndRemainder(2, 3)
 fmt.Println(div, remainder)
 
 _, rem = divAndRemainder(2, 3) // convention to use _ to use variable you don't need as go makes you read variables that are declared.
+```
+
+## Naked return
+
+Go's return values may be named.  You do this by defining them at the top of the function.  These names should be used to document the meaning of the return values.  A `return` statement without arguments returns the named return values.  This is known as the "naked return".
+
+```go
+package main
+
+import "fmt"
+
+func split(sum int) (x, y int) {
+    x = sum * 4 / 9
+    y = sum - x
+    return
+}
+
+func main() {
+    fmt.Println(split(17))
+}
 ```
 
 ## Functions Can Be Passed As Arguments
@@ -122,5 +150,35 @@ func main(){
         return a + 1
     }
     fmt.Println(myAddOne(1))
+}
+```
+
+## Function closures
+
+Go functions may be closures.  A closure is a function value that references variables from outside its body.  The function may access and assign to the referencesd variables; in this sense the function is bound to the variables.
+
+In example below, the `adder` function returns a closure.  Each closure is bound to its own `sum` variable.
+
+```go
+package main
+
+import "fmt"
+
+func adder() func(int) int {
+    sum := 0
+    return func(x int) int {
+        sum += x
+        return sum
+    }
+}
+
+func main() {
+    pos, neg := adder(), adder()
+    for i := 0; i < 10; i++ {
+        fmt.Println(
+            pos(i),
+            neg(-2*i),
+        )
+    }
 }
 ```

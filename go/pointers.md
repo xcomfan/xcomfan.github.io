@@ -4,15 +4,9 @@ title: "Pointers in Go"
 permalink: /go/pointers
 ---
 
-## Go versus C pointers
+## Zero value
 
-Pointers in Go are less scary than in C because...
-
-* Go has built in array and string types.
-
-* Go has garbage collection.
-
-* Go is strongly types (can't cast one pointer type to another)
+The zero value of a pointer is `nil`
 
 ## Basic pointer example
 
@@ -98,3 +92,15 @@ func main(){
     fmt.Println(*b) // prints the zero value of int of 0.
 }
 ```
+
+## Go versus C pointers
+
+Pointers in Go are less scary than in C because...
+
+* Go has built in array and string types.
+
+* Go has garbage collection.
+
+* Go is strongly types (can't cast one pointer type to another)
+
+* Unlike C, go has no pointer arithmetic

@@ -9,3 +9,5 @@ permalink: /go/control_structures
 [Loops]({% link go/control_structures/loops.md %})
 
 [Switch Statement]({% link go/control_structures/switch.md %})
+
+[Defer Statement]({% link go/control_structures/defer.md %})
