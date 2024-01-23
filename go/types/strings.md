@@ -12,7 +12,7 @@ You can declare strings in Go using **interpreted literals** or **raw string lit
 
 ### Interpreted Literals
 
-An interpreted string must be a single line.  In an interpreted sting `\n` can be used for new line, `\t` for tab and `\` is the escape character.
+An interpreted string must be a single line.  In an interpreted string `\n` can be used for new line, `\t` for tab and `\` is the escape character.
 
 ```go
 interpretedString := "Hello World!\n"

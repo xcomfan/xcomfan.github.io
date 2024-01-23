@@ -26,6 +26,8 @@ permalink: /go/
 
 [Interfaces]({% link go/interfaces.md %})
 
+[Built In Modules]({% link go/modules/modules.md %})
+
 [Packages And Imports]({% link go/packages.md %})
 
 [Go Routines]({% link go/goroutines.md %})
