@@ -50,7 +50,7 @@
 
 <h3 id="interpreted-literals">Interpreted Literals</h3>
 
-<p>An interpreted string must be a single line.  In an interpreted sting <code class="language-plaintext highlighter-rouge">\n</code> can be used for new line, <code class="language-plaintext highlighter-rouge">\t</code> for tab and <code class="language-plaintext highlighter-rouge">\</code> is the escape character.</p>
+<p>An interpreted string must be a single line.  In an interpreted string <code class="language-plaintext highlighter-rouge">\n</code> can be used for new line, <code class="language-plaintext highlighter-rouge">\t</code> for tab and <code class="language-plaintext highlighter-rouge">\</code> is the escape character.</p>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">interpretedString</span> <span class="o">:=</span> <span class="s">"Hello World!</span><span class="se">\n</span><span class="s">"</span>
 </code></pre></div></div>
@@ -61,6 +61,10 @@
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">rawString</span> <span class="o">:=</span> <span class="s">`This is a raw string literal.  It can contain any character except backticks.`</span>
 </code></pre></div></div>
+
+<h2 id="zero-value-for-stings">Zero value for stings</h2>
+
+<p>The zero value for stings is the empty string <code class="language-plaintext highlighter-rouge">""</code>.</p>
 
 <h2 id="concatenating-strings">Concatenating Strings</h2>
 
@@ -78,11 +82,15 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
+<h2 id="getting-length-of-a-string">Getting length of a string</h2>
+
+<p>You can get the length of a string (in bytes) using the build in <code class="language-plaintext highlighter-rouge">len()</code> function.</p>
+
 <h2 id="string-slicing">String Slicing</h2>
 
-<p>Go treats a string as <em>unmodifiable</em> sequence of bytes.  You can assess the bytes during slicing.  <strong>*Note:</strong> if your string is not in ASCII accessing using bytes won’t work well and you should look at the rune type.</p>
+<p>Go treats a string as <em>unmodifiable</em> sequence of bytes.  You can assess the bytes by slicing.  <strong>*Note:</strong> if your string is not in ASCII, accessing using bytes won’t work well and you should look at the rune type.</p>
 
-<p>You can slice characters and sections of a string. You can get the length of a string (in bytes) using the build in <code class="language-plaintext highlighter-rouge">len()</code> function.</p>
+<p>You can slice characters and sections of a string.</p>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
 

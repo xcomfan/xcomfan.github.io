@@ -43,7 +43,11 @@
   </header>
 
   <div class="post-content">
-    <h2 id="using-packages">Using packages</h2>
+    <h2 id="basic-info">Basic Info</h2>
+
+<p>Every Go program is made up of packages.  Programs start running in the package <code class="language-plaintext highlighter-rouge">main</code>.</p>
+
+<h2 id="using-packages">Using packages</h2>
 
 <p>Go packages fall into 3 categories</p>
 
@@ -61,19 +65,27 @@
 
 <p>You have to import entire packages.  You cannot import a single item from a package like you can in Python.</p>
 
+<p>You import packages into your code to use with the <code class="language-plaintext highlighter-rouge">import</code> statement.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"math"</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
 <h2 id="creating-and-using-your-own-packages">Creating and using your own packages</h2>
 
 <p>Your own package should live in its own separate directory.</p>
 
-<p>For all packages other than <code class="language-plaintext highlighter-rouge">main</code> the package name at the top of the go file should match the directory name.</p>
+<p>For all packages other than <code class="language-plaintext highlighter-rouge">main</code> the package name at the top of the go file should match the directory name.  By convention the package name is the same as the last element of the import path.  For exmaple, “math/rand” package is made up of files that begin with the statement <code class="language-plaintext highlighter-rouge">package rand</code>.</p>
 
 <h3 id="variable-scope">Variable scope</h3>
 
-<p>You can declare variables at the package level.  These variables cannot be assigned with he <code class="language-plaintext highlighter-rouge">:=</code> operator, and need to be declared outside a function.  If declared this way they are accessible in the entire package.</p>
+<p>You can declare variables at the package level.  These variables cannot be assigned with the <code class="language-plaintext highlighter-rouge">:=</code> operator, and need to be declared outside a function.  If declared this way they are accessible in the entire package.</p>
 
 <h3 id="variable-visibility">Variable visibility</h3>
 
-<p>In Go there are 2 levels of visibility.  <strong>package visible</strong> and <strong>public</strong> and these apply to variables, functions and data types.  <strong><em>if you want to make something public you capitalize the first letter in the variable name</em></strong></p>
+<p>In Go there are 2 levels of visibility.  <strong>package visible</strong> and <strong>public</strong> and these apply to variables, functions and data types.  <em>if you want to make something public you capitalize the first letter in the variable name</em></p>
 
 <h2 id="importing">Importing</h2>
 

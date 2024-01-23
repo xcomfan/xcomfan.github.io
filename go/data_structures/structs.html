@@ -43,21 +43,20 @@
   </header>
 
   <div class="post-content">
-    <h2 id="structs-are-not-objects">Structs are not objects</h2>
+    <h2 id="what-are-structs">What are structs</h2>
 
-<p>There is no inheritance for structs or in Go in general.  There is however embedding and delegation.</p>
+<p>A struct is a collection of fields.  Structs are not objects.  There is no inheritance for structs or in Go in general.  There is however embedding and delegation.</p>
 
-<h2 id="declaring-structs-and-assigning-values">Declaring structs and assigning values</h2>
+<h2 id="declaring-structs">Declaring structs</h2>
+
+<p>You declare a struct with the <code class="language-plaintext highlighter-rouge">struct</code> keyword.  Structs whose name starts with a capital letter are visible outside their packages.</p>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
 
 <span class="k">import</span> <span class="s">"fmt"</span>
 
-<span class="c">// `type name struct` is how you declare a struct</span>
-<span class="c">// Structs whose name start with capital </span>
-<span class="c">// letter are visible outside their packages</span>
 <span class="k">type</span> <span class="n">Foo</span> <span class="k">struct</span> <span class="p">{</span>
-    <span class="c">// List fields of the struct. They can be of any type. </span>
+    <span class="c">// List the fields of the struct. They can be of any type. </span>
     <span class="n">A</span> <span class="kt">int</span>   
     <span class="c">// variables starting with lower case are only visible within their packages. </span>
     <span class="n">b</span> <span class="kt">string</span>
@@ -89,6 +88,55 @@
     <span class="n">h</span><span class="o">.</span><span class="n">A</span> <span class="o">=</span> <span class="m">1000</span>
     <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">A</span><span class="p">)</span>
     <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="reading-values-from-a-struct">Reading values from a struct</h2>
+
+<p>Struct fields are accessed using the <code class="language-plaintext highlighter-rouge">.</code> operator.</p>
+
+<p>Struct fields can be accessed through a struct pointer.  You can write <code class="language-plaintext highlighter-rouge">(*p).X</code> however that notation is cumbersome so Go lets you just write p.X without the explicit dereference.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">type</span> <span class="n">Vertex</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">X</span> <span class="kt">int</span>
+    <span class="n">Y</span> <span class="kt">int</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">v</span> <span class="o">:=</span> <span class="n">Vertex</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">}</span>
+    <span class="n">p</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">v</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="m">1e9</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="struct-literals">Struct Literals</h2>
+
+<p>You can use a subset of fields using Name: syntax to define a struct literal.  Order of named fields is irrelevant.</p>
+
+<p>The prefix <code class="language-plaintext highlighter-rouge">&amp;</code> returns a pointer to the struct.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">type</span> <span class="n">Vertex</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="kt">int</span>
+<span class="p">}</span>
+
+<span class="k">var</span> <span class="p">(</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">Vertex</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">}</span>  <span class="c">// has type Vertex</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">Vertex</span><span class="p">{</span><span class="n">X</span><span class="o">:</span> <span class="m">1</span><span class="p">}</span>  <span class="c">// Y:0 is implicit</span>
+    <span class="n">v3</span> <span class="o">=</span> <span class="n">Vertex</span><span class="p">{}</span>      <span class="c">// X:0 and Y:0</span>
+    <span class="n">p</span>  <span class="o">=</span> <span class="o">&amp;</span><span class="n">Vertex</span><span class="p">{</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">}</span> <span class="c">// has type *Vertex</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">v3</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -128,128 +176,6 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h2 id="methods-on-structs-by-reference-and-by-value">Methods on structs by reference and by value</h2>
-
-<p>Think of methods as functions that are part of the definition of a data type</p>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
-
-<span class="k">import</span> <span class="s">"fmt"</span>
-
-<span class="k">type</span> <span class="n">Foo</span> <span class="k">struct</span> <span class="p">{</span>
-    <span class="n">A</span> <span class="kt">int</span>
-    <span class="n">B</span> <span class="kt">string</span>
-<span class="p">}</span>
-
-<span class="c">// this is a method declaration.</span>
-<span class="c">// It looks like a function declaration but has method</span>
-<span class="c">// receiver between func and name of method.</span>
-<span class="c">// the f here like self in Python</span>
-<span class="k">func</span> <span class="p">(</span><span class="n">f</span> <span class="n">Foo</span><span class="p">)</span> <span class="n">String</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"A: %d and B: %s"</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">A</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">B</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="c">// Method declaration but instead of being declared on Foo its being declared</span>
-<span class="c">// on pointer to Foo</span>
-<span class="c">// NOTE: if we declared it on Foo a copy would be passed into the double method</span>
-<span class="c">// and we would not be able to update the value.</span>
-<span class="c">// In general you should declare using value receiver if you are not modifying</span>
-<span class="c">// values in struct and reference receiver if you are modifying. </span>
-<span class="k">func</span> <span class="p">(</span><span class="n">f</span> <span class="o">*</span><span class="n">Foo</span><span class="p">)</span> <span class="n">Double</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">A</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">A</span> <span class="o">*</span> <span class="m">2</span>
-<span class="p">}</span>
-
-<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">f</span> <span class="o">:=</span> <span class="n">Foo</span><span class="p">{</span>
-        <span class="n">A</span><span class="o">:</span> <span class="m">10</span><span class="p">,</span>
-        <span class="n">B</span><span class="o">:</span> <span class="s">"Hello"</span><span class="p">,</span>
-    <span class="p">}</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">String</span><span class="p">())</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">Double</span><span class="p">()</span> <span class="c">// you can call a reference or value receiver from a reference that is not a pointer.</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">String</span><span class="p">())</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>The compiler won’t allow you to call a reference receiver if the struct has not been assigned to a variable.  If you call value reciever on a pointer that is <code class="language-plaintext highlighter-rouge">nil</code>, the program will compile but panic at runtime.</p>
-
-<h3 id="how-embedding-interacts-with-methods">How embedding interacts with methods</h3>
-
-<p><strong><em>Note:</em></strong> in example below we are using embedding NOT inheritance</p>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
-
-<span class="k">import</span> <span class="s">"fmt"</span>
-
-<span class="k">type</span> <span class="n">Foo</span> <span class="k">struct</span> <span class="p">{</span>
-    <span class="n">A</span> <span class="kt">int</span>
-    <span class="n">B</span> <span class="kt">string</span>
-<span class="p">}</span>
-
-<span class="k">func</span> <span class="p">(</span><span class="n">f</span> <span class="n">Foo</span><span class="p">)</span> <span class="n">String</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"%d fields: A: %d and B: %s"</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">FieldCount</span><span class="p">(),</span> <span class="n">f</span><span class="o">.</span><span class="n">A</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">B</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="k">func</span> <span class="p">(</span><span class="n">f</span> <span class="o">*</span><span class="n">Foo</span><span class="p">)</span> <span class="n">Double</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">A</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">A</span> <span class="o">*</span> <span class="m">2</span>
-<span class="p">}</span>
-
-<span class="k">func</span> <span class="p">(</span><span class="n">f</span> <span class="o">*</span><span class="n">Foo</span><span class="p">)</span> <span class="n">FieldCount</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Foo version of FieldCount"</span><span class="p">)</span>
-    <span class="k">return</span> <span class="m">2</span>
-<span class="p">}</span>
-
-<span class="k">type</span> <span class="n">Bar</span> <span class="k">struct</span> <span class="p">{</span>
-    <span class="n">C</span>   <span class="kt">bool</span>
-    <span class="n">Foo</span> <span class="c">// Bar has embedded struct of type Foo</span>
-<span class="p">}</span>
-
-<span class="k">func</span> <span class="p">(</span><span class="n">b</span> <span class="n">Bar</span><span class="p">)</span> <span class="n">fieldCount</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Bar version of field count"</span><span class="p">)</span>
-    <span class="k">return</span> <span class="m">3</span>
-<span class="p">}</span>
-
-<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">f</span> <span class="o">:=</span> <span class="n">Foo</span><span class="p">{</span>
-        <span class="n">A</span><span class="o">:</span> <span class="m">10</span><span class="p">,</span>
-        <span class="n">B</span><span class="o">:</span> <span class="s">"Hello"</span><span class="p">,</span>
-    <span class="p">}</span>
-    <span class="n">b</span> <span class="o">:=</span> <span class="n">Bar</span><span class="p">{</span>
-        <span class="n">C</span><span class="o">:</span>   <span class="no">true</span><span class="p">,</span>
-        <span class="n">Foo</span><span class="o">:</span> <span class="n">f</span><span class="p">,</span>
-    <span class="p">}</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">String</span><span class="p">())</span>
-    <span class="n">b</span><span class="o">.</span><span class="n">Double</span><span class="p">()</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">String</span><span class="p">())</span> <span class="c">// Field count of Foo runs</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h3 id="methods-on-concrete-types">Methods on concrete types</h3>
-
-<p>Go allows you to create concrete types other than structs and define methods on these types like you would with structs.</p>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
-
-<span class="k">import</span> <span class="s">"fmt"</span>
-
-<span class="k">type</span> <span class="n">myInt</span> <span class="kt">int</span>
-
-<span class="k">func</span> <span class="p">(</span><span class="n">mi</span> <span class="n">myInt</span><span class="p">)</span> <span class="n">isEven</span><span class="p">()</span> <span class="kt">bool</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="n">mi</span><span class="o">%</span><span class="m">2</span> <span class="o">==</span> <span class="m">0</span>
-<span class="p">}</span>
-
-<span class="k">func</span> <span class="p">(</span><span class="n">mi</span> <span class="o">*</span><span class="n">myInt</span><span class="p">)</span> <span class="n">Double</span><span class="p">()</span> <span class="p">{</span>
-    <span class="o">*</span><span class="n">mi</span> <span class="o">=</span> <span class="o">*</span><span class="n">mi</span> <span class="o">*</span> <span class="m">2</span>
-<span class="p">}</span>
-
-<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">m</span> <span class="o">:=</span> <span class="n">myInt</span><span class="p">(</span><span class="m">10</span><span class="p">)</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">isEven</span><span class="p">())</span>
-    <span class="n">m</span><span class="o">.</span><span class="n">Double</span><span class="p">()</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
 <h2 id="struct-tags">Struct tags</h2>
 
 <p>Below is an example of converting a struct back and forth from JSON</p>
@@ -277,6 +203,7 @@
     <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="kt">string</span><span class="p">(</span><span class="n">bob2</span><span class="p">))</span>
 <span class="p">}</span>
 </code></pre></div></div>
+
 
   </div>
 

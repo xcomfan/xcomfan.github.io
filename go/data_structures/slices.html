@@ -43,38 +43,205 @@
   </header>
 
   <div class="post-content">
-    <h2 id="basic-slice-example">Basic slice example</h2>
+    
+<h2 id="what-are-slices">What are slices</h2>
+
+<p>An array in Go is fixed in size, but a slice is a dynamically-sized flexible view into the elements of an array.</p>
+
+<p>A slice does not store any data, it just describes a section of an underlying array.  Changing the elements of a slice modifies the corresponding elements of its underlying array.  Other slices that share the same underlying array will see those changes.</p>
+
+<p><code class="language-plaintext highlighter-rouge">[]T</code> is a slice with elements of type <code class="language-plaintext highlighter-rouge">T</code></p>
+
+<p>A slice is formed by specifying two indices a low and a high.  This selects a half-open range which includes the first element, but excludes the last one.  The following expression creates a slice which includes elements 1 through 3 of <code class="language-plaintext highlighter-rouge">a</code>.  You can omit the high and low bounds to get their defaults of 0 lower bound and length of slice as upper bound.</p>
+
+<p><code class="language-plaintext highlighter-rouge">a[1:4]</code></p>
+
+<p>A slice has both a length and a capacity.</p>
+
+<p>The <strong>length</strong> of a slice is the number of elements it contains.</p>
+
+<p>The <strong>capacity</strong> of a slice is the number of elements in the underlying array, counting from the first element in the slice.</p>
+
+<p>The length and capacity of a slice can be obtained using the expressions len(s) and cap(s).</p>
+
+<p>You can extend a slice’s length by re-slicing it, <strong>provided it has sufficient capacity</strong>.</p>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
 
 <span class="k">import</span> <span class="s">"fmt"</span>
 
 <span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="c">// []string is a slice declaration make is used to create certain built in </span>
-    <span class="c">// types in Go</span>
-    <span class="n">s</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">string</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"length of s:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
-    <span class="c">// append adds new element to the end of a slice.  </span>
-    <span class="c">// NOTE: you must assign the append output back to your slice or slice</span>
-    <span class="c">// does not get updated.</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s">"hello"</span><span class="p">)</span> 
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"length of s:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"content of s[0]"</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="m">0</span><span class="p">])</span>
-    <span class="n">s</span><span class="p">[</span><span class="m">0</span><span class="p">]</span> <span class="o">=</span> <span class="s">"goodbye"</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"contents of s[0]:"</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="m">0</span><span class="p">])</span>
+    <span class="n">s</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">5</span><span class="p">,</span> <span class="m">7</span><span class="p">,</span> <span class="m">11</span><span class="p">,</span> <span class="m">13</span><span class="p">}</span>
+    <span class="n">printSlice</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 
-    <span class="n">s2</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">string</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"contents of s2[0]:"</span><span class="p">,</span> <span class="n">s2</span><span class="p">[</span><span class="m">0</span><span class="p">])</span>
-    <span class="c">// adding third element here.</span>
-    <span class="n">s2</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">s2</span><span class="p">,</span> <span class="s">"hello"</span><span class="p">)</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"contents of s2[0]:"</span><span class="p">,</span> <span class="n">s2</span><span class="p">[</span><span class="m">0</span><span class="p">])</span> 
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"contents of s2[2]:"</span><span class="p">,</span> <span class="n">s2</span><span class="p">[</span><span class="m">2</span><span class="p">])</span>
-    <span class="c">// length is now 3 because append left the first two elements as is.</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"length of s2:"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">s2</span><span class="p">))</span>
+    <span class="c">// Slice the slice to give it zero length.</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="o">:</span><span class="m">0</span><span class="p">]</span>
+    <span class="n">printSlice</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="c">// Extend its length.</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="o">:</span><span class="m">4</span><span class="p">]</span>
+    <span class="n">printSlice</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="c">// Drop its first two values.</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="m">2</span><span class="o">:</span><span class="p">]</span>
+    <span class="n">printSlice</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">printSlice</span><span class="p">(</span><span class="n">s</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"len=%d cap=%d %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">s</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h2 id="slice-literal-assignment-iteration-and-assignment">Slice literal assignment, iteration and assignment</h2>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">names</span> <span class="o">:=</span> <span class="p">[</span><span class="m">4</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
+        <span class="s">"John"</span><span class="p">,</span>
+        <span class="s">"Paul"</span><span class="p">,</span>
+        <span class="s">"George"</span><span class="p">,</span>
+        <span class="s">"Ringo"</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+
+    <span class="n">a</span> <span class="o">:=</span> <span class="n">names</span><span class="p">[</span><span class="m">0</span><span class="o">:</span><span class="m">2</span><span class="p">]</span>
+    <span class="n">b</span> <span class="o">:=</span> <span class="n">names</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">]</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+    <span class="n">b</span><span class="p">[</span><span class="m">0</span><span class="p">]</span> <span class="o">=</span> <span class="s">"XXX"</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="nil-slices">Nil slices</h2>
+
+<p>The zero value of a slice is <code class="language-plaintext highlighter-rouge">nil</code>.  A <code class="language-plaintext highlighter-rouge">nil</code> slice has a length and capacity of 0 and has no underlying array.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">s</span> <span class="p">[]</span><span class="kt">int</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"nil!"</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="creating-a-slice-with-make">Creating a slice with make</h2>
+
+<p>Slices can be created with the built-in make function; this is how you create dynamically-sized arrays.</p>
+
+<p>The make function allocates a zeroed array and returns a slice that refers to that array:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="m">5</span><span class="p">)</span>  <span class="c">// len(a)=5</span>
+</code></pre></div></div>
+
+<p>To specify a capacity, pass a third argument to make:</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">b</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">5</span><span class="p">)</span> <span class="c">// len(b)=0, cap(b)=5</span>
+
+<span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="o">:</span><span class="nb">cap</span><span class="p">(</span><span class="n">b</span><span class="p">)]</span> <span class="c">// len(b)=5, cap(b)=5</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="p">]</span>      <span class="c">// len(b)=4, cap(b)=4</span>
+</code></pre></div></div>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">a</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="m">5</span><span class="p">)</span>
+    <span class="n">printSlice</span><span class="p">(</span><span class="s">"a"</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+
+    <span class="n">b</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">5</span><span class="p">)</span>
+    <span class="n">printSlice</span><span class="p">(</span><span class="s">"b"</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+    <span class="n">c</span> <span class="o">:=</span> <span class="n">b</span><span class="p">[</span><span class="o">:</span><span class="m">2</span><span class="p">]</span>
+    <span class="n">printSlice</span><span class="p">(</span><span class="s">"c"</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+
+    <span class="n">d</span> <span class="o">:=</span> <span class="n">c</span><span class="p">[</span><span class="m">2</span><span class="o">:</span><span class="m">5</span><span class="p">]</span>
+    <span class="n">printSlice</span><span class="p">(</span><span class="s">"d"</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">printSlice</span><span class="p">(</span><span class="n">s</span> <span class="kt">string</span><span class="p">,</span> <span class="n">x</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"%s len=%d cap=%d %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span>
+    <span class="n">s</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="slices-of-slices">slices of slices</h2>
+
+<p>Slices can contain any type, including other slices.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"strings"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Create a tic-tac-toe board.</span>
+    <span class="n">board</span> <span class="o">:=</span> <span class="p">[][]</span><span class="kt">string</span><span class="p">{</span>
+        <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"_"</span><span class="p">,</span> <span class="s">"_"</span><span class="p">,</span> <span class="s">"_"</span><span class="p">},</span>
+        <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"_"</span><span class="p">,</span> <span class="s">"_"</span><span class="p">,</span> <span class="s">"_"</span><span class="p">},</span>
+        <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"_"</span><span class="p">,</span> <span class="s">"_"</span><span class="p">,</span> <span class="s">"_"</span><span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="c">// The players take turns.</span>
+    <span class="n">board</span><span class="p">[</span><span class="m">0</span><span class="p">][</span><span class="m">0</span><span class="p">]</span> <span class="o">=</span> <span class="s">"X"</span>
+    <span class="n">board</span><span class="p">[</span><span class="m">2</span><span class="p">][</span><span class="m">2</span><span class="p">]</span> <span class="o">=</span> <span class="s">"O"</span>
+    <span class="n">board</span><span class="p">[</span><span class="m">1</span><span class="p">][</span><span class="m">2</span><span class="p">]</span> <span class="o">=</span> <span class="s">"X"</span>
+    <span class="n">board</span><span class="p">[</span><span class="m">1</span><span class="p">][</span><span class="m">0</span><span class="p">]</span> <span class="o">=</span> <span class="s">"O"</span>
+    <span class="n">board</span><span class="p">[</span><span class="m">0</span><span class="p">][</span><span class="m">2</span><span class="p">]</span> <span class="o">=</span> <span class="s">"X"</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="p">);</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">strings</span><span class="o">.</span><span class="n">Join</span><span class="p">(</span><span class="n">board</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s">" "</span><span class="p">))</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="appending-to-a-slice">Appending to a slice</h2>
+
+<p>The build in <code class="language-plaintext highlighter-rouge">append</code> function is used to append elements to a slice.</p>
+
+<p><code class="language-plaintext highlighter-rouge">func append(s, []T, vs ...T)[]T</code></p>
+
+<p>The first parameter <code class="language-plaintext highlighter-rouge">s</code> is a slice of type <code class="language-plaintext highlighter-rouge">T</code>, and the rest are <code class="language-plaintext highlighter-rouge">T</code> values to append to the slice.  The resulting value of <code class="language-plaintext highlighter-rouge">append</code> is a slice containing all the elements of the original slice plus the provided values.  If the backing array of <code class="language-plaintext highlighter-rouge">s</code> is too small to fit all the given values a bigger array will be allocated.  The returned slice will point to the newly allocated array.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">s</span> <span class="p">[]</span><span class="kt">int</span>
+    <span class="n">printSlice</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="c">// append works on nil slices.</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>
+    <span class="n">printSlice</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="c">// The slice grows as needed.</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
+    <span class="n">printSlice</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="c">// We can add more than one element at a time.</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">)</span>
+    <span class="n">printSlice</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">printSlice</span><span class="p">(</span><span class="n">s</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"len=%d cap=%d %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="nb">cap</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">s</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="iterating-over-a-slice">Iterating over a slice</h2>
+
+<p>To iterate over a slice use the <code class="language-plaintext highlighter-rouge">for range</code> loop to iterate over a slice.</p>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
 
@@ -82,33 +249,115 @@
 
 <span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
     <span class="c">// initializing using slice literal format</span>
-    <span class="n">s3</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"a"</span><span class="p">,</span> <span class="s">"b"</span><span class="p">,</span> <span class="s">"c"</span><span class="p">}</span>
+    <span class="n">s</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"a"</span><span class="p">,</span> <span class="s">"b"</span><span class="p">,</span> <span class="s">"c"</span><span class="p">}</span>
 
-    <span class="c">// // k gives you the index and v is the value</span>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">s3</span> <span class="p">{</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="c">// k gives you the index and v is the value</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">s</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="packaging">Packaging</h2>
+
+<p>You should have a comment before all exported functions (ones that start with a capital)</p>
+
+<h2 id="working-with-files-and-the-web">Working with files and the web</h2>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"io"</span>
+    <span class="s">"io/ioutil"</span>
+    <span class="s">"os"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">content</span> <span class="o">:=</span> <span class="s">"Hello from Go!"</span>
+    <span class="n">file</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Create</span><span class="p">(</span><span class="s">"./fromString.txt"</span><span class="p">)</span>
+    <span class="n">checkError</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="n">length</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">io</span><span class="o">.</span><span class="n">WriteString</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+    <span class="n">checkError</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Wrote a file with %v chars</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="n">file</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+    <span class="k">defer</span> <span class="n">readFile</span><span class="p">(</span><span class="s">"./fromString.txt"</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">readFile</span><span class="p">(</span><span class="n">fileName</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">data</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">ioutil</span><span class="o">.</span><span class="n">ReadFile</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+    <span class="n">checkError</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Text read from file:"</span><span class="p">,</span> <span class="kt">string</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">checkError</span><span class="p">(</span><span class="n">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="nb">panic</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="parsing-a-json-without-declaring-the-struct-ahead-of-time">Parsing a JSON without declaring the struct ahead of time.</h2>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"encoding/json"</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"io/ioutil"</span>
+    <span class="s">"net/http"</span>
+    <span class="s">"strings"</span>
+<span class="p">)</span>
+
+<span class="k">const</span> <span class="n">url</span> <span class="o">=</span> <span class="s">"http://services.explorecalifornia.org/json/tours.php"</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="n">resp</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">http</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="nb">panic</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
     <span class="p">}</span>
 
-    <span class="n">s4</span> <span class="o">:=</span> <span class="n">s3</span><span class="p">[</span><span class="m">0</span><span class="o">:</span><span class="m">2</span><span class="p">]</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"s4:"</span><span class="p">,</span> <span class="n">s4</span><span class="p">)</span>
-    <span class="c">// if you take a slice from a slice they both refer to same area of </span>
-    <span class="c">// memory so changing one impacts the other.</span>
-    <span class="c">// Slices are reference types. They behave like pointers do.</span>
-    <span class="n">s3</span><span class="p">[</span><span class="m">0</span><span class="p">]</span> <span class="o">=</span> <span class="s">"d"</span> 
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"s4:"</span><span class="p">,</span> <span class="n">s4</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Response type: %T</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">resp</span><span class="p">)</span>
 
-    <span class="k">var</span> <span class="n">s5</span> <span class="p">[]</span><span class="kt">string</span>
-    <span class="n">s5</span> <span class="o">=</span> <span class="n">s3</span>
-    <span class="n">s5</span><span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="o">=</span> <span class="s">"camel"</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"s3:"</span><span class="p">,</span> <span class="n">s3</span><span class="p">)</span>
+    <span class="k">defer</span> <span class="n">resp</span><span class="o">.</span><span class="n">Body</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
 
-    <span class="n">modSlice</span><span class="p">(</span><span class="n">s3</span><span class="p">)</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"s3[0]:"</span><span class="p">,</span> <span class="n">s3</span><span class="p">[</span><span class="m">0</span><span class="p">])</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"s3:"</span><span class="p">,</span> <span class="n">s3</span><span class="p">)</span>
+    <span class="n">bytes</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">ioutil</span><span class="o">.</span><span class="n">ReadAll</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">Body</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="nb">panic</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
     <span class="p">}</span>
 
-    <span class="k">func</span> <span class="n">modSlice</span><span class="p">(</span><span class="n">s</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">s</span><span class="p">[</span><span class="m">0</span><span class="p">]</span> <span class="o">=</span> <span class="s">"hello"</span>
+    <span class="n">content</span> <span class="o">:=</span> <span class="kt">string</span><span class="p">(</span><span class="n">bytes</span><span class="p">)</span>
+    <span class="c">// fmt.Print(content)</span>
+
+    <span class="n">tours</span> <span class="o">:=</span> <span class="n">toursFromJson</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">tour</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">tours</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">tour</span><span class="o">.</span><span class="n">Name</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">toursFromJson</span><span class="p">(</span><span class="n">content</span> <span class="kt">string</span><span class="p">)</span> <span class="p">[]</span><span class="n">Tour</span> <span class="p">{</span>
+    <span class="n">tours</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="n">Tour</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">20</span><span class="p">)</span>
+
+    <span class="n">decoder</span> <span class="o">:=</span> <span class="n">json</span><span class="o">.</span><span class="n">NewDecoder</span><span class="p">(</span><span class="n">strings</span><span class="o">.</span><span class="n">NewReader</span><span class="p">(</span><span class="n">content</span><span class="p">))</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">decoder</span><span class="o">.</span><span class="n">Token</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="nb">panic</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">var</span> <span class="n">tour</span> <span class="n">Tour</span>
+    <span class="k">for</span> <span class="n">decoder</span><span class="o">.</span><span class="n">More</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">err</span> <span class="o">:=</span> <span class="n">decoder</span><span class="o">.</span><span class="n">Decode</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tour</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="nb">panic</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">tours</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">tours</span><span class="p">,</span> <span class="n">tour</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">tours</span>
+<span class="p">}</span>
+
+<span class="k">type</span> <span class="n">Tour</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">Name</span><span class="p">,</span> <span class="n">Price</span> <span class="kt">string</span>
 <span class="p">}</span>
 </code></pre></div></div>
 

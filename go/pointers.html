@@ -43,21 +43,9 @@
   </header>
 
   <div class="post-content">
-    <h2 id="go-versus-c-pointers">Go versus C pointers</h2>
+    <h2 id="zero-value">Zero value</h2>
 
-<p>Pointers in Go are less scary than in C because…</p>
-
-<ul>
-  <li>
-    <p>Go has built in array and string types.</p>
-  </li>
-  <li>
-    <p>Go has garbage collection.</p>
-  </li>
-  <li>
-    <p>Go is strongly types (can’t cast one pointer type to another)</p>
-  </li>
-</ul>
+<p>The zero value of a pointer is <code class="language-plaintext highlighter-rouge">nil</code></p>
 
 <h2 id="basic-pointer-example">Basic pointer example</h2>
 
@@ -138,6 +126,25 @@
     <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="o">*</span><span class="n">b</span><span class="p">)</span> <span class="c">// prints the zero value of int of 0.</span>
 <span class="p">}</span>
 </code></pre></div></div>
+
+<h2 id="go-versus-c-pointers">Go versus C pointers</h2>
+
+<p>Pointers in Go are less scary than in C because…</p>
+
+<ul>
+  <li>
+    <p>Go has built in array and string types.</p>
+  </li>
+  <li>
+    <p>Go has garbage collection.</p>
+  </li>
+  <li>
+    <p>Go is strongly types (can’t cast one pointer type to another)</p>
+  </li>
+  <li>
+    <p>Unlike C, go has no pointer arithmetic</p>
+  </li>
+</ul>
 
   </div>
 

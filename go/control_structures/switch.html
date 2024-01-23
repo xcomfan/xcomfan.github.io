@@ -45,6 +45,8 @@
   <div class="post-content">
     <h2 id="basic-switch-usage">Basic switch usage</h2>
 
+<p>The <code class="language-plaintext highlighter-rouge">switch</code> statement is a shorthand way to write a sequence of <code class="language-plaintext highlighter-rouge">if else</code> statements.  In Go unlike other languages you do not need a <code class="language-plaintext highlighter-rouge">break</code> in each case.  Go will run just the one case unless you use the <code class="language-plaintext highlighter-rouge">fallthrough</code> option.  Go will run the first case whose value is equal to the condition expression.</p>
+
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
 
 <span class="k">import</span> <span class="p">(</span>
@@ -143,6 +145,30 @@
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>go run string.go hi
 Very informal!
 Hi yourself
+</code></pre></div></div>
+
+<h2 id="switch-with-no-condition">Switch with no condition</h2>
+
+<p>Switch without a condition is the same as <code class="language-plaintext highlighter-rouge">switch true</code>.  This construct can be a clean way to write long if-then-else chains</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">t</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+    <span class="k">switch</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">t</span><span class="o">.</span><span class="n">Hour</span><span class="p">()</span> <span class="o">&lt;</span> <span class="m">12</span><span class="o">:</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Good morning!"</span><span class="p">)</span>
+    <span class="k">case</span> <span class="n">t</span><span class="o">.</span><span class="n">Hour</span><span class="p">()</span> <span class="o">&lt;</span> <span class="m">17</span><span class="o">:</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Good afternoon."</span><span class="p">)</span>
+    <span class="k">default</span><span class="o">:</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Good evening."</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
 <h2 id="case-with-no-code">Case with no code</h2>

@@ -44,39 +44,81 @@
 
   <div class="post-content">
     
-<h2 id="basic-map-usage">Basic map usage</h2>
+<h2 id="basic-map-operations">Basic map operations</h2>
 
 <p>Maps in Go allow you to map a key to a value.  The value can be anything, but keys cannot be slices, maps or functions.</p>
 
-<p>You cannot count on values in a map being in any sort of order.  It will be random.</p>
+<p>You cannot count on values in a map being in any sort of order; the order will be random.</p>
+
+<h3 id="insert-and-update">Insert and update</h3>
+
+<p><code class="language-plaintext highlighter-rouge">m[key] = elem</code></p>
+
+<h3 id="retrieve">Retrieve</h3>
+
+<p><code class="language-plaintext highlighter-rouge">elem = m[key]</code></p>
+
+<h3 id="delete">Delete</h3>
+
+<p><code class="language-plaintext highlighter-rouge">delete(m, key)</code></p>
+
+<h3 id="test-that-key-is-present">Test that key is present</h3>
+
+<p>Test that a key is present with a two-value assignment</p>
+
+<p><code class="language-plaintext highlighter-rouge">elem, ok = m[key]</code></p>
+
+<p>If <code class="language-plaintext highlighter-rouge">key</code> is in <code class="language-plaintext highlighter-rouge">m</code> <code class="language-plaintext highlighter-rouge">ok</code> is <code class="language-plaintext highlighter-rouge">true</code> if not <code class="language-plaintext highlighter-rouge">ok</code> is <code class="language-plaintext highlighter-rouge">false</code></p>
+
+<p>If <code class="language-plaintext highlighter-rouge">key</code> is not in <code class="language-plaintext highlighter-rouge">m</code> then <code class="language-plaintext highlighter-rouge">elem</code> is the zero value for the map’s element type.</p>
+
+<p>Note: if <code class="language-plaintext highlighter-rouge">elem</code> or <code class="language-plaintext highlighter-rouge">ok</code> have not been declared you can use the short declaration <code class="language-plaintext highlighter-rouge">elem, ok := m[key]</code></p>
+
+<h3 id="example-of-basic-map-operations">Example of basic map operations</h3>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
 
 <span class="k">import</span> <span class="s">"fmt"</span>
 
 <span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="c">// make a map that maps from strings to ints</span>
-    <span class="n">m</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span> 
-    <span class="c">// insert into map</span>
-    <span class="n">m</span><span class="p">[</span><span class="s">"hello"</span><span class="p">]</span> <span class="o">=</span> <span class="m">300</span>
-    <span class="n">h</span> <span class="o">:=</span> <span class="n">m</span><span class="p">[</span><span class="s">"hello"</span><span class="p">]</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"hello in m:"</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
-    <span class="c">// if not in map you will get a zero value for the value.</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"a in m:"</span><span class="p">,</span> <span class="n">m</span><span class="p">[</span><span class="s">"a"</span><span class="p">])</span>
+    <span class="n">m</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span>
 
-    <span class="c">// use the comma ok idiom for checking if a key is in a map.  </span>
-    <span class="c">// v is the value ok is a boolean by convention name should be ok for the bool.</span>
-    <span class="k">if</span> <span class="n">v</span><span class="p">,</span> <span class="n">ok</span> <span class="o">:=</span> <span class="n">m</span><span class="p">[</span><span class="s">"hello"</span><span class="p">];</span> <span class="n">ok</span> <span class="p">{</span> 
-        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"hello in m:"</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-    <span class="p">}</span>
+    <span class="n">m</span><span class="p">[</span><span class="s">"Answer"</span><span class="p">]</span> <span class="o">=</span> <span class="m">42</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"The value:"</span><span class="p">,</span> <span class="n">m</span><span class="p">[</span><span class="s">"Answer"</span><span class="p">])</span>
 
-    <span class="c">// if you assign a new value it replaces the old value</span>
-    <span class="n">m</span><span class="p">[</span><span class="s">"hello"</span><span class="p">]</span> <span class="o">=</span> <span class="m">20</span>  
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"hello in m:"</span><span class="p">,</span> <span class="n">m</span><span class="p">[</span><span class="s">"hello"</span><span class="p">])</span>
+    <span class="n">m</span><span class="p">[</span><span class="s">"Answer"</span><span class="p">]</span> <span class="o">=</span> <span class="m">48</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"The value:"</span><span class="p">,</span> <span class="n">m</span><span class="p">[</span><span class="s">"Answer"</span><span class="p">])</span>
+
+    <span class="nb">delete</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s">"Answer"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"The value:"</span><span class="p">,</span> <span class="n">m</span><span class="p">[</span><span class="s">"Answer"</span><span class="p">])</span>
+
+    <span class="n">v</span><span class="p">,</span> <span class="n">ok</span> <span class="o">:=</span> <span class="n">m</span><span class="p">[</span><span class="s">"Answer"</span><span class="p">]</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"The value:"</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="s">"Present?"</span><span class="p">,</span> <span class="n">ok</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h2 id="defining-a-map-literal-and-deleting-from-a-map">Defining a map literal and deleting from a map</h2>
+<h4 id="basic-map-operations-with-a-struct">Basic map operations with a struct</h4>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">type</span> <span class="n">Vertex</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">Lat</span><span class="p">,</span> <span class="n">Long</span> <span class="kt">float64</span>
+<span class="p">}</span>
+
+<span class="k">var</span> <span class="n">m</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="n">Vertex</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="nb">make</span><span class="p">(</span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="n">Vertex</span><span class="p">)</span>
+    <span class="n">m</span><span class="p">[</span><span class="s">"Bell Labs"</span><span class="p">]</span> <span class="o">=</span> <span class="n">Vertex</span><span class="p">{</span>
+        <span class="m">40.68433</span><span class="p">,</span> <span class="o">-</span><span class="m">74.39967</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s">"Bell Labs"</span><span class="p">])</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="defining-a-map-literal">Defining a map literal</h2>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
 
@@ -100,6 +142,50 @@
     <span class="c">// delete value from map</span>
     <span class="nb">delete</span><span class="p">(</span><span class="n">m2</span><span class="p">,</span> <span class="s">"b"</span><span class="p">)</span>
     <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"b in m2:"</span><span class="p">,</span> <span class="n">m2</span><span class="p">[</span><span class="s">"b"</span><span class="p">])</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="defining-map-literal-with-struct-values">Defining map literal with struct values</h3>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">type</span> <span class="n">Vertex</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">Lat</span><span class="p">,</span> <span class="n">Long</span> <span class="kt">float64</span>
+<span class="p">}</span>
+
+<span class="k">var</span> <span class="n">m</span> <span class="o">=</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="n">Vertex</span><span class="p">{</span>
+    <span class="s">"Bell Labs"</span><span class="o">:</span> <span class="n">Vertex</span><span class="p">{</span>
+        <span class="m">40.68433</span><span class="p">,</span> <span class="o">-</span><span class="m">74.39967</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s">"Google"</span><span class="o">:</span> <span class="n">Vertex</span><span class="p">{</span>
+        <span class="m">37.42202</span><span class="p">,</span> <span class="o">-</span><span class="m">122.08408</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>If the top-level type is just a type name, you can omit it from the elements of the literal.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">type</span> <span class="n">Vertex</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">Lat</span><span class="p">,</span> <span class="n">Long</span> <span class="kt">float64</span>
+<span class="p">}</span>
+
+<span class="k">var</span> <span class="n">m</span> <span class="o">=</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="n">Vertex</span><span class="p">{</span>
+    <span class="s">"Bell Labs"</span><span class="o">:</span> <span class="p">{</span><span class="m">40.68433</span><span class="p">,</span> <span class="o">-</span><span class="m">74.39967</span><span class="p">},</span>
+    <span class="s">"Google"</span><span class="o">:</span>    <span class="p">{</span><span class="m">37.42202</span><span class="p">,</span> <span class="o">-</span><span class="m">122.08408</span><span class="p">},</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div></div>
 

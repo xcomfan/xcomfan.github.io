@@ -3,20 +3,20 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Go Control Structures | My References</title>
+<title>Go defer statement | My References</title>
 <meta name="generator" content="Jekyll v3.9.2" />
-<meta property="og:title" content="Go Control Structures" />
+<meta property="og:title" content="Go defer statement" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://localhost:4000/go/control_structures" />
-<meta property="og:url" content="http://localhost:4000/go/control_structures" />
+<link rel="canonical" href="http://localhost:4000/go/control_structures/defer" />
+<meta property="og:url" content="http://localhost:4000/go/control_structures/defer" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Go Control Structures" />
+<meta property="twitter:title" content="Go defer statement" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Go Control Structures","url":"http://localhost:4000/go/control_structures"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Go defer statement","url":"http://localhost:4000/go/control_structures/defer"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
@@ -39,17 +39,47 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Go Control Structures</h1>
+    <h1 class="post-title">Go defer statement</h1>
   </header>
 
   <div class="post-content">
-    <p><a href="/go/control_structures/if_else">If Else</a></p>
+    <h2 id="basic-usage">Basic usage</h2>
 
-<p><a href="/go/control_structures/loops">Loops</a></p>
+<p>The defer statement defers the execution of a functions until the surrounding functions returns.  The deferred calls arguments are evaluated immediately, but the function call is not executed until the surrounding function returns.</p>
 
-<p><a href="/go/control_structures/switch">Switch Statement</a></p>
+<p>In the below example “world” will be printed after “hello”</p>
 
-<p><a href="/go/control_structures/defer">Defer Statement</a></p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">defer</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"world"</span><span class="p">)</span>
+
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"hello"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="stacking-defers">Stacking defers</h2>
+
+<p>Deferred function calls are pushed onto a stack.  When a function returns, its deferred calls are executed in last-in-first-out order.</p>
+
+<p>The example below will print in backwards order due to the last-in-first-out nature.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"counting"</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">defer</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"done"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
   </div>
 

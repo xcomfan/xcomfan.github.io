@@ -45,7 +45,7 @@
   <div class="post-content">
     <h2 id="go-does-not-convert-types-automatically">Go Does Not Convert Types Automatically</h2>
 
-<p>The code below will NOT compile and give you the error <code class="language-plaintext highlighter-rouge">invalid operation: i + f (mismatched types int8 and float32)</code></p>
+<p>The code below will <strong>NOT</strong> compile and give you the error <code class="language-plaintext highlighter-rouge">invalid operation: i + f (mismatched types int8 and float32)</code></p>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
 <span class="k">import</span> <span class="s">"fmt"</span>
@@ -57,7 +57,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>You need to use the conversion syntax such as <code class="language-plaintext highlighter-rouge">float32(i)</code> to convert to the desired types.  <strong><em>NOTE:</em></strong> if you are converting a float to an int the value will be truncated not rounders.</p>
+<p>You need to use the conversion syntax such as <code class="language-plaintext highlighter-rouge">float32(i)</code> to convert to the desired types.  <strong><em>NOTE:</em></strong> if you are converting a float to an int the value will be truncated not rounded</p>
 
 <p>You don’t just need to convert between float and int but different int sizes (<code class="language-plaintext highlighter-rouge">int16</code> and <code class="language-plaintext highlighter-rouge">int32</code> for example) must also be converted.</p>
 

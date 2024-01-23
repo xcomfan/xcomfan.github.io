@@ -43,7 +43,27 @@
   </header>
 
   <div class="post-content">
-    <h2 id="basic-for-loop">Basic for Loop</h2>
+    <h2 id="go-for-loop-has-3-forms">Go for loop has 3 forms</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">for</code> loop has three components separated by semicolons:</p>
+
+<ul>
+  <li>
+    <p>the init statement.  Variables declared here are only visible within the scope of the for loop</p>
+  </li>
+  <li>
+    <p>the condition expression: evaluated before every iteration.  The for loops stops executing once this condition is false.</p>
+  </li>
+  <li>
+    <p>the post statement: executed at the end of every iteration</p>
+  </li>
+</ul>
+
+<p>These components may be included or omitted to modify the behavior of the <code class="language-plaintext highlighter-rouge">for</code> loop.</p>
+
+<h3 id="normal-for-loop">Normal for Loop</h3>
+
+<p>If all 3 elements are included you will get for loop behavior similar to other languages.</p>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
 
@@ -60,23 +80,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h2 id="using-for-range-to-iterate-over-data-structures">Using for range To Iterate Over Data Structures</h2>
-
-<p>There is a <code class="language-plaintext highlighter-rouge">for range</code> loop which can iterate over some of Go’s built in types such as arrays, slices, maps, strings and channels.</p>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
-
-<span class="k">import</span> <span class="s">"fmt"</span>
-
-<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">s</span> <span class="o">:=</span> <span class="s">"Hello, world!"</span>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">s</span> <span class="p">{</span> <span class="c">// k is the offset and v is the rune</span>
-        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="kt">string</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h2 id="simulating-while-loop-behavior">Simulating While Loop Behavior</h2>
+<h3 id="simulating-while-loop-behavior">Simulating While Loop Behavior</h3>
 
 <p>In Go, instead of having a while statement the initializations and increment portions of the for loop are optional so you can use a for loop without those to have the behavior of a while loop.</p>
 
@@ -94,7 +98,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h2 id="looping-and-controlling-flow-with-break-and-continue">Looping And Controlling Flow with break And continue</h2>
+<h3 id="looping-and-controlling-flow-with-break-and-continue">Looping and controlling flow with break And continue</h3>
 
 <p>You can also leave the condition off altogether and use <code class="language-plaintext highlighter-rouge">break</code> and <code class="language-plaintext highlighter-rouge">continue</code> for control flow.</p>
 
@@ -114,6 +118,41 @@
     <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div></div>
+
+<h2 id="using-for-range-to-iterate-over-data-structures">Using for range To Iterate Over Data Structures</h2>
+
+<p>There is a <code class="language-plaintext highlighter-rouge">for range</code> loop which can iterate over some of Go’s built in types such as arrays, slices, maps, strings and channels.  When ranging over a slice, two values are returned for each iteration.  The first is the index, and the second is a copy of the element at that index.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">s</span> <span class="o">:=</span> <span class="s">"Hello, world!"</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">s</span> <span class="p">{</span> <span class="c">// k is the offset and v is the rune</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="kt">string</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>You can use the <code class="language-plaintext highlighter-rouge">_</code> variable name to skip the index or value if you do not need it.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">pow</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="m">10</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">pow</span> <span class="p">{</span>
+        <span class="n">pow</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="m">1</span> <span class="o">&lt;&lt;</span> <span class="kt">uint</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="c">// == 2**i</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">value</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">pow</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>If you just want the index the format <code class="language-plaintext highlighter-rouge">for i := range pow</code> is valid as well.</p>
 
   </div>
 

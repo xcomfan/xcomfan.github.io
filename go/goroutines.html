@@ -382,6 +382,224 @@
 
 <p>What if yo had multiple channels.  You would want to read the ready channels and skip the ones that are blocked.  Also what if you want to only write to a channel that is not blocked.  This is possible with select.</p>
 
+<h2 id="goroutine-notes-from-tour-of-go">Goroutine notes from tour of Go</h2>
+
+<p>A <strong>goroutine</strong> is a lightweight thread managed by the Go runtime.  <code class="language-plaintext highlighter-rouge">go f(x, y, z)</code> starts a new goroutine running <code class="language-plaintext highlighter-rouge">f(x, y, z)</code>.  The evaluation of <code class="language-plaintext highlighter-rouge">f, x, y</code> and <code class="language-plaintext highlighter-rouge">z</code> happens in the current goroutine and the execution of <code class="language-plaintext highlighter-rouge">f</code> happens in the new goroutine.</p>
+
+<p>Goroutines run in the same address space, so access to shared memory must be synchronized.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">say</span><span class="p">(</span><span class="n">s</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">5</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">100</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Millisecond</span><span class="p">)</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">go</span> <span class="n">say</span><span class="p">(</span><span class="s">"world"</span><span class="p">)</span>
+    <span class="n">say</span><span class="p">(</span><span class="s">"hello"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="channels-again">Channels again</h3>
+
+<p>Channels are a typed conduit through which you can send and receive values with the channel operator <code class="language-plaintext highlighter-rouge">&lt;-</code>.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ch</span> <span class="o">&lt;-</span> <span class="n">v</span>    <span class="c">// Send v to channel ch.</span>
+<span class="n">v</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">ch</span>  <span class="c">// Receive from ch, and</span>
+           <span class="c">// assign value to v.</span>
+</code></pre></div></div>
+
+<p>(The data flows in the direction of the arrow)</p>
+
+<p>Like maps and slices, channels must be created before use. <code class="language-plaintext highlighter-rouge">ch := make(chan int)</code></p>
+
+<p>By default, sends and receives block until the other side is ready.  This allows goroutines to synchronize without explicit locks or condition variables.  The example code sums the numbers in a slice, distributing the work between two goroutines.  Once both goroutines have completed their computation, it calculate the final result.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">func</span> <span class="n">sum</span><span class="p">(</span><span class="n">s</span> <span class="p">[]</span><span class="kt">int</span><span class="p">,</span> <span class="n">c</span> <span class="k">chan</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">sum</span> <span class="o">:=</span> <span class="m">0</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">s</span> <span class="p">{</span>
+        <span class="n">sum</span> <span class="o">+=</span> <span class="n">v</span>
+    <span class="p">}</span>
+    <span class="n">c</span> <span class="o">&lt;-</span> <span class="n">sum</span> <span class="c">// send sum to c</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">s</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">7</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">8</span><span class="p">,</span> <span class="o">-</span><span class="m">9</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">0</span><span class="p">}</span>
+
+    <span class="n">c</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">int</span><span class="p">)</span>
+    <span class="k">go</span> <span class="n">sum</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="o">:</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">/</span><span class="m">2</span><span class="p">],</span> <span class="n">c</span><span class="p">)</span>
+    <span class="k">go</span> <span class="n">sum</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">/</span><span class="m">2</span><span class="o">:</span><span class="p">],</span> <span class="n">c</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">c</span><span class="p">,</span> <span class="o">&lt;-</span><span class="n">c</span> <span class="c">// receive from c</span>
+
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="buffered-channels">Buffered Channels</h3>
+
+<p>Channels can be buffered.  Provide the buffer length as the second argument to <code class="language-plaintext highlighter-rouge">make</code> to initialize a buffered channel.  Sends to a buffered channel block only when the buffer is full.  Receives block when the buffer is empty.</p>
+
+<p><code class="language-plaintext highlighter-rouge">ch := make(chan int, 100)</code></p>
+
+<h3 id="range-and-close">Range and close</h3>
+
+<p>A sender can close a channel to indicate that no more values will be send.  Receivers can test whether a channel has been closed by assigning a second parameter to the receive expression.</p>
+
+<p><code class="language-plaintext highlighter-rouge">v, ok := &lt;- ch</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">ok</code> is <code class="language-plaintext highlighter-rouge">false</code> if there are not more values to receive and the channel is closed.  The loop <code class="language-plaintext highlighter-rouge">for i := range c</code> receives values form the channel repeatedly until it is closed.  <strong><em>Note:</em></strong> Only the sender should close the channel, never the receiver.  Sending on a closed channel will cause a panic.  <strong><em>Note:</em></strong> Channels aren’t like files; you don’t usually need to close them.  Closing is only necessary when the receiver must be told there are no more values coming, such as to terminate a <code class="language-plaintext highlighter-rouge">range</code> loop.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">fibonacci</span><span class="p">(</span><span class="n">n</span> <span class="kt">int</span><span class="p">,</span> <span class="n">c</span> <span class="k">chan</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">:=</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">c</span> <span class="o">&lt;-</span> <span class="n">x</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span>
+    <span class="p">}</span>
+    <span class="nb">close</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">c</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="m">10</span><span class="p">)</span>
+    <span class="k">go</span> <span class="n">fibonacci</span><span class="p">(</span><span class="nb">cap</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="n">c</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">c</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="select-from-go-tour">Select from go tour</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">select</code> statement lets a goroutine wait on multiple communication operations.  A <code class="language-plaintext highlighter-rouge">select</code> blocks until one of its cases can run, then it executes that case.  It chooses one at random if multiple are ready.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">func</span> <span class="n">fibonacci</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">quit</span> <span class="k">chan</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">:=</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span>
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="k">select</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">c</span> <span class="o">&lt;-</span> <span class="n">x</span><span class="o">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span>
+        <span class="k">case</span> <span class="o">&lt;-</span><span class="n">quit</span><span class="o">:</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"quit"</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">c</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">int</span><span class="p">)</span>
+    <span class="n">quit</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">int</span><span class="p">)</span>
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="o">&lt;-</span><span class="n">c</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">quit</span> <span class="o">&lt;-</span> <span class="m">0</span>
+    <span class="p">}()</span>
+    <span class="n">fibonacci</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">quit</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="default-selection">Default Selection</h4>
+
+<p>The <code class="language-plaintext highlighter-rouge">default</code> case in a <code class="language-plaintext highlighter-rouge">select</code> is run if no other case is ready.  Use a <code class="language-plaintext highlighter-rouge">default</code> case to try a send or receive without blocking</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="p">{</span>
+<span class="k">case</span> <span class="n">i</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">c</span><span class="o">:</span>
+    <span class="c">// use i</span>
+<span class="k">default</span><span class="o">:</span>
+    <span class="c">// receiving from c would block</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">tick</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Tick</span><span class="p">(</span><span class="m">100</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Millisecond</span><span class="p">)</span>
+    <span class="n">boom</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">After</span><span class="p">(</span><span class="m">500</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Millisecond</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="k">select</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">&lt;-</span><span class="n">tick</span><span class="o">:</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"tick."</span><span class="p">)</span>
+        <span class="k">case</span> <span class="o">&lt;-</span><span class="n">boom</span><span class="o">:</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"BOOM!"</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">default</span><span class="o">:</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"    ."</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">50</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Millisecond</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="syncmutex">sync.Mutex</h3>
+
+<p>We’ve seen how channels are great for communication among goroutines.  But what if we don’t need communication? What if we just want to make sure only one goroutine can access a variable at a time to avoid conflicts.  This concepts is called <em>mutual exclusion</em> and the conventional name for a data structure that promotes it is <em>mutex</em>.  Go’s standard library provides mutual exclusion with <code class="language-plaintext highlighter-rouge">sync.Mutex</code> and its two methods <code class="language-plaintext highlighter-rouge">Lock</code> and <code class="language-plaintext highlighter-rouge">Unlock</code>.  We can also <code class="language-plaintext highlighter-rouge">defer</code> to ensure the mutex will be unlocked as in the <code class="language-plaintext highlighter-rouge">Value</code> method</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"sync"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="c">// SafeCounter is safe to use concurrently.</span>
+<span class="k">type</span> <span class="n">SafeCounter</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">mu</span> <span class="n">sync</span><span class="o">.</span><span class="n">Mutex</span>
+    <span class="n">v</span>  <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span>
+<span class="p">}</span>
+
+<span class="c">// Inc increments the counter for the given key.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span><span class="n">SafeCounter</span><span class="p">)</span> <span class="n">Inc</span><span class="p">(</span><span class="n">key</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="c">// Lock so only one goroutine at a time can access the map c.v.</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">v</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">++</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">Unlock</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="c">// Value returns the current value of the counter for the given key.</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span><span class="n">SafeCounter</span><span class="p">)</span> <span class="n">Value</span><span class="p">(</span><span class="n">key</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="c">// Lock so only one goroutine at a time can access the map c.v.</span>
+    <span class="k">defer</span> <span class="n">c</span><span class="o">.</span><span class="n">mu</span><span class="o">.</span><span class="n">Unlock</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">c</span><span class="o">.</span><span class="n">v</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">c</span> <span class="o">:=</span> <span class="n">SafeCounter</span><span class="p">{</span><span class="n">v</span><span class="o">:</span> <span class="nb">make</span><span class="p">(</span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">)}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">1000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">go</span> <span class="n">c</span><span class="o">.</span><span class="n">Inc</span><span class="p">(</span><span class="s">"somekey"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="s">"somekey"</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
   </div>
 

@@ -184,6 +184,68 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
+<h2 id="error-notes-from-go-tour">Error notes from Go tour</h2>
+
+<h3 id="error-interface">Error interface</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">error</code> type is a built-in interface.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="kt">error</span> <span class="k">interface</span> <span class="p">{</span>
+    <span class="n">Error</span><span class="p">()</span> <span class="kt">string</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Functions often return an <code class="language-plaintext highlighter-rouge">error</code> value, and calling code should handle errors by testing whether the error equals <code class="language-plaintext highlighter-rouge">nil</code>.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">i</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">strconv</span><span class="o">.</span><span class="n">Atoi</span><span class="p">(</span><span class="s">"42"</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"couldn't convert number: %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="k">return</span>
+<span class="p">}</span>
+<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Converted integer:"</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>A <code class="language-plaintext highlighter-rouge">nil</code> error denots success; a non <code class="language-plaintext highlighter-rouge">nil</code> error denotes failure.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">type</span> <span class="n">MyError</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">When</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span>
+    <span class="n">What</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">e</span> <span class="o">*</span><span class="n">MyError</span><span class="p">)</span> <span class="n">Error</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"at %v, %s"</span><span class="p">,</span>
+    <span class="n">e</span><span class="o">.</span><span class="n">When</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">What</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">run</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="n">MyError</span><span class="p">{</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">(),</span>
+        <span class="s">"it didn't work"</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">run</span><span class="p">();</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>In the example above you just return error, but if you wanted to return error or an actual value you would define your function as…</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">Sqrt</span><span class="p">(</span><span class="n">x</span> <span class="kt">float64</span><span class="p">)</span> <span class="p">(</span><span class="kt">float64</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="m">0</span><span class="p">,</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+
   </div>
 
 </article>

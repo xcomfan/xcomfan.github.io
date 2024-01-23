@@ -47,22 +47,43 @@
 
 <p>Variables are declared with the <code class="language-plaintext highlighter-rouge">var</code> keyword and can be declared either in a function or a package.</p>
 
-<p>The format of declaration is that keyword <code class="language-plaintext highlighter-rouge">var</code> followed by the variable name followed by the type and optionally assignment.</p>
+<p>The format of declaration is the keyword <code class="language-plaintext highlighter-rouge">var</code> followed by the variable name followed by the type and optionally assignment.</p>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">i</span> <span class="kt">int</span> <span class="o">=</span> <span class="m">10</span>
 </code></pre></div></div>
 
-<h2 id="declaring-a-variable-with-type-inference">Declaring a variable with type inference</h2>
+<p>If you are declaring multiple variables of the same type you can list the type at the end.</p>
 
-<p>If you are declaring and assigning a variable in one line Go can frequently guess the type of variable being declared.  While the expression <code class="language-plaintext highlighter-rouge">var i = 10</code> is valid in Go there is a shorthand that used the <code class="language-plaintext highlighter-rouge">:=</code> operator.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// with type </span>
+<span class="k">var</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="kt">int</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span>
+<span class="c">// with inferred type</span>
+<span class="k">var</span> <span class="n">c</span><span class="p">,</span> <span class="n">python</span><span class="p">,</span> <span class="n">java</span> <span class="kt">bool</span> <span class="o">=</span> <span class="no">true</span><span class="p">,</span> <span class="no">false</span><span class="p">,</span> <span class="s">"no!"</span>
+</code></pre></div></div>
 
-<p>To declare a variable when type can be inferred you can use the expression <code class="language-plaintext highlighter-rouge">i := 10</code>.  <strong><em>Note:</em></strong> this is only allowed for function variables.  Package variables must use the <code class="language-plaintext highlighter-rouge">var</code> keyword for declaration.</p>
+<p>You can declare variables without initializing them.</p>
 
-<p>You cannot use <code class="language-plaintext highlighter-rouge">:=</code> operator on a variable that has already been assigned as the <code class="language-plaintext highlighter-rouge">:=</code> operator is assignment not declaration.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">c</span><span class="p">,</span> <span class="n">python</span><span class="p">,</span> <span class="n">java</span> 
+</code></pre></div></div>
+
+<h2 id="short-variable-declaration">Short variable declaration</h2>
+
+<p>If you are declaring a variable inside a function the <code class="language-plaintext highlighter-rouge">:=</code> shorthand can be used in place of a var declaration with implicit type.</p>
+
+<h2 id="exported-names">Exported names</h2>
+
+<p>In Go, a name is exported if it begins with a capital letter.  When a package is imported you can only access variables from the package which are exported.</p>
 
 <h2 id="variable-zero-values">Variable zero values</h2>
 
 <p>In Go variables that are declared but have no value assigned are assigned the <strong>zero value</strong> of that type.  For example numeric types will be default assigned the zero value of <code class="language-plaintext highlighter-rouge">0</code>.</p>
+
+<h2 id="constants">Constants</h2>
+
+<p>Constants are declared like variables, but with the <code class="language-plaintext highlighter-rouge">const</code> keyword</p>
+
+<p>Constants can be character, string, boolean, or numeric types.</p>
+
+<p>Constants cannot be declared using the <code class="language-plaintext highlighter-rouge">:=</code> syntax</p>
 
   </div>
 

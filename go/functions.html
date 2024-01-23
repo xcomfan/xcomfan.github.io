@@ -43,18 +43,26 @@
   </header>
 
   <div class="post-content">
-    <h2 id="defining-a-function">Defining a Function</h2>
+    
+<h2 id="defining-a-function">Defining a Function</h2>
 
-<p>Go does not have optional or named parameters.  Go also does ot do function overloading.</p>
+<p>Go does not have optional or named parameters.  Go also does not do function overloading.</p>
 
-<p><strong>*Note:</strong> All arguments in Go are passed by value.  A copy of the object being passed is made.</p>
+<p><strong>*Note:</strong> All arguments in Go are passed by value.  A copy of the object being passed is made.  You can use pointers to pass by reference.</p>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">addNumbers</span><span class="p">(</span><span class="n">a</span> <span class="kt">int</span><span class="p">,</span> <span class="n">b</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
     <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h2 id="functions-can-return-multiple-values">Functions can return multiple values</h2>
+<p>When two or more consecutive named function parameters share a type, you can omit the ty ep from all but the last.  Thus the above example can be written as.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">addNumbers</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="functions-can-return-any-number-values">Functions can return any number values</h2>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">divAndRemainder</span><span class="p">(</span><span class="n">a</span> <span class="kt">int</span><span class="p">,</span> <span class="n">b</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">){</span>
     <span class="k">return</span> <span class="n">a</span> <span class="o">/</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span>
@@ -63,7 +71,26 @@
 <span class="n">div</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">divAndRemainder</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
 <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">div</span><span class="p">,</span> <span class="n">remainder</span><span class="p">)</span>
 
-<span class="n">_</span><span class="p">,</span> <span class="n">rem</span> <span class="o">=</span> <span class="n">divAndRemainder</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span> <span class="c">// convention to use _ to use variable you don't need as go makes you read variables that are declared.</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">rem</span> <span class="o">=</span> <span class="n">divAndRemainder</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span> <span class="c">// convention to use _ for variable you don't need as go makes you read variables that are declared.</span>
+</code></pre></div></div>
+
+<h2 id="naked-return">Naked return</h2>
+
+<p>Go’s return values may be named.  You do this by defining them at the top of the function.  These names should be used to document the meaning of the return values.  A <code class="language-plaintext highlighter-rouge">return</code> statement without arguments returns the named return values.  This is known as the “naked return”.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">func</span> <span class="n">split</span><span class="p">(</span><span class="n">sum</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">sum</span> <span class="o">*</span> <span class="m">4</span> <span class="o">/</span> <span class="m">9</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">sum</span> <span class="o">-</span> <span class="n">x</span>
+    <span class="k">return</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">split</span><span class="p">(</span><span class="m">17</span><span class="p">))</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
 <h2 id="functions-can-be-passed-as-arguments">Functions Can Be Passed As Arguments</h2>
@@ -155,6 +182,92 @@
         <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="m">1</span>
     <span class="p">}</span>
     <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">myAddOne</span><span class="p">(</span><span class="m">1</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="function-closures">Function closures</h2>
+
+<p>Go functions may be closures.  A closure is a function value that references variables from outside its body.  The function may access and assign to the referenced variables; in this sense the function is bound to the variables.</p>
+
+<p>In example below, the <code class="language-plaintext highlighter-rouge">adder</code> function returns a closure.  Each closure is bound to its own <code class="language-plaintext highlighter-rouge">sum</code> variable.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">func</span> <span class="n">adder</span><span class="p">()</span> <span class="k">func</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="n">sum</span> <span class="o">:=</span> <span class="m">0</span>
+    <span class="k">return</span> <span class="k">func</span><span class="p">(</span><span class="n">x</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+        <span class="n">sum</span> <span class="o">+=</span> <span class="n">x</span>
+        <span class="k">return</span> <span class="n">sum</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">pos</span><span class="p">,</span> <span class="n">neg</span> <span class="o">:=</span> <span class="n">adder</span><span class="p">(),</span> <span class="n">adder</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span>
+            <span class="n">pos</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
+            <span class="n">neg</span><span class="p">(</span><span class="o">-</span><span class="m">2</span><span class="o">*</span><span class="n">i</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="type-parameters">Type parameters</h2>
+
+<p>Go functions can be written to work on multiple types using type parameters.  The type parameters of a function appear between brackets before the function’s arguments.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">Index</span><span class="p">[</span><span class="n">T</span> <span class="n">comparable</span><span class="p">](</span><span class="n">s</span> <span class="p">[]</span><span class="n">T</span><span class="p">,</span> <span class="n">x</span> <span class="n">T</span><span class="p">)</span> <span class="kt">int</span>
+</code></pre></div></div>
+
+<p>This declaration means that <code class="language-plaintext highlighter-rouge">s</code> is a slice of any type <code class="language-plaintext highlighter-rouge">T</code> that fulfills the built-in constraint <code class="language-plaintext highlighter-rouge">comparable</code>.  <code class="language-plaintext highlighter-rouge">x</code> is also a value of the same type.</p>
+
+<p><code class="language-plaintext highlighter-rouge">comparable</code> is a useful constraint that makes it possible to use the <code class="language-plaintext highlighter-rouge">==</code> and <code class="language-plaintext highlighter-rouge">!=</code> operators on values of the type.</p>
+
+<p>In the example below we use it to compare a value to all slice elements until a match is found.  This index function works for any type that supports comparison.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="c">// Index returns the index of x in s, or -1 if not found.</span>
+<span class="k">func</span> <span class="n">Index</span><span class="p">[</span><span class="n">T</span> <span class="n">comparable</span><span class="p">](</span><span class="n">s</span> <span class="p">[]</span><span class="n">T</span><span class="p">,</span> <span class="n">x</span> <span class="n">T</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">s</span> <span class="p">{</span>
+        <span class="c">// v and x are type T, which has the comparable</span>
+        <span class="c">// constraint, so we can use == here.</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="n">x</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">i</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="o">-</span><span class="m">1</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c">// Index works on a slice of ints</span>
+    <span class="n">si</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="m">10</span><span class="p">,</span> <span class="m">20</span><span class="p">,</span> <span class="m">15</span><span class="p">,</span> <span class="o">-</span><span class="m">10</span><span class="p">}</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">Index</span><span class="p">(</span><span class="n">si</span><span class="p">,</span> <span class="m">15</span><span class="p">))</span>
+
+    <span class="c">// Index also works on a slice of strings</span>
+    <span class="n">ss</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">"foo"</span><span class="p">,</span> <span class="s">"bar"</span><span class="p">,</span> <span class="s">"baz"</span><span class="p">}</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">Index</span><span class="p">(</span><span class="n">ss</span><span class="p">,</span> <span class="s">"hello"</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="generic-types">Generic types</h2>
+
+<p>In addition to generic functions, Go also supports generic types.  A type can be parameterized with a type parameter, which could be useful for implementing generic data structures.  The example below demonstrates a simple type declaration for a singly linked list holding any type of value.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="c">// List represents a singly-linked list that holds</span>
+<span class="c">// values of any type.</span>
+<span class="k">type</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span> <span class="n">any</span><span class="p">]</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">next</span> <span class="o">*</span><span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]</span>
+    <span class="n">val</span>  <span class="n">T</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
