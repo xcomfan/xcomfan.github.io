@@ -6,11 +6,37 @@ permalink: /go/data_structures/maps
 
 [comment]: <> (TODO: I should rework this section to be more common operation on Maps focused)
 
-## Basic map usage
+## Basic map operations
 
 Maps in Go allow you to map a key to a value.  The value can be anything, but keys cannot be slices, maps or functions.
 
-You cannot count on values in a map being in any sort of order.  It will be random.
+You cannot count on values in a map being in any sort of order; the order will be random.
+
+### Insert and update
+
+`m[key] = elem`
+
+### Retrieve
+
+`elem = m[key]`
+
+### Delete
+
+`delete(m, key)`
+
+### Test that key is present
+
+Test that a key is present with a two-value assignment
+
+`elem, ok = m[key]`
+
+If `key` is in `m` `ok` is `true` if not `ok` is `false`
+
+If `key` is not in `m` then `elem` is the zero value for the map's element type.
+
+Note: if `elem` or `ok` have not been declared you can use the short declaration `elem, ok := m[key]`
+
+### Example of basic map operations
 
 ```go
 package main
@@ -18,26 +44,23 @@ package main
 import "fmt"
 
 func main() {
-    // make a map that maps from strings to ints
-    m := make(map[string]int) 
-    // insert into map
-    m["hello"] = 300
-    h := m["hello"]
-    fmt.Println("hello in m:", h)
-    // if not in map you will get a zero value for the value.
-    fmt.Println("a in m:", m["a"])
+    m := make(map[string]int)
 
-    // use the comma ok idiom for checking if a key is in a map.  
-    // v is the value ok is a boolean by convention name should be ok for the bool.
-    if v, ok := m["hello"]; ok { 
-        fmt.Println("hello in m:", v)
-    }
+    m["Answer"] = 42
+    fmt.Println("The value:", m["Answer"])
 
-    // if you assign a new value it replaces the old value
-    m["hello"] = 20  
-    fmt.Println("hello in m:", m["hello"])
+    m["Answer"] = 48
+    fmt.Println("The value:", m["Answer"])
+
+    delete(m, "Answer")
+    fmt.Println("The value:", m["Answer"])
+
+    v, ok := m["Answer"]
+    fmt.Println("The value:", v, "Present?", ok)
 }
 ```
+
+#### Basic map operations with a struct
 
 ```go
 package main
@@ -59,7 +82,7 @@ func main() {
 }
 ```
 
-## Defining a map literal and deleting from a map
+## Defining a map literal
 
 ```go
 package main
@@ -86,6 +109,8 @@ func main() {
     fmt.Println("b in m2:", m2["b"])
 }
 ```
+
+### Defining map literal with struct values
 
 ```go
 package main
@@ -128,56 +153,6 @@ var m = map[string]Vertex{
 
 func main() {
     fmt.Println(m)
-}
-```
-
-## Operations you can do on a map
-
-### Insert and update
-
-`m[key] = elem`
-
-### Retrieve
-
-`elem = m[key]`
-
-### Delete
-
-`delete(m, key)`
-
-### Test that key is present
-
-Test that a key is present with a two-value assignment
-
-`elem, ok = m[key]`
-
-If `key` is in `m` `ok` is `true` if not `ok` is `false`
-
-If `key` is not in `m` then `elem` is the zero value for the map's element type.
-
-Note: if `elem` or `ok` have not been declared you can use the short declaration `elem, ok := m[key]`
-
-### Example of above ops
-
-```go
-package main
-
-import "fmt"
-
-func main() {
-    m := make(map[string]int)
-
-    m["Answer"] = 42
-    fmt.Println("The value:", m["Answer"])
-
-    m["Answer"] = 48
-    fmt.Println("The value:", m["Answer"])
-
-    delete(m, "Answer")
-    fmt.Println("The value:", m["Answer"])
-
-    v, ok := m["Answer"]
-    fmt.Println("The value:", v, "Present?", ok)
 }
 ```
 

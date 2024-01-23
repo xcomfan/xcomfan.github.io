@@ -26,6 +26,10 @@ Raw strings are surrounded with a back quote character.  They can span multiple 
 rawString := `This is a raw string literal.  It can contain any character except backticks.`
 ```
 
+## Zero value for stings
+
+The zero value for stings is the empty string `""`.
+
 ## Concatenating Strings
 
 You can concatenate strings with the `+` operator
@@ -43,13 +47,17 @@ func main() {
 }
 ```
 
+## Getting length of a string
+
+You can get the length of a string (in bytes) using the build in `len()` function.
+
 ## String Slicing
 
-Go treats a string as *unmodifiable* sequence of bytes.  You can assess the bytes during slicing.  ***Note:** if your string is not in ASCII accessing using bytes won't work well and you should look at the rune type.
+Go treats a string as *unmodifiable* sequence of bytes.  You can assess the bytes by slicing.  ***Note:** if your string is not in ASCII, accessing using bytes won't work well and you should look at the rune type.
 
 [comment]: <> (TODO: Link to rune type above when you hae that written up)
 
-You can slice characters and sections of a string. You can get the length of a string (in bytes) using the build in `len()` function.
+You can slice characters and sections of a string.
 
 ```go
 package main
@@ -68,7 +76,3 @@ func main() {
     fmt.Println(len(s)) // prints 13 (number of bytes not chars)
 }
 ```
-
-## Zero value for stings
-
-The zero value for stings is the empty string `""`.

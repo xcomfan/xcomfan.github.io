@@ -6,7 +6,7 @@ permalink: /go/control_structures/switch
 
 ## Basic switch usage
 
-The `switch` statement is a shorted way to write a sequence of `if else` statements.  In go unlike other languages you do not need a `break` in each case.  Go will run just the one case unless you use the `fallthrough` option.  Go will run the first case whose value is equal to the condition expression.
+The `switch` statement is a shorthand way to write a sequence of `if else` statements.  In Go unlike other languages you do not need a `break` in each case.  Go will run just the one case unless you use the `fallthrough` option.  Go will run the first case whose value is equal to the condition expression.
 
 ```go
 package main

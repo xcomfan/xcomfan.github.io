@@ -4,6 +4,8 @@ title: "Go If Else Statement"
 permalink: /go/control_structures/if_else
 ---
 
+## Syntax example
+
 ```go
 package main
 
@@ -19,7 +21,26 @@ func main(){
 }
 ```
 
+To combine conditionals you use `&&` and `||`
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    a := 10
+    if a > 5 || a < 11 {
+        fmt.Println("a is between 5 and 11")
+    }
+}
+```
+
+## If statement variables
+
 You can declare a variable as part of the if statement and this variable will only be accessible in the scope of the if statement.  It does not have to be a strict variable declaration you can put a short expression there.  Variables declared inside an `if` short statement are also visible inside any of the else blocks.
+
+### Declaration example
 
 ```go
 package main
@@ -31,11 +52,14 @@ func main() {
     if b := a / 2; b > 5 {
         fmt.Println("b is bigger than 5:", a, b)
     } else {
+        // variable b is in scope of else.
         fmt.Println("b is less than or equal to 5:", a, b)
     }
-    fmt.Println(b) // This will give you undefined error, but b ok to use above.
+    fmt.Println(b) // This will give you undefined error, but b ok to use in else above
 }
 ```
+
+### Expression example
 
 ```go
 package main

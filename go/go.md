@@ -22,8 +22,12 @@ permalink: /go/
 
 [Error Handling]({% link go/error_handling.md %})
 
+[Methods]({% link go/methods.md %})
+
 [Interfaces]({% link go/interfaces.md %})
 
 [Packages And Imports]({% link go/packages.md %})
 
 [Go Routines]({% link go/goroutines.md %})
+
+[Readers]({% link go/readers.md %})

@@ -31,3 +31,5 @@ permalink: /python/
 [Generator Functions]({% link python/generator_functions.md %})
 
 [Classes]({% link python/classes.md %})
+
+[Style Guide]({% link python/style_guide.md %})

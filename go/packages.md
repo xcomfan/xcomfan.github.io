@@ -41,7 +41,7 @@ You can declare variables at the package level.  These variables cannot be assig
 
 ### Variable visibility
 
-In Go there are 2 levels of visibility.  **package visible** and **public** and these apply to variables, functions and data types.  ***if you want to make something public you capitalize the first letter in the variable name***
+In Go there are 2 levels of visibility.  **package visible** and **public** and these apply to variables, functions and data types.  *if you want to make something public you capitalize the first letter in the variable name*
 
 ## Importing
 

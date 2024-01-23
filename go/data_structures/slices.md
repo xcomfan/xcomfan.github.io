@@ -8,23 +8,23 @@ permalink: /go/data_structures/slices
 
 ## What are slices
 
-An array in Go if fixed in size, but a slice is a dynamically-sized flexible view into the elements of an array.
+An array in Go is fixed in size, but a slice is a dynamically-sized flexible view into the elements of an array.
 
 A slice does not store any data, it just describes a section of an underlying array.  Changing the elements of a slice modifies the corresponding elements of its underlying array.  Other slices that share the same underlying array will see those changes.
 
 `[]T` is a slice with elements of type `T`
 
-A slice is formed by specifying two indices a low and a high.  This selects a half-open range which includes the first elment, but excludes the last one.  The following expression creates a slice which includes elements 1 through 3 of a:  You can omit the high and low bounds to get their defaults of 0 lower bound and length of slice as upper bound.
+A slice is formed by specifying two indices a low and a high.  This selects a half-open range which includes the first element, but excludes the last one.  The following expression creates a slice which includes elements 1 through 3 of `a`.  You can omit the high and low bounds to get their defaults of 0 lower bound and length of slice as upper bound.
 
 `a[1:4]`
 
 A slice has both a length and a capacity.
 
-The length of a slice is the number of elements it contains.
+The **length** of a slice is the number of elements it contains.
 
-The capacity of a slice is the number of elements in the underlying array, counting from the first element in the slice.
+The **capacity** of a slice is the number of elements in the underlying array, counting from the first element in the slice.
 
-The length and capacity of a slice s can be obtained using the expressions len(s) and cap(s).
+The length and capacity of a slice can be obtained using the expressions len(s) and cap(s).
 
 You can extend a slice's length by re-slicing it, **provided it has sufficient capacity**.
 
@@ -53,7 +53,6 @@ func main() {
 func printSlice(s []int) {
     fmt.Printf("len=%d cap=%d %v\n", len(s), cap(s), s)
 }
-
 ```
 
 ```go
@@ -175,34 +174,13 @@ func main() {
 }
 ```
 
- Below is an example from the go tour of how to do a basic matrix with slices.
-
- ```go
-package main
-
-import "golang.org/x/tour/pic"
-
-func Pic(dx, dy int) [][]uint8 {
-    pic := make([][]uint8, dy)
-    for y := range pic {
-        pic[y] = make([]uint8, dx)
-        for x := range pic[y] {
-            pic[y][x] = uint8(x*y)
-        }
-    }
-    return pic
-}
-
-func main() {
-    pic.Show(Pic)
-}
- ```
-
 ## Appending to a slice
 
-The build in `append` function used to append elements to a slice has the format `func append(s, []T, vs ...T)[]T`
+The build in `append` function is used to append elements to a slice.
 
-The first parameter `s` is a slice of type `T`, and the rest are `T` values to append to the slice.  The resulting value of `append` is a slice containing all the elements of the original slice plus the provided values.  If the backing array of s is too small to fit all the given values a bigger array will be allocated.  The returned slice will point to the newly allocated array.
+`func append(s, []T, vs ...T)[]T`
+
+The first parameter `s` is a slice of type `T`, and the rest are `T` values to append to the slice.  The resulting value of `append` is a slice containing all the elements of the original slice plus the provided values.  If the backing array of `s` is too small to fit all the given values a bigger array will be allocated.  The returned slice will point to the newly allocated array.
 
 ```go
 package main
@@ -231,39 +209,9 @@ func printSlice(s []int) {
 }
 ```
 
-## Basic slice example
+## Iterating over a slice
 
-```go
-package main
-
-import "fmt"
-
-func main() {
-    // []string is a slice declaration make is used to create certain built in 
-    // types in Go
-    s := make([]string, 0)
-    fmt.Println("length of s:", len(s))
-    // append adds new element to the end of a slice.  
-    // NOTE: you must assign the append output back to your slice or slice
-    // does not get updated.
-    s = append(s, "hello") 
-    fmt.Println("length of s:", len(s))
-    fmt.Println("content of s[0]", s[0])
-    s[0] = "goodbye"
-    fmt.Println("contents of s[0]:", s[0])
-
-    s2 := make([]string, 2)
-    fmt.Println("contents of s2[0]:", s2[0])
-    // adding third element here.
-    s2 = append(s2, "hello")
-    fmt.Println("contents of s2[0]:", s2[0]) 
-    fmt.Println("contents of s2[2]:", s2[2])
-    // length is now 3 because append left the first two elements as is.
-    fmt.Println("length of s2:", len(s2))
-}
-```
-
-## Slice literal assignment, iteration and assignment
+To iterate over a slice use the `for range` loop to iterate over a slice.
 
 ```go
 package main
@@ -272,32 +220,116 @@ import "fmt"
 
 func main() {
     // initializing using slice literal format
-    s3 := []string{"a", "b", "c"}
+    s := []string{"a", "b", "c"}
 
-    // // k gives you the index and v is the value
-    for k, v := range s3 {
-    fmt.Println(k, v)
+    // k gives you the index and v is the value
+    for k, v := range s {
+        fmt.Println(k, v)
+    }
+}
+```
+
+## Packaging
+
+You should have a comment before all exported functions (ones that start with a capital)
+
+## Working with files and the web
+
+```go
+package main
+
+import (
+    "fmt"
+    "io"
+    "io/ioutil"
+    "os"
+)
+
+func main() {
+    content := "Hello from Go!"
+    file, err := os.Create("./fromString.txt")
+    checkError(err)
+    length, err := io.WriteString(file, content)
+    checkError(err)
+    fmt.Printf("Wrote a file with %v chars\n", length)
+    defer file.Close()
+    defer readFile("./fromString.txt")
+}
+
+func readFile(fileName string) {
+    data, err := ioutil.ReadFile(fileName)
+    checkError(err)
+    fmt.Println("Text read from file:", string(data))
+}
+
+func checkError(err error) {
+    if err != nil {
+        panic(err)
+    }
+}
+```
+
+## Parsing a JSON without declaring the struct ahead of time.
+
+```go
+package main
+
+import (
+    "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
+    "strings"
+)
+
+const url = "http://services.explorecalifornia.org/json/tours.php"
+
+func main() {
+
+    resp, err := http.Get(url)
+    if err != nil {
+        panic(err)
     }
 
-    s4 := s3[0:2]
-    fmt.Println("s4:", s4)
-    // if you take a slice from a slice they both refer to same area of 
-    // memory so changing one impacts the other.
-    // Slices are reference types. They behave like pointers do.
-    s3[0] = "d" 
-    fmt.Println("s4:", s4)
+    fmt.Printf("Response type: %T\n", resp)
 
-    var s5 []string
-    s5 = s3
-    s5[1] = "camel"
-    fmt.Println("s3:", s3)
+    defer resp.Body.Close()
 
-    modSlice(s3)
-    fmt.Println("s3[0]:", s3[0])
-    fmt.Println("s3:", s3)
+    bytes, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+        panic(err)
     }
 
-    func modSlice(s []string) {
-    s[0] = "hello"
+    content := string(bytes)
+    // fmt.Print(content)
+
+    tours := toursFromJson(content)
+    for _, tour := range tours {
+        fmt.Println(tour.Name)
+    }
+}
+
+func toursFromJson(content string) []Tour {
+    tours := make([]Tour, 0, 20)
+
+    decoder := json.NewDecoder(strings.NewReader(content))
+    _, err := decoder.Token()
+    if err != nil {
+        panic(err)
+    }
+
+    var tour Tour
+    for decoder.More() {
+        err := decoder.Decode(&tour)
+        if err != nil {
+        panic(err)
+        }
+        tours = append(tours, tour)
+    }
+    return tours
+}
+
+type Tour struct {
+    Name, Price string
 }
 ```

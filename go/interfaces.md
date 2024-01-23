@@ -4,61 +4,199 @@ title: "Go Interfaces"
 permalink: /go/interfaces
 ---
 
-## Basic usage
+## Interface basics
 
-Interface is a type that provides a list of methods but provides no implementation.
+An **interface type** is defined as a set of method signatures but no implementation.  A value of interface type can hold any value that implements those methods.
+
+Interfaces are implemented implicitly. A type implements an interface by implementing its methods.  There is no explicit declaration of intent (no implements keyword or anything like that).  Implicit interfaces decouple the definition of an interface from its implementation, which could then appear in any package without prearrangement.
+
+```go
+package main
+
+import (
+    "fmt"
+    "math"
+)
+
+type Abser interface {
+    Abs() float64
+}
+
+type MyFloat float64
+
+func (f MyFloat) Abs() float64 {
+    if f < 0 {
+        return float64(-f)
+    }
+    return float64(f)
+}
+
+type Vertex struct {
+    X, Y float64
+}
+
+func (v *Vertex) Abs() float64 {
+    return math.Sqrt(v.X*v.X + v.Y*v.Y)
+}
+
+func main() {
+    var a Abser
+    f := MyFloat(-math.Sqrt2)
+    v := Vertex{3, 4}
+
+    a = f  // a MyFloat implements Abser
+    a = &v // a *Vertex implements Abser
+
+    // In the following line, v is a Vertex (not *Vertex)
+    // and does NOT implement Abser.
+    a = v
+
+    fmt.Println(a.Abs())
+}
+```
+
+## Interface values
+
+Under the hood, interface values can be thought of as a tuple of a value and a concrete type `(value, type)`.  An interface value holds a value of a specific underlying concrete type.  Calling a method on an interface value executes the method of the same name on its underlying type.
+
+```go
+package main
+
+import (
+    "fmt"
+    "math"
+)
+
+type MyInterface interface {
+    MyInterfaceMethod()
+}
+
+type MyType struct {
+    S string
+}
+
+func (t *MyType) MyInterfaceMethod() {
+    fmt.Println(t.S)
+}
+
+type MyFloat float64
+
+func (f MyFloat) MyInterfaceMethod() {
+    fmt.Println(f)
+}
+
+func main() {
+    var i MyInterface
+
+    i = &MyType{"Hello"}
+    describe(i)
+    i.MyInterfaceMethod()
+
+    i = MyFloat(math.Pi)
+    describe(i)
+    i.MyInterfaceMethod()
+}
+
+func describe(i MyInterface) {
+    fmt.Printf("(%v, %T)\n", i, i)
+}
+```
+
+### Interface values with nil underlying values
+
+If the concrete value inside the interface itself is `nil`, the method will be called with a `nil` receiver.  While in most languages this would trigger a null pointer exception in Go its common to write methods that gracefully handle being called with a `nil` receiver (as with the method `M` in example below)
+
+***NOTE:*** An interface value that holds a nil concrete value is itself non-nil.
 
 ```go
 package main
 
 import "fmt"
 
-// define interface
-type tester interface {
-    // list the signature types that make up our interface
-    test(int) bool
+type I interface {
+    M()
 }
 
-// function takes arg of int and a slice of types that implement tester
-func runTests(i int, tests []tester) bool {
-    result := true
-    for _, test := range tests {
-        result = result && test.test(i)
+type T struct {
+    S string
+}
+
+func (t *T) M() {
+    if t == nil {
+        fmt.Println("<nil>")
+        return
     }
-    return result
-}
-
-type rangeTest struct {
-    min int
-    max int
-}
-
-// there is no explicit declaration of interface implementation
-// as long as your type implements the right methods it meets the interface
-// both name and signature need to match or code won't compile.
-func (rt rangeTest) test(i int) bool {
-    return rt.min <= i && i <= rt.max
-}
-
-// define type divTest based on int
-type divTest int
-
-func (dt divTest) test(i int) bool {
-    return i%int(dt) == 0
+    fmt.Println(t.S)
 }
 
 func main() {
-    result := runTests(10, []tester{
-        rangeTest{min: 5, max: 20},
-        divTest(5),
-    })
-    fmt.Println(result)
+    var i I
+
+    var t *T
+    i = t
+    describe(i)
+    i.M()
+
+    i = &T{"hello"}
+    describe(i)
+    i.M()
+}
+
+func describe(i I) {
+    fmt.Printf("(%v, %T)\n", i, i)
+}
+```
+
+### Nil interface values
+
+A `nil` interface value holds neither value nor concrete type.  Calling a method on a nil interface is a run-time error because there is no type inside the interface tuple to indicate which *concrete* method to call.
+
+*Example below throws a runtime error*.
+
+```go
+package main
+
+import "fmt"
+
+type I interface {
+    M()
+}
+
+func main() {
+    var i I
+    describe(i)
+    i.M()
+}
+
+func describe(i I) {
+    fmt.Printf("(%v, %T)\n", i, i)
 }
 ```
 
 ## Empty interfaces
 
-If you have an interface with no methods at all that is an **empty interface**.  An empty interface is a way to express that object could be anything.
+If you have an interface with no methods at all that is an **empty interface** `interface{}`.  An empty interface is a way to express that object could be anything.  Empty interfaces are used by code that handles values of unknown type.  For example `fmt.Print` takes any number of interfaces of type `interface{}`
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    var i interface{}
+    describe(i)
+
+    i = 42
+    describe(i)
+
+    i = "hello"
+    describe(i)
+}
+
+func describe(i interface{}) {
+    fmt.Printf("(%v, %T)\n", i, i)
+}
+```
 
 ```go
 func main() {
@@ -70,7 +208,7 @@ func main() {
     // assert the type behind i is a sting and assign it to j
     j := i.(string)
     // ok will be assigned to a bool of assertion result
-    // if assertion true k will be assigned teh value if it fails
+    // if the assertion is true, k will be assigned the value if it fails
     // k will be assigned the 0 value of that type.
     k, ok := i.(int)
     fmt.Println(j, k, ok)
@@ -82,6 +220,34 @@ func main() {
 ```
 
 ## Getting the concrete type behind an interface
+
+A type assertion provides access to an interface value's underlying concrete type.  `t := i.(T)` This statement asserts that the interface value `i` holds the concrete type `T` and assigns the underlying `T` value to the variable `t`.  If `i` does not hold a `T`, the statement will trigger a panic.  To test whether an interface value holds a specific type, a type assertion can return two values: the underlying value and a boolean value that reports whether the assertion succeeded. `t, ok := i.(T)` If `i` holds a `T`, then `t` will be the underlying value and `ok` will be true.  If not, `ok` will be false and `t` will be the zero value of type `T`, and no panic occurs.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    var i interface{} = "hello"
+
+    s := i.(string)
+    fmt.Println(s)
+
+    s, ok := i.(string)
+    fmt.Println(s, ok)
+
+    f, ok := i.(float64)
+    fmt.Println(f, ok)
+
+    f = i.(float64) // panic
+    fmt.Println(f)
+}
+```
+
+### Type switches with interfaces
+
+A **type switch** is like a regular switch statement, but the cases in a type switch are specifically types (not values), and those value are compared against the type of the value held by the given interface value.  The declaration in a type switch has the same syntax as a type assertion `i.(T)`, but the specific type `T` is replaced with the keyword `type`.  The switch statement tests whether the interface value `i` holds a value of type `T` or `S`.  In the default case (where there is no match), the variable `v` is of the same interface type and value as `i`.
 
 ```go
 package main
@@ -109,8 +275,6 @@ func main() {
 ```
 
 ## Making a function implement an interfaces
-
-[comment]: <> (TODO: I need to work through this section as I don't quite understand it yet)
 
 You can make a function implement an interface by defining a function type and a method on the function type.
 
@@ -156,5 +320,76 @@ func main() {
         }),
     })
     fmt.Println(result)
+}
+```
+
+-------------------------
+### The empty interface
+
+
+### Type assertions
+
+A type assertion provides access to an interface values's underlying concrete type.
+
+`t := i.(T)`
+
+This statement asserts that the interface value `i` holds the concrete type `T` and assigns the underlying `T` value to the variable `t`.  If `i` does not hold a `T`, the statement will trigger a panic.  To test whether an interface value holds a specific type, a type assertion can return two values: the underlying value and a boolean value that reports whether the assertion succeeded.
+
+`t, ok := i.(T)`
+
+If `i` holds a `T`, then `t` will be the underlying value and `ok` will be true.  If not, `ok` will be false and `t` will be the zero value of type `T`, and no panic occurs.  
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    var i interface{} = "hello"
+
+    s := i.(string)
+    fmt.Println(s)
+
+    s, ok := i.(string)
+    fmt.Println(s, ok)
+
+    f, ok := i.(float64)
+    fmt.Println(f, ok)
+
+    f = i.(float64) // panic
+    fmt.Println(f)
+}
+```
+
+## Stringer Interface
+
+One of the most ubiquitous interfaces is `Stringer` defined int he `fmt` package.
+
+```go
+type Stringer interface {
+    String() string
+}
+```
+
+A `Stringer` is a ty pe that can describe itself as a string.  The `fmt` package and many others look for this interface to print values.
+
+```go
+package main
+
+import "fmt"
+
+type Person struct {
+    Name string
+    Age  int
+}
+
+func (p Person) String() string {
+    return fmt.Sprintf("%v (%v years)", p.Name, p.Age)
+}
+
+func main() {
+    a := Person{"Arthur Dent", 42}
+    z := Person{"Zaphod Beeblebrox", 9001}
+    fmt.Println(a, z)
 }
 ```

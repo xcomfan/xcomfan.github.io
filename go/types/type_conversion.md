@@ -6,7 +6,7 @@ permalink: /go/types_conversion
 
 ## Go Does Not Convert Types Automatically
 
-The code below will NOT compile and give you the error `invalid operation: i + f (mismatched types int8 and float32)`
+The code below will **NOT** compile and give you the error `invalid operation: i + f (mismatched types int8 and float32)`
 
 ```go
 package main
