@@ -55,9 +55,34 @@ func main() {
 }
 ```
 
+## Returning formatted error with fmt package
+
+The `fmt` package has a function that lets you return a formatted string as an error.
+
+```go
+package main
+
+import (
+    "fmt"
+    "math"
+)
+
+func sqrt(n float64) (float64, error) {
+    if n < 0 {
+        return 0.0, fmt.Errorf("sqrt of negative value (%f)", n)
+    }
+    return math.Sqrt(n), nil
+}
+
+func main() {
+    _, err := sqrt(-1)
+    fmt.Printf("Type of err = %\n", err) // same as you would get with errors.New()
+}
+```
+
 ## Error are an interface
 
-Because error is an interface, we can define ours instead of relying on ones given to us by `errors.New()`
+Because error is an interface, we can define our own instead of relying on ones given to us by `errors.New()`
 
 ```go
 package main
@@ -151,68 +176,82 @@ func main() {
 }
 ```
 
-## Error notes from Go tour
 
-### Error interface
+## Errors package
 
-The `error` type is a built-in interface.
+[comment]: <> (TODO: The package being discussed here did not work for me and the code is not validated.  I will revisit once I get more clarity on how to deal with third party packages)
 
-```go
-type error interface {
-    Error() string
-}
-```
+There is a commonly used package called pkg errors.  This is a drop in replacement to the built in pkg/errors package.
 
-Functions often return an `error` value, and calling code should handle errors by testing whether the error equals `nil`.
-
-```go
-i, err := strconv.Atoi("42")
-if err != nil {
-    fmt.Printf("couldn't convert number: %v\n", err)
-    return
-}
-fmt.Println("Converted integer:", i)
-```
-
-A `nil` error denots success; a non `nil` error denotes failure.
+Below is a good example of how to open up a config file and handle the possibility of it being missing as well as some basic logging.
 
 ```go
 package main
 
 import (
     "fmt"
-    "time"
+    "log"
+    "os"
+
+    "github.com/pkg/errors"
 )
 
-type MyError struct {
-    When time.Time
-    What string
+// Config holds configuration
+type Config struct {
+    // configuration fields go here (redacted)
 }
 
-func (e *MyError) Error() string {
-    return fmt.Sprintf("at %v, %s",
-    e.When, e.What)
-}
-
-func run() error {
-    return &MyError{
-        time.Now(),
-        "it didn't work",
+func readConfig(path string) (*Config, error) {
+    file, err := os.Open(path)
+    if err != nil {
+        return nil, errors.Wrap(err, "can't open configuration file")
     }
+
+    defer file.Close()
+
+    cfg := &Config{}
+    // Parse file here (redacted)
+    return cfg, nil
+}
+
+func setupLogging() {
+    out, err := os.OpenFile("app.log", os.O_APPEND|os.O_CREATE|os.O_RDONLY, 0644)
+    if err != nil {
+        return
+    }
+    log.SetOutput(out)
 }
 
 func main() {
-    if err := run(); err != nil {
-        fmt.Println(err)
+    setupLogging()
+    // we expect this to fail since we don't have config file on system
+    cfg, err := readConfig("/path/to/config.toml")
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "error: %s\n", err)
+        // %+v will print stack trace as part of the error package
+        log.Printf("error: %+v", err)
+        os.Exit(1)
     }
+
+    // Normal operation redacted
+    fmt.Println(cfg)
 }
 ```
 
-In the example above you just return error, but if you wanted to return error or an actual value you would define your function as...
+## Use defer and recover to guard against panics
+
+To guard against a panic use `defer`. Inside `defer` you call the built in `recover()` which returns something.  If the something is `nil` there is no panic if its not `nil` you get an error.
+
+Below is an example of using `defer` and `recover`
 
 ```go
-func Sqrt(x float64) (float64, error) {
-    return 0, nil
+func safeValue(vals []int, index int) (n int, err error){
+    defer func() {
+        if e := recover(); e != nil {
+            err = fmt.Errorf("%v", e)
+        }
+    }()
+
+    return vals[index], nil
 }
 ```
-

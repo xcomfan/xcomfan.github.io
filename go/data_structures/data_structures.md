@@ -11,3 +11,5 @@ permalink: /go/data_structures
 [Maps]({% link go/data_structures/maps.md %})
 
 [Structs]({% link go/data_structures/structs.md %})
+
+[Memory Management]({% link go/data_structures/memory_management.md %})

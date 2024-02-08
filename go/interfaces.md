@@ -10,6 +10,8 @@ An **interface type** is defined as a set of method signatures but no implementa
 
 Interfaces are implemented implicitly. A type implements an interface by implementing its methods.  There is no explicit declaration of intent (no implements keyword or anything like that).  Implicit interfaces decouple the definition of an interface from its implementation, which could then appear in any package without prearrangement.
 
+A good way to think about interfaces.  Think of the shapes circle, triangle and square. If we use interfaces to give each an area method and call the interface Shape, we can now create a slice of shapes.  Even though they are different structs because they implement the same interface we can treat them as the same type and stick them into a slice.  More concrete example of this in Go IO reader is an interface and using this same interface you can work with files, sockets, compressed files etc.
+
 ```go
 package main
 
@@ -391,5 +393,40 @@ func main() {
     a := Person{"Arthur Dent", 42}
     z := Person{"Zaphod Beeblebrox", 9001}
     fmt.Println(a, z)
+}
+```
+
+## Generics
+
+Generics is a feature added in Go 1.18 that lets you use a set of types as an interface.
+
+```go
+package main
+
+import "fmt"
+
+type Ordered interface {
+    int | float64 | string
+}
+
+func min[T Ordered](values []T) (T, error) {
+    if len(values) == 0 {
+        var zero T
+        return zero, fmt.Errorf("min of empty slice")
+    }
+
+    m := values[0]
+    for _, v := range values[1:] {
+        if v < m {
+            m = v
+        }
+    }
+
+    return m, nil
+}
+
+func main() {
+    fmt.Println(min([]float64{2, 1, 3}))
+    fmt.Println(min([]string{"B", "A", "C"}))
 }
 ```

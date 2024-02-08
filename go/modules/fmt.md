@@ -37,3 +37,27 @@ func main() {
     fmt.Printf("Fields are: %q", strings.Fields("  foo bar  baz   "))
 }
 ```
+
+## Printing keys and values of a struct
+
+You can use the verb `%#v` to print a struct with its keys and values.
+
+package main
+
+import (
+    "fmt"
+)
+
+type Person struct {
+    Name string
+    Age  int
+}
+
+func main() {
+    boris := Person{
+        Name: "Boris",
+        Age:  40,
+    }
+    // will print boris = main.Person{Name:"Boris", Age:40}
+    fmt.Printf("boris = %#v\n", boris)
+}

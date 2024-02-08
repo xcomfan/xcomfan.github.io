@@ -1,7 +1,7 @@
 ---
 layout: page
 title: "Goroutines"
-permalink: /go/goroutines
+permalink: /go/concurrency/goroutines
 ---
 
 [comment]: <> (TODO: This sections is just raw notes from the class.  I need to review and reformat.  Also should break out the channel and select sections)
@@ -322,7 +322,47 @@ The zero value for a channel is `nil`.  Writing to a `nil` channel makes your go
 | write | Pause until something is read | Pause only if buffer full | Hang forever | PANIC |
 | close | Works | Works | PANIC | PANIC |
 
+The preferred way to communicate between Goroutines is by using channels.  Think of a channel as a pipe that can send a specific type such as an int or a string.  We can send and receive on a pipe, and each will block if there is not a recipient at the other end.
 
+Below is a basic example of sending to a channel and receiving the value.  Note that send and receive without the Goroutine you would get a deadlock.
+
+Note in the loop example below if we close the channel after the loop that allows us to use `range` to iterate over the channel.
+
+```go
+package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+    ch := make(chan int)
+
+    go func() {
+        // Send number to the channel
+        ch <- 42
+    }()
+
+    val := <-ch // receive the value
+    fmt.Printf("got %d form channel\n", val)
+
+    const count = 3
+
+    go func() {
+        for i := 0; i < count; i++ {
+            fmt.Printf("sending %d\n", i)
+            ch <- i
+            time.Sleep(time.Second)
+        }
+        close(ch)
+    }()
+
+    for i := range ch {
+        fmt.Printf("Received %d\n", i)
+    }
+}
+```
 
 ## Select
 
@@ -352,6 +392,58 @@ func say(s string) {
 func main() {
     go say("world")
     say("hello")
+}
+```
+
+Select lets you work with multiple channels.
+
+Below is a basic example of select.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    ch1, ch2 := make(chan int), make(chan int)
+
+    go func() {
+        ch1 <- 42
+    }()
+
+    select {
+    case val := <-ch1:
+        fmt.Printf("got %d from ch1\n", val)
+    case val := <-ch2:
+        fmt.Printf("got %d form ch2\n", val)
+    }
+}
+```
+
+One use case of select statements is timeouts.  Below is an example of using `select`.
+
+```go
+package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+    out := make(chan float64)
+
+    go func() {
+        time.Sleep(100 * time.Millisecond)
+        out <- 3.14
+    }()
+
+    select {
+    case val := <-out:
+        fmt.Printf("got %f\n", val)
+    case <-time.After(20 * time.Millisecond):
+        fmt.Println("timeout!!!")
+    }
 }
 ```
 
@@ -552,5 +644,70 @@ func main() {
 
     time.Sleep(time.Second)
     fmt.Println(c.Value("somekey"))
+}
+```
+
+
+## Parallel versus serial example using wait groups and go routines
+
+In the example below we have a serial and concurrent version of calling a list of URLs and timing how long they run.
+
+In the concurrent version we are using a wait group to track concurrent execution.  We add 1 to wait group then call then we create a function and run it in a separate goroutine with the `go` keyword.  The function we create signals the wait group that it is complete with the `wg.Done()` call and we wait for all the functions being called to complete with `wg.Done()`
+
+```go
+package main
+
+import (
+    "fmt"
+    "net/http"
+    "sync"
+    "time"
+)
+
+func returnType(url string) {
+    resp, err := http.Get(url)
+    if err != nil {
+        fmt.Printf("Error: %s\n", err)
+        return
+    }
+
+    defer resp.Body.Close()
+    ctype := resp.Header.Get("content-type")
+    fmt.Printf("%s -> %s\n", url, ctype)
+
+}
+
+func siteSerial(urls []string) {
+    for _, url := range urls {
+        returnType(url)
+    }
+}
+
+func sitesConcurrent(urls []string) {
+    var wg sync.WaitGroup
+    for _, url := range urls {
+        wg.Add(1)
+        go func(url string) {
+            returnType(url)
+            wg.Done()
+        }(url)
+    }
+    wg.Wait()
+}
+
+func main() {
+    urls := []string{
+        "https://golang.org",
+        "https://api.github.com",
+        "https://httpbin.org/ip",
+    }
+
+    start := time.Now()
+    siteSerial(urls)
+    fmt.Println(time.Since(start))
+
+    start = time.Now()
+    sitesConcurrent(urls)
+    fmt.Println(time.Since(start))
 }
 ```

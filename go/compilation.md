@@ -6,7 +6,7 @@ permalink: /go/compiling
 
 ## Building and running Go binaries
 
-To compile your Go program run use the command `go build my_file.go`.  This will produce a binary executable which you can then run.
+To compile your Go program, use the command `go build my_file.go`.  This will produce a binary executable which you can then run.
 
 To compile and run immediately you can use the command `go run my_file.go`.
 

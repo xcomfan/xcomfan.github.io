@@ -56,3 +56,7 @@ It is illegal to import a package but not use anything from it.  This will give 
 To install a package into your local Go path use the command `go get package_name`.  Once you do that you can use the package in your code.
 
 You install dep by running an install script and then you can run dep init command to create Gopkg.toml files and Gopkg.lock files.  Use `dep ensure` to control what packages get installed.  More info at <https://golang.github.io/dep/>
+
+## Packaging
+
+You should have a comment before all exported functions (ones that start with a capital)

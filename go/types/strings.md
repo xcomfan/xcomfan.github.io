@@ -1,10 +1,15 @@
 ---
 layout: page
-title: "Go Strings"
+title: "Strings in Go"
 permalink: /go/types/strings
 ---
 
 [comment]: <> (TODO: Need to add to this section printing strings and formatting of printing, and deatails of fmt package once I have those)
+
+## Zero value for stings
+
+The zero value for stings is the empty string `""`.
+
 
 ## Declaring Strings
 
@@ -25,10 +30,6 @@ Raw strings are surrounded with a back quote character.  They can span multiple 
 ```go
 rawString := `This is a raw string literal.  It can contain any character except backticks.`
 ```
-
-## Zero value for stings
-
-The zero value for stings is the empty string `""`.
 
 ## Concatenating Strings
 
@@ -76,3 +77,7 @@ func main() {
     fmt.Println(len(s)) // prints 13 (number of bytes not chars)
 }
 ```
+
+## Strings package
+
+Go has a build in [strings package]({% link go/modules/strings.md %}) which has many utilities for working with strings.

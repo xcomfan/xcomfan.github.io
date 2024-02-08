@@ -4,17 +4,15 @@ title: "Go Slices"
 permalink: /go/data_structures/slices
 ---
 
-[comment]: <> (TODO: This page needs a reorganization)
-
-## What are slices
+## What are slices?
 
 An array in Go is fixed in size, but a slice is a dynamically-sized flexible view into the elements of an array.
 
 A slice does not store any data, it just describes a section of an underlying array.  Changing the elements of a slice modifies the corresponding elements of its underlying array.  Other slices that share the same underlying array will see those changes.
 
-`[]T` is a slice with elements of type `T`
+`[]T` is a slice with elements of type `T`.  Slices and their underlying arrays in Go can contain any type.
 
-A slice is formed by specifying two indices a low and a high.  This selects a half-open range which includes the first element, but excludes the last one.  The following expression creates a slice which includes elements 1 through 3 of `a`.  You can omit the high and low bounds to get their defaults of 0 lower bound and length of slice as upper bound.
+A slice is formed by specifying two indices a low and a high.  This selects a half-open range which includes the first element, but excludes the last one.  The following expression creates a slice which includes elements 1 through 3 of the array `a`.  You can omit the high and low bounds to get their defaults of 0 lower bound and length of slice as upper bound.
 
 `a[1:4]`
 
@@ -24,7 +22,7 @@ The **length** of a slice is the number of elements it contains.
 
 The **capacity** of a slice is the number of elements in the underlying array, counting from the first element in the slice.
 
-The length and capacity of a slice can be obtained using the expressions len(s) and cap(s).
+The length and capacity of a slice can be obtained using the expressions `len(s)` and `cap(s)`.
 
 You can extend a slice's length by re-slicing it, **provided it has sufficient capacity**.
 
@@ -32,6 +30,10 @@ You can extend a slice's length by re-slicing it, **provided it has sufficient c
 package main
 
 import "fmt"
+
+func printSlice(s []int) {
+    fmt.Printf("len=%d cap=%d %v\n", len(s), cap(s), s)
+}
 
 func main() {
     s := []int{2, 3, 5, 7, 11, 13}
@@ -49,10 +51,6 @@ func main() {
     s = s[2:]
     printSlice(s)
 }
-
-func printSlice(s []int) {
-    fmt.Printf("len=%d cap=%d %v\n", len(s), cap(s), s)
-}
 ```
 
 ```go
@@ -67,37 +65,22 @@ func main() {
         "George",
         "Ringo",
     }
-    fmt.Println(names)
+    fmt.Println(names) // prints [John Paul George Ringo]
 
     a := names[0:2]
     b := names[1:3]
-    fmt.Println(a, b)
+    fmt.Println(a, b) // prints [John Paul George Ringo]
 
+    // since slice has underlying array this impacts both a and b
     b[0] = "XXX"
-    fmt.Println(a, b)
-    fmt.Println(names)
+    fmt.Println(a, b) // prints [John XXX] [XXX George]
+    fmt.Println(names) // [John XXX George Ringo]
 }
 ```
 
-## Nil slices
+[comment]: <> (TODO: Have a link here to your memory management content.)
 
-The zero value of a slice is `nil`.  A `nil` slice has a length and capacity of 0 and has no underlying array.
-
-```go
-package main
-
-import "fmt"
-
-func main() {
-    var s []int
-    fmt.Println(s, len(s), cap(s))
-    if s == nil {
-        fmt.Println("nil!")
-    }
-}
-```
-
-## Creating a slice with make
+## Creating a slice with make (dynamically sized arrays)
 
 Slices can be created with the built-in make function; this is how you create dynamically-sized arrays.
 
@@ -111,66 +94,31 @@ To specify a capacity, pass a third argument to make:
 
 ```go
 b := make([]int, 0, 5) // len(b)=0, cap(b)=5
-
-b = b[:cap(b)] // len(b)=5, cap(b)=5
-b = b[1:]      // len(b)=4, cap(b)=4
 ```
+
+example of working with make to create slices
 
 ```go
 package main
 
 import "fmt"
 
+func printSlice(s string, x []int) {
+    fmt.Printf("%s len=%d cap=%d %v\n", s, len(x), cap(x), x)
+}
+
 func main() {
     a := make([]int, 5)
-    printSlice("a", a)
+    printSlice("a", a) // prints a len=5 cap=5 [0 0 0 0 0]
 
-    b := make([]int, 0, 5)
+    b := make([]int, 0, 5) // prints b len=0 cap=5 []
     printSlice("b", b)
 
     c := b[:2]
-    printSlice("c", c)
+    printSlice("c", c) // prints c len=2 cap=5 [0 0]
 
     d := c[2:5]
-    printSlice("d", d)
-}
-
-func printSlice(s string, x []int) {
-    fmt.Printf("%s len=%d cap=%d %v\n",
-    s, len(x), cap(x), x)
-}
-```
-
-## slices of slices
-
-Slices can contain any type, including other slices.
-
-```go
-package main
-
-import (
-    "fmt"
-    "strings"
-)
-
-func main() {
-    // Create a tic-tac-toe board.
-    board := [][]string{
-        []string{"_", "_", "_"},
-        []string{"_", "_", "_"},
-        []string{"_", "_", "_"},
-    }
-
-    // The players take turns.
-    board[0][0] = "X"
-    board[2][2] = "O"
-    board[1][2] = "X"
-    board[1][0] = "O"
-    board[0][2] = "X"
-
-    for i := 0; i < len(board); i++ {
-        fmt.Printf("%s\n", strings.Join(board[i], " "))
-    }
+    printSlice("d", d) // prints d len=3 cap=3 [0 0 0]
 }
 ```
 
@@ -229,107 +177,60 @@ func main() {
 }
 ```
 
-## Packaging
+## Slices of slices
 
-You should have a comment before all exported functions (ones that start with a capital)
-
-## Working with files and the web
+Slices can contain any type, including other slices.
 
 ```go
 package main
 
 import (
     "fmt"
-    "io"
-    "io/ioutil"
-    "os"
-)
-
-func main() {
-    content := "Hello from Go!"
-    file, err := os.Create("./fromString.txt")
-    checkError(err)
-    length, err := io.WriteString(file, content)
-    checkError(err)
-    fmt.Printf("Wrote a file with %v chars\n", length)
-    defer file.Close()
-    defer readFile("./fromString.txt")
-}
-
-func readFile(fileName string) {
-    data, err := ioutil.ReadFile(fileName)
-    checkError(err)
-    fmt.Println("Text read from file:", string(data))
-}
-
-func checkError(err error) {
-    if err != nil {
-        panic(err)
-    }
-}
-```
-
-## Parsing a JSON without declaring the struct ahead of time.
-
-```go
-package main
-
-import (
-    "encoding/json"
-    "fmt"
-    "io/ioutil"
-    "net/http"
     "strings"
 )
 
-const url = "http://services.explorecalifornia.org/json/tours.php"
+func main() {
+    // Create a tic-tac-toe board.
+    board := [][]string{
+        []string{"_", "_", "_"},
+        []string{"_", "_", "_"},
+        []string{"_", "_", "_"},
+    }
+
+    // The players take turns.
+    board[0][0] = "X"
+    board[2][2] = "O"
+    board[1][2] = "X"
+    board[1][0] = "O"
+    board[0][2] = "X"
+
+    for i := 0; i < len(board); i++ {
+        fmt.Printf("%s\n", strings.Join(board[i], " "))
+    }
+}
+
+// output will be..
+// X _ X
+// O _ X
+// _ _ O
+```
+
+
+
+## Nil slices
+
+The zero value of a slice is `nil`. A `nil` slice has a length and capacity of 0 and has no underlying array.
+
+```go
+package main
+
+import "fmt"
 
 func main() {
-
-    resp, err := http.Get(url)
-    if err != nil {
-        panic(err)
+    var s []int
+    fmt.Println(s, len(s), cap(s))
+    if s == nil {
+        fmt.Println("nil!")
     }
-
-    fmt.Printf("Response type: %T\n", resp)
-
-    defer resp.Body.Close()
-
-    bytes, err := ioutil.ReadAll(resp.Body)
-    if err != nil {
-        panic(err)
-    }
-
-    content := string(bytes)
-    // fmt.Print(content)
-
-    tours := toursFromJson(content)
-    for _, tour := range tours {
-        fmt.Println(tour.Name)
-    }
-}
-
-func toursFromJson(content string) []Tour {
-    tours := make([]Tour, 0, 20)
-
-    decoder := json.NewDecoder(strings.NewReader(content))
-    _, err := decoder.Token()
-    if err != nil {
-        panic(err)
-    }
-
-    var tour Tour
-    for decoder.More() {
-        err := decoder.Decode(&tour)
-        if err != nil {
-        panic(err)
-        }
-        tours = append(tours, tour)
-    }
-    return tours
-}
-
-type Tour struct {
-    Name, Price string
 }
 ```

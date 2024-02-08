@@ -12,13 +12,13 @@ permalink: /go/
 
 [Data Types]({% link go/types/types.md %})
 
+[Built In Data Structures]({% link go/data_structures/data_structures.md %})
+
 [Control Structures]({% link go/control_structures/control_structures.md %})
 
 [Pointers]({% link go/pointers.md %})
 
 [Functions]({% link go/functions.md %})
-
-[Built In Data Structures]({% link go/data_structures/data_structures.md %})
 
 [Error Handling]({% link go/error_handling.md %})
 
@@ -30,6 +30,14 @@ permalink: /go/
 
 [Packages And Imports]({% link go/packages.md %})
 
-[Go Routines]({% link go/goroutines.md %})
+[Concurrency in Go]({% link go/concurrency/concurrency.md %})
 
 [Readers]({% link go/readers.md %})
+
+[Getting User Input]({% link go/user_input.md %})
+
+[Working with time]({% link go/time.md %})
+
+[Working with JSON]({% link go/json.md %})
+
+[Working with files]({% link go/files.md %})
