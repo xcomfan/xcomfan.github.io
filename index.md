@@ -8,6 +8,7 @@ title: Contents
 
 [comment]: <> (TODO: Fix metadata around the site and see if you can update the styling to have a breadcrumb at the top.)
 
+## [Algorithms]({% link algorithms/algorithms.md %})
 ## [Git]({% link gitref/gitref.md %})
 [comment]: <> (TODO: Move Javascript to programming languages catagory that fans out when you write your python reference)
 ## [Go]({% link go/go.md%})
