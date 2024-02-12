@@ -276,7 +276,7 @@ func main() {
 }
 ```
 
-## Making a function implement an interfaces
+## Making a function implement an interface
 
 You can make a function implement an interface by defining a function type and a method on the function type.
 

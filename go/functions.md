@@ -18,7 +18,7 @@ func addNumbers(a int, b int) int {
 }
 ```
 
-When two or more consecutive named function parameters share a type, you can omit the ty ep from all but the last.  Thus the above example can be written as.
+When two or more consecutive named function parameters share a type, you can omit the type from all but the last.  Thus the above example can be written as.
 
 ```go
 func addNumbers(a, b int) int {
@@ -227,20 +227,5 @@ func main() {
 }
 ```
 
-## Generic types
 
-In addition to generic functions, Go also supports generic types.  A type can be parameterized with a type parameter, which could be useful for implementing generic data structures.  The example below demonstrates a simple type declaration for a singly linked list holding any type of value.
-
-```go
-package main
-
-// List represents a singly-linked list that holds
-// values of any type.
-type List[T any] struct {
-    next *List[T]
-    val  T
-}
-
-func main() {
-}
 ```

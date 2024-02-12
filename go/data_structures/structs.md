@@ -106,6 +106,10 @@ func main() {
 }
 ```
 
+## Printing a struct for debugging purposes
+
+To print a struct for debugging purposes use `%+v` for example `fmt.Printf("%+v\n", poodle)` where `poodle` is an instance of a struct.
+
 ## Embedded structs
 
 ```go
@@ -228,3 +232,20 @@ func main() {
     }
 }
 ```
+
+## Generic types
+
+In addition to generic functions, Go also supports generic types.  A type can be parameterized with a type parameter, which could be useful for implementing generic data structures.  The example below demonstrates a simple type declaration for a singly linked list holding any type of value.
+
+```go
+package main
+
+// List represents a singly-linked list that holds
+// values of any type.
+type List[T any] struct {
+    next *List[T]
+    val  T
+}
+
+func main() {
+}

@@ -4,13 +4,17 @@ title: "Go Maps"
 permalink: /go/data_structures/maps
 ---
 
-[comment]: <> (TODO: I should rework this section to be more common operation on Maps focused)
-
-## Basic map operations
+## What is a map
 
 Maps in Go allow you to map a key to a value.  The value can be anything, but keys cannot be slices, maps or functions.
 
 You cannot count on values in a map being in any sort of order; the order will be random.
+
+## Basic map operations
+
+### Declare a map
+
+`m := make(map[string]int)`
 
 ### Insert and update
 
