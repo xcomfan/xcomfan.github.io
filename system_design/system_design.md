@@ -112,6 +112,22 @@ permalink: /system_design
 * Very data intensive workload
 * Very high throughput for IOPs
 
+### ACID
+
+A: Atomic - All operations in a transaction succeed or every operation is rolled back.
+C: Consistent - On completion of a transaction the database is structurally sound.
+I: Isolated - Transaction do not contend with one another. Database makes sure that transactions appear to run sequentially.
+D: Durable - Once the transaction is completed it will remain in system even if failure occurs.
+
+### CAP Theorem
+
+C: Consistency - All clients see the same data at the same time no matter which node they connect to.
+A: Availability - Client gets a response if if one or more nodes are down.
+P: Partition Tolerance - System continues to operate despite message loss or partial failure.
+
+You basically need to pick two of these in a distributed system.
+
+
 ## Monitoring
 
 ### 4 Golder signals of monitoring
@@ -138,3 +154,19 @@ permalink: /system_design
 | MTTI | Mean time to investigate |
 | MTRS | Mean time to restore service |
 | MTBSI | Mean time between system incidents |
+
+## Load Balancing
+
+### Load Balance Algorithms
+
+* Round Robin
+* Sticky Round Robin - Keep sending to same host
+* Weighted Round Robin
+* IP/URL Hash
+* Least Connections
+* Least Response Time
+
+## Caching
+
+### Caching Strategies
+
