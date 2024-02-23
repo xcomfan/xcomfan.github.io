@@ -43,7 +43,36 @@
   </header>
 
   <div class="post-content">
-    <h2 id="integer-types">Integer types</h2>
+    <h2 id="special-types">Special types</h2>
+
+<p>In Go <code class="language-plaintext highlighter-rouge">byte</code>, <code class="language-plaintext highlighter-rouge">int</code>, and <code class="language-plaintext highlighter-rouge">uint</code> are aliases for the specific types to provide a shorthand.  The 32 versus 64 is determined by your CPU architecture.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Type Name</th>
+      <th>Same as</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>byte</td>
+      <td>uint8</td>
+    </tr>
+    <tr>
+      <td>int</td>
+      <td>int32 or int64</td>
+    </tr>
+    <tr>
+      <td>uint</td>
+      <td>uint32 or uint64</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="integer-types">Integer types</h2>
+
+<p>The zero value for integer types is zero <code class="language-plaintext highlighter-rouge">0</code></p>
 
 <table>
   <thead>
@@ -99,6 +128,8 @@
 
 <h2 id="floating-point-types">Floating point types</h2>
 
+<p>The zero value for float types is zero <code class="language-plaintext highlighter-rouge">0</code></p>
+
 <table>
   <tbody>
     <tr>
@@ -119,36 +150,29 @@
   </tbody>
 </table>
 
-<h2 id="special-types">Special types</h2>
+<h3 id="parsing-floats">Parsing Floats</h3>
 
-<p>In Go <code class="language-plaintext highlighter-rouge">byte</code>, <code class="language-plaintext highlighter-rouge">int</code>, and <code class="language-plaintext highlighter-rouge">uint</code> are aliases for the specific types to provide a shorthand.  The 32 versus 64 is determined by your CPU architecture.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
 
-<table>
-  <thead>
-    <tr>
-      <th>Type Name</th>
-      <th>Same as</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>byte</td>
-      <td>uint8</td>
-    </tr>
-    <tr>
-      <td>int</td>
-      <td>int32 or int64</td>
-    </tr>
-    <tr>
-      <td>uint</td>
-      <td>uint32 or uint64</td>
-    </tr>
-  </tbody>
-</table>
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"math"</span>
+<span class="p">)</span>
 
-<h2 id="zero-value-for-integers">Zero value for integers</h2>
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">f3</span> <span class="o">:=</span> <span class="m">23.5</span><span class="p">,</span> <span class="m">65.1</span><span class="p">,</span> <span class="m">76.3</span>
+    <span class="n">floatSum</span> <span class="o">:=</span> <span class="n">f1</span> <span class="o">+</span> <span class="n">f2</span> <span class="o">+</span> <span class="n">f3</span>
+    <span class="c">// prints x.yyyyyyyyy due to binary storage</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Float sum:"</span><span class="p">,</span> <span class="n">floatSum</span><span class="p">)</span>
 
-<p>The zero value for integer types is zero <code class="language-plaintext highlighter-rouge">0</code></p>
+    <span class="c">// *100 / 100 needed because by default math.Round will give integer</span>
+    <span class="c">//This is the safest and easiest way in Go to round numbers adn keep the decimal portion.</span>
+    <span class="c">// the *100 / 100 will give you 2 decimals of precisions (the number of 0s in 100) </span>
+    <span class="c">// for 3 use 1000</span>
+    <span class="n">floatSum</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">Round</span><span class="p">(</span><span class="n">floatSum</span><span class="o">*</span><span class="m">100</span><span class="p">)</span> <span class="o">/</span> <span class="m">100</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"The sum is now"</span><span class="p">,</span> <span class="n">floatSum</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
   </div>
 

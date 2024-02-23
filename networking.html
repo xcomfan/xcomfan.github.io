@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Networking | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Networking" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/networking" />
+<meta property="og:url" content="http://localhost:4000/networking" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Networking" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Networking","url":"http://localhost:4000/networking"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Networking</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="tcpip">TCP/IP</h2>
+
+<h3 id="overview">Overview</h3>
+
+<p>A TCP entity accepts user data streams from local processes, breaks them up into pieces not exceeding 64KB (in practice 1460 data bytes in order to fit into a single Ethernet frame with the IP and TCP Headers), and sends each piece as a separate IP datagram. When datagrams containing TCP data arrive at a machine, they are given to the TCP entity, which reconstructs the original byte stream.</p>
+
+<p>IP Layer gives no guarantee that datagrams will be delivered properly, nor any indication of how fast datagrams may be sent. It is up to TCP to send data-grams fast enough to make use of the capacity but not cause congestion, and to time out and retransmit any datagrams that are not delivered. Datagrams that do arrive may be in wrong order. It is up to TCP to reassemble them into messages in the proper sequence.</p>
+
+<p>Two or more connections can terminate at the same socket. Connections are identified by socket identifiers at both ends.</p>
+
+<p>Port numbers below 1024 are reserved for standard services and can only be started by root. They are called <strong>well known ports</strong></p>
+
+<p>TCP connections are full duplex (both nodes can send and receive data at the same time) and point to point (Each connection has only two endpoints).</p>
+
+<p>A TCP connection is a byte stream, not a datagram stream. Message boundaries are not preserved end to end. For example; if the sending process does four 512 byte writes to a TCP stream, this data may be delivered to the receiving process as four 51 byte chunks, two 124 byte chunks or one 2058 byte chunk. As with Unix files, TCP software has no idea wha the bytes mean and no interest in finding out. A byte is just a byte.</p>
+
+<p>The sending and receiving TCP entities exchange data in the form of segments. A <strong>TCP segment</strong> consists of a fixed 20 byte header (plus optional part) followed by zero or more data bytes. TCP software decides how big segments should be. It can accumulate data from multiple writes to a single segment or break u a write into multiple segments. Two limits to segment size are that TCP header must fit into the 65,515 byte IP payload, and each link has a Maximum MTU and each segment must fit into the MTU of the sender and receiver. TCP will use MTU discovery to find the minimum MTU size on a path and use that to avoid fragmentation (which leads to performance issues).</p>
+
+<p>Basic protocol used by TCP is the sliding window protocol with dynamic window size. When a sender transmits a segment, it also starts a timer. When the segment arrived at the destination, the receiving TCP entity sends back a segment(with data if any exists, and otherwise without) bearing an acknowledgement number equal to the next sequence number it expects to receive and the remaining window size. If the sender’s timer goes off before the acknowledgment is received, the sender transmits the segment again.</p>
+
+<h3 id="tcp-segment-structure">TCP Segment Structure</h3>
+
+<p>A TCP segment consists of data bytes and a header that is added to the data by TCP. The header of a TCP segment can range from 20 to 60 bytes. 40 bytes are for options. If there are no options, a header is 20 bytes.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Content</th>
+      <th>Size</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Source port address</td>
+      <td>16 bits</td>
+      <td>Port address of application sending the data segment</td>
+    </tr>
+    <tr>
+      <td>Destination port address</td>
+      <td>16 bits</td>
+      <td>Port address of the application in the host receiving data segment</td>
+    </tr>
+    <tr>
+      <td>Sequence number</td>
+      <td>32 bits</td>
+      <td>Byte number of the fist byte that is sent in that particular segment. Used to assemble segments received out of order.</td>
+    </tr>
+    <tr>
+      <td>Acknowledgement number</td>
+      <td>32 bits</td>
+      <td>Byte number receiver expect to receive next. In other words its the next in order byte expected. Its an acknowledgement for previous bytes being received successfully.</td>
+    </tr>
+    <tr>
+      <td>Header Length (HLEN)</td>
+      <td>4 bits</td>
+      <td>Indicates length of TCP header by a number of 4 byte words. For example if header is 20 bytes (min length of TCP header) then this field holds 5 (because 5 * 4 is 20) and the maximum 60 bytes will be 15 (15 * 4 is 60). Value of this field is always between 5 and 15. Tells how many 32 bit words are contained in the TCP header. Needed because the option field is variable in length so the header field is as well.</td>
+    </tr>
+    <tr>
+      <td>Control Flags</td>
+      <td>6 bits</td>
+      <td>6 1 bit control bits that control connection establishment. More details below</td>
+    </tr>
+    <tr>
+      <td>Windows Size</td>
+      <td>16 bits</td>
+      <td>Tells the window size of the sending TCP in bytes. 0 size is legal and says that the bytes upt o and including Acknowledgment number -1 have been received, but that the receiver has not had a chance to consume the data and would like no more data for the moment. Receiver can send another message later with a non zero window sze to continue the communication.</td>
+    </tr>
+    <tr>
+      <td>Checksum</td>
+      <td>16 bits</td>
+      <td>Holds the checksum for error control</td>
+    </tr>
+    <tr>
+      <td>Urgent Pointer</td>
+      <td>16 bits</td>
+      <td>Valid only if URG control flag set. Used to point to data that is urgently required that needs to reach the receiving process at the earliest. The value of this field is added to the sequence number to get the byte number of the last urgent byte</td>
+    </tr>
+    <tr>
+      <td>Options</td>
+      <td>0 or more 32 bit words</td>
+      <td>Options allow to add extra facilities not covered by regular header. Options are variable in length and use 0 padding to fill multiples of 32 bits. One options example is maximum segment size used during connection establishment. Without this option you default to a 536 byte payload. Timestamp option is another example which is used to solve the issue of sequence number wrapping around. SACK (Selective Acknowledgment Option ) lets a receiver tell the sender the ranges of sequence numbers it has received. This is a supplement to acknowledgement numbers and is used after a packet has been lost, but subsequent or duplicate data has arrived</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="control-flag-details">Control Flag details</h4>
+
+<table>
+  <tbody>
+    <tr>
+      <td>CWR</td>
+      <td>Congestion Window Reduced: Set to signal that congestion windows reduced from TCP sender to TCP receiver so that it knows the sender has slowed down and can stop sending ECN echo.</td>
+    </tr>
+    <tr>
+      <td>ECE</td>
+      <td>When congestion notification is triggered ECE is to to ECN-Echo to TCP sender to tell it to slow down</td>
+    </tr>
+    <tr>
+      <td>URG</td>
+      <td>Urgent pointer is valid</td>
+    </tr>
+    <tr>
+      <td>ACK</td>
+      <td>Acknowledgement number is valid (for cumulative acknowledgement)</td>
+    </tr>
+    <tr>
+      <td>PSH</td>
+      <td>Request for push. Kindly ask receiver to send to app directly and not wait for buffer to fill up</td>
+    </tr>
+    <tr>
+      <td>RST</td>
+      <td>Reset connection or refuse to open connection</td>
+    </tr>
+    <tr>
+      <td>SYN</td>
+      <td>Synchronize sequence numbers. Connection request has SYN = 1 and Ack = 0 to indicate that piggyback acknowledgement is not in use. The connection reply does have an acknowledgement so it has SYN = 1 and ACK = 1</td>
+    </tr>
+    <tr>
+      <td>FIN</td>
+      <td>Terminate connection. Means sender has no more data to transmit</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="tcp-connection-establishment-3-way-handshake">TCP Connection Establishment (3 way handshake)</h3>
+
+<p>To establish a connection, one side (the server) passively waits for an incoming connection (LISTEN and ACCEPT) primitives.</p>
+
+<p>The other side (the client) executes the CONNECT primitive specifying the IP address and port to which it wants to connect, the maximum TCP segment size it is willing to accept and optionally some user data (e.g password). The CONNECT primitive sends a TCP segment with SYN bit on and the ACK bit off and waits for a response from the other end.</p>
+
+<p>When the segment arrives at the destination, the entity there checks to see if there is a process that has done a LISTEN on the port given in the destination. If not it sends a reply with the RST bit on to reject the connection. If some process is listening to the port, the process is given the incoming TCP segment. It can either accept or reject the connection. If it accepts the acknowledgement segment is sent back.</p>
+
+<ol>
+  <li>Host 1 sends SYN (SEQ = x)</li>
+  <li>Host 2 sends SYN (SEQ = y, ACK = x + 1)</li>
+  <li>Host 1 sends (SEQ = x =1, ACK = y + 1)</li>
+</ol>
+
+<h3 id="tcp-connection-release">TCP Connection Release</h3>
+
+<p>Even though TCP connections are full duplex, to understand how connections are released its easier to think of the connection as a pair of simplex connections. Each simplex connection is released independently of its sibling. To release a connection either party can send a TCP segment with the FIN bit set, which means it has no more data to transmit. When the FIN is acknowledged that direction is shut down for new data. If response to FIN is not received within 2 packet lifetimes, the sender of the FIN releases the connection. The other side will eventually notice that nobody seems to be listening to it anymore and will time out as well.</p>
+
+<h3 id="states-of-tcp-connection">States of TCP Connection</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>State</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CLOSED</td>
+      <td>No connection is active or pending</td>
+    </tr>
+    <tr>
+      <td>LISTEN</td>
+      <td>The server is waiting for an incoming call</td>
+    </tr>
+    <tr>
+      <td>SYN RCVD</td>
+      <td>A connection request has arrived; wait for ACK</td>
+    </tr>
+    <tr>
+      <td>SYN SENT</td>
+      <td>The application has started to open a connection</td>
+    </tr>
+    <tr>
+      <td>ESTABLISHED</td>
+      <td>The normal data transfer state</td>
+    </tr>
+    <tr>
+      <td>FIN WAIT 1</td>
+      <td>The application has said it is finished</td>
+    </tr>
+    <tr>
+      <td>FIN WAIT 2</td>
+      <td>The other side has agreed to release</td>
+    </tr>
+    <tr>
+      <td>TIME WAIT</td>
+      <td>Wait for all packets to die off</td>
+    </tr>
+    <tr>
+      <td>CLOSING</td>
+      <td>Both sides have tried to close simultaneously</td>
+    </tr>
+    <tr>
+      <td>CLOSE WAIT</td>
+      <td>The other side has initiated a release</td>
+    </tr>
+    <tr>
+      <td>LAST ACK</td>
+      <td>Wait for all packets to die off</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="tcp-sliding-window">TCP Sliding Window</h3>
+
+<h3 id="tcp-congestion-protocol">TCP Congestion Protocol</h3>
+
+<h2 id="tls">TLS</h2>
+
+<h3 id="what-happens-during-a-tls-handshake">What happens during a TLS handshake</h3>
+
+<p>During a TLS handshake the client and server will do the following.</p>
+
+<ul>
+  <li>
+    <p>Specify which version of TLS they will use (1.0, 1.2, 1.3 etc)</p>
+  </li>
+  <li>
+    <p>Decide on which cipher suites they will use.</p>
+  </li>
+  <li>
+    <p>Authenticate the identity of the server via the server’s public key and the SSL certificate authority digital signature.</p>
+  </li>
+  <li>
+    <p>Generate session keys in order to use symmetric encryption after the handshake is complete.</p>
+  </li>
+</ul>
+
+<p>Steps of a TLS handshake</p>
+
+<ul>
+  <li>
+    <p>TLS handshakes are a series of datagrams or messages exchanged by a client and a server.</p>
+  </li>
+  <li>The actual steps depend on the key exchange algorithm. RSA is the most common one and it goes as follows…
+    <ul>
+      <li>
+        <p>Client initiates a message that has TLS version the client supports, cipher suites supported, a string of random bytes known as the “client random”</p>
+      </li>
+      <li>
+        <p>Server replies with the servers SSL certificate, the servers chosen cipher suite, server random.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>The client verifies the server’s SSL certificate with the certificate authority that issues it.</p>
+  </li>
+  <li>
+    <p>Client sends a <code class="language-plaintext highlighter-rouge">premaster secret</code> a random string encrypted with the servers public key that client gets from the certificate. This can only be decrypted by the server with the private key.</p>
+  </li>
+  <li>
+    <p>Session key is created from the client random, the server random and the premaster secret. They should arrive at the same result (Deffie Hellman).</p>
+  </li>
+  <li>
+    <p>Client sends a finished message that is encrypted with a session key.</p>
+  </li>
+  <li>
+    <p>Server sends a finished message encrypted with the session key.</p>
+  </li>
+  <li>Secure symmetric encryption is achieved.</li>
+</ul>
+
+<h3 id="how-deffie-hellman-works">How Deffie-Hellman works</h3>
+
+<ul>
+  <li>
+    <p>Client sends hello the protocol version and the client random and a list of cipher suites.</p>
+  </li>
+  <li>
+    <p>Server replies with SSL certificate, the chosen cipher and the server random. In this message server includes the server digital signature. Digital signature is the server using its private key to encrypt the client random, the server random, and the DH parameter. This encrypted data functions as the servers digital signature, establishing that the server had the private key that matches with the public key from the SSL certificate.</p>
+  </li>
+  <li>
+    <p>The client decrypts the servers digital signature with the public key, verifying that the server controls the private key and is who it says it is. The client sends the client DH parameter to the server.</p>
+  </li>
+  <li>
+    <p>Client and server calculate the premaster secret.  Instead of client generating premaster as in RSA client gives the DH parameter which his used to calculate the secret.</p>
+  </li>
+  <li>
+    <p>Now the client and server calculate session keys from the premaster secret, client random, and server random just like in RSA handshake.</p>
+  </li>
+</ul>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

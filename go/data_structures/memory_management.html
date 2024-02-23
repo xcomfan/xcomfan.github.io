@@ -3,20 +3,20 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Go Data Types | My References</title>
+<title>Memory management | My References</title>
 <meta name="generator" content="Jekyll v3.9.2" />
-<meta property="og:title" content="Go Data Types" />
+<meta property="og:title" content="Memory management" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://localhost:4000/go/types" />
-<meta property="og:url" content="http://localhost:4000/go/types" />
+<link rel="canonical" href="http://localhost:4000/go/data_structures/memory_management.html" />
+<meta property="og:url" content="http://localhost:4000/go/data_structures/memory_management.html" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Go Data Types" />
+<meta property="twitter:title" content="Memory management" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Go Data Types","url":"http://localhost:4000/go/types"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Memory management","url":"http://localhost:4000/go/data_structures/memory_management.html"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
@@ -39,17 +39,17 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Go Data Types</h1>
+    <h1 class="post-title">Memory management</h1>
   </header>
 
   <div class="post-content">
-    <p><a href="/go/types/numeric_types">Numeric types</a></p>
+    <h2 id="memory-management">Memory management</h2>
 
-<p><a href="/go/types/strings">Strings</a></p>
+<h3 id="make-vs-new">Make() vs new()</h3>
 
-<p><a href="/go/types/boolean">Boolean</a></p>
+<p><code class="language-plaintext highlighter-rouge">new()</code> Allocates but does not initialize memory. Returns a memory address but zeroed out storage.</p>
 
-<p><a href="/go/types_conversion">Converting types</a></p>
+<p><code class="language-plaintext highlighter-rouge">make()</code> Allocate and initialized memory. Allocates non-zeroed storage and returns a memory address.</p>
 
   </div>
 

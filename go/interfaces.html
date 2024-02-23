@@ -49,6 +49,8 @@
 
 <p>Interfaces are implemented implicitly. A type implements an interface by implementing its methods.  There is no explicit declaration of intent (no implements keyword or anything like that).  Implicit interfaces decouple the definition of an interface from its implementation, which could then appear in any package without prearrangement.</p>
 
+<p>A good way to think about interfaces.  Think of the shapes circle, triangle and square. If we use interfaces to give each an area method and call the interface Shape, we can now create a slice of shapes.  Even though they are different structs because they implement the same interface we can treat them as the same type and stick them into a slice.  More concrete example of this in Go IO reader is an interface and using this same interface you can work with files, sockets, compressed files etc.</p>
+
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
 
 <span class="k">import</span> <span class="p">(</span>
@@ -305,7 +307,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h2 id="making-a-function-implement-an-interfaces">Making a function implement an interfaces</h2>
+<h2 id="making-a-function-implement-an-interface">Making a function implement an interface</h2>
 
 <p>You can make a function implement an interface by defining a function type and a method on the function type.</p>
 
@@ -417,6 +419,40 @@
     <span class="n">a</span> <span class="o">:=</span> <span class="n">Person</span><span class="p">{</span><span class="s">"Arthur Dent"</span><span class="p">,</span> <span class="m">42</span><span class="p">}</span>
     <span class="n">z</span> <span class="o">:=</span> <span class="n">Person</span><span class="p">{</span><span class="s">"Zaphod Beeblebrox"</span><span class="p">,</span> <span class="m">9001</span><span class="p">}</span>
     <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="generics">Generics</h2>
+
+<p>Generics is a feature added in Go 1.18 that lets you use a set of types as an interface.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">type</span> <span class="n">Ordered</span> <span class="k">interface</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="o">|</span> <span class="kt">float64</span> <span class="o">|</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">min</span><span class="p">[</span><span class="n">T</span> <span class="n">Ordered</span><span class="p">](</span><span class="n">values</span> <span class="p">[]</span><span class="n">T</span><span class="p">)</span> <span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="m">0</span> <span class="p">{</span>
+        <span class="k">var</span> <span class="n">zero</span> <span class="n">T</span>
+        <span class="k">return</span> <span class="n">zero</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"min of empty slice"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">m</span> <span class="o">:=</span> <span class="n">values</span><span class="p">[</span><span class="m">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">values</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="p">]</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">m</span> <span class="p">{</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">m</span><span class="p">,</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">min</span><span class="p">([]</span><span class="kt">float64</span><span class="p">{</span><span class="m">2</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">3</span><span class="p">}))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">min</span><span class="p">([]</span><span class="kt">string</span><span class="p">{</span><span class="s">"B"</span><span class="p">,</span> <span class="s">"A"</span><span class="p">,</span> <span class="s">"C"</span><span class="p">}))</span>
 <span class="p">}</span>
 </code></pre></div></div>
 

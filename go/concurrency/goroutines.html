@@ -9,14 +9,14 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://localhost:4000/go/goroutines" />
-<meta property="og:url" content="http://localhost:4000/go/goroutines" />
+<link rel="canonical" href="http://localhost:4000/go/concurrency/goroutines" />
+<meta property="og:url" content="http://localhost:4000/go/concurrency/goroutines" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Goroutines" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Goroutines","url":"http://localhost:4000/go/goroutines"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Goroutines","url":"http://localhost:4000/go/concurrency/goroutines"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
@@ -378,6 +378,47 @@
   </tbody>
 </table>
 
+<p>The preferred way to communicate between Goroutines is by using channels.  Think of a channel as a pipe that can send a specific type such as an int or a string.  We can send and receive on a pipe, and each will block if there is not a recipient at the other end.</p>
+
+<p>Below is a basic example of sending to a channel and receiving the value.  Note that send and receive without the Goroutine you would get a deadlock.</p>
+
+<p>Note in the loop example below if we close the channel after the loop that allows us to use <code class="language-plaintext highlighter-rouge">range</code> to iterate over the channel.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">int</span><span class="p">)</span>
+
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c">// Send number to the channel</span>
+        <span class="n">ch</span> <span class="o">&lt;-</span> <span class="m">42</span>
+    <span class="p">}()</span>
+
+    <span class="n">val</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">ch</span> <span class="c">// receive the value</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"got %d form channel</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+    <span class="k">const</span> <span class="n">count</span> <span class="o">=</span> <span class="m">3</span>
+
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">count</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"sending %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+            <span class="n">ch</span> <span class="o">&lt;-</span> <span class="n">i</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="nb">close</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+    <span class="p">}()</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">ch</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Received %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
 <h2 id="select">Select</h2>
 
 <p>What if yo had multiple channels.  You would want to read the ready channels and skip the ones that are blocked.  Also what if you want to only write to a channel that is not blocked.  This is possible with select.</p>
@@ -405,6 +446,56 @@
 <span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">go</span> <span class="n">say</span><span class="p">(</span><span class="s">"world"</span><span class="p">)</span>
     <span class="n">say</span><span class="p">(</span><span class="s">"hello"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Select lets you work with multiple channels.</p>
+
+<p>Below is a basic example of select.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="s">"fmt"</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ch1</span><span class="p">,</span> <span class="n">ch2</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">int</span><span class="p">),</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">int</span><span class="p">)</span>
+
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">ch1</span> <span class="o">&lt;-</span> <span class="m">42</span>
+    <span class="p">}()</span>
+
+    <span class="k">select</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">val</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">ch1</span><span class="o">:</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"got %d from ch1</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+    <span class="k">case</span> <span class="n">val</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">ch2</span><span class="o">:</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"got %d form ch2</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>One use case of select statements is timeouts.  Below is an example of using <code class="language-plaintext highlighter-rouge">select</code>.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">out</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">float64</span><span class="p">)</span>
+
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="m">100</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Millisecond</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">&lt;-</span> <span class="m">3.14</span>
+    <span class="p">}()</span>
+
+    <span class="k">select</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">val</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="n">out</span><span class="o">:</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"got %f</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+    <span class="k">case</span> <span class="o">&lt;-</span><span class="n">time</span><span class="o">.</span><span class="n">After</span><span class="p">(</span><span class="m">20</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Millisecond</span><span class="p">)</span><span class="o">:</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"timeout!!!"</span><span class="p">)</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -598,6 +689,69 @@
 
     <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
     <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="s">"somekey"</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="parallel-versus-serial-example-using-wait-groups-and-go-routines">Parallel versus serial example using wait groups and go routines</h2>
+
+<p>In the example below we have a serial and concurrent version of calling a list of URLs and timing how long they run.</p>
+
+<p>In the concurrent version we are using a wait group to track concurrent execution.  We add 1 to wait group then call then we create a function and run it in a separate goroutine with the <code class="language-plaintext highlighter-rouge">go</code> keyword.  The function we create signals the wait group that it is complete with the <code class="language-plaintext highlighter-rouge">wg.Done()</code> call and we wait for all the functions being called to complete with <code class="language-plaintext highlighter-rouge">wg.Done()</code></p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"net/http"</span>
+    <span class="s">"sync"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">returnType</span><span class="p">(</span><span class="n">url</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">resp</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">http</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Error: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+
+    <span class="k">defer</span> <span class="n">resp</span><span class="o">.</span><span class="n">Body</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+    <span class="n">ctype</span> <span class="o">:=</span> <span class="n">resp</span><span class="o">.</span><span class="n">Header</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="s">"content-type"</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"%s -&gt; %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">ctype</span><span class="p">)</span>
+
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">siteSerial</span><span class="p">(</span><span class="n">urls</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">url</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">urls</span> <span class="p">{</span>
+        <span class="n">returnType</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">sitesConcurrent</span><span class="p">(</span><span class="n">urls</span> <span class="p">[]</span><span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">wg</span> <span class="n">sync</span><span class="o">.</span><span class="n">WaitGroup</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">url</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">urls</span> <span class="p">{</span>
+        <span class="n">wg</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+        <span class="k">go</span> <span class="k">func</span><span class="p">(</span><span class="n">url</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">returnType</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="n">wg</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span>
+        <span class="p">}(</span><span class="n">url</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">wg</span><span class="o">.</span><span class="n">Wait</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">urls</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span>
+        <span class="s">"https://golang.org"</span><span class="p">,</span>
+        <span class="s">"https://api.github.com"</span><span class="p">,</span>
+        <span class="s">"https://httpbin.org/ip"</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">start</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+    <span class="n">siteSerial</span><span class="p">(</span><span class="n">urls</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Since</span><span class="p">(</span><span class="n">start</span><span class="p">))</span>
+
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+    <span class="n">sitesConcurrent</span><span class="p">(</span><span class="n">urls</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Since</span><span class="p">(</span><span class="n">start</span><span class="p">))</span>
 <span class="p">}</span>
 </code></pre></div></div>
 

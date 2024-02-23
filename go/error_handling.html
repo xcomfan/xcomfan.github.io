@@ -92,9 +92,33 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
+<h2 id="returning-formatted-error-with-fmt-package">Returning formatted error with fmt package</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">fmt</code> package has a function that lets you return a formatted string as an error.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"math"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">n</span> <span class="kt">float64</span><span class="p">)</span> <span class="p">(</span><span class="kt">float64</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="m">0</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="m">0.0</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"sqrt of negative value (%f)"</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">Sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">sqrt</span><span class="p">(</span><span class="o">-</span><span class="m">1</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Type of err = %</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="c">// same as you would get with errors.New()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
 <h2 id="error-are-an-interface">Error are an interface</h2>
 
-<p>Because error is an interface, we can define ours instead of relying on ones given to us by <code class="language-plaintext highlighter-rouge">errors.New()</code></p>
+<p>Because error is an interface, we can define our own instead of relying on ones given to us by <code class="language-plaintext highlighter-rouge">errors.New()</code></p>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
 
@@ -184,67 +208,80 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h2 id="error-notes-from-go-tour">Error notes from Go tour</h2>
+<h2 id="errors-package">Errors package</h2>
 
-<h3 id="error-interface">Error interface</h3>
+<p>There is a commonly used package called pkg errors.  This is a drop in replacement to the built in pkg/errors package.</p>
 
-<p>The <code class="language-plaintext highlighter-rouge">error</code> type is a built-in interface.</p>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="kt">error</span> <span class="k">interface</span> <span class="p">{</span>
-    <span class="n">Error</span><span class="p">()</span> <span class="kt">string</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p>Functions often return an <code class="language-plaintext highlighter-rouge">error</code> value, and calling code should handle errors by testing whether the error equals <code class="language-plaintext highlighter-rouge">nil</code>.</p>
-
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">i</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">strconv</span><span class="o">.</span><span class="n">Atoi</span><span class="p">(</span><span class="s">"42"</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
-    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"couldn't convert number: %v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
-    <span class="k">return</span>
-<span class="p">}</span>
-<span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Converted integer:"</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>A <code class="language-plaintext highlighter-rouge">nil</code> error denots success; a non <code class="language-plaintext highlighter-rouge">nil</code> error denotes failure.</p>
+<p>Below is a good example of how to open up a config file and handle the possibility of it being missing as well as some basic logging.</p>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
 
 <span class="k">import</span> <span class="p">(</span>
     <span class="s">"fmt"</span>
-    <span class="s">"time"</span>
+    <span class="s">"log"</span>
+    <span class="s">"os"</span>
+
+    <span class="s">"github.com/pkg/errors"</span>
 <span class="p">)</span>
 
-<span class="k">type</span> <span class="n">MyError</span> <span class="k">struct</span> <span class="p">{</span>
-    <span class="n">When</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span>
-    <span class="n">What</span> <span class="kt">string</span>
+<span class="c">// Config holds configuration</span>
+<span class="k">type</span> <span class="n">Config</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="c">// configuration fields go here (redacted)</span>
 <span class="p">}</span>
 
-<span class="k">func</span> <span class="p">(</span><span class="n">e</span> <span class="o">*</span><span class="n">MyError</span><span class="p">)</span> <span class="n">Error</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"at %v, %s"</span><span class="p">,</span>
-    <span class="n">e</span><span class="o">.</span><span class="n">When</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">What</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="k">func</span> <span class="n">run</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="o">&amp;</span><span class="n">MyError</span><span class="p">{</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">(),</span>
-        <span class="s">"it didn't work"</span><span class="p">,</span>
+<span class="k">func</span> <span class="n">readConfig</span><span class="p">(</span><span class="n">path</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">Config</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">file</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">errors</span><span class="o">.</span><span class="n">Wrap</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="s">"can't open configuration file"</span><span class="p">)</span>
     <span class="p">}</span>
+
+    <span class="k">defer</span> <span class="n">file</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="n">cfg</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="n">Config</span><span class="p">{}</span>
+    <span class="c">// Parse file here (redacted)</span>
+    <span class="k">return</span> <span class="n">cfg</span><span class="p">,</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">setupLogging</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">out</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">OpenFile</span><span class="p">(</span><span class="s">"app.log"</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">O_APPEND</span><span class="o">|</span><span class="n">os</span><span class="o">.</span><span class="n">O_CREATE</span><span class="o">|</span><span class="n">os</span><span class="o">.</span><span class="n">O_RDONLY</span><span class="p">,</span> <span class="m">0644</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">SetOutput</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">run</span><span class="p">();</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
-        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="n">setupLogging</span><span class="p">()</span>
+    <span class="c">// we expect this to fail since we don't have config file on system</span>
+    <span class="n">cfg</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">readConfig</span><span class="p">(</span><span class="s">"/path/to/config.toml"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Fprintf</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stderr</span><span class="p">,</span> <span class="s">"error: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="c">// %+v will print stack trace as part of the error package</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"error: %+v"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">Exit</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
     <span class="p">}</span>
+
+    <span class="c">// Normal operation redacted</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>In the example above you just return error, but if you wanted to return error or an actual value you would define your function as…</p>
+<h2 id="use-defer-and-recover-to-guard-against-panics">Use defer and recover to guard against panics</h2>
 
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">Sqrt</span><span class="p">(</span><span class="n">x</span> <span class="kt">float64</span><span class="p">)</span> <span class="p">(</span><span class="kt">float64</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="m">0</span><span class="p">,</span> <span class="no">nil</span>
+<p>To guard against a panic use <code class="language-plaintext highlighter-rouge">defer</code>. Inside <code class="language-plaintext highlighter-rouge">defer</code> you call the built in <code class="language-plaintext highlighter-rouge">recover()</code> which returns something.  If the something is <code class="language-plaintext highlighter-rouge">nil</code> there is no panic if its not <code class="language-plaintext highlighter-rouge">nil</code> you get an error.</p>
+
+<p>Below is an example of using <code class="language-plaintext highlighter-rouge">defer</code> and <code class="language-plaintext highlighter-rouge">recover</code></p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">safeValue</span><span class="p">(</span><span class="n">vals</span> <span class="p">[]</span><span class="kt">int</span><span class="p">,</span> <span class="n">index</span> <span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">n</span> <span class="kt">int</span><span class="p">,</span> <span class="n">err</span> <span class="kt">error</span><span class="p">){</span>
+    <span class="k">defer</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">e</span> <span class="o">:=</span> <span class="nb">recover</span><span class="p">();</span> <span class="n">e</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+            <span class="n">err</span> <span class="o">=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"%v"</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}()</span>
+
+    <span class="k">return</span> <span class="n">vals</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="no">nil</span>
 <span class="p">}</span>
 </code></pre></div></div>
-
 
   </div>
 

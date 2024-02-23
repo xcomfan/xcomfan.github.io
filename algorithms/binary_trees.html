@@ -3,20 +3,20 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Go Data Types | My References</title>
+<title>Binary Trees | My References</title>
 <meta name="generator" content="Jekyll v3.9.2" />
-<meta property="og:title" content="Go Data Types" />
+<meta property="og:title" content="Binary Trees" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://localhost:4000/go/types" />
-<meta property="og:url" content="http://localhost:4000/go/types" />
+<link rel="canonical" href="http://localhost:4000/algorithms/binary_trees" />
+<meta property="og:url" content="http://localhost:4000/algorithms/binary_trees" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Go Data Types" />
+<meta property="twitter:title" content="Binary Trees" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Go Data Types","url":"http://localhost:4000/go/types"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Binary Trees","url":"http://localhost:4000/algorithms/binary_trees"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
@@ -39,17 +39,56 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Go Data Types</h1>
+    <h1 class="post-title">Binary Trees</h1>
   </header>
 
   <div class="post-content">
-    <p><a href="/go/types/numeric_types">Numeric types</a></p>
+    <h2 id="breadth-first-search">Breadth First Search</h2>
 
-<p><a href="/go/types/strings">Strings</a></p>
+<p>Walk though all nodes on the same level before moving on to the next level.</p>
 
-<p><a href="/go/types/boolean">Boolean</a></p>
+<p>Input:</p>
 
-<p><a href="/go/types_conversion">Converting types</a></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    A
+   / \
+  B   C
+ /   / \
+D   E   F
+</code></pre></div></div>
+
+<p>Output: <code class="language-plaintext highlighter-rouge">A, B, C, D, E, F</code></p>
+
+<ul>
+  <li>Uses a queue for traversal.</li>
+  <li>BFS can be used to find single source shortest path in unweighted graph because in BFS we reach a vertex with a minimum number of edges from a source vertex.</li>
+  <li>BFS has a property where it finds all the vertices that are one edge away from starting point, then two and so on.  This is useful if you are trying to find the shortest path from the starting vertex to a given vertex.
+    <ul>
+      <li>If you wind a path from start to destination with BFS you know its the shortest path.</li>
+    </ul>
+  </li>
+  <li>time complexity is O(Number of Nodes + Number of Edges)</li>
+</ul>
+
+<h2 id="depth-first-search">Depth First Search</h2>
+
+<p>Begins at root and proceeds through the nodes as far as possible until reaches node with no unvisited nearby nodes.</p>
+
+<p>Input:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    A
+   / \
+  B   D
+ /   / \
+C   E   F
+</code></pre></div></div>
+
+<p>Output: <code class="language-plaintext highlighter-rouge">A, B, C, D, E, F</code></p>
+
+<ul>
+  <li>Uses a stack for traversal.</li>
+  <li>Often used in simulations of games or game like situations in real world to evaluate all possible decisions/outcomes in a game because it goes to the bottom of the tree and then backtracks.</li>
+  <li>time complexity is O(Number of Nodes + Number of Edges)</li>
+</ul>
 
   </div>
 

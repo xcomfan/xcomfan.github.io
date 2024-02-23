@@ -45,7 +45,7 @@
   <div class="post-content">
     <h2 id="overview">Overview</h2>
 
-<p>The <code class="language-plaintext highlighter-rouge">strings</code> package implements functions for manipulating UTF-8 encoded strings.</p>
+<p>The <code class="language-plaintext highlighter-rouge">strings</code> package implements functions for manipulating UTF-8 encoded strings.  Full documentation can be found <a href="https://pkg.go.dev/strings">here</a></p>
 
 <h2 id="splitting-a-string">Splitting a string</h2>
 
@@ -63,6 +63,67 @@
     <span class="n">words</span> <span class="o">:=</span> <span class="n">strings</span><span class="o">.</span><span class="n">Fields</span><span class="p">(</span><span class="n">myString</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">word</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">words</span> <span class="p">{</span>
         <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="check-if-a-substring-is-in-a-string">Check if a substring is in a string</h2>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"strings"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">strings</span><span class="o">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">"seafood"</span><span class="p">,</span> <span class="s">"foo"</span><span class="p">))</span> <span class="c">// yields true</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">strings</span><span class="o">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">"seafood"</span><span class="p">,</span> <span class="s">"bar"</span><span class="p">))</span> <span class="c">// yield false</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">strings</span><span class="o">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">"seafood"</span><span class="p">,</span> <span class="s">""</span><span class="p">))</span> <span class="c">// yields true</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">strings</span><span class="o">.</span><span class="n">Contains</span><span class="p">(</span><span class="s">""</span><span class="p">,</span> <span class="s">""</span><span class="p">))</span> <span class="c">// yields true</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="lower-or-uppercase-a-sting">Lower or uppercase a sting</h2>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"strings"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">strings</span><span class="o">.</span><span class="n">ToLower</span><span class="p">(</span><span class="s">"Gopher"</span><span class="p">))</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">strings</span><span class="o">.</span><span class="n">ToUpper</span><span class="p">(</span><span class="s">"Gopher"</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="convert-strings-to-other-types">Convert strings to other types</h2>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"bufio"</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"os"</span>
+    <span class="s">"strconv"</span>
+    <span class="s">"strings"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="n">reader</span> <span class="o">:=</span> <span class="n">bufio</span><span class="o">.</span><span class="n">NewReader</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stdin</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Print</span><span class="p">(</span><span class="s">"Enter text: "</span><span class="p">)</span>
+    <span class="n">input</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">reader</span><span class="o">.</span><span class="n">ReadString</span><span class="p">(</span><span class="sc">'\n'</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"You entered:"</span><span class="p">,</span> <span class="n">input</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Print</span><span class="p">(</span><span class="s">"Enter a number: "</span><span class="p">)</span>
+    <span class="n">numInput</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">reader</span><span class="o">.</span><span class="n">ReadString</span><span class="p">(</span><span class="sc">'\n'</span><span class="p">)</span>
+    <span class="n">aFloat</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">strconv</span><span class="o">.</span><span class="n">ParseFloat</span><span class="p">(</span><span class="n">strings</span><span class="o">.</span><span class="n">TrimSpace</span><span class="p">(</span><span class="n">numInput</span><span class="p">),</span> <span class="m">64</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Value of number: "</span><span class="p">,</span> <span class="n">aFloat</span><span class="p">)</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>

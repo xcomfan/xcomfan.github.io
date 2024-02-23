@@ -140,6 +140,10 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
+<h2 id="printing-a-struct-for-debugging-purposes">Printing a struct for debugging purposes</h2>
+
+<p>To print a struct for debugging purposes use <code class="language-plaintext highlighter-rouge">%+v</code> for example <code class="language-plaintext highlighter-rouge">fmt.Printf("%+v\n", poodle)</code> where <code class="language-plaintext highlighter-rouge">poodle</code> is an instance of a struct.</p>
+
 <h2 id="embedded-structs">Embedded structs</h2>
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
@@ -204,6 +208,73 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
+<h2 id="simulating-a-constructor">Simulating a constructor</h2>
+
+<p>In Go, if you want to have a constructor for a struct you write a function that does all of the work a constructor would do and returns a pointer to the struct.  This function should start with the word <code class="language-plaintext highlighter-rouge">New</code> by convention.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">type</span> <span class="n">Budget</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">CampaignID</span> <span class="kt">string</span>
+    <span class="n">Balance</span>    <span class="kt">float64</span>
+    <span class="n">Expires</span>    <span class="n">time</span><span class="o">.</span><span class="n">Time</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">NewBudget</span><span class="p">(</span><span class="n">campaignID</span> <span class="kt">string</span><span class="p">,</span> <span class="n">balance</span> <span class="kt">float64</span><span class="p">,</span> <span class="n">expires</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">Budget</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">campaignID</span> <span class="o">==</span> <span class="s">""</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"empty campaignID"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">balance</span> <span class="o">&lt;=</span> <span class="m">0</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"balance must be bigger than 0"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">expires</span><span class="o">.</span><span class="n">Before</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="no">nil</span><span class="p">,</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"bad expiration date"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">b</span> <span class="o">:=</span> <span class="n">Budget</span><span class="p">{</span>
+        <span class="n">CampaignID</span><span class="o">:</span> <span class="n">campaignID</span><span class="p">,</span>
+        <span class="n">Balance</span><span class="o">:</span>    <span class="n">balance</span><span class="p">,</span>
+        <span class="n">Expires</span><span class="o">:</span>    <span class="n">expires</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">,</span> <span class="no">nil</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">expire</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="m">7</span> <span class="o">*</span> <span class="m">24</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Hour</span><span class="p">)</span>
+
+    <span class="n">b1</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">NewBudget</span><span class="p">(</span><span class="s">"puppies"</span><span class="p">,</span> <span class="m">32.2</span><span class="p">,</span> <span class="n">expire</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"ERROR:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"%#v</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">b1</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="generic-types">Generic types</h2>
+
+<p>In addition to generic functions, Go also supports generic types.  A type can be parameterized with a type parameter, which could be useful for implementing generic data structures.  The example below demonstrates a simple type declaration for a singly linked list holding any type of value.</p>
+
+<p>```go
+package main</p>
+
+<p>// List represents a singly-linked list that holds
+// values of any type.
+type List[T any] struct {
+    next *List[T]
+    val  T
+}</p>
+
+<p>func main() {
+}</p>
 
   </div>
 

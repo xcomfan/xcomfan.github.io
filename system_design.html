@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>System Design Reference | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="System Design Reference" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/system_design" />
+<meta property="og:url" content="http://localhost:4000/system_design" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="System Design Reference" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"System Design Reference","url":"http://localhost:4000/system_design"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">System Design Reference</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="steps-do-designing-your-system">Steps do designing your system</h2>
+
+<h3 id="step-1-requirements-clarification">Step 1: Requirements clarification</h3>
+
+<h4 id="functional-requirements">Functional Requirements</h4>
+
+<ul>
+  <li>The actual functionality: What can users do?  What can admins do? etc.</li>
+  <li>Business rules</li>
+  <li>Authentication</li>
+</ul>
+
+<h4 id="non-functional-requirements">Non functional requirements</h4>
+
+<ul>
+  <li>High availability</li>
+  <li>Consistency</li>
+  <li>Number of users</li>
+  <li>Latency for timelines etc</li>
+</ul>
+
+<h3 id="step-2-estimation-of-important-parts">Step 2: Estimation of important parts</h3>
+
+<ul>
+  <li>Storage</li>
+  <li>Bandwidth Estimates</li>
+</ul>
+
+<h3 id="step-3-data-flow">Step 3: Data flow</h3>
+
+<ul>
+  <li>Rational DB or NoSQL DB</li>
+</ul>
+
+<h3 id="step-4-high-level-component-design">Step 4: High level component design</h3>
+
+<h3 id="step-5-detailed-design">Step 5: Detailed Design</h3>
+
+<ul>
+  <li>Talk about tradeoffs</li>
+</ul>
+
+<h3 id="step-6-identify-and-resolve-bottlenecks">Step 6: Identify and resolve bottlenecks</h3>
+
+<ul>
+  <li>Is there a single point of failure?</li>
+  <li>Do you have enough replicas in case you have failures</li>
+  <li>Do you have enough copies to prevent shutdown</li>
+</ul>
+
+<h2 id="back-of-envelope-calculations">Back of envelope calculations</h2>
+
+<h3 id="storage-definitions">Storage definitions</h3>
+
+<table>
+  <tbody>
+    <tr>
+      <td>bit</td>
+      <td>1 or 0</td>
+    </tr>
+    <tr>
+      <td>Byte</td>
+      <td>8 bits</td>
+    </tr>
+    <tr>
+      <td>Kilobyte (KB)</td>
+      <td>1024 bytes</td>
+    </tr>
+    <tr>
+      <td>Megabyte (MB)</td>
+      <td>1024 Kilobytes</td>
+    </tr>
+    <tr>
+      <td>Gigabyte (GB)</td>
+      <td>1024 Megabytes</td>
+    </tr>
+    <tr>
+      <td>Terabyte (TB)</td>
+      <td>1024 Gigabytes</td>
+    </tr>
+    <tr>
+      <td>Petabyte (PB)</td>
+      <td>1024 Terabytes</td>
+    </tr>
+    <tr>
+      <td>Exabyte (EB)</td>
+      <td>1024 Petabytes</td>
+    </tr>
+    <tr>
+      <td>Zettabyte (ZB)</td>
+      <td>1024 Exabytes</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="storage-estimates">Storage estimates</h3>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Single Char</td>
+      <td>2 bytes</td>
+    </tr>
+    <tr>
+      <td>Unicode Char</td>
+      <td>4 bytes</td>
+    </tr>
+    <tr>
+      <td>Long or Double</td>
+      <td>8 bytes</td>
+    </tr>
+    <tr>
+      <td>Image or Photo</td>
+      <td>200Kb</td>
+    </tr>
+    <tr>
+      <td>Good Photo</td>
+      <td>2 BM</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="operation-timings">Operation timings</h3>
+
+<p>(one ns is one billionth of a second)</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Action</th>
+      <th>Time</th>
+      <th>Operations per second</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>L1 cache reference</td>
+      <td>0.5 ns</td>
+      <td>2 billion per second</td>
+    </tr>
+    <tr>
+      <td>L2 cache reference</td>
+      <td>7 ns</td>
+      <td>142 million per second</td>
+    </tr>
+    <tr>
+      <td>Mutex lock/unlock</td>
+      <td>100 ns</td>
+      <td>100 million per second</td>
+    </tr>
+    <tr>
+      <td>Main memory reference</td>
+      <td>100 ns</td>
+      <td>100 million per second</td>
+    </tr>
+    <tr>
+      <td>Compress 1K bytes</td>
+      <td>10,000 ns</td>
+      <td>100k per second</td>
+    </tr>
+    <tr>
+      <td>Send 2K bytes over 1 Gbps network</td>
+      <td>20,000 ns</td>
+      <td>50k per second</td>
+    </tr>
+    <tr>
+      <td>Read 1MB sequentially from memory</td>
+      <td>250,000 ns</td>
+      <td>4000 per second</td>
+    </tr>
+    <tr>
+      <td>Round trip within same datacenter</td>
+      <td>500,000 ns</td>
+      <td>2000 per second</td>
+    </tr>
+    <tr>
+      <td>Disk seek</td>
+      <td>10,000,000 ns</td>
+      <td>100 per second</td>
+    </tr>
+    <tr>
+      <td>Read 1MB sequentially from network</td>
+      <td>10,000,00 ns</td>
+      <td>100 per second</td>
+    </tr>
+    <tr>
+      <td>Read 1MB sequentially from disk</td>
+      <td>30,000,000 ns</td>
+      <td>33 per second</td>
+    </tr>
+    <tr>
+      <td>Send packet CA to Netherlands to CA</td>
+      <td>150,000,0000,000 ns</td>
+      <td>6.66 per second</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Key takeaways</strong></p>
+
+<ul>
+  <li>Compression can save a lot of network bandwidth</li>
+  <li>Writes are 40 times more expensive than reads</li>
+</ul>
+
+<h2 id="sql-vs-no-sql">SQL vs no SQL</h2>
+
+<h3 id="reasons-to-use-sql">Reasons to use SQL</h3>
+
+<ul>
+  <li>Structured data</li>
+  <li>Strict schema</li>
+  <li>Relational data</li>
+  <li>Need for complex joins</li>
+  <li>Transactions</li>
+  <li>Clear patterns for scaling</li>
+  <li>Lookups by index are very fast</li>
+</ul>
+
+<h3 id="reasons-to-use-no-sql">Reasons to use no SQL</h3>
+
+<ul>
+  <li>Semi structured data</li>
+  <li>Dynamic or flexible schema</li>
+  <li>Non relational data</li>
+  <li>No need for complex joins</li>
+  <li>Store many TB or PB of data</li>
+  <li>Very data intensive workload</li>
+  <li>Very high throughput for IOPs</li>
+</ul>
+
+<h3 id="acid">ACID</h3>
+
+<p>A: Atomic - All operations in a transaction succeed or every operation is rolled back.
+C: Consistent - On completion of a transaction the database is structurally sound.
+I: Isolated - Transaction do not contend with one another. Database makes sure that transactions appear to run sequentially.
+D: Durable - Once the transaction is completed it will remain in system even if failure occurs.</p>
+
+<h3 id="cap-theorem">CAP Theorem</h3>
+
+<p>C: Consistency - All clients see the same data at the same time no matter which node they connect to.
+A: Availability - Client gets a response if if one or more nodes are down.
+P: Partition Tolerance - System continues to operate despite message loss or partial failure.</p>
+
+<p>You basically need to pick two of these in a distributed system.</p>
+
+<h2 id="monitoring">Monitoring</h2>
+
+<h3 id="4-golder-signals-of-monitoring">4 Golder signals of monitoring</h3>
+
+<ul>
+  <li>Traffic - Gives an understanding of service demand</li>
+  <li>Latency - Time taken to service an incoming request</li>
+  <li>Error (rate) - measure of failed client requests</li>
+  <li>Saturation - measure of resource utilization by a service</li>
+</ul>
+
+<h3 id="types-of-monitoring-metrics">Types of monitoring metrics</h3>
+
+<ul>
+  <li>Gauge</li>
+  <li>Timer - time taken to complete a task</li>
+  <li>Counter - number of occurrences of a particular event</li>
+</ul>
+
+<h2 id="fault-tolerant-metrics">Fault tolerant metrics</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Abbreviation</th>
+      <th>Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>MTTR</td>
+      <td>Mean time to repair</td>
+    </tr>
+    <tr>
+      <td>MTBB</td>
+      <td>Mean time between failures</td>
+    </tr>
+    <tr>
+      <td>MTTF</td>
+      <td>Mean time to failure</td>
+    </tr>
+    <tr>
+      <td>MTTD</td>
+      <td>Mean time to detect</td>
+    </tr>
+    <tr>
+      <td>MTTI</td>
+      <td>Mean time to investigate</td>
+    </tr>
+    <tr>
+      <td>MTRS</td>
+      <td>Mean time to restore service</td>
+    </tr>
+    <tr>
+      <td>MTBSI</td>
+      <td>Mean time between system incidents</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="load-balancing">Load Balancing</h2>
+
+<h3 id="load-balance-algorithms">Load Balance Algorithms</h3>
+
+<ul>
+  <li>Round Robin</li>
+  <li>Sticky Round Robin - Keep sending to same host</li>
+  <li>Weighted Round Robin</li>
+  <li>IP/URL Hash</li>
+  <li>Least Connections</li>
+  <li>Least Response Time</li>
+</ul>
+
+<h2 id="caching">Caching</h2>
+
+<h3 id="caching-strategies">Caching Strategies</h3>
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

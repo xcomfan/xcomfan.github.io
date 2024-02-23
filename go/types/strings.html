@@ -3,9 +3,9 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Go Strings | My References</title>
+<title>Strings in Go | My References</title>
 <meta name="generator" content="Jekyll v3.9.2" />
-<meta property="og:title" content="Go Strings" />
+<meta property="og:title" content="Strings in Go" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
@@ -14,9 +14,9 @@
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Go Strings" />
+<meta property="twitter:title" content="Strings in Go" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Go Strings","url":"http://localhost:4000/go/types/strings"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Strings in Go","url":"http://localhost:4000/go/types/strings"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
@@ -39,11 +39,15 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Go Strings</h1>
+    <h1 class="post-title">Strings in Go</h1>
   </header>
 
   <div class="post-content">
     
+<h2 id="zero-value-for-stings">Zero value for stings</h2>
+
+<p>The zero value for stings is the empty string <code class="language-plaintext highlighter-rouge">""</code>.</p>
+
 <h2 id="declaring-strings">Declaring Strings</h2>
 
 <p>You can declare strings in Go using <strong>interpreted literals</strong> or <strong>raw string literals</strong>.</p>
@@ -61,10 +65,6 @@
 
 <div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">rawString</span> <span class="o">:=</span> <span class="s">`This is a raw string literal.  It can contain any character except backticks.`</span>
 </code></pre></div></div>
-
-<h2 id="zero-value-for-stings">Zero value for stings</h2>
-
-<p>The zero value for stings is the empty string <code class="language-plaintext highlighter-rouge">""</code>.</p>
 
 <h2 id="concatenating-strings">Concatenating Strings</h2>
 
@@ -108,6 +108,10 @@
     <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="c">// prints 13 (number of bytes not chars)</span>
 <span class="p">}</span>
 </code></pre></div></div>
+
+<h2 id="strings-package">Strings package</h2>
+
+<p>Go has a build in <a href="/go/modules/fmt">strings package</a> which has many utilities for working with strings.</p>
 
   </div>
 
