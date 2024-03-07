@@ -9,7 +9,8 @@ permalink: /python/
 
 [General Syntax]({% link python/general_syntax.md %})
 
-[Variables and assignment]({% link python/variables_and_assignment.md %}) 
+[Variables and assignment]({% link python/variables_and_assignment.md %})
+
 [Strings]({% link python/built_in_types/strings.md %})
 
 [Printing]({% link python/print.md %})
@@ -33,3 +34,5 @@ permalink: /python/
 [Classes]({% link python/classes.md %})
 
 [Style Guide]({% link python/style_guide.md %})
+
+[Type Hints]({% link python/type_hints.md %})
