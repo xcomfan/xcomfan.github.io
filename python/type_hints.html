@@ -3,20 +3,20 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Python Loops | My References</title>
+<title>Python Type Hints | My References</title>
 <meta name="generator" content="Jekyll v3.9.2" />
-<meta property="og:title" content="Python Loops" />
+<meta property="og:title" content="Python Type Hints" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://localhost:4000/python/loops" />
-<meta property="og:url" content="http://localhost:4000/python/loops" />
+<link rel="canonical" href="http://localhost:4000/python/type_hints" />
+<meta property="og:url" content="http://localhost:4000/python/type_hints" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Python Loops" />
+<meta property="twitter:title" content="Python Type Hints" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Python Loops","url":"http://localhost:4000/python/loops"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Python Type Hints","url":"http://localhost:4000/python/type_hints"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
@@ -39,36 +39,24 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Python Loops</h1>
+    <h1 class="post-title">Python Type Hints</h1>
   </header>
 
   <div class="post-content">
-    <h2 id="while-loop">While Loop</h2>
+    <h2 id="list-of-integers-or-none">List of integers or None</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">y</span> <span class="o">=</span> <span class="mi">11</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">y</span> <span class="o">//</span> <span class="mi">2</span>
-
-<span class="k">while</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">y</span> <span class="o">%</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="s">'has factor '</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-        <span class="k">break</span> <span class="c1"># skip else
-</span>    <span class="n">x</span> <span class="o">-=</span> <span class="mi">1</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="s">'is prime'</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="k">def</span> <span class="nf">example</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="bp">None</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">pass</span>
 </code></pre></div></div>
 
-<h2 id="enumerate">Enumerate</h2>
+<h2 id="class-init-method-that-takes-instance-of-same-class-as-an-argument">Class init method that takes instance of same class as an argument.</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">my_array</span> <span class="o">=</span> <span class="p">[</span><span class="s">"A"</span><span class="p">,</span> <span class="s">"B"</span><span class="p">,</span> <span class="s">"C"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">]</span>
-<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">my_array</span><span class="p">):</span>
-<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"At index </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s"> value is </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
-
-<span class="c1"># Above will print the following. 
-# At index 0 value is A
-# At index 1 value is B
-# At index 2 value is C
-# At index 3 value is D
-</span></code></pre></div></div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># This is for Python 3.10 for 3.11 you can just import Self from typing
+</span><span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Self</span>
+<span class="k">def</span> <span class="nf">example</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Self</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">return</span> <span class="n">Self</span>
+    <span class="k">pass</span>
+</code></pre></div></div>
 
   </div>
 
