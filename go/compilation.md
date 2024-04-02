@@ -10,6 +10,8 @@ To compile your Go program, use the command `go build my_file.go`.  This will pr
 
 To compile and run immediately you can use the command `go run my_file.go`.
 
+If you want to name your executable you can use the command `go build -o my_program_name main.go`.
+
 Because you can only have one main you can use the shorthand `go build .` or `go run .` where you are giving Go the directory and it figures out what to do.
 
 ## Structure of a Go Program

@@ -6,6 +6,8 @@ permalink: /python/built_in_types
 
 [comment]: <> (TODO: This is just an outline based on https://docs.python.org/3/library/stdtypes.html that you may want to use as the structure of a list of things to cover.)
 
+[Sets]({% link python/built_in_types/sets.md %})
+
 * Boolean
   * 8 comparison types
   * and, or, not operations
@@ -42,6 +44,3 @@ permalink: /python/built_in_types
   * The Ellipsis Object
   * The Notimplemented Object
   * Internal Objects
-
-
-

@@ -4,54 +4,63 @@ title: "Git Reference"
 permalink: /gitref/
 ---
 
-
-[comment]: <> (TODO: Good idea to add table of contents at top of each page so you can jump to sections.)
-
-## Workflow
-
-[comment]: <> (TODO: Once you build out the content may want to sue the subgraph option to make more granular pages.)
-[comment]: <> (TODO: Now that I am working my way through I think this chart needs a complete overhaul and most of the content is in a working locally sub-graph)
-[comment]: <> (TODO: Once you are content complete may want to build a new grapsh with direct links to the sub pages and habe the full index below.)
-
-{% mermaid %}
- flowchart LR
-    subgraph work_local_sub [Work Locally]
-        direction LR
-        history([Work with repository history])
-        branching([Create and work with branches])
-        work([Work on your local branch])
-        stashing([Stashing your work])
-        commit([Committing your work])
-    end
-
-    init([Create or clone repo])
-    
-    remotes([Remote repositories])
-    
-    click init "{% link gitref/init.md %}"
-    click history "{% link gitref/repo_history/repo_history.md %}"
-    click branching "{% link gitref/branching/branching.md %}"
-    click work "{% link gitref/work/work.md %}"
-    click stashing "{% link gitref/stashing.md %}"
-    click commit "{% link gitref/committing/commit.md %}"
-    click remotes "{% link gitref/remotes/remotes.md%}"
-
-    init-->work_local_sub
-    work_local_sub-->remotes
-{% endmermaid %}
-
 ## Contents
 
 ### Initializing your project
 
 [Create or clone a repository]({% link gitref/init.md%})
 
-### Work with repository history
 
 ### Working with branches
 
-### Stashing your work
+[Branching concepts]({% link gitref/branching/branch_concepts.md %})
+
+[Branching workflows]({% link gitref/branching/branching_workflows.md %})
+
+[Listing, creating, deleting, switching and renaming branches]({% link gitref/branching/creating_and_switching_branches.md %})
+
+[Merging branches]({% link gitref/branching/merging.md %})
+
+[Rebasing]({% link gitref/branching/rebasing.md %})
+
+### Working on your local branch
+
+[Basic concepts of Git local workflow]({% link gitref/work/concepts.md%})
+
+[Working in your local directory: view, stage, un-stage and revert changes]({% link gitref/work/workdir.md %})
+
+[Searching in your work: working with git grep]({% link gitref/work/searching.md %})
+
+[Cleaning your working directory]({% link gitref/work/cleaning.md %})
+
+[comment]: <> (TODO: I'm not happy with the reset section as it currently is may need to change this link after I get it rewritten.)
+
+[Working with Git reset]({% link gitref/work/reset.md %})
+
+[Stashing your work]({% link gitref/stashing.md %})
 
 ### Committing your work
 
+[Create a commit]({% link gitref/committing/create_commit.md %})
+
+[Rewriting commit history]({% link gitref/committing/rewrite_commits.md %})
+
 ### Working with remote repositories
+
+[Git distributed workflows]({% link gitref/remotes/distributed_workflow.md %})
+
+[Remote repository basic concepts]({% link gitref/remotes/basic_concepts.md %})
+
+[Working with remote repositories]({% link gitref/remotes/work_with_remote_repositories.md %})
+
+[Working with remote branches]({% link gitref/remotes/work_with_remote_branches.md %})
+
+[Pushing, pulling and fetching with remotes]({% link gitref/remotes/push_pull_fetch.md %})
+
+### Work with repository history
+
+[Viewing commit history: Use Git to see history of changes.]({% link gitref/repo_history/viewing_repo_history.md %})
+
+[Searching in commit history: Use Git to find when changes were introduced and by whom.]({% link gitref/repo_history/searching_repo_history.md %})
+
+[Debugging using commit history: Use git to find which commit introduced an issue.]({% link gitref/repo_history/debugging_using_repo_history.md %})

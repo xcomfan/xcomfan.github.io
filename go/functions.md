@@ -41,7 +41,7 @@ _, rem = divAndRemainder(2, 3) // convention to use _ for variable you don't nee
 
 ## Naked return
 
-Go's return values may be named.  You do this by defining them at the top of the function.  These names should be used to document the meaning of the return values.  A `return` statement without arguments returns the named return values.  This is known as the "naked return".
+Go's return values may be named.  You do this by defining them at the top of the function.  These names should be used to document the meaning of the return values.  A `return` statement without arguments returns the named return values.  This is known as the **naked return**.
 
 ```go
 package main

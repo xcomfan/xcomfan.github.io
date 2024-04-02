@@ -4,19 +4,114 @@ title: "Python Lists and Tuples"
 permalink: /python/lists_and_tuples
 ---
 
-## List Operations
-
-[comment]: <> (TODO: Break up this ugly monolith.)
+## Defining a list
 
 ```python
->>> L = [123, 'spam', 1.23]
->>> len(L)
-3
->>> L[:-1]
-[123, 'spam']
->>> L + [4, 5, 6]
-[123, 'spam', 1.23, 4, 5, 6]
->>> L # Note that L did not change with the prior operation
+# List can contain a mix of types
+L = [123, 'some text', 1.23]
+
+# Define empty list
+L = []
+
+# Use constructor to define list (note the double parenthesis)
+my_list = list(("abc", "qyz", "zzz"))
+```
+
+## Get length of a list
+
+```python
+L = ['a', 'b', 'c']
+len(l)
+```
+
+## List methods
+
+| Method | Function |
+| ------ | -------- |
+| append | Adds an element to the end of the list |
+| clear | Removes all the elements from the list |
+| 
+
+**append** - Adds an element to the end of the list
+
+```python
+
+```
+
+'append', 
+'clear', 
+'copy', 
+'count', 
+'extend', 
+'index', 
+'insert',
+'pop',
+'remove',
+'reverse',
+'sort'
+
+## List slicing
+
+The general syntax for Python list slicing is `Lst[ Initial: End: IndexJump ]`
+
+Each of the slice elements is optional.  If you leave off the `Initial` value (`l[:3]`) the default of 0 is used and if you leave of the `End` (`l[1:]`) it defaults to the remainder of the list.  Leaving off both (`l[:]`) will give you a copy of the entire list.  Leaving off the `IndexJump means no index stepping is used.
+
+The end is not included in the slice.  For example...
+
+```python
+>>> s = 'abcdef'
+>>> print(s[1:3]) # index at 3 is not included in result
+bc
+```
+
+The `IndexJump` cna be positive or negative.  For positive indexing the first element of the list has the index number 0, and the last element of the list has the index number N-1 where N is the length of the list.  For negative indexing, the last value of the list is at index -1 and the first element is at -N where N is the length of the list.
+
+### Operations with slicing
+
+```python
+>>> l = ['a', 'b', 'c', 'd', 'e', 'f']
+>>>
+>>> # Reverse a list
+>>> l[::-1]
+['f', 'e', 'd', 'c', 'b', 'a']
+>>>
+>>> # Copy a list
+>>> l2 = l[:]
+>>> l2
+['a', 'b', 'c', 'd', 'e', 'f']
+>>>
+>>> # Every other or N item of a list
+>>> l[::2]
+['a', 'c', 'e']
+>>> l[::-2]
+['f', 'd', 'b']
+>>>
+>>> # Get the last N elements of a list
+>>> l[-2:]
+['e', 'f']
+>>>
+>>> # Re-assign parts of list
+>>> l[1:3] = ['B', 'C']
+>>> l
+['a', 'B', 'C', 'd', 'e', 'f']
+```
+
+## Math operations on Lists
+
+```python
+>>> list_a = [1,2,3]
+>>> list_b = ['a', 'b', 'c']
+>>>
+>>> # Lists can be added to concatenate them (not subtracted though)
+>>> list_a + list_b
+[1, 2, 3, 'a', 'b', 'c']
+
+>>> # Lists can be multiplied for repetition
+>>> list_b * 3
+['a', 'b', 'c', 'a', 'b', 'c', 'a', 'b', 'c']
+```
+
+
 [123, 'spam', 1.23]
 >>> ['Ni!'] * 4 # Repetition
 ['Ni!', 'Ni!', 'Ni!', 'Ni!']
