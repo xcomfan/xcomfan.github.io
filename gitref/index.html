@@ -43,52 +43,63 @@
   </header>
 
   <div class="post-content">
-    
-<h2 id="workflow">Workflow</h2>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"></script>
-<div class="mermaid">
- flowchart LR
-    subgraph work_local_sub [Work Locally]
-        direction LR
-        history([Work with repository history])
-        branching([Create and work with branches])
-        work([Work on your local branch])
-        stashing([Stashing your work])
-        commit([Committing your work])
-    end
-
-    init([Create or clone repo])
-    
-    remotes([Remote repositories])
-    
-    click init "/gitref/init/"
-    click history "/gitref/repo_history"
-    click branching "/gitref/branching/"
-    click work "/gitref/work_locally/"
-    click stashing "/gitref/stashing/"
-    click commit "/gitref/commit/"
-    click remotes "/gitref/remotes/"
-
-    init--&gt;work_local_sub
-    work_local_sub--&gt;remotes
-</div>
-
-<h2 id="contents">Contents</h2>
+    <h2 id="contents">Contents</h2>
 
 <h3 id="initializing-your-project">Initializing your project</h3>
 
 <p><a href="/gitref/init/">Create or clone a repository</a></p>
 
-<h3 id="work-with-repository-history">Work with repository history</h3>
-
 <h3 id="working-with-branches">Working with branches</h3>
 
-<h3 id="stashing-your-work">Stashing your work</h3>
+<p><a href="/gitref/branching/concepts">Branching concepts</a></p>
+
+<p><a href="/gitref/branching/branching_workflows">Branching workflows</a></p>
+
+<p><a href="/gitref/creating_and_switching_branches/">Listing, creating, deleting, switching and renaming branches</a></p>
+
+<p><a href="/gitref/branching/merging">Merging branches</a></p>
+
+<p><a href="/gitref/branching/rebasing/">Rebasing</a></p>
+
+<h3 id="working-on-your-local-branch">Working on your local branch</h3>
+
+<p><a href="/gitref/work_locally/concepts">Basic concepts of Git local workflow</a></p>
+
+<p><a href="/gitref/work_locally/workdir">Working in your local directory: view, stage, un-stage and revert changes</a></p>
+
+<p><a href="/gitref/work_locally/searching">Searching in your work: working with git grep</a></p>
+
+<p><a href="/gitref/work_locally/clean">Cleaning your working directory</a></p>
+
+<p><a href="/gitref/work_locally/reset">Working with Git reset</a></p>
+
+<p><a href="/gitref/stashing/">Stashing your work</a></p>
 
 <h3 id="committing-your-work">Committing your work</h3>
 
+<p><a href="/gitref/comitting/create_commit">Create a commit</a></p>
+
+<p><a href="/gitref/comitting/rewrite_commits">Rewriting commit history</a></p>
+
 <h3 id="working-with-remote-repositories">Working with remote repositories</h3>
+
+<p><a href="/gitref/distributed_work">Git distributed workflows</a></p>
+
+<p><a href="/gitref/remotes/basic_concepts">Remote repository basic concepts</a></p>
+
+<p><a href="/gitref/remotes/add_remove_view">Working with remote repositories</a></p>
+
+<p><a href="/gitref/remotes/add_remove_view">Working with remote branches</a></p>
+
+<p><a href="/gitref/remotes/push_pull_fetch">Pushing, pulling and fetching with remotes</a></p>
+
+<h3 id="work-with-repository-history">Work with repository history</h3>
+
+<p><a href="/gitref/repo_history/viewing_repo_history">Viewing commit history: Use Git to see history of changes.</a></p>
+
+<p><a href="/gitref/repo_history/searching_repo_history">Searching in commit history: Use Git to find when changes were introduced and by whom.</a></p>
+
+<p><a href="/gitref/repo_history/debugging_using_repo_history">Debugging using commit history: Use git to find which commit introduced an issue.</a></p>
 
   </div>
 

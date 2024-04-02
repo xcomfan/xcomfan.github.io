@@ -43,126 +43,67 @@
   </header>
 
   <div class="post-content">
-    
-<h2 id="python-strings-are-immutable">Python Strings Are Immutable</h2>
+    <h2 id="python-strings-general-information">Python strings general information</h2>
 
-<p>Python strings are immutable and cannot be changed after being created. Every string operation is defined to produce a new string as a result.  If you need to change a string you need to convert it to a list join it back without a separator.</p>
+<p><a href="/python/strings/immutability">Python strings are immutable</a></p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">S</span> <span class="o">=</span> <span class="s">'snakes'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s">'h'</span> <span class="c1"># will throw error
-</span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
-  <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="nb">TypeError</span><span class="p">:</span> <span class="s">'str'</span> <span class="nb">object</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">support</span> <span class="n">item</span> <span class="n">assignment</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">S</span><span class="p">)</span> <span class="c1"># convert to a list
-</span><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
-<span class="p">[</span><span class="s">'s'</span><span class="p">,</span> <span class="s">'n'</span><span class="p">,</span> <span class="s">'a'</span><span class="p">,</span> <span class="s">'k'</span><span class="p">,</span> <span class="s">'e'</span><span class="p">,</span> <span class="s">'s'</span><span class="p">]</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s">'h'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">S</span> <span class="o">=</span> <span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">L</span><span class="p">)</span> <span class="c1"># use join with no sep to convert list to string
-</span><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
-<span class="n">shakes</span>
-</code></pre></div></div>
+<h2 id="formatting-python-strings">Formatting Python Strings</h2>
 
-<h2 id="string-formatting">String Formatting</h2>
+<p><a href="/python/strings/f_strings">f strings</a></p>
 
-<h3 id="f-strings">f Strings</h3>
+<p><a href="/python/strings/formatters">String formatters</a></p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">name</span> <span class="o">=</span> <span class="s">'Simon'</span><span class="p">;</span> <span class="n">age</span> <span class="o">=</span> <span class="mi">24</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Hello, my name is </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s"> and I am </span><span class="si">{</span><span class="n">age</span><span class="si">}</span><span class="s"> years old."</span><span class="p">)</span>
-<span class="n">Hello</span><span class="p">,</span> <span class="n">my</span> <span class="n">name</span> <span class="ow">is</span> <span class="n">Simon</span> <span class="ow">and</span> <span class="n">I</span> <span class="n">am</span> <span class="mi">24</span> <span class="n">years</span> <span class="n">old</span><span class="p">.</span>
+<p><a href="/python/strings/raw_strings">Raw strings</a></p>
 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s">"name"</span><span class="p">:</span> <span class="s">"Simon"</span><span class="p">,</span> <span class="s">"age"</span><span class="p">:</span> <span class="mi">24</span><span class="p">}</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="c1"># If you need to use a string in an f string use the other type of quote (single or double)
-</span><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Hello, my name is </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s">'name'</span><span class="p">]</span><span class="si">}</span><span class="s"> and I am </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s">'age'</span><span class="p">]</span><span class="si">}</span><span class="s"> years old."</span><span class="p">)</span>
-<span class="n">Hello</span><span class="p">,</span> <span class="n">my</span> <span class="n">name</span> <span class="ow">is</span> <span class="n">Simon</span> <span class="ow">and</span> <span class="n">I</span> <span class="n">am</span> <span class="mi">24</span> <span class="n">years</span> <span class="n">old</span><span class="p">.</span>
-</code></pre></div></div>
+<h2 id="string-methods">String methods</h2>
 
-<h3 id="raw-strings">Raw Strings</h3>
+<p>capitalize()	Converts the first character to upper case
+casefold()	Converts string into lower case
+center()	Returns a centered string
+count()	Returns the number of times a specified value occurs in a string
+encode()	Returns an encoded version of the string
+endswith()	Returns true if the string ends with the specified value
+expandtabs()	Sets the tab size of the string
+find()	Searches the string for a specified value and returns the position of where it was found
+format()	Formats specified values in a string
+format_map()	Formats specified values in a string
+index()	Searches the string for a specified value and returns the position of where it was found
+isalnum()	Returns True if all characters in the string are alphanumeric
+isalpha()	Returns True if all characters in the string are in the alphabet
+isascii()	Returns True if all characters in the string are ascii characters
+isdecimal()	Returns True if all characters in the string are decimals
+isdigit()	Returns True if all characters in the string are digits
+isidentifier()	Returns True if the string is an identifier
+islower()	Returns True if all characters in the string are lower case
+isnumeric()	Returns True if all characters in the string are numeric
+isprintable()	Returns True if all characters in the string are printable
+isspace()	Returns True if all characters in the string are whitespaces
+istitle()	Returns True if the string follows the rules of a title
+isupper()	Returns True if all characters in the string are upper case
+join()	Converts the elements of an iterable into a string
+ljust()	Returns a left justified version of the string
+lower()	Converts a string into lower case
+lstrip()	Returns a left trim version of the string
+maketrans()	Returns a translation table to be used in translations
+partition()	Returns a tuple where the string is parted into three parts
+replace()	Returns a string where a specified value is replaced with a specified value
+rfind()	Searches the string for a specified value and returns the last position of where it was found
+rindex()	Searches the string for a specified value and returns the last position of where it was found
+rjust()	Returns a right justified version of the string
+rpartition()	Returns a tuple where the string is parted into three parts
+rsplit()	Splits the string at the specified separator, and returns a list
+rstrip()	Returns a right trim version of the string
+split()	Splits the string at the specified separator, and returns a list
+splitlines()	Splits the string at line breaks and returns a list
+startswith()	Returns true if the string starts with the specified value
+strip()	Returns a trimmed version of the string
+swapcase()	Swaps cases, lower case becomes upper case and vice versa
+title()	Converts the first character of each word to upper case
+translate()	Returns a translated string
+upper()	Converts a string into upper case
+zfill()	Fills the string with a specified number of 0 values at the beginning</p>
 
-<p>Raw strings are useful whe you don’t want to have to escape special characters.  Tye are denoted by an <code class="language-plaintext highlighter-rouge">r</code> before the string literal.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">path</span> <span class="o">=</span> <span class="sa">r</span><span class="s">'C:\text\new'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">path</span>
-<span class="s">'C:</span><span class="se">\\</span><span class="s">text</span><span class="se">\\</span><span class="s">new'</span>
-</code></pre></div></div>
-
-<h3 id="string-formatters">String Formatters</h3>
-
-<h4 id="available-formatters">Available Formatters</h4>
-
-<table>
-  <thead>
-    <tr>
-      <th>Syntax</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">%s</code></td>
-      <td>string of any other object</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">%c</code></td>
-      <td>character (int or str)</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">%d</code></td>
-      <td>decimal base 10 integer</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">i</code></td>
-      <td>integer</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">e</code></td>
-      <td>floating point exponent lower case</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">f</code></td>
-      <td>floating point decimal</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">%%</code></td>
-      <td>literal % sign</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">x</code></td>
-      <td>hex integer base 16</td>
-    </tr>
-  </tbody>
-</table>
-
-<h4 id="normal-usage">Normal Usage</h4>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="s">"%s, eggs, and %s"</span> <span class="o">%</span> <span class="p">(</span><span class="s">'spam'</span><span class="p">,</span> <span class="s">'SPAM!'</span><span class="p">)</span>
-<span class="s">'spam, eggs, and SPAM!'</span> <span class="c1"># Formatting supported in all versions of PYthon
-</span></code></pre></div></div>
-
-<h4 id="justification">Justification</h4>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">res</span> <span class="o">=</span> <span class="s">"integers: ...%d...%d...%06d"</span> <span class="o">%</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="p">)</span> 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">res</span>
-<span class="s">'integers: ...1234...1234...001234'</span>
-</code></pre></div></div>
-
-<h4 id="dictionary-formatting">Dictionary Formatting</h4>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="s">'%(qty)d more %(food)s'</span> <span class="o">%</span> <span class="p">{</span><span class="s">'qty'</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s">'food'</span><span class="p">:</span> <span class="s">'spam'</span><span class="p">}</span>
-<span class="s">'1 more spam'</span>
-</code></pre></div></div>
-
-<h4 id="template-string">Template String</h4>
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">reply</span> <span class="o">=</span> <span class="s">'''
-... Greeting...
-... Hello %(name)s!
-... Your age is %(age)s'''</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">values</span> <span class="o">=</span> <span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'Bob'</span><span class="p">,</span> <span class="s">'age'</span><span class="p">:</span><span class="mi">40</span><span class="p">}</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">reply</span> <span class="o">%</span> <span class="n">values</span><span class="p">)</span>
-
-<span class="n">Greeting</span><span class="p">...</span>
-<span class="n">Hello</span> <span class="n">Bob</span><span class="err">!</span>
-<span class="n">Your</span> <span class="n">age</span> <span class="ow">is</span> <span class="mi">40</span>
-</code></pre></div></div>
+<p>‘capitalize’, ‘casefold’, ‘center’, ‘count’, ‘encode’, ‘endswith’, ‘expandtabs’, ‘find’, ‘format’, ‘format_map’, ‘index’, ‘isalnum’, ‘isalpha’, ‘isascii’, ‘isdecimal’, ‘isdigit’, ‘isidentifier’, ‘islower’, ‘isnumeric’, ‘isprintable’, ‘isspace’, ‘istitle’, ‘isupper’, ‘join’, ‘ljust’, ‘lower’, ‘lstrip’, ‘maketrans’, ‘partition’, ‘removeprefix’, ‘removesuffix’, ‘replace’, ‘rfind’, ‘rindex’, ‘rjust’, ‘rpartition’, ‘rsplit’, ‘rstrip’, ‘split’, ‘splitlines’, ‘startswith’, ‘strip’, ‘swapcase’, ‘title’, ‘translate’, ‘upper’, ‘zfill’]</p>
 
 <h5 id="using-vars-for-variable-access">Using <code class="language-plaintext highlighter-rouge">vars()</code> For Variable Access</h5>
 
@@ -223,6 +164,29 @@
 <span class="o">&gt;&gt;&gt;</span> <span class="n">s</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># If using negative stride the first two arguments are essentially reversed
 </span><span class="s">'fedc'</span>
 </code></pre></div></div>
+
+<h2 id="encoding">Encoding</h2>
+
+<p>Most non-UTF codecs handle only a small subset of Unicode characters. When converting test to bytes, if a character is not defined in the target encoding, <code class="language-plaintext highlighter-rouge">UnicodeEncodeError</code> will be raised, unless special handling is provided by passing an <code class="language-plaintext highlighter-rouge">errors</code> argument to the encoding method.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">city</span> <span class="o">=</span> <span class="s">'São Paulo'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">city</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'utf_8'</span><span class="p">)</span>
+<span class="sa">b</span><span class="s">'S</span><span class="se">\xc3\xa3</span><span class="s">o Paulo'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">city</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'iso8859_1'</span><span class="p">)</span>
+<span class="sa">b</span><span class="s">'S</span><span class="se">\xe3</span><span class="s">o Paulo'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">city</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'cp437'</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s">'ignore'</span><span class="p">)</span>
+<span class="sa">b</span><span class="s">'So Paulo'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">city</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'cp437'</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s">'replace'</span><span class="p">)</span>
+<span class="sa">b</span><span class="s">'S?o Paulo'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">city</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'cp437'</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s">'xmlcharrefreplace'</span><span class="p">)</span>
+<span class="sa">b</span><span class="s">'S&amp;#227;o Paulo'</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">error='ignore'</code> Skips characters that cannot be encoded.  Usually bad as it leads to lost data.</p>
+
+<p><code class="language-plaintext highlighter-rouge">error='replace'</code> Substitutes character that cannot be encoded with <code class="language-plaintext highlighter-rouge">?</code>; data is also lost but user is given a hint that something changed.</p>
+
+<p><code class="language-plaintext highlighter-rouge">error='xmlcharrefreplace</code> Replaces un-encodable characters with an XML entity.  If you can’t use UTF, and you can’t afford to loose data this is the only option.</p>
 
   </div>
 

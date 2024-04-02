@@ -45,7 +45,9 @@
   <div class="post-content">
     <h2 id="basic-info">Basic Info</h2>
 
-<p>Every Go program is made up of packages.  Programs start running in the package <code class="language-plaintext highlighter-rouge">main</code>.</p>
+<p>Every Go program is made up of packages.  The package <code class="language-plaintext highlighter-rouge">main</code> is the entry point to your Go program.</p>
+
+<p>A good place to look for go packages is <a href="https://pkg.go.dev">pkg.go.dev</a></p>
 
 <h2 id="using-packages">Using packages</h2>
 
@@ -77,11 +79,31 @@
 
 <p>Your own package should live in its own separate directory.</p>
 
-<p>For all packages other than <code class="language-plaintext highlighter-rouge">main</code> the package name at the top of the go file should match the directory name.  By convention the package name is the same as the last element of the import path.  For exmaple, “math/rand” package is made up of files that begin with the statement <code class="language-plaintext highlighter-rouge">package rand</code>.</p>
+<p>For all packages other than <code class="language-plaintext highlighter-rouge">main</code> the package name at the top of the go file should match the directory name.  By convention the package name is the same as the last element of the import path.  For example, “math/rand” package is made up of files that begin with the statement <code class="language-plaintext highlighter-rouge">package rand</code>.</p>
 
 <h3 id="variable-scope">Variable scope</h3>
 
-<p>You can declare variables at the package level.  These variables cannot be assigned with the <code class="language-plaintext highlighter-rouge">:=</code> operator, and need to be declared outside a function.  If declared this way they are accessible in the entire package.</p>
+<p>You can declare variables at the package level.  These variables cannot be assigned with the <code class="language-plaintext highlighter-rouge">:=</code> operator, and need to be declared outside a function.  If declared this way they are accessible in the entire package.  Package level variables can be superseded by local ones (example below)</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+<span class="p">)</span>
+
+<span class="k">var</span> <span class="n">val</span> <span class="o">=</span> <span class="s">"Package Level Value"</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">val</span> <span class="o">:=</span> <span class="s">"Local Scop"</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Type of val is %T value is %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+    <span class="c">// calling the function lets as access global version of val</span>
+    <span class="n">printVal</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">printVal</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Global val is: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
 <h3 id="variable-visibility">Variable visibility</h3>
 
@@ -102,6 +124,14 @@
 <h2 id="packaging">Packaging</h2>
 
 <p>You should have a comment before all exported functions (ones that start with a capital)</p>
+
+<h2 id="modules">Modules</h2>
+
+<p>A module is a collection of packages.</p>
+
+<p>You can tell that something is a module because there will be a <code class="language-plaintext highlighter-rouge">go.mod</code> file that exists at the root of the project.</p>
+
+<p>Your code will need to be a module if you want to use third party packages.  To make your code a module use the command <code class="language-plaintext highlighter-rouge">go mod init my_module_name</code>.  This will generate the <code class="language-plaintext highlighter-rouge">go.mod</code> file.  Once you have the <code class="language-plaintext highlighter-rouge">go.mod</code> file generated you are able to run the command <code class="language-plaintext highlighter-rouge">got get package_path</code> to download packages into your cache and <code class="language-plaintext highlighter-rouge">go mod tidy</code> command to add/remove packages from cache based on your code imports.</p>
 
   </div>
 

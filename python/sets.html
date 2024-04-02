@@ -45,37 +45,97 @@
   <div class="post-content">
     <p>Sets are unordered collections of unique and immutable objects.  They are useful for math set operations or for filtering out duplicates.  Sets can only contain immutable types, so you cannot have a set of arrays or dictionaries.  Sets can also be used to isolate differences in lists.  Sets can also be used to keep track of where you have been when traversing a graph or other cyclic structure.  Sets are also useful for large database queries.  You can quickly find the union or intersection of the two sets.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">X</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="s">'spam'</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">Y</span> <span class="o">=</span> <span class="p">{</span><span class="s">'h'</span><span class="p">,</span> <span class="s">'a'</span><span class="p">,</span> <span class="s">'m'</span><span class="p">}</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">X</span><span class="p">,</span><span class="n">Y</span>
-<span class="p">({</span><span class="s">'s'</span><span class="p">,</span> <span class="s">'m'</span><span class="p">,</span> <span class="s">'p'</span><span class="p">,</span> <span class="s">'a'</span><span class="p">},</span> <span class="p">{</span><span class="s">'h'</span><span class="p">,</span> <span class="s">'m'</span><span class="p">,</span> <span class="s">'a'</span><span class="p">})</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">X</span> <span class="o">&amp;</span> <span class="n">Y</span>
-<span class="p">{</span><span class="s">'m'</span><span class="p">,</span> <span class="s">'a'</span><span class="p">}</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">X</span> <span class="o">|</span> <span class="n">Y</span>
-<span class="p">{</span><span class="s">'s'</span><span class="p">,</span> <span class="s">'p'</span><span class="p">,</span> <span class="s">'a'</span><span class="p">,</span> <span class="s">'h'</span><span class="p">,</span> <span class="s">'m'</span><span class="p">}</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">X</span> <span class="o">-</span> <span class="n">Y</span>
-<span class="p">{</span><span class="s">'s'</span><span class="p">,</span> <span class="s">'p'</span><span class="p">}</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">X</span> <span class="o">&gt;</span> <span class="n">Y</span>
-<span class="bp">False</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="p">{</span> <span class="n">n</span> <span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]}</span> <span class="c1"># Set Comprehension
-</span><span class="p">{</span><span class="mi">16</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">}</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span> <span class="c1"># Remove Duplicates
-</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="s">'p'</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="s">'spam'</span><span class="p">)</span>
-<span class="bp">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">set</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">7</span><span class="p">])</span> <span class="o">-</span> <span class="nb">set</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">])</span> <span class="c1"># get the difference between sets
-</span><span class="p">{</span><span class="mi">7</span><span class="p">}</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">engineers</span> <span class="o">=</span> <span class="p">{</span><span class="s">'bob'</span><span class="p">,</span> <span class="s">'sue'</span><span class="p">,</span> <span class="s">'ann'</span><span class="p">,</span> <span class="s">'vic'</span><span class="p">}</span>
+<h2 id="creating-a-set">Creating a set</h2>
+
+<h3 id="using-constructor">Using constructor</h3>
+
+<p><strong><em>Note:</em></strong> input is single arg use array or iterable if need multiples.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># new empty set
+</span><span class="n">x</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+<span class="c1"># single value
+</span><span class="n">x</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="s">"apple"</span><span class="p">)</span>
+<span class="c1"># multiple values
+</span><span class="n">x</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s">"apple"</span><span class="p">,</span> <span class="s">"banana"</span><span class="p">,</span> <span class="s">"cherry])
+</span></code></pre></div></div>
+
+<h3 id="using-set-literal">Using set literal</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="p">{</span><span class="s">'apple'</span><span class="p">,</span> <span class="s">'banana'</span><span class="p">,</span> <span class="s">'kiwi'</span><span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="using-set-comprehension">Using set comprehension</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span> <span class="n">n</span> <span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]}</span>
+</code></pre></div></div>
+
+<h2 id="adding-items">Adding items</h2>
+
+<h3 id="add-single-item">Add single item</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mySet</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">'orange'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="add-items-from-another-set-to-a-set">Add items from another set to a set</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mySet</span> <span class="o">=</span> <span class="p">{</span><span class="s">"apple"</span><span class="p">,</span> <span class="s">"banana"</span><span class="p">,</span> <span class="s">"cherry"</span><span class="p">}</span>
+<span class="n">tropical</span> <span class="o">=</span> <span class="p">{</span><span class="s">"pineapple"</span><span class="p">,</span> <span class="s">"mango"</span><span class="p">,</span> <span class="s">"papaya"</span><span class="p">}</span>
+
+<span class="n">mySet</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">tropical</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="add-any-iterable-to-a-set">Add any iterable to a set</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mySet</span> <span class="o">=</span> <span class="p">{</span><span class="s">"apple"</span><span class="p">,</span> <span class="s">"banana"</span><span class="p">,</span> <span class="s">"cherry"</span><span class="p">}</span>
+<span class="n">myList</span> <span class="o">=</span> <span class="p">[</span><span class="s">"kiwi"</span><span class="p">,</span> <span class="s">"orange"</span><span class="p">]</span>
+
+<span class="n">mySet</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">myList</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">mySet</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="removing-items">Removing items</h2>
+
+<h3 id="removing-single-item">Removing single item</h3>
+
+<p>You can use the <code class="language-plaintext highlighter-rouge">discard</code> method which will not throw an error if item does not exist or the <code class="language-plaintext highlighter-rouge">remove</code> method which will throw an error if item does not exist.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">mySet</span> <span class="o">=</span> <span class="p">{</span><span class="s">"apple"</span><span class="p">,</span> <span class="s">"banana"</span><span class="p">,</span> <span class="s">"cherry"</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">mySet</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="s">"dragon fruit"</span><span class="p">)</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="nb">KeyError</span><span class="p">:</span> <span class="s">'dragon fruit'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">mySet</span><span class="p">.</span><span class="n">discard</span><span class="p">(</span><span class="s">"dragon fruit"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="clear-contents-of-a-set">Clear contents of a set</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">mySet</span> <span class="o">=</span> <span class="p">{</span><span class="s">"apple"</span><span class="p">,</span> <span class="s">"banana"</span><span class="p">,</span> <span class="s">"cherry"</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">mySet</span><span class="p">)</span>
+<span class="p">{</span><span class="s">'cherry'</span><span class="p">,</span> <span class="s">'banana'</span><span class="p">,</span> <span class="s">'apple'</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">mySet</span><span class="p">.</span><span class="n">clear</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">mySet</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="use-set-to-remove-duplicates-from-a-listiterable">Use set to remove duplicates from a list/iterable</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span>
+</code></pre></div></div>
+
+<h2 id="set-math">Set Math</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">engineers</span> <span class="o">=</span> <span class="p">{</span><span class="s">'bob'</span><span class="p">,</span> <span class="s">'sue'</span><span class="p">,</span> <span class="s">'ann'</span><span class="p">,</span> <span class="s">'vic'</span><span class="p">}</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">managers</span> <span class="o">=</span> <span class="p">{</span><span class="s">'tom'</span><span class="p">,</span> <span class="s">'sue'</span><span class="p">}</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="s">'bob'</span> <span class="ow">in</span> <span class="n">engineers</span> <span class="c1"># is bob an engineer?
 </span><span class="bp">True</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">engineers</span> <span class="o">&amp;</span> <span class="n">managers</span> <span class="c1"># who is both engineer and manager?
 </span><span class="p">{</span><span class="s">'sue'</span><span class="p">}</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">engineers</span> <span class="o">|</span> <span class="n">managers</span> <span class="c1"># Who is in either catagory
+<span class="o">&gt;&gt;&gt;</span> <span class="n">engineers</span> <span class="o">|</span> <span class="n">managers</span> <span class="c1"># Who is in either category
 </span><span class="p">{</span><span class="s">'sue'</span><span class="p">,</span> <span class="s">'ann'</span><span class="p">,</span> <span class="s">'bob'</span><span class="p">,</span> <span class="s">'tom'</span><span class="p">,</span> <span class="s">'vic'</span><span class="p">}</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">managers</span> <span class="o">-</span> <span class="n">engineers</span> <span class="c1"># managers who are not engineers
 </span><span class="p">{</span><span class="s">'tom'</span><span class="p">}</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">engineers</span> <span class="o">&gt;</span> <span class="n">managers</span> <span class="c1"># Area ll managers engineers (superset)
+<span class="o">&gt;&gt;&gt;</span> <span class="n">engineers</span> <span class="o">&gt;</span> <span class="n">managers</span> <span class="c1"># is engineers a superset of managers
 </span><span class="bp">False</span>
 </code></pre></div></div>
 
