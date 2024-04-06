@@ -8,6 +8,8 @@ permalink: /algorithms
 
 [Binary search]({% link algorithms/binary_search.md %})
 
+[Combinations]({% link algorithms/combinations.md %})
+
 [Quick sort]({% link algorithms/quick_sort.md %})
 
 [Insertion sort]({% link algorithms/insertion_sort.md %})
