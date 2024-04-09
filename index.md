@@ -14,6 +14,7 @@ title: Contents
 ## [Go]({% link go/go.md%})
 ## [JavaScript]({% link javascript/javascript.md %})
 ## [Jekyll]({% link jekyllref/jekyllref.md %})
+## [Linux]({% link linux/linux.md %})
 ## [Networking]({% link networking/networking.md %})
 ## [Python]({% link python/python.md %})
 ## [System Design]({% link system_design/system_design.md %})
