@@ -129,13 +129,13 @@ A process can terminate in one of two ways
 In either case the process yields a termination status. A small nonnegative integer value that is available for inspection by the parent process using the wait() system call. In the case of a call to _exit() the process explicitly specifies its own termination status. If a processes is killed by a signal the termination status is set based on the type of signal. By convention termination status of 0 indicates that the process succeeded, and a nonzero status indicates that some error occurred. Most shells make the termination status available in the $? variable.
 
 ### Process user and group identifiers
-        
+
 Each process has a number of associated user IDs (UIDs) and group IDs (GIDs). Real user ID and real group ID: These identify the user and group to which the process belongs. A new process inherits these IDs from its parent. A login shell gets its real user ID and real group ID from the corresponding fields in the sytem password file
 
 Effective user ID and effective group ID: These in conjunction with the supplementary group IDs discussed below are used in determining the permissions that the process has when accessing protected resources such as files and inter-process communication objects. Typically the effective IDs are the same as the real ones. Changing the effective IDs is a mechanism that allows a process to assume the privileges of another user or group as described in a moment.
 
 Supplementary group IDs: These IDs identify additional groups to which a process belongs. A new process inherits its supplementary group IDs from its parent. A login shell gets its supplementary group IDs from the system group file
-        
+
 ### The init process
 
 When booting the system the kernel creates a special process called init the parent of all processes which is derived from the program file /sbin/init. All processes on the system are created using fork() either by init or one of its decedents. Init process always has the PID of 1 and runs with superuser privileges. Init process cannot be killed even by the superuser and terminates only when system is shut down. The main task of init is to create and monitor a range of processes required by a running system. For details see the init(8) man page.
@@ -144,7 +144,7 @@ When booting the system the kernel creates a special process called init the par
 
 A process can establish upper limits on its consumption of various resources using the setrlimit() system call. Each resource limit has two associated values.
 
-* A soft limit which limits the amount of resource the process may consueme.
+* A soft limit which limits the amount of resource the process may consume.
 * A hard limit which is a ceiling on the value to which the soft limit may be set.
 
 An unprivileged process may change its soft limit for a particular resource to any value up to the hard limit, but can only lower its hard limit. Resource limits of the shell can be adjusted using the ulimit command.  These limits are inherited by the child processes that the shell creates to execute commands.
