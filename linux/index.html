@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Linux Reference | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Linux Reference" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/linux/" />
+<meta property="og:url" content="http://localhost:4000/linux/" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Linux Reference" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Linux Reference","url":"http://localhost:4000/linux/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Linux Reference</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="linux-standards">Linux standards</h2>
+
+<p><strong>POSIX</strong> stands for portable operating system interface and it refers to a group of standards developed under IEEE.  The goal of the standard is to promote application portability at the source code level.  POSIX documents an API for a set of services that should be made available to a program by a conforming operating system.  POSIX xpecifies the API, but not the implementation.</p>
+
+<p><strong>SUSvX</strong> stands for single UNIX Specification Version X and it is essentially POSIX 1003.1-2001 which replaces earlier POSIX standards.</p>
+
+<h2 id="tasks-performed-by-the-kernel">Tasks performed by the kernel</h2>
+
+<h3 id="process-scheduling">Process scheduling</h3>
+
+<p>Linux is a preemptive multitasking operating system.  Multitasking means that multiple processes can simultaneously reside in memory and each may receive use of the CPU(s). Preemptive means that rules governing which processes receive use of the CPU and for how long are determined by the kernel process scheduler (rather than by the processes themselves).</p>
+
+<h3 id="memory-management">Memory management</h3>
+
+<p>Memory is a limited resource that the kernel needs to manage in an equitable and efficient fashion. Linux uses virtual memory management which has the following benefits.</p>
+
+<ul>
+  <li>Processes are isolated from each other and from the kernel so that one process can’t read or modify memory of another.</li>
+  <li>Only part of a process needs to be kept in memory.  Allowing more processes to run in the RAM available.</li>
+</ul>
+
+<h3 id="provision-of-a-file-system">Provision of a file system</h3>
+
+<p>The kernel provides a file system on disk, allowing files to be created, retrieved, updated, deleted, and so on.</p>
+
+<h3 id="creation-and-termination-of-processes">Creation and termination of processes</h3>
+
+<p>The kernel can load a new program into memory and provide it with resources (CPU, RAM, access to files). Once the program has completed the kernel ensures that the resources it used are freed for subsequent programs.</p>
+
+<h3 id="access-to-devices">Access to devices</h3>
+
+<p>The kernel provides an interface that that simplifies access to devices such as mice, keyboards, disks etc.</p>
+
+<h3 id="networking">Networking</h3>
+
+<p>The kernel transmits and receives network messages (packets) on behalf of user processes.</p>
+
+<h3 id="provision-of-a-system-call-application-programming-interface-api">Provision of a system call application programming interface (API)</h3>
+
+<p>The API interface that lets you build programs that utilize the services provided by the kernel</p>
+
+<h2 id="kernel-mode-and-user-mode">Kernel Mode and User Mode</h2>
+
+<p>Modern processors operate in at least two modes.  user mode and kernel mode.  Hardware instructions allow switching from one mode to the other.</p>
+
+<p>Areas of virtual memory can be marked as being part of user space or kernel space.  When running in user mode the CPU cannot access kernel space memory.  In kernel mode the CPU can access both user space and kernel space.   Attempts to access kernel space in user mode will result in a hardware exception.</p>
+
+<p>Certain operations can only be performed when processor is in kernel mode.  Some examples are…</p>
+
+<ul>
+  <li>heart instruction</li>
+  <li>accessing the memory management hardware</li>
+  <li>initiating device I/O operation</li>
+</ul>
+
+<h2 id="process-versus-kernel-view-of-the-system">Process versus kernel view of the system</h2>
+
+<h3 id="process-view">Process view</h3>
+
+<p>Many things happen transparently for a process. A process doesn’t know where it is located in RAM or even if its in RAM or a swap area. It does not know where on disk the files its accessing are, and can’t communicate directly with I/O. Process operates in isolation.  It can’t directly communicate with another process, create a new process or even end its own existence.</p>
+
+<h3 id="kernel-view">Kernel view</h3>
+
+<p>Kernel facilitates running of all processes on the system, and kernel decides which process will obtain access to the CPU next and for how long.  Kernel maintains data structures with information about all running processes and updates these structures as processes are created, change state and terminate. kernel maintains low level data structures that map the virtual memory of each process into the physical memory of the computer and the swap areas on disk. All communication between processes is done via mechanisms provided by the kernel.  In response to requests form processes kernel creates and terminates processes.
+Kernel (in particular device drivers) performs all direct communication with input and output devices transferring information to and from user processes as required.</p>
+
+<h2 id="shell">Shell</h2>
+
+<p>A shell is a special purpose program designed to read commands typed by a user and execute appropriate programs in response to those commands.  The term login shell is used to denote the process that is created to run a shell when the user first logs in.</p>
+
+<h3 id="directory-hierarchy-links-and-files">Directory hierarchy, links and files</h3>
+
+<h4 id="file-types">File Types</h4>
+
+<p>Within the file system each file is marked with a type</p>
+
+<ul>
+  <li>regular or plain files</li>
+  <li>directory - special file whose contents take the form of a table of filenames coupled with references to the corresponding files (links) Every directory contains at least two entries . (dot) and .. (dot-dot) which are links to current and parent directory. In the / root directory the . (dot) refers to itself.</li>
+  <li>symbolic link - provides an alternative name for a file. A normal link is a filename plus pointer entry in a directory, a symbolic link is a specially marked file containing the name of another file.</li>
+</ul>
+
+<h4 id="current-working-directory">Current Working Directory</h4>
+
+<p>Each process has a current working directory (sometimes called the process working directory). A process inherits its current working directory from its parent process.</p>
+
+<h2 id="file-io-model">File I/O Model</h2>
+
+<p>Everything in Linux is a file and the same API calls (open(), read(), write(), close()) are used to perform I/O on all types of files including devices.  Kernel translates the applications I/O requests into appropriate file-system or device driver operations that perform I/O on the target file or device.  Kernel essentially provides one file type: a sequential stream of bytes (which for disk files can be randomly accessed using lseek() system call.</p>
+
+<h3 id="file-descriptors">File descriptors</h3>
+
+<p>The I/O system calls refer to open files using a file descriptor (usually a small non negative integer).  Normally a process inherits 3 file descriptors when it is started by a shell.</p>
+
+<ul>
+  <li>descriptor 0 is standard input, the file from which the process takes its input.</li>
+  <li>descriptor 1 is standard output, the file to which the process writes its output.</li>
+  <li>descriptor 2 is standard error, the file to which the process writes error messages and notification of exceptional or abnormal conditions.</li>
+</ul>
+
+<p>In an interactive shell or program these three descriptors are normally connected to the terminal.  In the stdio library they correspond to stdin, stdout, and stderr.  stdio library is the standard C library that provides fopen(), fclose(), scanf(), printf() etc…</p>
+
+<h2 id="processes">Processes</h2>
+
+<p>A process is an instance of an executing program.</p>
+
+<h3 id="process-memory-layout">Process memory layout</h3>
+
+<p>A process is logically divided into the following parts, known as segments</p>
+
+<ul>
+  <li>Text - The instructions of the program</li>
+  <li>Data - The static variables used by the program</li>
+  <li>Heap - An area from which programs can dynamically allocate extra memory</li>
+  <li>Stack - A piece of memory that grows and shrinks as functions are called and return and that is used to allocate storage for local variables and function call linkage information.</li>
+</ul>
+
+<h3 id="process-creation-and-program-execution">Process creation and program execution</h3>
+
+<p>A process can create a new process using the fork() system call. The process that calls fork() is referred to as the parent process and the new process is called the child process. The kernel creates the child process by making a duplicate of the parent process.  The child inherits copies of the parent’s data, stack and heap segments which it may then modify independently of the parent’s copies. The program text, which is placed in memory marked as read-only, is shared by the two processes. The child process goes on to either execute a different set of functions in the same code as the parent, or frequently to use the execve() system call to load and execute an entirely new program. An execve() call destroys the existing text, data, stack and heap segments, replacing them with new segments based on the code of the new program.</p>
+
+<p>Each process has a unique integer process identifier PID and a parent process identifier PPID which identifies the process that requested the kernel to create this process.</p>
+
+<h3 id="process-termination-and-termination-status">Process termination and termination Status</h3>
+
+<p>A process can terminate in one of two ways</p>
+
+<ul>
+  <li>By requesting its own termination use the _exit() system call or related exit() library funciton.</li>
+  <li>By being killed by the delivery of a signal.</li>
+</ul>
+
+<p>In either case the process yields a termination status. A small nonnegative integer value that is available for inspection by the parent process using the wait() system call. In the case of a call to _exit() the process explicitly specifies its own termination status. If a processes is killed by a signal the termination status is set based on the type of signal. By convention termination status of 0 indicates that the process succeeded, and a nonzero status indicates that some error occurred. Most shells make the termination status available in the $? variable.</p>
+
+<h3 id="process-user-and-group-identifiers">Process user and group identifiers</h3>
+
+<p>Each process has a number of associated user IDs (UIDs) and group IDs (GIDs). Real user ID and real group ID: These identify the user and group to which the process belongs. A new process inherits these IDs from its parent. A login shell gets its real user ID and real group ID from the corresponding fields in the sytem password file</p>
+
+<p>Effective user ID and effective group ID: These in conjunction with the supplementary group IDs discussed below are used in determining the permissions that the process has when accessing protected resources such as files and inter-process communication objects. Typically the effective IDs are the same as the real ones. Changing the effective IDs is a mechanism that allows a process to assume the privileges of another user or group as described in a moment.</p>
+
+<p>Supplementary group IDs: These IDs identify additional groups to which a process belongs. A new process inherits its supplementary group IDs from its parent. A login shell gets its supplementary group IDs from the system group file</p>
+
+<h3 id="the-init-process">The init process</h3>
+
+<p>When booting the system the kernel creates a special process called init the parent of all processes which is derived from the program file /sbin/init. All processes on the system are created using fork() either by init or one of its decedents. Init process always has the PID of 1 and runs with superuser privileges. Init process cannot be killed even by the superuser and terminates only when system is shut down. The main task of init is to create and monitor a range of processes required by a running system. For details see the init(8) man page.</p>
+
+<h3 id="resource-limits">Resource limits</h3>
+
+<p>A process can establish upper limits on its consumption of various resources using the setrlimit() system call. Each resource limit has two associated values.</p>
+
+<ul>
+  <li>A soft limit which limits the amount of resource the process may consume.</li>
+  <li>A hard limit which is a ceiling on the value to which the soft limit may be set.</li>
+</ul>
+
+<p>An unprivileged process may change its soft limit for a particular resource to any value up to the hard limit, but can only lower its hard limit. Resource limits of the shell can be adjusted using the ulimit command.  These limits are inherited by the child processes that the shell creates to execute commands.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
