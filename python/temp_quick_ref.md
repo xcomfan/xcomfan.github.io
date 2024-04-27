@@ -19,6 +19,12 @@ apple, banana, cherry
 >>>
 ```
 
+## Ternary operator
+
+`p1 = l1.val if l1 else 0`
+
+`return 1 if x else 0`
+
 ## Input and queue as two stacks
 
 In this example we are reading a bunch of lines from input.
@@ -41,3 +47,4 @@ for _ in range(q):
         else:
             print(s2[-1])
 ```
+

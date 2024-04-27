@@ -15,6 +15,7 @@ title: Contents
 ## [JavaScript]({% link javascript/javascript.md %})
 ## [Jekyll]({% link jekyllref/jekyllref.md %})
 ## [Linux]({% link linux/linux.md %})
+## [Troubleshooting]({% link system_design/troubleshooting.md %})
 ## [Networking]({% link networking/networking.md %})
 ## [Python]({% link python/python.md %})
 ## [System Design]({% link system_design/system_design.md %})

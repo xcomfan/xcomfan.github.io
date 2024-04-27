@@ -166,7 +166,88 @@ You basically need to pick two of these in a distributed system.
 * Least Connections
 * Least Response Time
 
-## Caching
 
-### Caching Strategies
+## L7 (applications load balancer has the following features)
 
+* Examples of L7 load balancer are…
+  * HAProxy
+  * Envoy
+  * Traefik
+
+* Can forward request to healthy backends
+* TLS termination
+* HTTP routing
+* header rewriting
+* rate limiting of unauthenticated users
+* Can keep connection to server open for lower resource use and latency
+* requests can be retried in case of failure
+* clients can use different IP protocols than servers
+* Servers don't have to worry about MTU discover, TCP congestion control algorithms, avoiding the TIME-WAIT state and other low level details.
+
+## How do you balance the traffic between load balancers?
+
+* ExaBGP can be used to let load balancers announce their availability via BGP
+  * It announces to the routers that load balancer is available
+  * relies on L4 load balancing
+  * If load balancer is removed you will have bad connections
+  * Since routers choose their own routes there is not a lot of control here.
+
+* L4 Load balancing
+  * stateful - state synchronization among the members
+  * stateless - consistent hashing
+
+* DSR (Direct Server Return) When a server behind load balancer responds to the client directly bypassing the load balancer
+
+* IPVS (IP virtual Server) this can give you a load balancing cluster (need to read up more on it)
+
+* DNS Load balancing
+
+## 7 Pipeline Design Patterns for Continuous Delivery
+
+* Pipeline as Code
+  * No GUI pipeline logic is managed just like application code
+  * Execute on container to give everything its own environment
+  * CI runner configuration is automated, identical, and hands free. CI runners can scale
+  * Secrets are stored outside of the pipeline and their output is masked
+
+* Externalize Logic into Reusable Libraries
+  * Your CI tooling is software
+
+* Separate Build and Deploy Pipelines
+  * build once deploy many times
+  * first build becomes an artifact that you can deploy many times
+
+* Trigger the right pipeline
+  * Pushing commit to pull request builds an Ephemeral Environment for testing
+  * Merges to mainline go to a demo environment that is the latest code
+  * Production pushes are signaled with tags
+  * Fast Team Feedback
+    * Every commit triggers a build with builds designed for speed and quick feedback
+  * Stable Internal Releases
+    * Only versioned packages produced by the build pipeline are deployed and these deployments are triggered by humans or automated events.
+  * Buttoned up product releases
+  * Deploy tagged releases to production and automate the paperwork but leave a paper trail.
+
+## Notes on URL Resource Loading
+
+* two types of loaders blocking and non blocking.  Blocking are ones that need to be loaded before a page can be displayed and non blocking are resources that can be loaded asynchronously in parallel with the main page (images and scripts)
+
+* Loading process beings when the user requests a page by entering its URL in the browser.  The browser then sends a request to the sever, which sends back the HTML file, along with any other resources that the HTML file calls for. The browser then parses the HTML file and requests any additional resources that the hTML file calls for, such as images, stylesheets and scripts.
+
+* Best practices for resource loading
+  * Minimizing HTTP requests - this is more on how the website is built than on the resource loader.
+  * Compression and minification
+  * Caching and preloading - preloading is loading in background before they are actually needed.
+  * Async and defer attributes - async attribute allows browser to load other stuff while loading this resource. Defer attribute specifies that a resource should be loaded only after the page has finished parsing, ensuring that the resource does not block the rendering of the page.
+  * Lazy loading - load resources only when they are needed rather tha loading all resources at once.  
+  
+* Chromium design doc on resource loading
+  * All network communication is done by the browser process.  This is done not only so that the browser process can control each renderer's access to the network, but also to maintain consistent session state across processes like cookies and cached data.  The browser as a whole should not open too many connections per host.
+
+  * ResourceLoader implements the interface WebURLLoaderClient.  This is the callback interface used by the renderer to dispatch data and other events to Blink.  (Blink is the render engine that renders web pages)
+
+  * Requests are sent to a global ResourceDispatcherHost via IPC communication.
+
+  * Cookies are handled in browser process which handles all network requests becuase cookies need to be the same across all tabs.  When page requests a cookie an async message is sent from the renderer to the browser requesting the cookie.  While the browser is processing the cookie the thread that Blink works on is suspended.  When the renderer's I/O thread receives the response from the browser, it un-suspends the thread and passes the result back to the JavaScript engine.
+
+  * You can scan the html in two passes one for the blocking and one for the non blocking and fire off the blocking first then non blocking but only return when non blocking is done.
