@@ -310,3 +310,311 @@ A signal may be added to the signal mask in the following ways.
 
 Attempts to block SIGKILL and SIGSTOP are silently ignored. If we attempt to block these signals, `sigprocmask()` neither honors the request nor generates an error.
 
+### Pending Signals
+  
+If a process receives a signal that it is currently blocking, that signal is added to the process's set of pending signals.  When and if the signal is later unblocked, it is then delivered to the process.
+  
+### Signals are not queued
+  
+The set of pending signals is only a mask. It indicates whether or not a signal has occurred, but not how many times it has occurred. In other words, if the same signal is generated multiple times while it is blocked, then it is recorded in the set of pending signals, and later delivered, just once.
+
+A blocked signal is delivered only once, no matter how may times it is generated. Even if a process doesn't block signals, it may receive fewer signals than are sent to it. This can happen if the signals are sent so fast they arrive before the receiving process has a chance to be scheduled for execution by the kernel, with the result that the multiple signals are recorded just once in the process's pending signal set.
+  
+### Waiting for a signal: pause()
+  
+Calling `pause()` suspends execution of the process until the call is interrupted by a signal handler (or until an unhandled signal terminates the process)
+
+## Signal handlers
+
+### Designing Signal Handlers
+  
+The signal handler sets a global flag and exits. The main program periodically checks this flag, and if it is set, takes appropriate action. The signal handler performs some type of cleanup and then either terminates the process or uses a non-local goto to unwind the stack and return control to a predetermined location in the main program.
+  
+### Signals Are Not Queued (Revisited)
+
+If the signal is generated more than once while the handler is executing, then it is still marked as pending, and it will later be delivered only once. We can't reliably count the number of times a signal is generated. Furthermore, we may need to code our signal handlers to deal with the possibility that multiple events of the type corresponding to the signal have occurred.
+  
+### Reentrant and Async-Signal Safe Functions
+  
+#### Reentrant and non-reentrant functions
+
+The main program and the signal handler in effect form two independent (although not concurrent) threads of execution within the same process. A function is said to be reentrant if it can safely be simultaneously executed by multiple threads of execution in the same process. In this context "safe" means that the function achieved its expected result, regardless of the state of execution of any other thread of execution. A function may be non-reentrant if it updates global o static data structures.
+
+#### Standard async-signal safe functions
+
+An async-signal-safe function is one that the implementation guarantees to be safe when called from a signal handler. A function is async-signal-safe either because it is reentrant or because it is not interruptible by a signal handler.  
+
+When writing signal handlers we have two choices
+
+* Ensure that the code of the signal handler itself is reentrant and that it calls only async-signal-safe functions.
+* Block delivery of signals while executing code in the main program that calls unsafe functions or works with global data structures also updated by the signal handler.
+
+We must not call unsafe functions from within a signal handler.
+
+### Other Methods of Terminating a Signal
+
+* Use `_exit()` to terminate the process. Beforehand, the handler may carry out some cleanup actions. Note that we can't use `exit()` to terminate a signal handler, because it is not one of the safe functions. It is unsafe because it flushes stdio  buffers prior to calling `_exit()`. 
+* Use `kill()` or `raise()` to send a signal that kills the process (i.e. signal whose default action is process termination).
+* Perform a non-local GoTo from the signal handler.
+* Use the abort() function to terminate the process with a core dump.
+
+## Signals Advanced Features
+
+### Core dump files
+
+One way of causing a program to produce a core dump is to type the quit character (usually Control - |), which causes the `SIGQUIT` signal to be generated:
+
+```bash  
+ulimit -c unlimited # see below why this is needed.
+$ sleep 30
+Type Control - |
+Quit (core dumped)
+ls -l core
+-rw-------- 1 mtc users 57344 Nov 30 12:39 core
+```
+
+The core dump file gets created in the working directory of the process with the name core. The `/prox/sys/kernel/core_pattern` file controls the naming of all core dump files produced on the system. By default this file contains the string core.  A privileged user can define this file to use format specifiers.
+
+| Format Specifier | Replaced By |
+| ---------------- | ----------- |
+| %c | Core file size soft resource limit (bytes; since Linux 2.6.24) |
+| %e | Executable filename without prefix |
+| %g | Read group ID of dumped process |
+| %h | Name of host system |
+| %p | Process ID of dumped process |
+| %s | Number of signal that terminated process |
+| %t | Time of dump, in seconds since epoch |
+| %u | Read user ID of dumped process |
+| %% | A single % character |
+
+Circumstances in which core dump files are not produced
+
+* The process doesn't have permission to write the core dump file. No write permission to directory or core file exists already and no permission to over write.
+* A regular file with the same name already exists.
+* The directory in which the core dump file is to be created doesn't exist.
+* The process resource limit on the size of a core dump file is set to 0.
+* In example above we use ulimit command to ensure that there is no limit on the size of core files.
+* The binary executable file that the process is executing doesn't have read permission enabled. This prevents users from using a core dump to obtain a copy of the code of a program that they would otherwise be unable to read.
+* The file system on which the current working directory resides is mounted read-only, if full, or has run out of i-nodes.  Alternatively the user has reached their quota limit on the file system.
+* Set-user-ID programs executed by a user other than the file owner (group owner) don't generate core dumps. This prevents malicious users from dumping memory of a secure program and examining it for sensitive information such as passwords.
+* The `/proc/PID/coredump_filter` can be used on a per process basis to determine which types of memory mappings are written to a core dump file. The value in this file is a mask of four bits corresponding to the four types of memory mappings outlined below. The default value of the file provides traditional Linux behavior: only private anonymous and shared anonymous mappings are dumped.
+  * private anonymous mappings
+  * private file mappings
+  * shared anonymous mappings
+  * shared file mappings
+
+### Special Cases for Delivery, Disposition, and Handling
+  
+#### SIGKILL and SIGSTOP
+
+It is not possible to change the default action for SIGKILL, which always terminates a process, and SIGSTOP which always stops a process. These two signals also can't be blocked.  This is a deliberate design decision.  Disallowing changes to the default actions of these signals means that they can always be used to kill or stop a runaway process.
+
+#### SIGCONT and stop signals
+
+If a process is currently stopped, the arrival of a SIGCONT signal always causes the process to resume, even if the process is currently blocking or ignoring SIGCONT. This feature is necessary because it would otherwise be impossible to resume such stopped processes.  (if the stopped process was blocking SIGCONT, and had established a handler for SIGCONT, then after the process is resumed, the handler is invoked only when SIGCONT is later unblocked)
+
+If any other signal is sent to a stopped process, the signal is not actually delivered to the process until it is resumed via receipt of a SIGCONT signal. The one exception is SIGKILL, which always kills a process even one that is currently stopped.
+
+Whenever SIGCONT is delivered to a process, any pending stop signals for the process are discarded (i.e, the process never sees them). Conversely if any of the stop signals is delivered to a process, then any pending SIGCONT signal is automatically discarded. These steps are taken in order to prevent the action of SIGCONT signal from being subsequently undone by a stop signal that was actually sent beforehand, and vice versa.
+
+### Interruptible and Uninterruptible Process Sleep States
+
+At various times the kernel may put a process to sleep, and the two sleeps states are distinguished:
+
+#### TASK_INTERUPTIBLE
+
+The process is waiting for some event. For example, it is waiting for terminal input, for data to be written to a currently empty pipe, or for the value of a System V semaphore to be increased. A process may spend an arbitrary length of time in this state. If a signal is generated for a process in this state, then the operation is interrupted and the process is woken up by the delivery of a signal. When listed by ps(1) process in the `TASK_INTERRUPTIBLE` state are marked by the letter S in the STAT (process state) field.
+
+#### TASK_UNINTERRUPTIBLE
+
+The process is waiting on certain special classes of event such as the completion of a disk I/O. If a signal is generated for a process in this state, then the signal is not delivered until the process emerges from this state. Processes in the `TASK_UNINTERRUPTIBLE` state are listed by ps(1) with a D in the STATE field.
+
+Because a process normally spends only very brief periods in the `TASK_UNINTERRUPTIBLE` state, the fact that a signal is delivered only when the process leaves this state is invisible. However in rare circumstances a process may remain hung in this state. This can happen as a result of a hardware failure, an NFS problem, or a kernel bug. In such cases, SIGKILL won't terminate the hung process. If the underlying problem can't otherwise be resolved, then we must restart the system in order to eliminate the process.
+
+Starting with kernel 2.6.25, Linux adds a third state `TASK_KILLABLE` This state is like `TASK_UNINTERRUPTILBE`, but wakes the process if a fatal signal (i.e, one that would kill the process is received) By converting relevant parts of the kernel code to use this state, various scenarios where a hung process requires a system restart can be avoided.
+
+### Hardware generated signals
+
+`SIGBUS`, `SIGFPE`, `SIGILL`, and `SIGSEGV` can be generated as a consequence of a hardware exception or less usually by being sent by kill. In the case of a hardware exception, SUSv3 specified that the behavior of a process is undefined if it returns from a handler for the signal, or if it ignores or blocks the signal. The reason for this is as follows. The correct way to deal with hardware generated signals is to either accept their default action (process termination) or to write handlers that don't perform a normal return.  The reasons for this are detailed below.
+
+#### Returning from the signal handler.
+
+Suppose that a machine-language instruction generates one of these signals, and a signal handler is consequently invoked. On normal return from the handler, the program attempts to resume execution at the point where it was interrupted. But this is the very instruction that generated the signal in the first place, so the signal is generated once more. The consequence is usually that the program goes into an infinite loop, repeatedly calling the signal handler.
+
+#### Ignoring the signal
+
+It makes little sense to ignore a hardware-generated signal, as it is unclear how a program should continue execution after, say an arithmetic exception. When one of these signals is generated as a consequence of a hardware exception, Linux forces its delivery, even if the program has requested that the signal be ignored.
+
+#### Blocking the signal
+
+As with the previous case, it makes little sense to block a hardware-generated signal, as it is unclear how a program should then continue execution. On Linux 2.4 and earlier, the kernel simply ignores attempts to block a hardware-generated signal; the signal is delivered to the process anyway, and then either terminates the process or is caught by a signal handler, if one has been established. Starting with Linux 2.6, if the signal is blocked, then the process is always immediately killed by that signal, even I the process has installed a handler for the signal.
+
+### Timing and Order of Signal Delivery
+
+#### When is a signal delivered?
+
+When a process sends itself a signal using raise(), the signal is delivered before the raise() call returns. When a signal is generated asynchronously, there may be a (small) delay while the signal is pending between the time when it was generated and the time it is actually delivered, even if we have not blocked the signal. The reason for this is that the kernel delivers a pending signal to a process only at the next switch from kernel mode to user mode while executing that process. In practice this means the signal is delivered at one of the following times. When the process is rescheduled after it earlier timed out (i.e at the start of a time slice) or at completion of a system call (delivery of the signal may cause blocking system call to complete prematurely)
+
+#### Order of delivery of multiple unblocked signals
+
+As currently implemented, the Linux kernel delivers the signals in ascending order. For example, if pending `SIGINT` (signal 2) and `SIGQUIT` (signal 3) were both simultaneously unblocked then SIGINT would be delivered before `SIGQUIT`, regardless of the order in which the two signals were generated. We can't rely on (standard) signals being delivered in any particular order, since SUSv3 says that delivery order of multiple signals is implementation defined. When multiple unblocked signals are awaiting delivery, if a switch between kernel mode and user mode occurs during the execution of a signal handler, then the execution of that handler will be interrupted by the invocation of a second signal handler (and so on).
+
+#### Realtime signals
+
+Realtime signals were defined in POSIX.1b to remedy a number of limitation of standard signals. They have the following advantages over standard signals. Realtime signals provide an increased range of signals that can be used for application-defined purposes. Only two standard signals are freely available for application-defined purposes: `SIGUSR1` and `SIGUSER2`
+
+Realtime signals are queued. If multiple instances of a realtime signal are sent to a process, then the signal is delivered multiple times. By contrast if we send further instances of a standard signal that is already pending for a process, that signal is delivered only once.
+
+When sending a realtime signal, it is possible to specify data (an integer or pointer value) that accompanies the signal.  The signal handler in the receiving process can retrieve this data. The order of delivery of different realtime signals is guaranteed.  If multiple different realtime signals are pending, then the lowest numbered signal is delivered first. In other words, signals are prioritized with lower numbered signals having higher priority. When multiple signals of the same type are queued, they are delivered along with their accompanying data in the order which they were sent.
+  
+##### Limits on the number of queued signals
+
+Queuing realtime signals (with associated data) requires that the kernel maintain data structures listing the signals queued to each process. Since the data structures consume kernel memory, the kernel places limits on the number of realtime signals that may be queued.
+
+### Inter process communication with signals
+
+From one viewpoint we can consider signals as a form of inter process communication (IPC) however signals suffer a number of limitations as an IPC mechanism. Programming with signals is cumbersome and difficult for the following reasons. There are better IPC methods that we will cover later. The asynchronous nature of signals means that we face various problems, including re-entrancy requirements, race condition and the correct handling of global variables from signal handlers. Standard signals are not queued. Even for realtime signals, there are upper limits on the number of signals that may be queued. This means that in order to avoid loss of information, the process receiving the signals must have a method of informing the sender that it is ready to receive another signal. The most obvious method of doing this is for the receiver to send a signal to the sender. A further problem is that signals carry limited information.
+
+## Process Creation
+
+### Overview of fork(), exit(), wait(), and execve()
+
+The `fork()` system call allows one process, the parent, to create a new process, the child. This is done by making the new child process an (almost) exact duplicate of the parent. The child obtains copies of the parent's stack, data, heap and text segments. The term fork derives from the fact that we can envisage the parent process as dividing to yield two copies of itself.
+
+The `exit(status)` library function terminates a process, making all resources (memory, open file descriptors, and so on) used by the process available for subsequent reallocation by the kernel. The status argument is an integer that determines the termination status of the process. Using the `wait()` system call, the parent can retrieve this status.
+
+The `wait(&stats)` system call has two purposes. First, if a child of this process has not yet terminated by calling `exit()`, then `wait()` suspends execution of the process until one of its children has terminated.Second the termination status of the child is returned in the status arguments of `wait()`.
+
+The `execve(pathname, argv, envp)` system call loads a new program (pathname, with argument list argv, and environment list envp) into a process's memory. The existing program text is discarded, and the stack, data, and heap segments are freshly created for the new program. This operation is often referred to as `execing` a new program.
+
+Putting it together thing of a shell executing a command.  The shell continuously executes a loop that reads a command, performs various processing on it, and then forks a child process to exec the command. The use of `execve()` is optional as sometimes its useful to have the child carry on executing the same program as the parent.  In either cae the execution of the child is ultimately terminated by a call to `exit()` (or by delivery of a signal), yielding a termination status that the parent can obtain via `wait()`. The call to wait() is likewise optional.  The parent can simply ignore its child and continue executing.  However, we'll see later that the use of wait() is usually desirable, and is often employed within  a handler for the `SIGCHLD` signal, which the kernel generates for a parent process when one of its children terminates.
+
+### Creating a new process: fork()
+
+In many applications creating multiple processes can be a useful way of dividing up a task. For example, a network server process may listen for incoming client requests and create a new child process to handle each request; meanwhile, the server process continues to listen for further client connection. Dividing tasks up in this way often makes applications design simpler.  It also permits greater concurrency (i.e. more tasks or requests can be handled simultaneously). The `fork()` system call creates a new process, the child, which is an almost exact duplicate of the calling process, the parent. The key point to understanding `fork()` is to realize that after it has completed its work, two processes exist, and in each process execution continues from the point where `fork()` returns. The two processes are executing the same program text, but they have separate copies of the stack, data, and heap segments. The child's stack, data, and heap segments are initially exact duplicates of the corresponding parts of the parent's memory. After the `fork()`, each process can modify the variables in its stack, data, and heap segments without affecting the other process. Within the code of a program, we can distinguish the two processes via the value returned from `fork()`. For the parent `fork()` returns the process ID of the newly created child. This is useful because the parent may create and thus track several children via `wait()` or one of its relatives. For the child, `fork()` returns 0. If necessary the child can obtain its own process ID using `getpid()`, and the process ID of its parent using `getppid()`. It is important to realize that after a fork(), it is indeterminate which of the two processes is next scheduled to use the CPU.
+  
+#### File Sharing Between Parent and Child
+
+When a `fork()` is performed, the child receives duplicates of all of the parent's file descriptors. These duplicates are made in the manner of `dup()`, which means that corresponding descriptors in the parent and the child refer to the same open file description. The open file description contains the current file offset (as modified by `read()`, `write()`, `lseek()`) and the open file status flags (set by `open()` and changed by `fcntl()`). Consequently, these attributes of an open file are shared between the parent and child. For example, if the child updates the file offset, this change is visible though the corresponding descriptor in the parent. Sharing of open file attributes between the parent and child process is frequently useful. For example, if the parent and child are both writing to a file, sharing the file offset ensures that the two process don't overwrite each other's output. It does not, however, prevent the output of the two processes from being randomly intermingled.
+
+#### Memory Semantics of fork()
+
+Making a full copy of the text, data, and heap when executing fork() would be wasteful. Main reason is that fork() is frequently followed by execve() which replaces the process' data heap and stack. Most modern Linux interpretations use two techniques to avoid wasteful copying. The kernel marks the text segment of each process as read-only, so that a process can't modify it sown code. This means that the parent and child can share the same text segment. The fork() system call creates a text segment for the child by building a set of per-process page-table entries that refer to the same physical memory page frames already used by the parent.
+
+For pages in the data, heap and stack segments of the parent process, the kernel employs a technique known as copy on write. Initially the kernel sets things up so that the page-table entries for these segments refer to the same physical memory pages as the corresponding page-table entries in the parent, and the pages themselves are marked read-only. After the fork(), the kernel traps any attempts by either the parent or the child to modify one of these pages, and makes a duplicate copy of the about to be modified page. This new page copy is assigned to the faulting process, and the corresponding page-table entry for the other process is adjusted appropriately. From this point on, the parent and child can each modify their private copies of the page, without the changes being visible to the other process.
+
+### Avoiding Race Conditions by Synchronizing with Signals
+  
+After a fork(), if either process needs to wait for the other to complete an action, then the active process can send a signal after completing the action; the other process waits for the signal.
+
+## Process Termination
+
+### Terminating a Process: _exit() and exit()
+
+A process can terminate either abnormally (caused by delivery of a signal whose default action is to terminate the process) or via an exit call. A process is always successfully terminated by _exit() (i.e `_exit()` never returns). Performing a return without specifying a value, or falling off the end of the main() function, also results in the caller of `main()` invoking `exit()`, but with results that vary depending on the version of the C standard supported and compilation options employed.
+  
+### Details of Process Termination
+
+During both normal and abnormal termination of a process, the following actions occur. Open file descriptors, directory steams, message catalog descriptors and conversion descriptors are closed. As a consequence of closing file descriptors, any file locks help by this process are released. Any attached System V shared memory segments are detached, and the `shm_nattch` counter corresponding to each segment is decremented by one. For each system V semaphore for which a `semadj` value has been set by the process, that `semadj` value is added to the semaphore value. If this is the controlling process for a controlling terminal, then the SIGHUP signal is sent to each process in the controlling terminal's foreground process group, and the terminal is disassociated from the session. Any POSIX named semaphores that are open in the calling process are closed as though sem_close() were called. Any POSIX message queues that are open in the calling porcess are closed as though mq_close() were called. If, as a consequence of this process exiting, a process group becomes orphaned and there are any stopped processes in that group, then all process in the group are sent a SIGHUP signal followed by a SIGCONT signal. Any memory locks established by this process using `mlock()` or  `mlockall()` are removed. Any memory mappings established by this process using `mmap()`  are unmapped.
+
+### Exit Handlers
+  
+An exit handler is a programmer-supplied function that is registered at some point during the life of the process and is then automatically called during normal process termination via `exit()`. Exit handlers are not called if a program calls `_exit()` directly or if the process is terminated abnormally by a signal.
+
+## Monitoring child processes
+
+### Waiting on a child process
+
+#### The wait() System Call
+
+The `wait()` system call waits for one of the children of the calling process to terminate and return the termination status of that child in the buffer pointed to by status.
+
+`pid_t wait(int *status);`
+
+The `wait()` system call does the following
+
+* If no (previously un-waited for) child of the calling process has yet terminated, the call blocks until one of the children terminates.
+* If status is not NULL, information about how the child terminated is returned in the integer to which status points.
+* The kernel adds the process CPU times and resource usage statistics to running totals for all children of this parent process.
+* As its function result, wait() returns the process ID of the child that has terminated.
+* On error, wait() returns -1.  One possible error is that the calling process has no (previously un-waited-for) children, which is indicated by the errno value ECHILD.
+
+We can use the following loop to wait for all children of the calling process to terminate.
+
+```c
+while((childId = wait(NULL)) != -1)
+  continue;
+if(errno != ECHILD) /* An unexpected error… */
+  errExit("wait");
+```
+
+#### The waitpid() System Call
+
+The `wait()` system call has a number of limitations, which `waitpid()` was designed to address. If a parent process has created multiple children, it is not possible to wait() for the completions of a specific child; we can only wait for the next child that terminates. If no child has yet terminated, wait() always blocks. Sometimes, it would be preferable to perform a non-blocking wait so that if no child has yet terminated, we obtain an immediate indication of this fact. Using `wait()`, we can find out only about children that have terminated.  It is not possible to be notified when a child is stopped by a signal (such as `SIGSTOP` or `SIGINT`) or when a stopped child is resumed by delivery of a `SIGCONT` signal. The return value and status arguments of `waitpid()` are the same as for wait().  The pid `arugment` enables the selection of the child to be waited for, as follows.
+
+* If pid is greater than 0, wait for the child whose process ID equals pid.
+* If pid equals 0, wait for any child in the same process group as the caller (parent)
+* If pid is less than -1, wait for any child whose process group identifier equals the absolute value of pid
+* If pid equals -1, wait for any child.  The call `wait(&status)` is equivalent to the call `(waitpid(-1,&status0))`
+
+#### The Wait Status Value
+
+The status value returned by `wait()` and `waitpid()` allows us to distinguish the following events for the child.
+
+* The child terminated by calling _exit() or exit(), specifying an integer exit status.
+* The child was terminated by the delivery of an unhandled signal.
+* The child was stopped by a signal, and waitpid() was called with the `WUNTRACED` flag
+* The child was resumed by SIGCONT signal, and waitpid() was called with `CONTINUED` flag.
+
+## Monitoring child processes (again?)
+
+### Orphans and Zombies
+  
+The lifetimes of parent and child processes are usually not the same; either the parent outlives the child or vice versa. This raises two questions.
+  
+* Who becomes the parent of an orphaned child?
+  * The orphaned child is adopted by init the ancestor of all processes, whose process ID is 1. This can be used to determine if a child's true parent is till alive (assuming the child was created by a process other than init)
+
+* What happens to a child that terminates before its parent has had a chance to perform a wait()?
+  * The point here is that, although the child has finished its work, the parent should still be permitted to perform a wait() at some later time to determine how the child terminated.  
+  * The kernel handles this situation by turning the child into a zombie.  
+    * This means that most of the resources held by the child are released back to the system to be reused by other processes.
+    * The only part of the process that remains is an entry in the kernel's process table recording (among other things) the child process ID, termination status, and resource usage statistics.
+  * A zombie process can't be killed by a signal, not even SIGKILL. This ensures that the parent can eventually perform a wait().
+  * When the parent does perform a wait(), the kernel removed the zombie, since the last remaining information about the child is no longer required.  
+  * On the other hand if the parent terminates without doing a wait(), then the init process adopts the child and automatically performs a wait(), thus removing the zombie process from the system.
+  * If a parent creates a child, but fails to perform a wait() then an entry for the zombie child will be maintained indefinitely in the kernel's process table. If a large number of such zombie children are created, they will eventually fill the kernel process table, preventing the creation of new processes.
+  * Since zombies can't be killed by a signal, the only way to remove them from the system is to kill their parent (or wait for it to exit) at which time the zombies are adopted and waited on by init, and consequently removed from the system.
+  * These semantics have important implications for the design of long-lived parent processes, such as netowrk servers and shells, that create numerous children. Such applications, a parent process should perform wait() calls in order to ensure that dead children are always removed from the system, rather than becoming long-lived zombies. The parent may perform such wait() calls either synchronously or asynchronously in response to delivery of the `SIGCHLD` signal.
+  * If you see `<defunct>` in ps output that means the process is a zombie
+  
+### The SIGCHLD Signal
+  
+The termination of a child process is an event that occurs asynchronously. A parent can't predict when one of its children will terminate. The parent can call `wait()` or `waitpid()`  without specifying the `WNOHAND` flag, in which case the call will block if a child has not already terminated. The parent can periodically perform a non-blocking check (a poll) for dead children via a call to `waitpid()` specifying the `WNOHANG` flag.
+
+Both of these approaches can be inconvenient. On the one hand, we may not want the parent to be blocked waiting for a child to terminate. On the other hand , making repeated non-blocking waitpid() calls wastes CPU time and adds complexity to an application design. To get around these problems, we can employ a handler for the `SIGCHLD` signal
+  
+#### Establishing a Handler for SIGCHLD
+
+The `SIGCHLD` signal is sent to a parent process whenever one of its children terminates. By default, this signal is ignored, but we can catch it by installing a signal handler. Within the signal handler, we can use `wait()` (or similar) to reap the zombie child.
+
+There are some subtleties to consider with this approach
+
+* When a signal handler is called, the signal that caused its invocation is temporality blocked (unless the sigaction() SA_NODEFER flag was specified)
+* The standard signals, of which SIGCHLD is one, are not queued.
+* Consequently if a second and third child terminate in quick succession while a SIGCHLD handler is executing for an already terminated child, then although SIGCHLD is generated twice, it is queued only once to the parent. As a result, if the parent's SIGCHLD handler called wait() only once each time it was invoked, the handler might fail to reap some zombie children. The solution is to loop inside the SIGCHLD handler, repeatedly calling waitpid() with the WNOHANG flag until there are no more dead children processes to be reaped.
+
+Often the body of a SIGCHLD handler simply consists of the following code, which reaps any dead children without checking their status:
+
+```c
+while(waitpid(-1, NULL, WNOHANG) > 0)
+  continue;
+```
+
+The above loop continues until `waitpid()` returns either 0 indicating no more zombie children, or -1 indicating an error (probably ECHILD, meaning that there are no more children).
+
+#### Ignoring Dead Child Processes
+
+Explicitly setting the disposition of SIGCHLD to SIG_IGN causes any child process that subsequently terminates to be immediately removed from the system instaed of being converted into a zombie. In this case, since the status of the child process is simply discarded, a subsequent call to wait() (or similar) can't return any information for the terminated child.
+
+## Program Execution
