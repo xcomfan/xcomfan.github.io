@@ -79,7 +79,7 @@ hello
 * If a variable is assigned inside an enclosing def, it is non-local to nested functions.
 * If a variable is assigned outside all defs, it is global to the entire file.
 
-### LEGB Rule
+### LEGB rule
 
 When you use an unqualified name inside a function, Python searches up to four scopes.
 
@@ -89,9 +89,9 @@ When you use an unqualified name inside a function, Python searches up to four s
 
 **G** - Global scope (module level scope)
 
-**B** - Built in scope (build in functions and exceptions)
+**B** - Built in scope (built in functions and exceptions)
 
-### The global statement
+### The global keyword
 
 The `global` statement tells Python that a function plans to change one or more global names (names in the enclosing scope).
 
@@ -117,11 +117,36 @@ def hider():
     open('data.txt') # error this no longer opens a file in this scope
 ```
 
-## Python Collections (Arrays)
+### The nonlocal keyword
 
-There are four collection data types in the Python programming language:
+The `nonlocal` keyword is used to work with variables inside nested functions, where the variable should not belong to the inner function.  Use the `nonlocal` keyword to declare that the variable is not local.
 
-List is a collection which is ordered and changeable. Allows duplicate members.
-Tuple is a collection which is ordered and unchangeable. Allows duplicate members.
-Set is a collection which is unordered, unchangeable*, and unindexed. No duplicate members.
-Dictionary is a collection which is ordered** and changeable. No duplicate members.
+```python
+def my_outer_func():
+    x = 0
+    def my_inner_func():
+        nonlocal x # without the nonlocal keyword cannot use x for closure scope.
+        x += 1
+        return
+    my_inner_func()
+    return x
+
+my_outer_function() # returns "hello"
+```
+
+[comment]: <> (TODO: The below is based on my best understanding  I need to validate in documentation and add pass by reference pass by value phenomenon here.)
+
+***Note:*** The `nonlocal` keyword is only needed for primitive types which are passed in Python by value.  You do not need it if an object is passed by reference as is the case for Object types.
+
+### Using `vars()` For Variable Access
+
+You can use the build in `vars()` method to access all in scope variables to utilize in your strings.  `vars()` will return a dictionary of all in scope variables
+
+```python
+>>> food = 'spam'
+>>> qty = 10
+>>> vars()
+{'__name__': '__main__', '__doc__': None, '__package__': None, '__loader__': <class '_frozen_importlib.BuiltinImporter'>, '__spec__': None, '__annotations__': {}, '__builtins__': <module 'builtins' (built-in)>, 'food': 'spam', 'qty': 10}
+>>> '%(qty)d more %(food)s' % vars()
+'10 more spam'
+```

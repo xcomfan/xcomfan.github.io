@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "Python Variables and Assignment"
+title: "Python Variable Assignment and Unpacking"
 permalink: /python/variables_and_assignment
 ---
 

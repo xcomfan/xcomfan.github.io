@@ -618,3 +618,38 @@ The above loop continues until `waitpid()` returns either 0 indicating no more z
 Explicitly setting the disposition of SIGCHLD to SIG_IGN causes any child process that subsequently terminates to be immediately removed from the system instaed of being converted into a zombie. In this case, since the status of the child process is simply discarded, a subsequent call to wait() (or similar) can't return any information for the terminated child.
 
 ## Program Execution
+
+### Executing a new program: execve()
+
+The `execve()` system call loads a new program into a process's memory.  During this operation, the old program is discarded, and the process's stack, data, and heap are replaced by those of the new program. After executing various C library run-time startup code and program initialization code (e.g., C++ static constructors or C functions declared with the gcc constructor attribute) the new program commences execution at its main() function. The most frequent use of `execve()` is in the child produced by a `fork()`, although it is also occasionally used in applications without a preceding `fork()`
+
+Below is the `execve()` function prototype. It never returns on success; returns -1 on error
+
+```c
+#include <unistd.h>
+int execve(const char *pathname, char *const argv[], char *const envp[]);
+```
+
+The `pathname` argument contains the pathname of the new program to be loaded into the process's memory. This pathname can be absolute (indicated by an initial /) or relative to the current working directory of the calling process.
+
+The `argv` argument specified the command-line arguments to be passed to the new program.  This array corresponding to, and has the same form as, the second (argv) argument to a C main() function. It is a NULL terminated list of pointers to character strings. The value supplied for argv[0] corresponds to the command name.
+
+The final argument `envp`, specifies the environment list for the new program. The envp argument corresponds to the environ array of the new program. It is a NULL terminated list of pointers to character stings of the name=value
+
+The Linux specific `/proc/PID/exe` file is a symbolic link containing the absolute pathname of the executable file being run by the corresponding process
+
+After an `execve()`, the process ID of the process remains the same, because the same process continues to exist. A few other process attributes also remain unchanged. If the set-user-ID (set-group-ID) permission bit of the program file specified by pathname is set, then when the file is execed, the effective user (group) ID of the process is changed to be the same as the owner (group) of the program file. This is a mechanism for temporarily granting privileges to user while running a specific program. After optionally changing the effective IDs, and regardless of whether they were changed, an `execve()` copies the value of the process's effective user ID into its saved set-user-ID, and copies the value of the process's effective group ID into its saved set-group-ID. Since it replaces the program that called it, a successful `execve()` never returns. We never need to check the return value from `execve()` it will always be -1.  The very fact that it returned informs us that an error occurred, and, as usual we can use errno to determine the cause. The following are some of the errors that we may see.
+
+* EACCES - The pathname argument does not refer to a regular file, the file doesn't have execute permission enabled, or one of the directory components of pathname is not searchable.  Alternatively the file may reside on a file system that was mounted with the MS_NOEXEC flag.
+* ENOENT - The file referred to by pathname doesn't exist.
+* ENOEXEC - The file referred to by pathname is marked as being executable, but it is not in a recognizable executable format.  Possibly it is a script that doesn't begin with a line (starting with the characters #!) specifying the script interpreter.
+* ETXTBSY - The file referred to by pathname is open for writing by one or more processes
+* E2BIG - The total space required by the argument list and environment list exceeds the allowed maximum.
+
+The errors above may also be generated if any of these conditions apply to the interpreter file defined to execute a script. or the ELF interpreter being used to execute the program.
+
+The Executable and Linking Format (ELF) is a widely implemented specification describing the layout of executable files.
+
+Normally during an exec, a process image is constructed using the segments of the executable file.  However the ELF specification also allows for an executable file to define an interpreter (the PT_INTERP ELF program header element) to be used to execute the program. 
+        □ If an interpreter is defined, the kernel constructs the process image from the segments of the specified interpreter executable file.  It is then the responsibility of the interpreter to load and execute the program.
+

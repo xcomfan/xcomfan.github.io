@@ -4,29 +4,32 @@ title: "Python Built In Types"
 permalink: /python/built_in_types
 ---
 
+## Immutable versus mutable objects in Python
+
+In Python every variable holds an instance of an object. Whenever an object is instantiated, it is assigned a unique object id. The type of object is defined at runtime and cannot be changed afterward; however its state can be changed if its a mutable object.  Immutable objects such as `int`, `float`, `bool`, `string`, `Unicode` and `tuple` cannot be modified.  Immutable objects can only be re-assigned.
+
+## Python types
+
 [comment]: <> (TODO: This is just an outline based on https://docs.python.org/3/library/stdtypes.html that you may want to use as the structure of a list of things to cover.)
 
-[Sets]({% link python/built_in_types/sets.md %})
+[comment]: <> (TODO: Fill out the table below and make links as your notes develop.)
 
-* Boolean
-  * 8 comparison types
-  * and, or, not operations
+* Boolean (immutable)
 * Numeric Types
-  * int
-  * float
+  * int (immutable)
+  * float (immutable)
   * complex
-  * Bitwise Operators and Integer Types
 * Sequence Types
-  * list
-  * tuple
+  * [list]({% link python/built_in_types/lists.md %})
+  * [tuple (immutable)]({% link python/built_in_types/tuples.md %})
   * range
-  * str
+  * [string]({% link python/built_in_types/strings/strings.md %}) (immutable)
 * Binary Sequence Types
   * bytes
   * bytearray
   * memoryview
 * Set Types
-  * set
+  * [set]({% link python/built_in_types/sets.md %})
   * frozenset
 * Mapping Types
   * dict
