@@ -8,12 +8,12 @@ permalink: /python/functions
 
 | Syntax | Type |
 | ------ | ---- |
-| def f1(a, b): | normal args |
-| def f2(a, *b): | positional varargs |
-| def f3(a, **b): | keyword varargs |
-| def f4(a, *b, **c): | mixed args |
-| def f5(a, b=2, c=3): | defaults |
-| def f6(a, b=2, *c): | defaults and positional varargs |
+| `def f1(a, b):` | normal args |
+| `def f2(a, *b):` | positional variable args |
+| `def f3(a, **b):` | keyword variable args |
+| `def f4(a, *b, **c):` | mixed args |
+| `def f5(a, b=2, c=3):` | defaults |
+| `def f6(a, b=2, *c):` | defaults and positional variable arguments |
 
 ## Keywords and defaults
 
@@ -36,9 +36,9 @@ permalink: /python/functions
 1 2 6
 ```
 
-## Mutable values for default arguments can retain state between calls.
+## WARNING! Mutable values for default arguments retain state between calls
 
-***Note:*** This is often unexpected
+***Note:*** This behavior is often unexpected
 
 ```python
 >>> def saver(x=[]):
@@ -143,11 +143,11 @@ SyntaxError: invalid syntax
 
 Correct way is `def f(a, *b, c=6, **d): print(a,b,c,d)`
 
-## Functions are objects
+## Functions are objects 
 
 ### Function annotation
 
-You can provide information about arguments and the return type in your code.  This is information only.  The only thing Python does with this is make it available on the `__annotations__` attribute.
+You can provide information about arguments and the return type in your code. This is information only. The only thing Python does with this is make it available on the `__annotations__` attribute.
 
 ```python
 >>> def func(a: 'info', b: (1,10), c: float) -> int:
@@ -231,7 +231,6 @@ The below example works because closures provide state for each function generat
 >>> g(4)
 64
 ```
-
 
 ## Ternary Operators for Functions
 

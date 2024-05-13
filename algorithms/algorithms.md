@@ -13,3 +13,5 @@ permalink: /algorithms
 [Quick sort]({% link algorithms/quick_sort.md %})
 
 [Insertion sort]({% link algorithms/insertion_sort.md %})
+
+[Queue Implemented from two tacks]({% link algorithms/queue_from_stacks.md %})

@@ -6,11 +6,11 @@ permalink: /python/classes
 
 ## Class syntax
 
-* Superclasses are listed in parentheses in a class header
-* Classes inherit attributes from their superclasses
-* Instances inherit attributes from all accessible classes
-* Each object.attribute reference invokes a new, independent search.
-* Logic changes are made by subclassing not by changing superclasses.
+* Superclasses are listed in parentheses in a class header.
+* Classes inherit attributes from their superclasses.
+* Instances inherit attributes from all accessible classes.
+* Each `object.attribute` reference invokes a new, independent search.
+* Logic changes are made by sub-classing not by changing superclasses.
 * Methods named with double underscores (dunders) are special hooks.  Such methods are called automatically when instances appear in built in operations.
 * Classes may override most built in type operations.
 * Classes may be used like dictionaries but with embedded logic.
@@ -26,7 +26,7 @@ permalink: /python/classes
 ...
 >>> x = FirstClass() # Make two instances
 >>> y = FirstClass() # Each is a new namespace
->>> x.setData("Mungo Jerry") # self.data differs in each instances
+>>> x.setData("Mungo Jerry") # self.data differs in each instance
 >>> y.setData(12345)
 >>> x.display()
 Mungo Jerry
@@ -38,10 +38,11 @@ Thurston Harris
 >>> x.another = "John Monty" # can set new attributes here too
 >>> x.another
 'John Monty'
-
+>>> class SecondClass(FirstClass):
+...   pass
 >>> z = SecondClass()
 >>> z.setData(42) # finds setData on the first class.
->>> z.display() # finds overriden method in SecondClass
+>>> z.display() # finds overridden method in SecondClass
 Current value = 42
 
 >>> class ThirdClass(SecondClass):
@@ -151,7 +152,7 @@ class Super(metaclass=ABCMeta):
         pass
 ```
 
-### Extending types by subclassing
+### Extending types by sub-classing
 
 ```python
 >>> class MyList(list):
@@ -276,6 +277,3 @@ addrepr(3)
 `__str__` is tried first for the print operation and the `str` built in function.  It generally should return a user friendly display.
 
 `__repr__` is used in all other contexts: for interactive echoes, the repr function and nested appearances as well as by print and str if no `__str__` is present.
-
-### Indexing and slicing
-

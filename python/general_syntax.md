@@ -150,3 +150,24 @@ You can use the build in `vars()` method to access all in scope variables to uti
 >>> '%(qty)d more %(food)s' % vars()
 '10 more spam'
 ```
+
+[comment]: <> (TODO: Keeping object section here for now, but may want to break it out in future.)
+
+## Objects
+
+### Comparing Objects
+
+```python
+>>> L = [1,2,3]
+>>> M = L
+>>> L == M # Same values
+True
+>>> L is M # Same object
+True
+>>> L = [1,2,3]
+>>> M = [1,2,3]
+>>> L == M # Same values
+True
+>>> L is M # Different objects
+False
+```

@@ -4,6 +4,8 @@ title: "Working With Files And Directories"
 permalink: /python/files_and_dirs
 ---
 
+[comment]: <> (TODO: Make this a part of standard library reference)
+
 ## Traversing directories
 
 ### Custom traversal
@@ -32,7 +34,7 @@ def recursively_print_files(path: str, sep=0):
         print(f"Could not find: {path}")
 
 if __name__ == "__main__":
-    recursively_print_files("/home/ubuntu/leetcode_practice")
+    recursively_print_files("/home/ubuntu/practice_")
 ```
 
 ### Using os.walk

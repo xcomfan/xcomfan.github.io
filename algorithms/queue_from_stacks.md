@@ -1,29 +1,8 @@
 ---
 layout: page
-title: "Python Quick Reference"
-permalink: /python/quick_ref
+title: "Binary Search"
+permalink: /algorithms/queue_from_stacks
 ---
-
-## Strings
-
-### Join values in an array with a set delimiter
-
-Use `"" if no delimiter of "," if comma delimiter"
-
-```python
->>> fruit = ['apple', 'banana', 'cherry']
-apple,banana,cherry
->>> fruits = ", ".join(fruit)
->>> print(fruits)
-apple, banana, cherry
->>>
-```
-
-## Ternary operator
-
-`p1 = l1.val if l1 else 0`
-
-`return 1 if x else 0`
 
 ## Input and queue as two stacks
 
@@ -47,4 +26,3 @@ for _ in range(q):
         else:
             print(s2[-1])
 ```
-

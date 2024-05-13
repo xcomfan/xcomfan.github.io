@@ -4,7 +4,7 @@ title: "Python Function Decorators"
 permalink: /python/function_decorators
 ---
 
-Because a decorator can return any sort of object this allows the decorator to insert a layer of logic to be run on every call. The decorator function is free to return either the original function or a new proxy object that saves teh original function passed to the decorator to be invoked indirectly after the extra logic layer runs.
+Because a decorator can return any sort of object this allows the decorator to insert a layer of logic to be run on every call. The decorator function is free to return either the original function or a new proxy object that saves the original function passed to the decorator to be invoked indirectly after the extra logic layer runs.
 
 ```python
 >>> class tracer:

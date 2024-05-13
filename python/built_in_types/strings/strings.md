@@ -37,6 +37,19 @@ shakes
 
 [comment]: <> (TODO: need to go through and do a basic example for each of these Maybe a good idea to break out to seperate page.)
 
+### join
+
+Join values in an array into a string with a set delimiter. Use `""` if not delimiter wanted or `","` if you want a coma decimeter (comma can replaced with any set of characters)
+
+```python
+>>> fruit = ['apple', 'banana', 'cherry']
+apple,banana,cherry
+>>> fruits = ", ".join(fruit)
+>>> print(fruits)
+apple, banana, cherry
+>>>
+```
+
 * capitalize() - Converts the first character to upper case
 * casefold() - Converts string into lower case
 * center() - Returns a centered string
@@ -60,7 +73,9 @@ shakes
 * isspace() - Returns True if all characters in the string are whitespaces
 * istitle() - Returns True if the string follows the rules of a title
 * isupper() - Returns True if all characters in the string are upper case
-* join() - Converts the elements of an iterable into a string
+
+
+
 * ljust() - Returns a left justified version of the string
 * lower() - Converts a string into lower case
 * lstrip() - Returns a left trim version of the string
@@ -82,6 +97,11 @@ shakes
 * translate() - Returns a translated string
 * upper() - Converts a string into upper case
 * zfill() - Fills the string with a specified number of 0 values at the beginning
+
+[comment]: <> (TODO: Add this little tidbit to the join method as well as the + section of concatenating strings.)
+* Use ''.joni() over += or a = a+ b this may be faster and is more consistent for non cpython implementations.
+* Use string methods instead of the string module its faster
+* Use startswith() and endswith() instead of slicing.
 
 ## String Operations
 

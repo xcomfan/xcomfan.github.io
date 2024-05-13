@@ -7,20 +7,17 @@ permalink: /python/
 [comment]: <> (TODO: Look at https://docs.python.org/3/library/stdtypes.html for a comprehensive list of Python built in types you can use for organizing your notes.)
 [comment]: <> (TODO: The above link is also a good starting point for what to add to notes for each type.)
 
+[Style Guide]({% link python/style_guide.md %})
+
 [Variable assignment and unpacking]({% link python/variables_and_assignment.md %})
 
 [General Syntax]({% link python/general_syntax.md %})
 
 [Printing]({% link python/print.md %})
 
-[Build in Types]({% link python/built_in_types/built_in_types.md %})
+[Built in Types]({% link python/built_in_types/built_in_types.md %})
 
 [Loops]({% link python/loops.md %})
-
-[comment]: <> (TODO: This is my marker of which pages I have audited.  After this marker means page is good/complete.)
-
-
-[Objects]({% link python/objects.md %})
 
 [Functions]({% link python/functions.md %})
 
@@ -34,10 +31,8 @@ permalink: /python/
 
 [Classes]({% link python/classes.md %})
 
-[Style Guide]({% link python/style_guide.md %})
-
 [Type Hints]({% link python/type_hints.md %})
 
-[Working with files and directories]({% link python/working_with_files_and_directories.md %})
+[Concurrency]({% link python/concurrency/concurrency.md %})
 
-[Quick Ref]({% link python/temp_quick_ref.md %})
+[Working with files and directories]({% link python/working_with_files_and_directories.md %})
