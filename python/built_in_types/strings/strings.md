@@ -50,6 +50,25 @@ apple, banana, cherry
 >>>
 ```
 
+### split, rsplit
+
+Both `split()` and `rsplit()` methods split a string into a list with `split()` starting from the left and `rsplit()` starting from the right.
+
+Both take `sepearartor` and `maxsplit` as potional parameters which specify the separator to use and the number of splits to make.  When maxsplit is specified the list will containe the number of elements *plus* one.
+
+`string.split(separator, maxsplit)`
+
+```python
+>>> fruit = "apple, banana, cherry, date"
+['apple, banana', 'cherry', 'date']
+>>> fruit.rsplit(None, 2)
+['apple, banana,', 'cherry,', 'date']
+>>> fruit.rsplit(None, 1)
+['apple, banana, cherry,', 'date']
+```
+
+### Other Methods I have not written up yet.
+
 * capitalize() - Converts the first character to upper case
 * casefold() - Converts string into lower case
 * center() - Returns a centered string
@@ -73,8 +92,6 @@ apple, banana, cherry
 * isspace() - Returns True if all characters in the string are whitespaces
 * istitle() - Returns True if the string follows the rules of a title
 * isupper() - Returns True if all characters in the string are upper case
-
-
 
 * ljust() - Returns a left justified version of the string
 * lower() - Converts a string into lower case

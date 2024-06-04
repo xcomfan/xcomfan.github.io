@@ -27,7 +27,7 @@ permalink: /python/
 
 [Function Decorators]({% link python/function_decorators.md %})
 
-[Generator Functions]({% link python/generator_functions.md %})
+[Generators]({% link python/generators.md %})
 
 [Classes]({% link python/classes.md %})
 

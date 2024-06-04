@@ -10,4 +10,4 @@ permalink: /python/concurrency
 
 [AsyncIO]({% link python/concurrency/asyncio.md %})
 
-Multiprocessing
+[Multiprocessing]({% link python/concurrency/multiprocessing.md %})
