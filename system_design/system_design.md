@@ -9,3 +9,5 @@ permalink: /system_design
 [Monitoring]({% link system_design/monitoring.md %})
 
 [Observability]({% link system_design/observability.md %})
+
+[CI/CD]({% link system_design/ci_cd.md %})
