@@ -50,7 +50,7 @@ spec:
         server: my.nfs.server.local
         path: "/exports"
   containers:
-    - image: gcr.io/kuar-demo/kuard-amd64:blue
+    - image: gcr.io/kuar-demo/kuard-arm64:blue
       name: kuard
       ports:
         - containerPort: 8080
@@ -232,6 +232,8 @@ The `apply` command also records the history of previous configurations in an an
 
 When you want to delete an object use the command `kubectl delete -f obj.yaml`. ***Note:*** `kubectl` will not prompt for a confirmation before deleting an object.  There is however a terminating grace period of 30 seconds by default (At least for Pods need to confirm if for other objects). When a Pod is transitioned to Terminating state it stops taking request.  The grace period allows the Pod to finish any active reqeusts that it may be in the middle of processing before it is terminated. When a Pod is deleted any data in the container is deleted as well.  If you need to persist data than you need to use `PersistentVolumes`
 
+To create a deployment in a non declarative way you can use the command `kubectl create deployment <deployment_name> --image=<image> --replicas=<replica_count>` with real values that looks like `kubectl create deployment alpaca-prod --image=gcr.io/kuar-demo/kuard-arm64:blue --replicas=2`
+
 ## Kubernetes API
 
 Everything contained in Kubernetes is represented by a RESTful resource. These objects exist at unique HTTP paths; for example, `https://your-k8s.com/api/v1/namespaces/default/pods/my-pod` leads to the representation of a Pod in the default namespace. The `kubectl` command makes HTTP requests to these URLs to access Kubernetes objects that reside at these paths.
@@ -265,3 +267,62 @@ If you are interested in how your cluster is using resources you can use `kubect
 * `kubectl` supports integration with your shell to enable tab completion for both commands and resources. You may need to install the `bash-completion` package to make this work.
 
 * For log aggregators look into `fluentd` and `elasticsearch`.
+
+## Labels and Annotations
+
+*Labels* are key value pairs that can be attached to Kubernetes objects such as Pods and ReplicaSets. They are useful for attaching identifying information to Kubernetes objects. Labels provide the foundation for grouping objects. *Annotations*, on the other hand, provide a storage mechanism that resembles labels. Annotations are key value pairs designed to hold non-identifying information that can be leveraged by tools and libraries.
+
+### Labels
+
+Labels are key/value pairs where both the key and value are represented by strings. Label keys can be broken down into two parts: an optional prefix and a name, separated by a slash. The prefix, if specified must be a DNS sub-domain with a 253 character limit. The key name is required and must be shorted than 63 characters. Names must also start and end with an alphanumeric character and permit the use of dashes `-`, underscores`_` and dots `.`. Label values are strings with a maximum length of 63 characters. The contents of the label values follow the same rules as for label keys. Below are some examples of label keys and values
+
+| Key | Value |
+| --- | ----- |
+| acme.com/app-version | 1.0.0 |
+| appVersion | 1.0.0 |
+| app.version | 1.0.0 |
+| kubernetes.io/cluster-service | true |
+
+When domain names are use in labels and annotations they are expected to be aligned to that particular entity in some way. For example a project might define a canonical set of labels used to identify the various stages of application deployment (e.g staging, canary, production)
+
+#### Applying and removing labels
+
+To apply or update a label on a running object use the command similar to `kubectl label deployments alpaca-prod "ver=1"` ***Note:*** this command only labels the deployment not the objects which the deployment creates. To change those objects you would need to change the template embedded in the deployment.
+
+You can view labels on an object using the `kubectl describe` command.  You can also use the `--show-labels` option in kubectl to see the labels applied to an object. For example `kubectl get pods --show-labels`
+
+To remove a label use a minus at end of label command specifying a key for example `kubectl label deployments alpaca-prod "env-"`. The minus `-` at end of label name removes it.
+
+You may see a label called `pod-template-hash` when viewing labels. This label is applied by the deployment so it can keep track of which Pods were generated from which template version and allows the deployment to manage updates ina clean way.
+
+#### Label Selectors
+
+Label selectors are used to filter Kubernetes objects based on a set of labels. Label selectors are used by both end users and by different types of objects (for example how a ReplicaSet relates to its Pods).
+
+You use the `--selector` flag or `-l` for short to use label selectors in kubectl. Below are a few examples.
+
+List pods with `ver` label set to 2 `kubectl get pods --selector="ver=2"`
+
+If you specify two selectors separated by a comma only objects that satisfy both will be returned. This is a logical AND operation: `kubectl get pods -l="app=badnicoot,ver-2"`
+
+You can also ask if a label is one of a set of values. `kubectl get pods -l="app in (alpaca,bandicoot)"`
+
+We can also check if a label is set or not. `kubectl get deployments -l="canary"`. This example we are asking for all deployments where the `canary` label is set to anything.
+
+Below is a summary of the Selector operations:
+| Operator | Description |
+| -------- | ----------- |
+| key=value | key is set to value |
+| key!=value | key is not set to value |
+| key in (value1, value2) | key is one of value1 or value2 |
+| key notin (value1, value2) | key is not one of value1 or value2 |
+| key | key is set |
+| !key | key is not set |
+
+You can combine positive and negative selectors for example `kubectl get pods -l "ver=2,!canary"`
+
+#### Labels in Kubernetes architecture
+
+Kubernetes is a purposefully decoupled system. There is no hierarchy and all components operate independently. When objects need to be related to each other they are related with labels.  For example ReplicaSets which create multiple replicas of a Pod, find the Pods that they are managing via a selector. When you want to restrict network traffic in your cluster, you would use networkPolicy in conjunction with specific labels to identify Pods that should or should not be allowed to communicate with each other. Labels are the glue that holds a Kubernetes application together.
+
+### Annotations
