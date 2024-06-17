@@ -232,7 +232,7 @@ The `apply` command also records the history of previous configurations in an an
 
 When you want to delete an object use the command `kubectl delete -f obj.yaml`. ***Note:*** `kubectl` will not prompt for a confirmation before deleting an object.  There is however a terminating grace period of 30 seconds by default (At least for Pods need to confirm if for other objects). When a Pod is transitioned to Terminating state it stops taking request.  The grace period allows the Pod to finish any active reqeusts that it may be in the middle of processing before it is terminated. When a Pod is deleted any data in the container is deleted as well.  If you need to persist data than you need to use `PersistentVolumes`
 
-To create a deployment in a non declarative way you can use the command `kubectl create deployment <deployment_name> --image=<image> --replicas=<replica_count>` with real values that looks like `kubectl create deployment alpaca-prod --image=gcr.io/kuar-demo/kuard-arm64:blue --replicas=2`
+To create a deployment in a non declarative way you can use the command `kubectl create deployment <deployment_name> --image=<image> --replicas=<replica_count>` with real values that looks like `kubectl create deployment alpaca-prod --image=gcr.io/kuar-demo/kuard-arm64:blue --replicas=3 --port=8080`
 
 ## Kubernetes API
 
@@ -347,3 +347,85 @@ Annotations are used in various places in Kubernetes with the primary use case b
 Annotations keys use the same format as label keys but because they are often used to communicate information between tools the namespace part of the key is more important.  Example keys would be `deployment.kubernetes.io/revision` or `kubernetes.io/change-cause`.
 
 The value component of an annotation is a free-form field and there is no validation that any format is being followed. Its not uncommon to have a JSON document encoded as a string and stored as an annotation.
+
+Annotations are defined in the common `metadata` section in every Kubernetes object.
+
+```yaml
+...
+metadata:
+  annotations:
+    example.com/icon-url: "https://example.com/icon.png"
+...
+```
+
+## Service Discovery
+
+Kubernetes is a dynamic system where Pods are placed on nodes, and the numbers of Pods running can vary based on load. This makes it easy to run a lot of things but you also need to be able to find those running things. This class of problem is referred to as **service discovery**. Service discovery tools help solve the problem of finding which processes are listening at which addresses for which services. 
+
+### The Service object
+
+In Kubernetes service discovery starts with a **Service object**. A Service object is a way to create a named label selector, but it has some other functionality.
+
+To imperatively create a Service object use the command similar to `kubectl expose deployment alpaca-prod` (assuming you have the alpaca-prod) deployment already running. The `kubectl expose` command will pull both the label selector and the relevant ports from the deployment definition to set up the service. It will also assign a virtual IP (called **cluster IP**) to the service. This is a special IP address which Kubernetes will use to load balance across all the Pods that are identified by the selector.  This process of having Pods that match a selector get load balanced in the cluster IP is the service discovery mechanism (just my take away need to confirm)
+
+### Service DNS
+
+Because the cluster IP is virtual, it is stable and it is appropriate to give it a DNS address. Kubernetes provides a DNS service exposed to Pods running in the cluster and provides DNS names to cluster IPs.
+
+An example of the DNS name and how it breaks down is `alpaca-prod.default.svc.cluster.local` where...
+
+* `alpaca-prod` is the name of the service in questions
+* `default` is the namespace that the service is in
+* `svc` is for recognizing that this is a service
+* `cluster.local` is the base domain name for the cluster
+
+When referring to a service in your won namespace you can just use the service name.  You can also refer to a service in another namespace by having the namespace in the specified name (`alpaca-prod.default` for example) or you can use the FQDN.
+
+### Readiness Checks
+
+One nice things the Service object does is track if a Pod is ready to accept requests or not. This is useful if your applications needs some time to initialize when it starts up. This is the readiness check functionality.  You can specify the readiness check in your manifest file with code similar to
+
+```yaml
+speck:
+  ...
+  template:
+  ...
+  spec:
+    containers:
+      ...
+      name: alpaca-prod
+      readinessProbe:
+        httpGet:
+          path: /ready
+          port: 8080
+        periodSeconds: 2
+        initialDelaySeconds: 0
+        failureThreshold: 3
+        successThreshold: 1
+```
+
+In the example above the readiness check will look for successful GET request to `/ready` endpoint on port 8080. It will check every 2 seconds starting as soon as the Pod comes up. If three successive checks fail then the Pod will be considered not ready. If one checks succeeds the Pod will again be considered ready.  Only ready pods are sent traffic.  This functionality is not just useful at startup its a also a good way for an overloaded or sick server to signal to the system that it doesn't want to receive traffic anymore, and is a good way to implement a graceful shutdown. Server can signal it no longer wants to receive traffic complete all jobs or connections and shut down.
+
+### Exposing a service outside a cluster
+
+You can use the `NodePort` functionality to have your service be accessible from any cluster node. Essentially if you specify `spec.type` as `NodePort` or use `--type=NodePort` when calling expose command Kubernetes will assign a port to your service that can be used from any cluster node to access the service.
+
+#### Cloud Integration
+
+If your cloud supports it, you can use the `LoadBalancer` type which builds on the `NodePort` concept. Essential the cloud provider will create a load balancer and direct it at nodes in your cluster. This functionality is cloud provider specific, but is a way to get your application exposed/usable to the world.
+
+### Endpoints
+
+Some applications (and the system itself) want to be able to use services without a cluster IP. This can be done with the **Endpoints** object. For every Service object Kubernetes creates a buddy Endpoints object that contains the IP address of that service.  You an view the Endpoints object with the command `kubectl describe endpoints alpaca-prod`. To use a service an application that is aware of Endpoints (likely an application written tow ork with Kubernetes) can talk to Kubernetes API directly to look up endpoints and call them. The Kubernetes API even has the capability to "watch" objects and be notified as soon as they change. This allows the client to react immediately as soon as the IPs associated with a service change. Most applications don't use this and just use stable IP addresses that don't change often, but the alternative is there.
+
+### kube-proxy and cluster IPs
+
+Cluster IPs are stable virtual IPs that load-balance traffic across all of the endpoints in a service. This is performed by a component running on every node in the cluster called `kube-proxy`. `kube-proxy` watches for new services in the cluster via the API server and then programs a set of `iptables` rules in the kernel of that host to rewrite the destinations of packets so they care directed at one of the endpoints for that service. If the set of endpoints for a service changes (due to Pods coming and going ro due to failed readiness checks) the set of `iptables` rules is rewritten.
+
+The cluster IP itself is usually assigned by the API server as the service is created, however when creating the service the user can specify a specific cluster IP.  Once set the cluster IP cannot be modified without deleting and recreating the Service object.
+
+### Connecting with other environments
+
+ When you are connecting Kubernetes to legacy resources outside of the cluster, you can use selector-less services to declare a Kubernetes ser‐ vice with a manually assigned IP address that is outside of the cluster. That way, Kubernetes service discovery via DNS works as expected, but the network traffic itself flows to an external resource.
+
+ Connecting external resources to Kubernetes services is somewhat trickier. If your cloud provider supports it, the easiest thing to do is to create an “internal” load balancer that lives in your virtual private network and can deliver traffic from a fixed IP address into the cluster. You can then use traditional DNS to make this IP address available to the external resource. Another option is to run the full kube-proxy on an external resource and program that machine to use the DNS server in the Kubernetes cluster. Such a setup is significantly more difficult to get right and should really only be used in on-premise environments. There are also a variety of open source projects (for example, Hashicorp’s Consul) that can be used to manage connectivity between in-cluster and out-of-cluster resources.
