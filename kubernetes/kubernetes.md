@@ -889,3 +889,465 @@ The Job construct in kubernetes lets you run one time short-lives task. A job cr
 
 ### The Job object
 
+The Job object is responsible for creating and managing Pods defined in a template in the job specification. These Pods generally run until successful completion. The Job object coordinates running a number of Pods in parallel. If the Pod fails before a successful termination, the job controller will create a new Pod based on the pod template in the job specification.
+
+Given that Pods have to be scheduled, theres is a chance that your job wil not execute if the required resources are not found by the scheduler. Also, due to the nature of distributed systems there is a small chance, during certain failure scenarios, that duplicate Pods will be created for a specific task.
+
+### Job patterns
+
+Jobs are designed to manage batch-like workloads where work items are processed by one or more Pods. By default, each job runs a single Pod once until successful termination. This job pattern is defined by two primary attributes of a job, namely the number of job completions and the number of Pods to run in parallel. In the case of run once until completion for example, the `completions` and `parallelism` parameters are set to 1.
+
+| Job pattern type | Use case | Behavior | Completions | Parallelism |
+| ---------------- | -------- | -------- | ----------- | ----------- |
+| One shot | Database migrations | A single Pod running once until successful completion | 1 | 1 |
+| Parallel fixed comletions | Multiple pods processing a set of work in parallel | Once or more Pods running one or more times until reaching a fixed completion count | 1+ | 1+ |
+| Work queue | Multiple Pods processing from a centralized work queue | One or more Pods running once until successful termination | 1 | 2+ |
+
+#### One shot
+
+One shot jobs provide a way to run a single Pod once until successful termination. A Pod must be created and submitted to the Kubernetes API. This is done using a Pod template defined in the job configuration. Once a job is up and running, the Pod backing the job must be monitored for successful termination. A job can fail for any number of reasons, including an application error, an uncaught exception during runtime, or a node failure before the jbo has a chance to complete. In all cases, the job controller is responsible for recreating the Pod until a successful termination occurs. 
+
+There are multiple ways to create a one-shot job in Kubernetes. The easiest is to use the `kubectl` command line tools for example...
+
+`kubectl run -i oneshot --image=gcr.io/kuar-demo/kuard-amd64:blue --restart=OnFailure -- --keygen-enable --keygen-exit-on-complete --keygen-num-to-gen 10`
+
+Some things to note about the above example
+
+* The `-i` option indicates that this is an interactive command. `kubectl` will wait until the job is running and then show the log output from the first (and in this example only) Pod in the job.
+* `--restart=OnFailure` is the option that tells `kubectl` to create a Job object.  Restart policy can be set to Never if you do not wish for kubernetes to keep trying to restart the Pod if it fails. The behavior with Never will be to keep crating new Pods which can create a lot of Junk in your cluster so the `OnFailre` restart option is preferred. Kubelet has mechanisms to do a crash loop backoff so as to not keep eating resources on the cluster.
+* All of the options after `--` are command line arguments to the container image. These instruct our test server (kuard) to genearte 10 4096 bit SSH keys and then exit.
+* `kubectl` often misses the first couple of lines of the output with the `-i` option.
+
+After the job has completed, the Job object and related Pod are still around. This is so that you can inspect the log output. Note that this job won't show up in `kubectl get jobs` unless you pass the `-a` flag. Without this flag `kubectl` hides completed jobs. To delete the job use the command `kubectl delete jobs oneshot`.
+
+You can also use a manifest file to create a job.  Below is an example.  You would then submit the job with the command `kubectl apply -f job-oneshot.yaml`.  You can view the results of the job by looking at the logs of the Pod that was created using `kubectl describe jobs oneshot` to find the Pod and `kubectl logs oneshot-4kfdt` to see the logs from Pod.
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: oneshot
+spec:
+  template:
+    spec:
+      containers:
+      - name: kuard
+        image: gcr.io/kuar-demo/kuard-amd64:blue
+        imagePullPolicy: Always
+    args:
+    - "--keygen-enable"
+    - "--keygen-exit-on-complete"
+    - "--keygen-num-to-gen=10"
+    restartPolicy: OnFailure
+```
+
+One thing to consider is a job may get stuck and not make progress. To handle this you want to use a liveness probe to determine if the job should be restarted.
+
+### Parallelism
+
+If for example you wnt to generate 100 keys by having 10 runs of kuard with each generating 10 keys while limiting to just running 5 pods at a time this will translate to `completions` of 10 and `parallelism` of 5.  Below is an example of such a job manifest.  You can start this job with the command `kubectl apply -f job-parallel.yaml`
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: parallel
+  labels:
+    chapter: jobs
+spec:
+  parallelism: 5
+  completions: 10
+  template:
+    metadata:
+      labels:
+        chapter: jobs
+    spec:
+      containers:
+      - name: kuard
+        image: gcr.io/kuar-demo/kuard-amd64:blue
+        imagePullPolicy: Always
+        args:
+        - "--keygen-enable"
+        - "--keygen-exit-on-complete"
+        - "--keygen-num-to-gen=10"
+      restartPolicy: OnFailure
+```
+
+### Work Queues
+
+The manifest example below is telling the job to start up fie Pods in parallel. As the `completions` parameter is unset, we put the job into a worker pool mode. Once the first Pod exits with a zero exit code, the job will start winding down and will not start any new Pods. This means that none of the workers should exit until the work is done and they are all in the process of finishing up.  Note that in the book a work to be done queue was set up for the example workers.
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: message-queue
+    component: consumer
+    chapter: jobs
+  name: consumers
+spec:
+  parallelism: 5
+  template:
+    metadata:
+      labels:
+        app: message-queue
+        component: consumer
+        chapter: jobs
+    spec:
+      containers:
+      - name: worker
+        image: "gcr.io/kuar-demo/kuard-amd64:blue"
+        imagePullPolicy: Always
+        args:
+        - "--keygen-enable"
+        - "--keygen-exit-on-complete"
+        - "--keygen-memq-server=http://queue:8080/memq/server"
+        - "--keygen-memq-queue=keygen"
+      restartPolicy: OnFailure
+```
+
+For the example manifest above we can clean up using labels with the command `kubectl delete rs,svc,job -l chapter=jobs`
+
+### CronJobs
+
+Below is an example of a CronJob definition in Kubernetes. Note the `sepc.schedule field`, which contains the interval for the CronJob in standard cron format. As with other definitions you can schedule it with the command `kubectl create -f cron-job.yaml` and use `kubectl describe <cron-job>` to get the details.
+
+```yaml
+apiVersion: batch/v1beta1
+    kind: CronJob
+    metadata:
+      name: example-cron
+    spec:
+      # Run every fifth hour
+      schedule: "0 */5 * * *"
+      jobTemplate:
+        spec:
+          template:
+            spec:
+              containers:
+              - name: batch-job
+                image: my-batch-image
+              restartPolicy: OnFailure
+```
+
+## ConfigMaps and Secrets
+
+### ConfigMaps
+
+ConfigMaps are used to provide configuration information for workloads. This information can be a short string or a file. One way to think of ConfigMaps is a Kubernetes object that defines a set ov variables that can be used when defining the environment or command line for your containers.
+
+### Creating ConfigMaps
+
+To imperatively create a ConfigMap which makes a `my-config.txt` file available to a Pod you would use a command similar to ...
+
+`kubectl create configmap my-config --from-file=my-config.txt --from-literal=extra-param=extra-value --from-literal=another-param=another-value`
+
+In this example the context of `my-config.txt` are below...
+
+```text
+# This is a sample config file that I might use to configure an application
+parameter1 = value1
+parameter2 = value2
+```
+
+The YAML for the above command would ...
+
+```yaml
+apiVersion: v1
+    data:
+      another-param: another-value
+      extra-param: extra-value
+      my-config.txt: |
+        # This is a sample config file that I might use to configure an application
+        parameter1 = value1
+        parameter2 = value2
+    kind: ConfigMap
+    metadata:
+      creationTimestamp: ...
+      name: my-config
+      namespace: default
+      resourceVersion: "13556"
+      selfLink: /api/v1/namespaces/default/configmaps/my-config
+      uid: 3641c553-f7de-11e6-98c9-06135271a273
+```
+
+You can get the YAML for the ConfigMap imperatively created with the command `kubectl get configmaps my-config -o yaml`
+
+### Using a ConfigMap
+
+There are three main ways to use a ConfigMap:
+
+* Filesystem - You can mount a ConfigMap into a Pod. A file is created for each entry based on the key name. The contents of that file are set to the value.
+* Environment variable - A ConfigMap can be used to dynamically set the value of an environment variable
+* Command line arguments - Kubernetes supports dynamically creating the command line for a container based on ConfigMap values.
+
+The manifest below shows examples of these three use cases.
+
+For the filesystem method, we create a new volume inside the Pod and give it the name `config-volume`. We then define this volume to be a ConfigMap volume and point at the ConfigMap to mount. We have to specify where this gets mounted into the `kuard` containers with a `volumeMount`. In this case we are mounting it a `/config`. Environments variables are specified with a special `valueFrom` member. This references the ConfigMap and the data key to use within that ConfigMap. Command line arguments build on environment variables. Kubernetes will perform the correct substitution with a special `$(<env-var-name>)` syntax.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kuard-config
+spec:
+  containers:
+    - name: test-container
+      image: gcr.io/kuar-demo/kuard-amd64:blue
+      imagePullPolicy: Always
+      command:
+        - "/kuard"
+        - "$(EXTRA_PARAM)"
+      env:
+        - name: ANOTHER_PARAM
+          valueFrom:
+            configMapKeyRef:
+              name: my-config
+              key: another-param
+        - name: EXTRA_PARAM
+          valueFrom:
+            configMapKeyRef:
+              name: my-config
+              key: extra-param
+      volumeMounts:
+        - name: config-volume
+          mountPath: /config
+  volumes:
+    - name: config-volume
+      configMap:
+        name: my-config
+  restartPolicy: Never
+```
+
+## Secrets
+
+Secrets are similar to ConfigMaps but focus on making sensitive available to the workload. They can be used for things like credentials or TLS certificates. Secrets are exposed to Pds via explicit declaration in Pod manifests and the Kubernetes API. In this way, the Kubernetes secrets API provides an application centric mechanism for exposing sensitive configuration information to applications in a way that's easy to audit and leverages native OS isolation primitives.
+
+***Note:*** By default, Kubernetes secrets are stored in plain text in `etcd` storage for the cluster. This may not be sufficient security depending on your requirements. Anyone who has cluster admin rights will be able to read all of the secrets in the cluster. Recent versions of Kubernetes add support for encrypting the secrets with a user supplied key which is generally integrated into a cloud key store. Most cloud key stores have integrations with Kubernetes flexible volumes, enabling you to skip Kubernetes secrets entirely and rely on the cloud providers key store.
+
+### Creating Secrets
+
+Secretes hold one or more data elements as a collection of key/value paris and are creted either with Kubernetes API or the kubectl command-line tool. 
+
+Below is an example of using the `kubectl` command to created a secret which stored a TLS certificate and key from files local on the system where the command is being run. The command will create a secret with two elements `kuard.crt` and `kuard.key`
+
+`kubectl create secret generic kuard-tls --from-file=kuard.crt --from-file=kuard.key`
+
+To view the secret use the command below
+
+`kubectl describe secrets kuard-tls`
+
+### Consuming Secrets
+
+Secrets can be consumed using the Kubernetes REST API by applications that know how to call that API directly. This approach may not be desirable as this makes your application not portable (will only work in Kubernetes). Another option is to use a **secrets volume**.
+
+#### Secrets volumes
+
+Secret data can be exposed to Pods using the secrets volume type. Secret volumes are managed by the `kubelet` and are created at Pod creation time. Secrets are stored on tmpfs volumes (aka RAM disks), and as such are not written to disk on nodes. Each element of a secret is stored in a separate file under the target mount point specified in the volume mount. 
+
+The below Pod manifest demonstrates how to declare a secrets volume which exposes the `kuard-tls` secret volume to `/tls` mount point.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kuard-tls
+spec:
+  containers:
+    - name: kuard-tls
+      image: gcr.io/kuar-demo/kuard-amd64:blue
+      imagePullPolicy: Always
+      volumeMounts:
+      - name: tls-certs
+        mountPath: "/tls"
+        readOnly: true
+  volumes:
+    - name: tls-certs
+      secret:
+        secretName: kuard-tls
+```
+
+### Private Docker registries
+
+A special use case for secretes is to store access credentials for private Docker registries. Private Docker images can be stored across one or more private registries. This presents a challenge for managing credentials for each private registry on every possible node in the cluster. **Image pull secrets** leverage the secrets API to automate the distribution of private registry credentials. Image pull secrets are stored just like normal secrets but are consumed through the `spec.imagePullSecrets` Pod specification field.
+
+Use the `create secret docker-registry to create this special kind of secret. For example `kubectl create secret docker-registry my-image-pull-secret --docker-username=<username> --docker-password=<password> --docker-email=<email-address>`
+
+You then enable access to the private repository by referencing the image pull secret in the Pod manifest file as in the example below.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kuard-tls
+spec:
+  containers:
+    - name: kuard-tls
+      image: gcr.io/kuar-demo/kuard-amd64:blue
+      imagePullPolicy: Always
+      volumeMounts:
+      - name: tls-certs
+        mountPath: "/tls"
+        readOnly: true
+  imagePullSecrets:
+  - name:  my-image-pull-secret
+  volumes:
+    - name: tls-certs
+      secret:
+        secretName: kuard-tls
+```
+
+If you are repeatedly pulling from the same registry, you can add the secrets to the default service account associated with each Pod to avoid having to specify the secrets in every Pod you create.
+
+### Naming Constraints
+
+The key names for data items inside of a secret or ConfigMap are defined to map to valid environment variable names. They may begin with a dot followed by a letter or number.  Following characters include dots, dashes, and underscores. Dots cannot be repreated and dots and underscores or dashes cannot be adjacent to each other. The below regular expression checks for valid names.
+
+`^[.[?[a-zAZ0-9[([.[?[a-zA-Z0-9[+[-_a-zA-Z0-9[?)*$`
+
+Below are some examples of valid and invalid names.
+
+| Valid key name | Invalid key name |
+| -------------- | ---------------- |
+| `.auth_token` | `Token..properties`|
+| `Key.pem` | `auth file.json` |
+| `config_file` | `_password.txt` |
+
+When selecting a key name, consider that these keys can be exposed to Pods via a volume mount. Pick a name that is going to make sense when specified on a command line or in a config file. Storing a TLS key as key.pem is more clear than `tls-key` when configuring applications to access secrets.
+
+As of Kubernetes 1.6 ConfigMaps are unable to store binary data and can only be UTF-8 text.  You can in theory encode binary data into a base64 string and put it into the YAML file, but that makes YAML files hard to manage.
+
+Maximum size for a ConfigMap or secret is 1MB.
+
+### Managing ConfigMaps and Secrets
+
+Secrets and ConfigMaps are managed through the Kubernetes API. The usual `create`, `delete`, `get` and `describe` commands work for manipulating these objects.
+
+#### Listing
+
+`kubectl get secrets`
+
+`kubectl get configmaps`
+
+`kubectl describe configmap my-config`
+
+#### Creating
+
+The easiest way to create a secret or ConfigMap is via `kubectl create secret generic` or `kubectl create configmap`. Ther are a variety of ways to specify the data items that go into the secret or ConfigMap. These can be combined in a single command.
+
+* `--from-file=<filename>` - Load from the file with the secret data key the same as the filename
+
+* `--from-file=<key>=<filename>` - Load from the file with the secret data key explicitly specified
+
+* `--from-file=<directory>` - Load all files in the specified directory where the filename is an acceptable key name
+
+* `--from-literal=<key>=<value>` - Use the specified key/value pair directly
+
+#### Updating
+
+You can update a ConfigMap or secret and have it reflected in running programs. There is no need to restart if the application is configured to reread configuration values. This is a rare feature but might be something you can add to your applications.
+
+Below are three ways to update ConfigMaps or secrets.
+
+##### Update from file
+
+If you have a manifest for your ConfigMap or secret, you can just edit it directly and push a new version with `kubectl replace -f <filename>` You can also use `kubectl apply -f <filename>` if you previously created the resource with kubectl apply. Due to the way that datafiles are encoded into these objects, updating a configuration can be a bit cumbersome as there is no provision in `kubectl` to load data from an external file. The data must be stored directly in the YAML manifest. The most common use case is when the ConfigMap is defined as part of a directory or list of resources and everything is created and updated together. Oftentimes these manifests will be checked into source control. Be careful not put push secrets into a public location.
+
+##### Recreate and update
+
+If you store the inputs into your ConfigMaps or secrets as separate files on disk (as opposed to embedded into YAML directly), you can use `kubectl` to recreate the manifest and then use it to update the object. This will look something like...
+
+`kubectl create secret generic kuard-tls --from-file=kuard.crt --from-file=kuard.key --dry-run -o yaml | kubectl replace -f -`
+
+This command line first creates a new secret with the same name as our existing secret. If we just stopped there, the Kubernetes API server would return an error complaining that we are tying to create a secret that already exists. Instead, we tell `kubectl` not to actually send the data to the server but instead to dump the YAML that it *would have* sent to the API server to `stdout`. We then pipe that to `kubectl` replace and use `-f -` to tell it to read from `stdin`. In this way we can update a secret from files on disk without having to manually base64 encode the data.
+
+##### Edit current version
+
+You can use `kubectl edit` to bring up a version of the ConfigMap in your editor so you can modify it (you can also do this with a secret but you will have to update the base64 encoding value manually)
+
+`kubectl edit configmap my-config`
+
+One you make the desired changes in your editor and save, the new version of the object will be pushed to the Kubernetes API server.
+
+##### Live updates
+
+Once a ConfigMap or secret is updated using the API, it will automatically be pushed to all volumes that use that ConfigMap or secret. This update may take a few seconds. Currently there is not built in way to signal an application when a new version of ConfigMap is deployed. It is up to the application or some helper script to look for the config files to change and reload them.
+
+## Role based access control for Kubernetes
+
+Role Based Access Control (RBAC) has been generally available since Kubernetes 1.8. It provides a mechanism for restricting access and actions on Kubernetes APIs to ensure that only appropriate users have access to APIs in the cluster. RBAC is only part of a good security solution. Anyone who can run arbitrary code inside the Kubernetes cluster can effectively obtain root privileges on the entire cluster. RBAC by itself is not sufficient to protect from this. You must isolate the Pods running in your cluster using hypervisor isolated containers or some sort of sandbox, or both.
+
+Every request in Kubernetes is first *authenticated*. Authentication provides the identity of the caller issuing the request. This could be as simple as saying that the request is unauthenticated, or it could intergrade with a pluggable authentication provider (for example Azure Active Directory) to establish an identity within that third party system. Kubernetes does not have a built in identity store; it integrates other identity sources.
+
+Once a user is identified the authorization phase determines if the user is authorized to perform the request. Authorization is a combination of the identity of the user, the resource (effectively the HTTP path), and the verb or action the user is attempting to perform. If user is not authorized a 403 is returned.
+
+### Identity in Kubernetes
+
+Every request that comes to Kubernetes is associated with some identity. Requests with no identity are associated with `system:unauthenticated` group. Kubernetes makes a distinction between user identities and service account identities. Service accounts are created and managed by by Kubernetes itself and are generally associated with components running inside the cluster. User accounts are all other accounts associated with actual users of the cluster (often associated with continuous delivery as a service running outside the cluster).
+
+Kubernetes uses a generic interface for authentication providers. Each of the providers supplies a user name and optionally a set of groups to which the user belongs. Kubernetes supports a number of provides including basic HTTP authentication (deprecated) x509 client certificates, static token files on host, Cloud authentication (Azure AD, AWS IAM etc) and Authentication webhooks. Managed Kubernetes will configure authentication for you, but in your own cluster you get to decide.
+
+### Roles and role bindings
+
+Roles and role bindings are used to determine if a user is authorized to perform an action on an object once the user identity is known. A **role** is a set of capabilities. For example `appdev` role might represent the ability to create Pods and services. A **role binding** is an assignment of a role to one or more identities. Binding the `appdev` role to the user `alice` indicates that Alice has the ability to create Pods and services.
+
+There are two related resources in Kubernetes that represent roles and role bindings. `Role` and `RoleBinding` which applies to just a namespace and `ClusterRole` and `ClusterRoleBinding` which apply across the whole cluster. 
+
+`Role` resources are namespaced, and represent capabilities within that single namespace. You cannot use namespaced roles for non-namespaced resources (e.g., CustomResourceDefinitions), and binding a `RoleBinding` to a role only provides authorization within the Kubernetes namespace that contains both the `Role` and the `RoleDefinition`. 
+
+Below is an example of a role that gives an identity the ability to create and modify Pods and services.
+
+```yaml
+kind: Role
+    apiVersion: rbac.authorization.k8s.io/v1
+    metadata:
+      namespace: default
+      name: pod-and-services
+    rules:
+    - apiGroups: [""]
+      resources: ["pods", "services"]
+      verbs: ["create", "delete", "get", "list", "patch", "update", "watch"]
+```
+
+To bind the above `Role` to the user `alice` we need to create a `RoleBinding` exemplified in the below manifest.
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  namespace: default
+  name: pods-and-services
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: User
+  name: alice
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
+  name: mydevs
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: pod-and-services
+```
+
+If you want to make the same action but cluster wide you would use `ClusterRole` and `ClusterRoleBinding`. They are largely identical tot he namespaced peers, but have a larger scope.
+
+### Verbs for Kubernetes roles
+
+Commonly used vers in Kubernetes RBAC are listed elow.
+
+| Verb | HTTP method | Description |
+| ---- | ----------- | ----------_ |
+| create | POST | Create a new resource |
+| delete | DELETE | Delete an existing resource |
+| get | GET | Get a resource |
+| list | GET | List a collection of resources |
+| patch | PATCH | Modify an existing resource via a partial change |
+| update | PUT | Modify an existing resource via a complete object |
+| watch | GET | Watch for streaming updates to a resource |
+| proxy | GET | Connect to resource via a streaming WebSocket proxy |
+
+### Using build-in roles
+
+START HERE
