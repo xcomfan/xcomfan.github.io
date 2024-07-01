@@ -368,6 +368,8 @@ In Kubernetes service discovery starts with a **Service object**. A Service obje
 
 To imperatively create a Service object use the command similar to `kubectl expose deployment alpaca-prod` (assuming you have the alpaca-prod) deployment already running. The `kubectl expose` command will pull both the label selector and the relevant ports from the deployment definition to set up the service. It will also assign a virtual IP (called **cluster IP**) to the service. This is a special IP address which Kubernetes will use to load balance across all the Pods that are identified by the selector.  This process of having Pods that match a selector get load balanced in the cluster IP is the service discovery mechanism (just my take away need to confirm)
 
+You can get a list of services with the command `kubectl get services`
+
 ### Service DNS
 
 Because the cluster IP is virtual, it is stable and it is appropriate to give it a DNS address. Kubernetes provides a DNS service exposed to Pods running in the cluster and provides DNS names to cluster IPs.
@@ -1350,4 +1352,445 @@ Commonly used vers in Kubernetes RBAC are listed elow.
 
 ### Using build-in roles
 
-START HERE
+Kubernetes has a large number of well-known system identities (e.g., a scheduler) that require a know set of capabilities. There are also built in cluster roles.  You can view these roles by running the command `kubectl get clusterroles`.  Most of these roles are for system utilities four are intended for generic end users.
+
+* `cluster-admin` role provides complete access to the entire cluster
+* `admin` role provides complete access to a complete namespace
+* `edit` role allows an end user to modify things in a namespace
+* `view` role allows for read only access to a namespace
+
+To see the cluster role binding use the command `kubectl get clusterrolebindings`
+
+#### Auto-reconciliation of built in roles
+
+When the Kubernetes API server starts up, it automatically installs a number of default `ClusterRoles` that are defined int the code of the API server itself. This means if you modify those roles your changes will get discarded when the API server restarts (for example during an update).  To prevent this from happening you need to add the `rbac.authorization.kubernetes.io/autoupdate` annotation with a value of `false` to the built in ClusterRole resource. If this annotation is set to `false` the API server will not overwrite the modified ClusterRole resource.
+
+By default, the Kubernetes API server installs a cluster role that allows `system:unauthenticated` users access to the API server's API discovery endpoint. This is bad for any cluster exposed to a hostile environment such as the open internet. If you need to lock this down, ensure that the `--anonymous=auth=false` flag is set on your API serer.
+
+### Managing RBAC
+
+#### Testing authorization with can-i
+
+You can use the `can i` functionality of `kubectl` to verify if you have access to perform an action. You can also have users use this to validate their permissions.
+
+`kubectl auth can-i create pods`
+
+You can also test sub-resources like logs or port forwarding with the `--subresource` command line flag
+
+`kubectl auth can-i get pods --subresource=logs`
+
+#### Managing RBAC in Source Control
+
+Like all resources in Kubernetes, RBAC resources are modeled using JSON or YAML so they can be source controlled.  `kubectl` has a `reconcile` command that operates similar to `kubectl apply` but for RBAC resources and will reconcile a text-based set of roles and role bindings with the current state of the cluster.
+
+`kubectl auth reconcile -f some-rbac-config.yaml`
+
+If you want to see the changes before they are made you can add the `--dry-run` flag to the command.
+
+### Aggregating ClusterRoles
+
+RBAC supports the usage of an **aggregation rule** to combine multiple roles together in a new role. This new role combined all of the capabilities of all of the aggregate roles together, and any changes to any of the sub-roles will automatically be propagated back into the aggregate role. `ClusterRoles` to be aggregated are specified using label selectors. The `aggregationRule` field in the `ClusterRole` resource contains a `clusterRoleSelector` field, which in turn is a label selector. All `ClusterRole` resources that match this selector are dynamically aggregated into the `rules` array in the aggregate `ClusterRole` resource. 
+
+A best practice for managing `ClusterRole` resource is to create a number of fine-grained cluster roles and then aggregate them together to form higher-level or broadly defined cluster roles. Below is an example of the built in `edit` role defined to be the aggregate of all `ClusterRole` objects that have a label of `rbac.authrization.k8s.io/aggregate-to-edit` set to `true`.
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: edit
+  ...
+aggregationRule:
+  clusterRoleSelectors:
+  - matchLabels:
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+    ...
+```
+
+### Using Groups for bindings
+
+When you bind a group to a `ClusterRole` or a namespace Role, anyone who is a member of that group gains access to the resource and verbs defined by that role. To enable any individual go gain access to the group's role, that individual needs to be added to the group. Its better to use groups to control access for obvious reasons. Its hard to manage permissions at an individual person level.
+
+To bind a group to a ClusterRole use a `Group` kind for the `subject` in the binding. In Kubernetes, groups are supplied by authentication providers. There is no strong notion of group in Kubernetes itself; just that an identify can be part of one or more groups, and these groups can be associated with a `Role` or `ClusterRole` via a binding.
+
+```yaml
+...
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
+  name: my-great-groups-name
+    ...
+```
+
+## Integrating storage solutions and Kubernetes
+
+### Importing External Services
+
+This section has a side discussion on a use case for namespaces.  In the YAML below you can specify my-database as the database and vary the namespace. That way depending on the namespace you are running in when `my-database` is referenced you will get a different instance. This is good for having a test environment.  The Kubernetes DNS service will return `my-database.test.svc.cluster.internal` in the test namespace and `my-database.prod.svc.cluster.internal` in the prod namespace.
+
+```yaml
+kind: Service
+metadata:
+  name: my-database
+  # note 'prod' namespace here
+  namespace: prod
+...
+```
+
+A key difference between a service running in Kubernetes and one that is outside Kubernetes is that in Kubernetes label selectors can be used to identify the dynamic set of Pods what are the backends for a particular service. With a service running outside of Kubernetes this is not the case.
+
+Lets assume we have a service running on the host `database.company.com` To import this external database service into Kubernetes, we start by creating a service without a Pod selector that references the DNS name of the database server.
+
+```yaml
+kind: Service
+apiVersion: v1
+metadata:
+  name: external-database
+spec:
+  type: ExternalName
+  externalName: database.company.com
+```
+
+When a typical Kubernetes service is created, an IP address is also created and the Kubernetes DNS service is populated with an A record that points to that IP address. When you create a service of type `ExternalName`, the Kubernetes DNS service is instead populated with a CNAME record that points to the external name you specified (`database.company.com` in this example). When an application in the cluster does a DNS lookup for the hostname `external-database.svc.default.cluster`, the DNS protocol aliases that name to `database.company.com`. In this way all containers in Kubernetes believe that they are talking to a service that is backed with other containers.  This technique can also apply to calling cloud services such as cloud provided database which give you a URL for the resource.
+
+If you don't have a DNS name for the external service but just an IP address. The operation to import the service is a little different. You first crate a service without a label selector, but also without a `ExternalName` type we used before. This will make Kubernetes allocate a virtual IP address for this service and populate an A record for it.
+
+```yaml
+kind: Service
+apiVersion: v1
+metadata:
+  name: external-ip-database
+```
+
+Since there is no selector for the service Kubernetes cannot populate the endpoints for the service for the load balancer to redirect traffic to.  The user is responsible for populating the end-points manually using an `Endpoints` resource as in the example below.  If you have more than one IP address for redundancy, you can repeat them in the `addresses` array. Once the endpoints are populated the load balancer will start redirecting traffic from you Kubernetes service to the IP address endpoints.
+
+```yaml
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: external-ip-database
+subsets:
+  - addresses:
+    - ip: 192.168.0.1
+    ports:
+    - port: 3306
+```
+
+***Note:*** External services do not perform any  health checking.
+
+### Running reliable singletons
+
+The challenge of running storage solutions in Kubernetes is that primitives like ReplicaSet expect that every container is identical and replaceable, but for most storage solutions this is not the case. One option to address this is to run a single Pod that runs the database or other storage solution. This avoids the challenges of running replicated storages in Kubernetes since there is no replication. This is approach is acceptable for environments where limited downtime (for maintenance for example) is acceptable.
+
+#### Running a MySQL singleton
+
+To run a MySQL singleton you will need.
+
+* A persistent volume for the on-disk storage of the application managed independently of the lifespan of the running MySQL application.
+* A mySQL Pod that will run the MySQL application
+* A service that will expose this Pod to other containers in the cluster
+
+In this example we will use NFS for storage but Kubernetes has many other options which included cloud storage provider options. The YAML example below defines a `PersistentVolume` object which users NFS and has 1GB of space
+
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: database
+  labels:
+    volume: my-volume
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 1Gi
+  nfs:
+    server: 192.168.0.1
+    path: "/exports"
+```
+
+With the persistent volume created we need to claim that persistent volume for our Pod.  This is done with a `PersistentVolumeClaim` object as in the example below. Note that the `selector` field is used to find the matching volume we defined earlier using a label. You can declare volumes directly inside a Pod specification, but this locks that Pod specification to a particular volume provider. By using volume claims, you can keep your Pod specifications cloud-agnostic; Just create different volumes specific to the cloud, and use a `PersistentVolumeClaim` to bind them together.  
+
+```yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: database
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  selector:
+    matchLabels:
+      volume: my-volume
+```
+
+Now that we've claimed our volume, we can use a ReplicaSet to construct our singleton Pod. The user or ReplicaSet (instead of just a Pod) but this is better for reliability. Once scheduled to a machine, a bare Pod is bound to that machine forever. If the machine fails, then any Pods that are on that machine that are not being managed by a higher-level controller such as a ReplicaSet vanish with the machine and are not rescheduled elsewhere. For this reason in example below we use a ReplicaSet with a replica size of one for our database.
+
+```yaml
+apiVersion: extensions/v1
+kind: ReplicaSet
+metadata:
+name: mysql
+  # labels so that we can bind a Service to this Pod
+  labels:
+    app: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: database
+        image: mysql
+        resources:
+          requests:
+            cpu: 1
+            memory: 2Gi
+        env:
+        # Environment variables are not a best practice for security,
+        # but we're using them here for brevity in the example.
+        # See Chapter 11 for better options.
+        - name: MYSQL_ROOT_PASSWORD
+          value: some-password-here
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+          - name: database
+            # /var/lib/mysql is where MySQL stores its databases
+            mountPath: "/var/lib/mysql"
+      volumes:
+      - name: database
+        persistentVolumeClaim:
+          claimName: database
+```
+
+The final step is to expose this as a Kubernetes services which is done in the example below. This will expose a service named `mysql` which we can access at the full domain name `mysql.svc.default.cluster`
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+ports:
+  - port: 3306
+    protocol: TCP
+  selector:
+app: mysql
+```
+
+### Dynamic volume provisioning
+
+Many clusters include **dynamic volume provisioning** which has the cluster operator creating one or more `StorageClass` objects. The example below shows a default storage class object that automatically provisions disk objects on the Microsoft Azure platform. Once a storage class has been created for a cluster, you can refer to this refer to this storage class in your persistent volume claim, rather than referring to any specific persistent volume. 
+
+```yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: default
+  annotations:
+    storageclass.beta.kubernetes.io/is-default-class: "true"
+  labels:
+    kubernetes.io/cluster-service: "true"
+provisioner: kubernetes.io/azure-disk
+```
+
+When the dynamic provisioner sees this storage claim, it uses the appropriate volume driver to create the volume and bind it to your persistent volume claim. The example below shows usage of a `PersistentVolumeClaim` that uses the `default` storage class. The `volume.beta.kubernetes.io/storage-class` annotation is what links this claim back up to the storage class we created. ***Note:*** The lifespan of persistent volumes id dedicated by the reclamation policy of the `PersistentVolumeClaim` and the default is to bind the lifespan of the volume to that of the Pod. This means if you delete a Pod (with a scale down or other event) then the volumes is deleted as well. While this may be the desired behavior you need to be careful not to delete your persistent volumes.
+
+```yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: my-claim
+  annotations:
+    volume.beta.kubernetes.io/storage-class: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+```
+
+Persistent volumes are good for traditional applications that need storage, but if you need to develop a high-availability high-availability, scalable storage in a Kubernetes-native fashion you should look into `StatefulSet`. 
+
+[comment]: <> (TODO: Link to StatefulSet once you have that section)
+
+### Kubernetes native storage with StatefulSets
+
+StatefulSets are replicated groups of Pods, similar to ReplicaSets, but unlike RepilcaSets they have the following unique properties.
+
+* Each replica gets a persistent hostname with a unique index (e.g., database-0, database-1, etc.)
+* Each replica is created in order from lowest to highest index, and creation will block until the Pod at the previous index is healthy and available. This also applies to scaling up.
+* When a StatefulSet is deleted, each of the managed replica Pods is also deleted in order from highest to lowest. This also applied to scaling down the number of replicas.
+
+This set of features makes it easier to deploy storage applications on Kubernetes. For example, the combination of stable hostnames and ordering mean that all replcias, other thant he first one, can reliable reference `database-0` for the purposes of discovery and establishing replication quorum.
+
+#### Manually replicated MongoDB with StatefulSets
+
+[comment]: <> (TODO: This section gets a little messy to follow via my notes. Need to run though this exercise baed on the book and update the notes.)
+
+In this section we set up a replicated MongoDB cluster as an example of using StatefulSets. The example below creates a MongoDB based replicated storage utilizing StatefulSets. When this manifest is deployed with `kubectl apply -f mongo-simple.yaml` you will see the pods coming up one at a time and getting unique names for each Pod.
+
+```yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+spec:
+  serviceName: "mongo"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:3.4.1
+        command:
+        - mongod
+        - --replSet
+        - rs0
+        ports:
+        - containerPort: 27017
+name: peer
+```
+
+Once the StatefulSet is created, we also need to create a "headless" service to manage the DNS entries for the StatefulSet. In Kubernetes a service is called **headless**  if it doesn't have a cluster virtual IP address. Since with StatefulSets each Pod has a unique identity, it doesn't really make sense to have a load-balancing IP address for the replicated service. You can create a headless service using `clusterIP: None` in the service specification as in the example below.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+spec:
+  ports:
+  - port: 27017
+    name: peer
+  clusterIP: None
+  selector:
+app: mongo
+```
+
+Once the service is created, there are four DNS entries that are populated. `mongo.default.svc.cluster.local` is created, but unlike with a standard service a DNS lookup on this hostname provides all the addresses in the StatefulSet. In addition, entries are created for `mongo-0.mongo.default.svc.cluster.local` and `mongo-1.mongo` and `mongo-2.mongo`. Each of these resolves to the specific IP address of the replica index in the StatefulSet. Thus, with StatefulSets you get well-defined, persistent names for each replica in the set. This useful when you are configuring a replicated storage solution.
+
+At this point you would need to run the below command below in the Pod to set to make `rs0` with `mongo-0.mongo` be the initial primary.
+
+```bash
+kubectl exec -it mongo-0 mongo > rs.initiate( {
+_id: "rs0",
+      members:[ { _id: 0, host: "mongo-0.mongo:27017" } ]
+     });
+OK
+```
+
+To automate the execution of this command we can add an additional containers to our Pods to perform the initialization.  You can use ConfigMap to add a script into the existing MongoDB image as in the example below. Its mounting a ConfigMap volume whose name is `mongo-init`. This ConfigMap holds a script that performs our initialization. It first determines whether it is running on `mongo-0` or not. If it si on `mongo-0` it creates teh ReplicaSet using the same command we ran manually. If its on a different replica it waits until the ReplicaSet exists and then it registers itself as a member of that ReplicaSet.
+
+```yaml
+...
+- name: init-mongo
+  image: mongo:3.4.1
+  command:
+  - bash
+  - /config/init.sh
+  volumeMounts:
+  - name: config
+    mountPath: /config
+  volumes:
+  - name: config
+    configMap:
+      name: "mongo-init"
+```
+
+The script below sleeps forever after initializing the cluster. Since every container in the Pod needs to have the same `RestartPolicy`. Since we don't want the Mongo cluster to get restarted we need to have our initialization containers run forever as well or Kubernetes may think the Pod is unhealthy.
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-init
+data:
+  init.sh: |
+    #!/bin/bash
+    # Need to wait for the readiness health check to pass so that the
+    # mongo names resolve. This is kind of wonky.
+    until ping -c 1 ${HOSTNAME}.mongo; do
+      echo "waiting for DNS (${HOSTNAME}.mongo)..."
+sleep 2 done
+    until /usr/bin/mongo --eval 'printjson(db.serverStatus())'; do
+      echo "connecting to local mongo..."
+      sleep 2
+    done
+    echo "connected to local."
+HOST=mongo-0.mongo:27017
+    until /usr/bin/mongo --host=${HOST} --eval 'printjson(db.serverStatus())'; do
+      echo "connecting to remote mongo..."
+      sleep 2
+    done
+    echo "connected to remote."
+    if [[ "${HOSTNAME}" != 'mongo-0' ]]; then
+      until /usr/bin/mongo --host=${HOST} --eval="printjson(rs.status())" \
+            | grep -v "no replset config has been received"; do
+        echo "waiting for replication set initialization"
+        sleep 2
+      done
+      echo "adding self to mongo-0"
+      /usr/bin/mongo --host=${HOST} \
+         --eval="printjson(rs.add('${HOSTNAME}.mongo'))"
+    fi
+    if [[ "${HOSTNAME}" == 'mongo-0' ]]; then
+      echo "initializing replica set"
+      /usr/bin/mongo --eval="printjson(rs.initiate(\
+          {'_id': 'rs0', 'members': [{'_id': 0, \
+           'host': 'mongo-0.mongo:27017'}]}))"
+    fi
+    echo "initialized"
+    while true; do
+      sleep 3600
+done
+```
+
+#### Persistent volumes and StatefulSets
+
+For persistent storage you need to mount a persistent volume in the `/data/db` directory in the Pod template. Because the StatefulSet replicates more than one Pod you cannot simply reference a persistent volume claim. Instead you need to add a **persistent volume claim template**. A claim template is like a Pod template, but it creates volume clmains.
+
+This following needs to be added to your stateful definition. When y ou add a volume claim template to a StatefulSet definition, each time the StatefulSet controller creates a Pod that is part of the StatefulSet it will create a persistent volume claim based on this tempalte as part of that Pod.  For these replicated persistent volumes to work correctly, you either need to have auotprovisions set up for persistent volumes or you need to prepopulate a collection of persistent volume object for the StatefulSet controller to draw from. If there are no claims that can be created, the StatefulSet controlller will not be able to create the corresponding Pods.
+
+```yaml
+volumeClaimTemplates:
+- metadata:
+  name: database
+  annotations:
+    volume.alpha.kubernetes.io/storage-class: anything
+  spec:
+    accessModes: [ "ReadWriteOnce" ]
+    resources:
+    requests:
+    storage: 100Gi
+```
+
+#### Readines probes for the Mongo cluster
+
+For this example we can use the below for the readines probe.
+
+```yaml
+livenessProbe:
+  exec:
+    command:
+    - /usr/bin/mongo
+    - --eval
+    - db.serverStatus()
+  initialDelaySeconds: 10
+  timeoutSeconds: 10
+```
