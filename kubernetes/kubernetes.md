@@ -1794,3 +1794,203 @@ livenessProbe:
   initialDelaySeconds: 10
   timeoutSeconds: 10
 ```
+
+## Extending Kubernetes
+
+Even cluster admins should be careful and use diligence when extending Kuberneetes with third party tools. Some extensions can be used as a vector to steal secrets or run malicious code. Extending a cluster makes it different than stock Kubernetes. When running multiple clusters, it is very valuable to build tooling to maintain consistency of experience across clusters which shold include extensions that are installed.
+
+### Points of extensibility
+
+In addition to admission controllers and API extensions, there are a numbrer of ways to "extend" your cluster wihtout modifying the API server. These include DaemonSets that install automatic logging and monitoring tools that can scan your services for vulnerabilities.
+
+Admission contorllers are called prior to the API object being written into the backing storage. Adminssion controllers can reject or modify API requests. There are several admission controllers that are built into the Kubernetes API server. The limit range admission controller sets default limits for Pods without default limits. Many systems use custom admission controllers to auto-inject sidecar continers into all Pods created on the system to create "auto-magic" experiences.
+
+The other for of extension which can be used in conjunction with admission controllers is custom resources. With custom resources whole new API objects are added to the Kubernetes API surface area. These new APIs can be added to namespaces,are subject to RBAC and can be used with existing tools such as `kubectl`.
+
+The first thing you need to do to create a custom resource is to create a CustomResourceDefinition. This objec tis a meta-resource (a resource that is the definition of another resource). As a concrete exmple consider defining a new resource to represent load tests in your cluster. When a new LoadTest resource is created, a load test is spun up in your Kubernetes cluster and drives traffic to a service.  The first steap in creating this resource is defining it through CustomResourceDefinition. Below is an example. The name of a custom resource has to have the form `<resource plural>.<api-group>` to ensure that each resource definition is unique to the cluster.  The API group in the spec musht match the suffix in the metadata. Once you use `kubectl create -f loadtest-resource.yaml` (loadtest-resource.yaml is the file name with below example) you can right away run the command `kubectl get loadtests`.
+
+```yaml
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: loadtests.beta.kuar.com
+spec:
+  group: beta.kuar.com
+  versions:
+    - name: v1
+      served: true
+      storage: true
+  scope: Namespaced
+  names:
+    plural: loadtests
+    singular: loadtest
+    kind: LoadTest
+    shortNames:
+    - lt
+```
+
+Now that you have the resource created you can create the resource. The manifest for that is below. You can provide a schema for the CustomResourceDefinition, but unless you want to do validation you don't need to do that. Even if you do want to do validation you can register a validating admission controller. The manifest below can bre created using `kubectl create -f loadtest.yaml`
+
+```yaml
+apiVersion: beta.kuar.com/v1
+kind: LoadTest
+metadata:
+  name: my-loadtest
+spec:
+  service: my-service
+  scheme: https
+  requestsPerSecond: 1000
+  paths:
+    - /index.html
+    - /login.html
+    - /shares/my-shares/
+```
+
+At this point we can list the loadtest resource but it does not do anything yet. You canuse the CRUD API to create read update delete objects but they will take no action. To actually do something a controller needs to be present in the cluster to react to the new API we defined. We need a piece of code that will continuously monitor the custom resources and create, modify, or delete LoadTests as necessary to implement the API. There is a Watch API on the API server that your code can use to implement this control loop. The API is a bit hard to use so you should look into supported mehcanisms such as `informer` in the [client-go library](https://pkg.go.dev/k8s.io/client-go/informers)
+
+
+[comment]: <> (TODO: I stopped outlining this chapter as it became kind of har to follow without working though the examples. Will re pass later)
+
+### Patterns for custom resources
+
+#### Just data
+
+In the Just data pattern, you are simply using the API server for storage and retrieval of information for your application. You should not use the API server for storage and retrieval for your application; its snot designed for that. API extensions should be used for control or configuration object that help you manage the deployment or runtime of your application. An examle use case for "just data" might be configuration for canary deployments of your application. While you can use ConfigMaps; ConfigMaps are untyped and sometimes using a more strongly types API extension object provides clarity and ease of use. Extensiosn that are just data don't need a corresponding controller to activate them, but they may have validating or mutating admission controlles to ensure that they are well formed.
+
+#### Compilers
+
+This pattern knows as "compiler" or "abstraction" pattern has the API extension object representing a higher-level abstraction that is "compiled" into a combination of lower level Kubernetes objects. The LoadTest extension we discussed prior is an example of this pattern. A user consumes the extension as a high level concept, in this examle a `loadtest`, but it comes into being by being deployed as a collection of Kubernetes Pods and services. To achive this, a compiled abstraction requries an API controller to be running somewehre in the cluster, to watch the current LoadTests and create the "compiled" represntation. There is however no online helath maintenances.
+
+#### Operators
+
+Operator pattern provides online proactive management of the resources created by the extension. These extensions likely provide a higher level abstraction (for example a database) that is compield down to a lower level representation, but they also provide online functionality such as snapshot, backups, or upgrades. To achieve this, the controller not only monitors the running state of the application supplied by the extension to add or remove things as necessary, but also monitors the running state of the application supplied by the extension and takes actions to remediate unhealthy databases, take snapshots or restore from a snapshot if failure occurs. Operators are the most complicated pattern for API extension. 
+
+#### Getting started
+
+The [Kubebuilder project](https://kubebuilder.io) is a good resource to use when getting started with extension development.
+
+## Organizing your application
+
+### Principles to guide us
+
+* Filesystems as the source of truth
+* Code review to ensure the quality of changes
+* Feature flags for staged roll forward and roll back
+
+#### Feature gate and guards
+
+Feature gates and guards play an important role in bridging the gap of developing new features in source control and the deployment of those features into production. You can do the development behind a feature flag or gate as in the sippet below. This enables commiting of code to the production branch long before the feature is ready to ship. The enabling of the feature requries just a configuration change to activate the flag. This makes it very clear what chagned in the production environment, and makes it easy to roll back without having to go back to an older version of the code.
+ 
+```javascript
+if (featureFlags.myFlag){
+  // Feature implementation goes here
+}
+```
+
+#### Filesystem layout
+
+The first cardinality on which you want to organize your application is the semantic component or layer (e.g., frontend, batch work queue etc.) This may seem like overkill when one team manages all these components but it makes it easy to scale the team later. An application with a front end that uses two services would have a file layour similar to the below. Within each directory the configuration for each application is stored. These are YAML files that directly represent the current state of the cluster. Its generally useful to include both service namea nd the object type withing the same file. While Kubernetes allows for the creation of YAML files with multiple objects in the same file, this should generally be avoided. The only good reason to group objects in the same file is if they are conceptually identical. If grouping objects togetehr doesn't form a single concept, they probably shouldn't be in a single file.
+
+```text
+frontend/
+  frontend-deployment.yaml
+  frontend-service.yaml
+  frontend-ingress.yaml
+service-1/
+  service-1-deployment.yaml
+  service-1-service.yaml
+  service-1-configmap.yaml
+service-2/
+  ...
+```
+
+#### Managing periodic versions
+
+It is very useful to be able to look back historically and see what your application deployment previously looked like. It is also useful to be able to iterate a configuration forward while still being able to deploy a stable release configuration. Thus its handy to be able to simultaneously store and maintain multiple different revisions of your configuration. There are two approaches to this.
+
+The first is to use tags, branches and source-control features. This leads to a more simplified directory structure and aligns with how source code revisions are managed. The second options is to clone the configuration within the filesystem and use directoreis for different revisions. This approach is convinient because it makes simultaneous viewing of the configuration very straightforward. Both of these are essentially identical and are just a matter of preference.
+
+##### Versioning with branches and tags
+
+When you are ready for realease, you place a source-control tag (e.g `git tag v1.0`) on the config version and the HEAD continues to iterate forward. When you need to update the release configuration; first you commit the change to HEAD of the repository, then you create a new branch named v1 at the v1.0 tag. You then cherry-pick the desired change onto the release branch (`git cherry-pick <edit>`), and finally you tag this branch with the `v1.1` tag to indicate the new point release. ***Note:*** A common error is to cherry pick fixes into a release branch only. Its a good idea to cherry-pick it into all active releases, in case for some reason you need to roll back versions but the fix is still needed.
+
+##### Versioning with directories
+
+In this approach your versioned deployment exists within its own directory as in the example below. All deployments occur from `HEAD` instead of from specific revision tags. When adding a new configuration it is done to the files in the `current` directory. When creating a new rlease the current directory is copied to create a new directory associated wit the new release. When performing a bugfix change to a release, the pull request must modify the YAML file in all the relevant release directories. This is a slightly better experience than the cherry-picking approach described earlier, since it is clear in a single change request that all of the relevant versions are bing updated with the same change, instead of requiring a cherry-pick per version.
+
+```text
+frontend/
+  v1/
+    frontend-deployment.yaml
+    frontend-service.yaml
+  current/
+    frontend-deployment.yaml
+    frontend-service.yaml
+service-1/
+  v1/
+    service-1-deployment.yaml
+    service-1-service.yaml
+  v2/
+    service-1-deployment.yaml
+    service-1-service.yaml
+  current/
+    service-1-deployment.yaml
+    service-1-service.yaml
+...
+```
+
+
+
+### Structuring your appliation for development, testing and deployment
+
+There are two goals for your application with regard to development and testing.
+
+* Each developer should be able to easily develop new features for the application. Developers should be able to work in their own environment with all services available.
+* You should be able to easily and accurately test your application prior to deployment. This is essential to being able to quickly roll out features while maintaining availability.
+
+#### Progression of a release
+
+To achieve both these goals it is important to relate stages of development to the release versions described earlier. The stages of release are:
+
+* HEAD - The bleeding edge of the configuration; the latest changes
+* Development - Largely stable, but not ready for deployment. Suitable for developers to use for building features.
+* Staging - The beginning of testing, unlikely to change unless problems are found.
+* Canary - The first realease to users, used to test for problems with real world traffic and likewise give user a chance to test what is coming next.
+* Release - the current production release
+
+You should use a tag to mark the development stage. An automated process should be used to test the `HEAD` branch, and if test pass the `development` tag is moved to `HEAD`. Thus developers can track reasonably close to the latest changes when deploying their own environments.
+
+To map the stage to a specific revision if using source control approach you would use tags and if using file system approach you would use symbolic links.
+
+#### Parameterizing your applications with templates
+
+Since its impractical to keep the development stages identical, but you want the environments to be as identical as possible its a good idea to have parametrirized environments with templates. This lets you use a template for the bulk of the configuration but have a limited set of parameters to produce the final configuration. This makes it easy to see the differences between environments.
+
+##### Parameterizing with Helm and templates
+
+[Helm](https://helm.sh) is a package manager for Kubernetes. They patterns described here for Helm will apply to whatever templating option you choose.
+
+Helm templating language use the "mustache" syntax, so for exmple
+
+```yaml
+metadata:
+  name: {{ .Release.Name }}-deployment
+```
+
+indicates that `Release.Name` should be substituded into the name of a deployment. To pass a parameter for this value you use `values.yaml` file with contents like the below.
+
+```yaml
+Release:
+  Name: my-release
+```
+
+After paramter substitution you would get ...
+
+```yaml
+metadata:
+  name: my-release-deployment
+```
+
+##### Filesystem layour for parameterization
+
+START HERE
