@@ -1993,4 +1993,57 @@ metadata:
 
 ##### Filesystem layour for parameterization
 
-START HERE
+With parametarization, instead of treating each deployment lifecycle stage as a pointer to a version, each deployment lifecycle is the combination of a parameter file and a pointer to a specific version.  Below is an example of such a layout.  
+
+```text
+frontend/
+  staging/
+    templates -> ../v2
+    staging-parameters.yaml
+  production/
+    templates -> ../v1
+    production-parameters.yaml
+  v1/
+    frontend-deployment.yaml
+    frontend-service.yaml
+  v2/
+    frontend-deployment.yaml
+    frontend-service.yaml
+```
+
+Doing this with version control looks similar, except that the parameters for each life-cycle stage are kept at the root of the configuration directory tree.
+
+```text
+frontend/
+  staging-parameters.yaml
+  templates/
+  frontend-deployment.YAML
+```
+
+Should you need to have different configurations for different regions, your directory layout would lool like the below.
+
+```text
+frontend/
+  staging/
+    templates -> ../v3/
+    parameters.yaml
+  eastus/
+    templates -> ../v1/
+    parameters.yaml
+  westus/
+    templates -> ../v2/
+    parameters.yaml
+...
+```
+
+If using version control your layout would look like...
+
+```text
+frontend/
+  staging-parameters.yaml
+  eastus-parameters.yaml
+  westus-parameters.yaml
+  templates/
+    frontend-deployment.yaml
+...
+```

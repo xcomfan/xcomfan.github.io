@@ -20,4 +20,5 @@ title: Contents
 ## [Networking]({% link networking/networking.md %})
 ## [Python]({% link python/python.md %})
 ## [System Design]({% link system_design/system_design.md %})
+## [Terraform]({% link terraform/terraform.md %})
 ## [Windows]({% link windows/windows_terminal.md %})
