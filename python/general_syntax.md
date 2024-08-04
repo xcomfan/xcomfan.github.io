@@ -26,6 +26,8 @@ True
 
 An object is considered true if it is either a nonzero number or a nonempty collection object.  The built in words `True` and `False` are essentially predefined to have the same meaning as integers 1 and 0 respectively.
 
+Whe testing for none it is more Pythonic to write `if none_value is None:` than `if none_value == None`
+
 ## Built In Vs. Object Methods
 
 As a general rule generic operations that apply to multiple types show up as built-in functions or expressions.  For example `len(x)`, `x[0]`.  Type specific operations are method calls.  For example `aString.upper()`
@@ -70,6 +72,12 @@ To have a statement span multiple lines enclose it in brackets `()`, `[]`, or `{
 ... 
 hello
 ```
+
+## In place variable swap
+
+The comma makes it a tuple and you are using tuple unpacking to do the variable swap.
+
+`a, b = b, a`
 
 ## Scoping
 

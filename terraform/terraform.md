@@ -4,12 +4,7 @@ title: "Terraform"
 permalink: /terraform
 ---
 
-## Set these in your environment to use Terraform
-
-```bash
-$ export AWS_ACCESS_KEY_ID=(your access key id)
-$ export AWS_SECRET_ACCESS_KEY=(your secret access key)
-```
+[Installing and Configuring]({% link terraform/install_and_configure.md %})
 
 ## Terraform commands
 
@@ -75,7 +70,7 @@ Config can contain
 
 * `description`
 * `sensitive`
-* `depends_on` - Normally Terraform automatically figures out your dependency graph, but in rare situations, you have to give it extra hings. For example you have a variable that depends on IP address of a server, but that IP address won't be accessible until a security group is properly configured. This lets you explicitly tell Terraform there is a dependency between the IP address output variable and the security group.
+* `depends_on` - Normally Terraform automatically figures out your dependency graph, but in rare situations, you have to give it extra hints. For example you have a variable that depends on IP address of a server, but that IP address won't be accessible until a security group is properly configured. This lets you explicitly tell Terraform there is a dependency between the IP address output variable and the security group.
 
 Note that the ASG uses a reference to fill in the launch configuration name. This leads to a problem: launch configurations are immutable, so if you change any parameter of your launch configuration, Terraform will try to replace it. Normally, when replacing a resource, Terraform would delete the old resource first and then creates its replacement, but because your ASG now has a reference to the old resource, Terraform won’t be able to delete it.
 To solve this problem, you can use a lifecycle setting. Every Terraform resource supports several lifecycle settings that configure how that resource is created, updated, and/or deleted. A particularly useful lifecycle setting is create_before_destroy. If you set create_before_destroy to true, Terraform will invert the order in which it replaces resources, creating the replacement resource first (including updating any references that were pointing at the old resource to point to the replacement) and then deleting the old resource. Add the lifecycle block to your aws_launch_configuration as follows:
@@ -231,12 +226,286 @@ terraform {
 }
 ```
 
-Once you have the above definition in place you run `terraform init` again to configure the backend.  The init command is idempotent so you can run it multiple times.
+Once you have the above definition in place you run `terraform init` again to configure the backend.  The init command is idempotent so you can run it multiple times. After this command you will store your config in the s3 bucket.
+
+You can use the below to confirm things are working. Run `terraform apply` after you add them.
+
+```hcl
+output "s3_bucket_arn" {
+  value       = aws_s3_bucket.terraform_state.arn
+  description = "The ARN of the S3 bucket"
+}
+
+output "dynamodb_table_name" {
+  value       = aws_dynamodb_table.terraform_locks.name
+  description = "The name of the DynamoDB table"
+}
+```
+
+#### Limitations with Terraform Backends
+
+The fist limitation is the chicken egg situation of using Terraform to create the S3 bucket to store your Terraform state. You first write the Terraform code to create the s3 bucket and Dynamo DB table and deploy that code with a local backend. You then add the remote backend to your Terraform code and run `terraform init` to cpy your local state to S3. If you ever want to delete the S3 bucket and DynamoDB table, you'd have to do this two step process in reverse.  Fist remove the backend in your Terraform code and run `terraform init` to copy the Terraform state back to local disk. Then you run `terraform destroy` to delete the S3 bucket and DynamoDB table.
+
+Note that you can share a single S3 bucket and DynamoDB table across all of your Terraform code.
+
+The second limitation is that the `backend` block in Terraform does not allow you to use any variables or references. This means that you need to manually copy and past the S3 bucket name, region, and DynamoDB table name, etc into every one of your Terraform modules. You also must be very careful not to copy and paste the `key` value but unsure a unique `key` for every Terraform module you deploy so that you don't accidentally over write the state of some other module. One option for reducing the copy and paste is to use **partial configurations**  where you omit certain parameters from the backend configuration in your Terraform code and instead pass those in via `-backend-config` command-line arguments when calling `terraform init`. For example you can extract the repeated arguments such as `bucket` and `region`, into a separate file called `backend.hcl`
+
+```hcl
+# backend.hcl
+bucket         = "terraform-up-and-running-state"
+region         = "us-east-2"
+dynamodb_table = "terraform-up-and-running-locks"
+encrypt        = true
+```
+
+Only the `key` parameter remains in the Terraform code, since you still need to set a different `key` for each module.
+
+```hcl
+# Partial configuration. The other settings (e.g., bucket, region) 
+# will be passed in from a file via -backend-config arguments to 
+# 'terraform init'
+terraform {
+  backend "s3" {
+    key = "example/terraform.tfstate"
+  }
+}
+```
+
+To put all your partial configurations together, run `terraform init` with the `-backend-config` argument as in `terraform init -backend-config=backend.hcl`. Terraform will merge the partial configuration in `backend.hcl` with the partial configuration in your Terraform code to produce the full configuration.
+
+Another option to reduce the copy pasting is to use [Terragrunt](https://terragrunt.gruntwork.io) an open source tool that can help keep your entire `backend` configuration DRY (Don't Repeat Yourself) by defining all the basic `backend` settings in one file and automatically setting the `key` argument to the relative folder path of the module`
+
 
 ### Locking state files
 
-Need to solve the issue of what happens if two team members run Terraform at the same time.
+Need to solve the issue of what happens if two team members run Terraform at the same time. (I believe the backend solves this for us need to remove section or clarify in rewrite)
 
 ### Isolating state files
 
-How can you isolate QA/Staging/prod if all your state is in one file?
+If you keep all your Terraform code in a single file or directory all your Terraform state will also end up in one file which means one break can break everything. You want to separate your dev, test staging etc environments. There are two ways you can isolate environments.
+
+* Isolation via workspaces - useful for quick isolated tests on the same configuration
+* Isolation via file layout - Useful for production use cases for which you need strong separation between environments.
+
+#### Isolation via workspaces
+
+[Terraform workspaces](https://www.terraform.io/language/state/workspaces) allow you to store your Terraform state in multiple, separate, named workspaces. You use the default workspace by default. To create a new workspace or switch between workspaces, you use the `terraform workspace` commands. You can see which workspace you are using with the `terraform workspace show` command. To create a new workspace use a command similar to `terraform workspace new example1`. The state files in each workspace are isolated from each other. For example if your create an EC2 instance in default workspace that instance will not be there in the example workspace state file and thus a new instance will be created.  To switch workspaces you would use the `terraform workplace select example1`. On the backend in the s3 bucket Terraform will create a directory structure with a directory for each your workspaces in the `env` directory.
+
+This is handy for when you have a Terraform module deployed and want to do some experiments.
+
+Below is an example of using a ternary expression to set instancy type based on which workspace you are in.
+
+```hcl
+resource "aws_instance" "example" {
+  ami           = "ami-0fb653ca2d3203ac1"
+  instance_type = (
+    terraform.workspace == "default" ? "t2.medium" : "t2.micro"
+  )
+}
+```
+
+Workspaces are good for quick experiments, but have some drawbacks.
+
+* State files are stored in the same backend which means same authentication and access controls are used for all the workspaces. This makes them unsuitable for isolating environments.
+* Workspaces are not visible in code or in console unless you check with `terraform workspace` command. When browsing a module the code can be deployed to one or 10 workspaces which makes it hard to track your infrastructure.
+* Its easy to forget what workspace you are in and deploy to the wrong one or worse run terraform destroy in production workspace instead of staging one. As same auth is used for both there is no safety net.
+
+#### Isolation via file layout
+
+To achieve full isolation between environments, you need to 1. Put the Terraform configuration files for each environment into a separate folder. For example, all of the configurations for the staging environment can be in a folder called stage and all the configurations for the production environment can be in a folder called prod. 2. Configure a different backend for each environment, using different authentication mechanisms and access controls. Each environment could live in separate AWS account with separate s3 buckets as a backend.
+
+With this approach its clear which environment you are making changes in due to the separate folders and separate authentication for each environment makes it less likely that a screw up in one environment will impact another. 
+
+You can further isolate things into components. For example the networking configuration rarely changes so you can have the be separate from the more frequently changing web servers. Its a good idea to break these out into separate state files.
+
+Below is a recommended file layour.
+
+```text
+stage
+    vpc
+    services
+        frontend-app
+        backend-app
+            variables.tf
+            outputs.tf
+            main.tf
+        data-storate
+            mysql
+            redis
+prod
+    vpc
+    services
+        frontend-app
+        backend-app
+    data-storage
+        mysql
+        redis
+mgmt
+    vpc
+    services
+    bastion-host
+    jenkins
+global
+    iam
+    s3
+```
+
+When you run Terraform it simply looks for files in the current directory with the `.tf` extension so filenames are up to you.
+
+Some options beyond the conventions above
+
+* `dependencies.tf` - its common to put all your data sources in a `dependencies.tf` file to make it easier to see what external things the code depends on.
+* `providers.tf` - You may want to put your providers block into `providers.tf` so you can see at a glance what providers the coded talks to and what authentication you have to provide.
+* `main-xxx.tf` - break up the main file into some smaller logical resources. For example main-iam.tf main-s3.tf. 
+
+A drawback of the breaking things into directory is you can no longer run one single file which will bring up the entire environment. You can work around this with `Terragrunt` using the `run-all` command.
+
+#### The terraform_remote_state data source
+
+Similar to the `aws_subnets` data source we used before to get a list of subnets in our VPC, there is another data source that is particularly useful when working with state. The `terraform_remote_state` can be used to fetch the Terraform state file stored by another set of Terraform configurations.
+
+Lets say we have the following content in the file `stage/data-stores/mysql/main.tf` in our directory structure.
+
+```terraform
+provider "aws" {
+    region = "us-east-2"
+}
+
+resource "aws_db_instance" "example" {
+  identifier_prefix   = "terraform-up-and-running"
+  engine              = "mysql"
+  allocated_storage   = 10
+  instance_class      = "db.t2.micro"
+  skip_final_snapshot = true
+  db_name             = "example_database"
+  # How should we set the username and password?
+  username = var.db_username
+  password = var.db_password
+}
+```
+
+Note that above we are not specifying the username and password.  In a later section we will cover how to manage secretes when working with Terraform, but for now we will just keep the secrets in a separate file without default values so that we are prompted for them.
+
+```terraform
+# stage/data-stores/mysql/variables.tf
+variable "db_username" {
+  description = "The username for the database"
+  type        = string
+  sensitive   = true
+}
+
+variable "db_password" {
+  description = "The password for the database"
+  type        = string
+  sensitive   = true
+}
+```
+
+Now we configure the module to store its state in S3 bucket we created earlier.
+
+```terraform
+terraform {
+  backend "s3" {
+    # Replace this with your bucket name!
+    bucket         = "terraform-up-and-running-state"
+    key            = "stage/data-stores/mysql/terraform.tfstate"
+    region         = "us-east-2"
+
+    # Replace this with your DynamoDB table name!
+    dynamodb_table = "terraform-up-and-running-locks"
+    encrypt        = true
+  }
+}
+```
+
+Finally we add two output variables
+
+```terraform
+# stage/data-stores/mysql/output.tf
+output "address" {
+  value       = aws_db_instance.example.address
+  description = "Connect to the database at this endpoint"
+}
+
+output "port" {
+  value       = aws_db_instance.example.port
+  description = "The port the database is listening on"
+}
+```
+
+You can pass the values in when you run the code at the prompt or you can set them in your shell environment.
+
+```bash
+$ export TF_VAR_db_username="(YOUR_DB_USERNAME)"
+$ export TF_VAR_db_password="(YOUR_DB_PASSWORD)"
+```
+
+Now you can run `terraform init` and `terraform apply` to create the database.
+
+Now if we go back to our cluster code, we can get the web server to read those outputs (for the database) from the state file using `terraform_remote_state`
+
+```terraform
+data "terraform_remote_state" "db" {
+  backend = "s3"
+
+  config = {
+    bucket = "(YOUR_BUCKET_NAME)"
+    key    = "stage/data-stores/mysql/terraform.tfstate"
+    region = "us-east-2"
+  }
+}
+```
+
+Like all Terraform data sources, the data returned by `terraform_remote_state` is read only.   Your read the data with the syntax `data.terraform_remote_state.<NAME>.outputs.<ATTRIBUTE>` for example ...
+
+```bash
+user_data = <<EOF
+#!/bin/bash
+echo "Hello, World" >> index.html
+echo "${data.terraform_remote_state.db.outputs.address}">>index.html
+echo "${data.terraform_remote_state.db.outputs.port}">>index.html
+nohup busybox httpd -f -p ${var.server_port} &
+EOF
+```
+
+A side not here its kind of a pain to have your bash script inside of your terraform code.  You can sue the `template` built in functionality to externalize the script.
+
+You would use the Terraform function (there are other functions you can explore) `templatefile(<PATH>, <VARS>)` to do this. 
+
+We can put our bash script int ot he file `stage/services/webserver-cluster/user-data.sh` as in the example below. Not that `${...}` is used where we need to substitute variables. The script will only have access to variables passed in via the second function parameter.  The script below also added some HTML style syntax to make the output look nicer.
+
+```bash
+#!/bin/bash
+
+cat > index.html <<EOF
+<h1>Hello, World</h1>
+<p>DB address: ${db_address}</p>
+<p>DB port: ${db_port}</p>
+EOF
+
+nohup busybox httpd -f -p ${server_port} &
+```
+
+Once we have script created, we need to update the `user_data` parameter of the `aws_launch_configuration` resource to call the `templatefile` function and pass in the variables it needs as a map.
+
+```terraform
+resource "aws_launch_configuration" "example" {
+  image_id        = "ami-0fb653ca2d3203ac1"
+  instance_type   = "t2.micro"
+  security_groups = [aws_security_group.instance.id]
+
+  # Render the User Data script as a template
+  user_data = templatefile("user-data.sh", {
+    server_port = var.server_port
+    db_address  = data.terraform_remote_state.db.outputs.address
+    db_port     = data.terraform_remote_state.db.outputs.port
+  })
+
+  # Required when using a launch configuration with an ASG.
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+```
+
+You can experiment with Terraform functions using the `terraform console` command. This will give you an interactive console where you can experiment. The Terraform console is read only so you don't need to worry about accidentally changing infrastructure state.
