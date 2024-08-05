@@ -3,20 +3,20 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>System Design | My References</title>
+<title>Linux Standards | My References</title>
 <meta name="generator" content="Jekyll v3.9.2" />
-<meta property="og:title" content="System Design" />
+<meta property="og:title" content="Linux Standards" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://localhost:4000/system_design" />
-<meta property="og:url" content="http://localhost:4000/system_design" />
+<link rel="canonical" href="http://localhost:4000/linux/standards" />
+<meta property="og:url" content="http://localhost:4000/linux/standards" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="System Design" />
+<meta property="twitter:title" content="Linux Standards" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"System Design","url":"http://localhost:4000/system_design"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Linux Standards","url":"http://localhost:4000/linux/standards"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
@@ -39,17 +39,27 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">System Design</h1>
+    <h1 class="post-title">Linux Standards</h1>
   </header>
 
   <div class="post-content">
-    <p><a href="/system_design/reference">System Design Reference</a></p>
+    <h2 id="posix">POSIX</h2>
 
-<p><a href="/system_design/monitoring">Monitoring</a></p>
+<p>POSIX stands for portable operating system interface and it refers to a group of standards developed under IEEE.  The goal of the standard is to promote application portability at the source code level. POSIX documents an API for a set of services that should be made available to a program by a conforming operating system. POSIX xpecifies the API, but not the implementation.</p>
 
-<p><a href="/system_design/observability">Observability</a></p>
+<h2 id="susvx">SUSvX</h2>
 
-<p><a href="/system_design/ci_cd">CI/CD</a></p>
+<p>SUSvX stands for single UNIX Specification Version X and it is essentially POSIX 1003.1-2001 which replaces earlier POSIX standards.</p>
+
+<h2 id="the-standard-c-library-the-gnu-c-library">The Standard C Library; The GNU C Library</h2>
+
+<p>Determining the version of glibc on the system</p>
+
+<p>From the shell, we can determine the version of glibc shared library files by running the .so file as though it was an executable. You will need to find where glibc is.</p>
+
+<p>Another way is to run ldd against a linked program.</p>
+
+<p><code class="language-plaintext highlighter-rouge">ldd myprog | grep libc</code></p>
 
   </div>
 

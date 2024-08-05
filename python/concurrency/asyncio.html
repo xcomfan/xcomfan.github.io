@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Async IO | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Async IO" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/python/concurrency/asyncio" />
+<meta property="og:url" content="http://localhost:4000/python/concurrency/asyncio" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Async IO" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Async IO","url":"http://localhost:4000/python/concurrency/asyncio"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Async IO</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="what-is-asyncio">What is asyncio</h2>
+
+<p>Async IO in Python is actually a single threaded single process design. It takes long waiting periods in which functions would otherwise be blocking and allows other functions to run during that downtime.</p>
+
+<p>Async IO is ideas for when you have multiple IO-bound tasks such as</p>
+
+<ul>
+  <li>Network IO</li>
+  <li>Read/write operations where you want to write and move on, but not have to worry about managing locks.</li>
+</ul>
+
+<h2 id="the-asyncio-package-and-asyncawait">The asyncio package and async/await</h2>
+
+<p>At the hear of async IO are coroutines.  A coroutine is a specialized version of a Python generator function. A coroutine can suspend its execution before reaching return, and it can indirectly pass control to another coroutine for some time.</p>
+
+<h3 id="hello-world-of-async-io">Hello World of async IO</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">asyncio</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">count</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"One"</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Two"</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">gather</span><span class="p">(</span><span class="n">count</span><span class="p">(),</span> <span class="n">count</span><span class="p">(),</span> <span class="n">count</span><span class="p">())</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">time</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span>
+    <span class="n">asyncio</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+    <span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">s</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"executed in </span><span class="si">{</span><span class="n">elapsed</span><span class="p">:</span><span class="mf">0.2</span><span class="n">f</span><span class="si">}</span><span class="s"> seconds."</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The above program will output below.  Notice that execution took one second whereas without asyncio it would take 3.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>One
+One
+One
+Two
+Two
+Two
+executed in 1.00 seconds.
+</code></pre></div></div>
+
+<p>The order of the output above demonstrates the core of async IO. Each of the calls to <code class="language-plaintext highlighter-rouge">count()</code> is driven by a single event loop. When each task reaches the <code class="language-plaintext highlighter-rouge">await asyncio.sleep(1)</code>, the function is effectively notifying the event loop that its going to sleep in the example here but making a long call such as a network request in a real scenario; and that the event loop can run something else in the meantime.</p>
+
+<p><strong><em>Note</em></strong> we are using <code class="language-plaintext highlighter-rouge">asyncio.sleep()</code> here as <code class="language-plaintext highlighter-rouge">time.sleep()</code> is not compatible with async IO.  In general you need to be cautious of libraries being used with async IO as libraries not compatible with async IO will be blocking while executing.</p>
+
+<h3 id="rules-of-async-io">Rules of async IO</h3>
+
+<ul>
+  <li>
+    <p>The syntax <code class="language-plaintext highlighter-rouge">async def</code> introduces either a <strong>native coroutine</strong> or an <strong>asynchronous generator</strong>.</p>
+  </li>
+  <li>
+    <p>The expressions <code class="language-plaintext highlighter-rouge">with async</code> and <code class="language-plaintext highlighter-rouge">async for</code> are also valid.</p>
+  </li>
+  <li>
+    <p>The keyword <code class="language-plaintext highlighter-rouge">await</code> passes function control back to the event loop.  It suspends the execution of the surrounding coroutine and allows something else to run.</p>
+  </li>
+  <li>
+    <p>A function that you define with <code class="language-plaintext highlighter-rouge">async def</code> is a coroutine. It may use <code class="language-plaintext highlighter-rouge">await</code> <code class="language-plaintext highlighter-rouge">return</code>, or <code class="language-plaintext highlighter-rouge">yield</code> but all of these are optional.  To call a coroutine function, you must <code class="language-plaintext highlighter-rouge">await</code> it to get its results.</p>
+  </li>
+  <li>
+    <p>You can use <code class="language-plaintext highlighter-rouge">yield</code> in in an aysnc def block.  This creates an <strong>asynchronous generator</strong> which you iterate over with using <code class="language-plaintext highlighter-rouge">async for</code>.</p>
+  </li>
+  <li>
+    <p>Anything defined with <code class="language-plaintext highlighter-rouge">async def</code> cannot use <code class="language-plaintext highlighter-rouge">yield from</code>.  This will raise a <code class="language-plaintext highlighter-rouge">SyntaxError</code>.</p>
+  </li>
+  <li>
+    <p>You cannot use <code class="language-plaintext highlighter-rouge">await</code> outside of a <code class="language-plaintext highlighter-rouge">async def</code> function.  This will raise a <code class="language-plaintext highlighter-rouge">SyntaxError</code>.  You can only use <code class="language-plaintext highlighter-rouge">await</code> in the body of a coroutine.</p>
+  </li>
+</ul>
+
+<h2 id="the-event-loop-and-asynciorun">The event loop and asyncio.run()</h2>
+
+<p>You can think of an event loop as a <code class="language-plaintext highlighter-rouge">while True</code> loop that monitors coroutines, taking feedback on what’s idle, and looking for things that can be executed in the meantime. It is able to wake up a coroutine when whatever that coroutine is waiting on is becomes available.</p>
+
+<p><code class="language-plaintext highlighter-rouge">asyncio.run()</code> is responsible for getting the event loop running tasks until they are complete then closing the vent loop. A more granular option for controlling rhe vent loop is below but in most cases <code class="language-plaintext highlighter-rouge">asyncio.run()</code> should be sufficient.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">loop</span><span class="p">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+<span class="k">finally</span><span class="p">:</span>
+    <span class="n">loop</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="some-important-points-about-even-loop">some important points about even loop</h3>
+
+<ul>
+  <li>
+    <p>Coroutines don’t do much on their own until they are tied to an event loop. If you call a function declared with <code class="language-plaintext highlighter-rouge">async def</code> it won’t do anything and just return the coroutine object. It needs to be called/started with <code class="language-plaintext highlighter-rouge">asyncio.run()</code></p>
+  </li>
+  <li>
+    <p>By default an asyncio event loop runs in a single thread on a single CPU core. Usually this is sufficient but you can mis threading and asyncio to have it run on multiple threads.</p>
+  </li>
+  <li>
+    <p>Event loops are pluggable. If you want to you can implement your own even loop (one example of this is the <code class="language-plaintext highlighter-rouge">uvloop</code> package which in an implementation of the even loop in Cython). You can use any working implementation of even loop independent of the coroutines themselves.</p>
+  </li>
+</ul>
+
+<h3 id="top-level-asyncio-functions">Top level asyncio functions</h3>
+
+<p>You can create a task with <code class="language-plaintext highlighter-rouge">create_task</code> to schedule the execution of a coroutine object, followed by <code class="language-plaintext highlighter-rouge">asyncio.run()</code>. <strong><em>Note</em></strong> in example below if you don’t <code class="language-plaintext highlighter-rouge">await</code> on <code class="language-plaintext highlighter-rouge">t</code> within <code class="language-plaintext highlighter-rouge">main()</code>, it may finish before <code class="language-plaintext highlighter-rouge">main()</code> itself signals that it is complete.  Because <code class="language-plaintext highlighter-rouge">asyncio.run(main())</code> calls <code class="language-plaintext highlighter-rouge">loop.run_until_complete(main())</code> without the <code class="language-plaintext highlighter-rouge">await t</code> present the event loop only ares if <code class="language-plaintext highlighter-rouge">main()</code> is done not the tasks that get created within main.  Without the <code class="language-plaintext highlighter-rouge">await t</code> the loop’s other tasks will be cancelled, possibly before they are completed.  If you need to get a list of currently pending tasks you can use <code class="language-plaintext highlighter-rouge">asyncio.Task.all_tasks()</code></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">asyncio</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">async</span> <span class="k">def</span> <span class="nf">coro</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="p">...</span>     <span class="s">"""'IO' wait time is proportional to the max element."""</span>
+<span class="p">...</span>     <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
+<span class="p">...</span>     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="p">...</span>     <span class="c1"># This is a bit redundant in the case of one task
+</span><span class="p">...</span>     <span class="c1"># We could use `await coro([3, 2, 1])` on its own
+</span><span class="p">...</span>     <span class="n">t</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">coro</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>  <span class="c1"># Python 3.7+
+</span><span class="p">...</span>     <span class="k">await</span> <span class="n">t</span>
+<span class="p">...</span>     <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'t: type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+<span class="p">...</span>     <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'t done: </span><span class="si">{</span><span class="n">t</span><span class="p">.</span><span class="n">done</span><span class="p">()</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">t</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+<span class="n">t</span><span class="p">:</span> <span class="nb">type</span> <span class="o">&lt;</span><span class="k">class</span> <span class="err">'</span><span class="nc">_asyncio</span><span class="p">.</span><span class="n">Task</span><span class="s">'&gt;
+t done: True
+</span></code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">asyncio.gather()</code> is mean to put a collections of coroutines (futures) into a single future.  As a result, it returns a single future object, and, if you <code class="language-plaintext highlighter-rouge">await asyncio.gather()</code> and specify multiple tasks and coroutines you are waiting for all of them to be completed.  The result will be a list of results across the inputs.  Alternatively you can loop over <code class="language-plaintext highlighter-rouge">asyncio.as_completed()</code> to get tasks as they are completed in the order of completion.  The function returns an iterator that yields tasks as they finish.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">async</span> <span class="k">def</span> <span class="nf">coro</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="p">...</span>     <span class="s">"""'IO' wait time is proportional to the max element."""</span>
+<span class="p">...</span>     <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
+<span class="p">...</span>     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="p">...</span>     <span class="n">t</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">coro</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<span class="p">...</span>     <span class="n">t2</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">coro</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+<span class="p">...</span>     <span class="k">print</span><span class="p">(</span><span class="s">'Start:'</span><span class="p">,</span> <span class="n">time</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%X'</span><span class="p">))</span>
+<span class="p">...</span>     <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">as_completed</span><span class="p">((</span><span class="n">t</span><span class="p">,</span> <span class="n">t2</span><span class="p">)):</span>
+<span class="p">...</span>         <span class="n">compl</span> <span class="o">=</span> <span class="k">await</span> <span class="n">res</span>
+<span class="p">...</span>         <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'res: </span><span class="si">{</span><span class="n">compl</span><span class="si">}</span><span class="s"> completed at </span><span class="si">{</span><span class="n">time</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">"%X"</span><span class="p">)</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+<span class="p">...</span>     <span class="k">print</span><span class="p">(</span><span class="s">'End:'</span><span class="p">,</span> <span class="n">time</span><span class="p">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">'%X'</span><span class="p">))</span>
+<span class="p">...</span>     <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'Both tasks done: </span><span class="si">{</span><span class="nb">all</span><span class="p">((</span><span class="n">t</span><span class="p">.</span><span class="n">done</span><span class="p">(),</span> <span class="n">t2</span><span class="p">.</span><span class="n">done</span><span class="p">()))</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+<span class="n">Start</span><span class="p">:</span> <span class="mi">09</span><span class="p">:</span><span class="mi">49</span><span class="p">:</span><span class="mi">07</span>
+<span class="n">res</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="n">completed</span> <span class="n">at</span> <span class="mi">09</span><span class="p">:</span><span class="mi">49</span><span class="p">:</span><span class="mi">10</span>
+<span class="n">res</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span> <span class="n">completed</span> <span class="n">at</span> <span class="mi">09</span><span class="p">:</span><span class="mi">49</span><span class="p">:</span><span class="mi">17</span>
+<span class="n">End</span><span class="p">:</span> <span class="mi">09</span><span class="p">:</span><span class="mi">49</span><span class="p">:</span><span class="mi">17</span>
+<span class="n">Both</span> <span class="n">tasks</span> <span class="n">done</span><span class="p">:</span> <span class="bp">True</span>
+</code></pre></div></div>
+
+<h2 id="full-example-program-using-async-io">Full example program using async io</h2>
+
+<p>The example below is a web scraping URL collector which uses <code class="language-plaintext highlighter-rouge">aiohttp</code> as the <code class="language-plaintext highlighter-rouge">requests</code> package does not support async IO.</p>
+
+<p>The program below reads a sequence of URLs from a local file <code class="language-plaintext highlighter-rouge">urls.txt</code>, sends <code class="language-plaintext highlighter-rouge">GET</code> requests for the URLs and decodes the resulting content. It then searches for URLs in the body of the HTML response and writes them to <code class="language-plaintext highlighter-rouge">foundurls.txt</code></p>
+
+<p>below is a sample of urls.txt.  The second one is intended to fail.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>urls.txt
+https://regex101.com/
+https://docs.python.org/3/this-url-will-404.html
+https://www.nytimes.com/guides/
+https://www.mediamatters.org/
+https://1.1.1.1/
+https://www.politico.com/tipsheets/morning-money
+https://www.bloomberg.com/markets/economics
+https://www.ietf.org/rfc/rfc2616.txt
+</code></pre></div></div>
+
+<p>Some notes on the program.</p>
+
+<ul>
+  <li>
+    <p>In the <code class="language-plaintext highlighter-rouge">parse()</code> function the second portion is blocking, but it consists fo a quick regex match and ensuring that links discovered are made into absolute paths.  Just a note here that any line in a coroutine unless that line uses <code class="language-plaintext highlighter-rouge">yield</code>, <code class="language-plaintext highlighter-rouge">await</code> or <code class="language-plaintext highlighter-rouge">return</code> will block.  If this operation was a more expensive process you should consider running it with <code class="language-plaintext highlighter-rouge">loop.run_in_executor()</code>.</p>
+  </li>
+  <li>
+    <p>The package <code class="language-plaintext highlighter-rouge">aiofiles</code> is the async IO compatible package for writing to files.</p>
+  </li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">IO</span>
+<span class="kn">import</span> <span class="nn">urllib.error</span>
+<span class="kn">import</span> <span class="nn">urllib.parse</span>
+
+<span class="kn">import</span> <span class="nn">aiofiles</span>
+<span class="kn">import</span> <span class="nn">aiohttp</span>
+<span class="kn">from</span> <span class="nn">aiohttp</span> <span class="kn">import</span> <span class="n">ClientSession</span>
+
+<span class="n">logging</span><span class="p">.</span><span class="n">basicConfig</span><span class="p">(</span>
+    <span class="nb">format</span><span class="o">=</span><span class="s">"%(asctime)s %(levelname)s:%(name)s: %(message)s"</span><span class="p">,</span>
+    <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="n">DEBUG</span><span class="p">,</span>
+    <span class="n">datefmt</span><span class="o">=</span><span class="s">"%H:%M:%S"</span><span class="p">,</span>
+    <span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">"areq"</span><span class="p">)</span>
+<span class="n">logging</span><span class="p">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">"chardet.charsetprober"</span><span class="p">).</span><span class="n">disabled</span> <span class="o">=</span> <span class="bp">True</span>
+
+<span class="n">HREF_RE</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nb">compile</span><span class="p">(</span><span class="sa">r</span><span class="s">'href="(.*?)"'</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_html</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">ClientSession</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="s">"""GET request wrapper to fetch page HTML.
+
+    kwargs are passed to `session.request()`.
+    """</span>
+
+    <span class="n">resp</span> <span class="o">=</span> <span class="k">await</span> <span class="n">session</span><span class="p">.</span><span class="n">request</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s">"GET"</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">resp</span><span class="p">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+    <span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"Got response [%s] for URL: %s"</span><span class="p">,</span> <span class="n">resp</span><span class="p">.</span><span class="n">status</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="k">await</span> <span class="n">resp</span><span class="p">.</span><span class="n">text</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">html</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">ClientSession</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">:</span>
+    <span class="s">"""Find HREFs in the HTML of `url`."""</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="k">await</span> <span class="n">fetch_html</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span>
+        <span class="n">aiohttp</span><span class="p">.</span><span class="n">ClientError</span><span class="p">,</span>
+        <span class="n">aiohttp</span><span class="p">.</span><span class="n">http_exceptions</span><span class="p">.</span><span class="n">HttpProcessingError</span><span class="p">,</span>
+    <span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="p">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="s">"aiohttp exception for %s [%s]: %s"</span><span class="p">,</span>
+            <span class="n">url</span><span class="p">,</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s">"status"</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s">"message"</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">found</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="p">.</span><span class="n">exception</span><span class="p">(</span>
+            <span class="s">"Non-aiohttp exception occured:  %s"</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s">"__dict__"</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">found</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">HREF_RE</span><span class="p">.</span><span class="n">findall</span><span class="p">(</span><span class="n">html</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">abslink</span> <span class="o">=</span> <span class="n">urllib</span><span class="p">.</span><span class="n">parse</span><span class="p">.</span><span class="n">urljoin</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="n">urllib</span><span class="p">.</span><span class="n">error</span><span class="p">.</span><span class="n">URLError</span><span class="p">,</span> <span class="nb">ValueError</span><span class="p">):</span>
+                <span class="n">logger</span><span class="p">.</span><span class="n">exception</span><span class="p">(</span><span class="s">"Error parsing URL: %s"</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">found</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">abslink</span><span class="p">)</span>
+        <span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"Found %d links for %s"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">found</span><span class="p">),</span> <span class="n">url</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">found</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">write_one</span><span class="p">(</span><span class="nb">file</span><span class="p">:</span> <span class="n">IO</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="s">"""Write the found HREFs from `url` to `file`."""</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="k">await</span> <span class="n">parse</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">res</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">aiofiles</span><span class="p">.</span><span class="nb">open</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="s">"a"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">f</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+        <span class="n">logger</span><span class="p">.</span><span class="n">info</span><span class="p">(</span><span class="s">"Wrote results for source URL: %s"</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">bulk_crawl_and_write</span><span class="p">(</span><span class="nb">file</span><span class="p">:</span> <span class="n">IO</span><span class="p">,</span> <span class="n">urls</span><span class="p">:</span> <span class="nb">set</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="s">"""Crawl &amp; write concurrently to `file` for multiple `urls`."""</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">ClientSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+        <span class="n">tasks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">urls</span><span class="p">:</span>
+            <span class="n">tasks</span><span class="p">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">write_one</span><span class="p">(</span><span class="nb">file</span><span class="o">=</span><span class="nb">file</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">tasks</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pathlib</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+
+    <span class="k">assert</span> <span class="n">sys</span><span class="p">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="s">"Script requires Python 3.7+."</span>
+    <span class="n">here</span> <span class="o">=</span> <span class="n">pathlib</span><span class="p">.</span><span class="n">Path</span><span class="p">(</span><span class="n">__file__</span><span class="p">).</span><span class="n">parent</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">here</span><span class="p">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s">"urls.txt"</span><span class="p">))</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
+        <span class="n">urls</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">.</span><span class="n">strip</span><span class="p">,</span> <span class="n">infile</span><span class="p">))</span>
+
+    <span class="n">outpath</span> <span class="o">=</span> <span class="n">here</span><span class="p">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s">"foundurls.txt"</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outpath</span><span class="p">,</span> <span class="s">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+        <span class="n">outfile</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s">"source_url</span><span class="se">\t</span><span class="s">parsed_url</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+
+    <span class="n">asyncio</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">bulk_crawl_and_write</span><span class="p">(</span><span class="nb">file</span><span class="o">=</span><span class="n">outpath</span><span class="p">,</span> <span class="n">urls</span><span class="o">=</span><span class="n">urls</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h2 id="async-for-and-async-generator-comprehensions">Async for and async generator comprehensions</h2>
+
+<p>Along with the plain <code class="language-plaintext highlighter-rouge">async await</code> Python enables <code class="language-plaintext highlighter-rouge">async for</code> to iterate over an <strong>asynchronous iterator</strong>. The purpose of the asynchronous iterator is for it to be able to call asynchronous code at each state its iterated over.  A natural extension of this concept is an <strong>asynchronous generator</strong>.  Python enables <strong>asynchronous comprehension</strong> with <code class="language-plaintext highlighter-rouge">async await</code>.</p>
+
+<p>The key thing is that neither <strong>asynchronous generators</strong> nor <strong>asynchronous comprehensions</strong> make the iteration concurrent. All they do is provide the look and feel of their synchronous version, but with the ability for the loop in question to give up control to the event loop so that another coroutine could run. The async for and async with statements are only needed to the extent that using plain for or with would “break” the nature of await in the coroutine.</p>
+
+<h2 id="async-io-design-patterns">Async IO design patterns</h2>
+
+<h3 id="chaining-coroutines">Chaining coroutines</h3>
+
+<p>A key feature of coroutines is that they can be chained together. A coroutine is awaitable, so another coroutine can <code class="language-plaintext highlighter-rouge">await</code> it.  This allows you to break programs into smaller, manageable, recyclable coroutines.  Basic example of this pattern below.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">part1</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"part1(</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s">) sleeping for </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s"> seconds."</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"result</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s">-1"</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Returning part1(</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s">) == </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s">."</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">part2</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"part2</span><span class="si">{</span><span class="n">n</span><span class="p">,</span> <span class="n">arg</span><span class="si">}</span><span class="s"> sleeping for </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s"> seconds."</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"result</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s">-2 derived from </span><span class="si">{</span><span class="n">arg</span><span class="si">}</span><span class="s">"</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Returning part2</span><span class="si">{</span><span class="n">n</span><span class="p">,</span> <span class="n">arg</span><span class="si">}</span><span class="s"> == </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s">."</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">chain</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="k">await</span> <span class="n">part1</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">p2</span> <span class="o">=</span> <span class="k">await</span> <span class="n">part2</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p1</span><span class="p">)</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"--&gt;Chained result</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s"> =&gt; </span><span class="si">{</span><span class="n">p2</span><span class="si">}</span><span class="s"> (took </span><span class="si">{</span><span class="n">end</span><span class="p">:</span><span class="mf">0.2</span><span class="n">f</span><span class="si">}</span><span class="s"> seconds)."</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">chain</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">args</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="n">random</span><span class="p">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">444</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span>
+    <span class="n">asyncio</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">))</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Program finished in </span><span class="si">{</span><span class="n">end</span><span class="p">:</span><span class="mf">0.2</span><span class="n">f</span><span class="si">}</span><span class="s"> seconds."</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The above programs output is below.  Note how part1 sleeps for a variable amount of time, and part2 begins working with the results as they become available.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python3 chained.py 9 6 3
+part1(9) sleeping for 4 seconds.
+part1(6) sleeping for 4 seconds.
+part1(3) sleeping for 0 seconds.
+Returning part1(3) == result3-1.
+part2(3, 'result3-1') sleeping for 4 seconds.
+Returning part1(9) == result9-1.
+part2(9, 'result9-1') sleeping for 7 seconds.
+Returning part1(6) == result6-1.
+part2(6, 'result6-1') sleeping for 4 seconds.
+Returning part2(3, 'result3-1') == result3-2 derived from result3-1.
+--&gt;Chained result3 =&gt; result3-2 derived from result3-1 (took 4.00 seconds).
+Returning part2(6, 'result6-1') == result6-2 derived from result6-1.
+--&gt;Chained result6 =&gt; result6-2 derived from result6-1 (took 8.01 seconds).
+Returning part2(9, 'result9-1') == result9-2 derived from result9-1.
+--&gt;Chained result9 =&gt; result9-2 derived from result9-1 (took 11.01 seconds).
+Program finished in 11.01 seconds.
+</code></pre></div></div>
+
+<h3 id="using-a-queue">Using a queue</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">asyncio</code> package provides <a href="https://docs.python.org/3/library/asyncio-queue.html">queue classes</a> that let you implement a producer consumer pattern that is async IO compatible.  Each producer may add multiple items to the queue at random times and a group of consumers can retrieve items from the queue as they show up without the two processes needing to signal each other.</p>
+
+<p>Basic example of this pattern below where a producer puts from 1 to 5 items into the queue with a random number and the time the item was added to queue. Consumer pulls an item out, calculates the elapsed time.</p>
+
+<p>Few notes about this example.</p>
+
+<ul>
+  <li>
+    <p>There needs to be a signal to the consumers that production is done. Otherwise <code class="language-plaintext highlighter-rouge">await q.get()</code> will hang indefinitely, because the queue will have been fully processed, but consumers won’t have any idea that production is complete.</p>
+  </li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">await</code> on <code class="language-plaintext highlighter-rouge">q.join()</code> blocks until all items in the queue have been received and processed and then cancel the consumer tasks, which would otherwise hang up and wait endlessly for additional queue items to appear.</p>
+  </li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="n">it</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">makeitem</span><span class="p">(</span><span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">os</span><span class="p">.</span><span class="n">urandom</span><span class="p">(</span><span class="n">size</span><span class="p">).</span><span class="nb">hex</span><span class="p">()</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">randsleep</span><span class="p">(</span><span class="n">caller</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">caller</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">caller</span><span class="si">}</span><span class="s"> sleeping for </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s"> seconds."</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">produce</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">q</span><span class="p">:</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">Queue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">it</span><span class="p">.</span><span class="n">repeat</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>  <span class="c1"># Synchronous loop for each single producer
+</span>        <span class="k">await</span> <span class="n">randsleep</span><span class="p">(</span><span class="n">caller</span><span class="o">=</span><span class="sa">f</span><span class="s">"Producer </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="k">await</span> <span class="n">makeitem</span><span class="p">()</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span>
+        <span class="k">await</span> <span class="n">q</span><span class="p">.</span><span class="n">put</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">t</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Producer </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s"> added &lt;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">&gt; to queue."</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">consume</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">q</span><span class="p">:</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">Queue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">randsleep</span><span class="p">(</span><span class="n">caller</span><span class="o">=</span><span class="sa">f</span><span class="s">"Consumer </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="k">await</span> <span class="n">q</span><span class="p">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Consumer </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s"> got element &lt;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">&gt;"</span>
+              <span class="sa">f</span><span class="s">" in </span><span class="si">{</span><span class="n">now</span><span class="o">-</span><span class="n">t</span><span class="p">:</span><span class="mf">0.5</span><span class="n">f</span><span class="si">}</span><span class="s"> seconds."</span><span class="p">)</span>
+        <span class="n">q</span><span class="p">.</span><span class="n">task_done</span><span class="p">()</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">nprod</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ncon</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">Queue</span><span class="p">()</span>
+    <span class="n">producers</span> <span class="o">=</span> <span class="p">[</span><span class="n">asyncio</span><span class="p">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">produce</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">q</span><span class="p">))</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nprod</span><span class="p">)]</span>
+    <span class="n">consumers</span> <span class="o">=</span> <span class="p">[</span><span class="n">asyncio</span><span class="p">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">consume</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">q</span><span class="p">))</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncon</span><span class="p">)]</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="p">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">producers</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">q</span><span class="p">.</span><span class="n">join</span><span class="p">()</span>  <span class="c1"># Implicitly awaits consumers, too
+</span>    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">consumers</span><span class="p">:</span>
+        <span class="n">c</span><span class="p">.</span><span class="n">cancel</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">argparse</span>
+    <span class="n">random</span><span class="p">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">444</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="p">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="p">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">"-p"</span><span class="p">,</span> <span class="s">"--nprod"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">parser</span><span class="p">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s">"-c"</span><span class="p">,</span> <span class="s">"--ncon"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">ns</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span>
+    <span class="n">asyncio</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">(</span><span class="o">**</span><span class="n">ns</span><span class="p">.</span><span class="n">__dict__</span><span class="p">))</span>
+    <span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Program completed in </span><span class="si">{</span><span class="n">elapsed</span><span class="p">:</span><span class="mf">0.5</span><span class="n">f</span><span class="si">}</span><span class="s"> seconds."</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="references">References</h2>
+
+<p>A lot of the content I made notes on here is from the <a href="https://realpython.com/async-io-python/#libraries-that-work-with-asyncawait">Real Python async IO tutorial</a></p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

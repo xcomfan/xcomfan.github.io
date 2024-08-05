@@ -1,0 +1,11 @@
+temp page for me to brainstorm categories for organizing the Terraform notes.
+
+- Terraform workflow
+    - depends on and the resource lifecycle
+- Managing Terraform state
+- Terraform DSL language
+    - variables
+    - data sources
+- Reading Terraform output/plans
+    - Output (may be a ref to variables)
+- 

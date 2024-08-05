@@ -43,30 +43,27 @@
   </header>
 
   <div class="post-content">
-    
-<p><a href="/python/sets">Sets</a></p>
+    <h2 id="immutable-versus-mutable-objects-in-python">Immutable versus mutable objects in Python</h2>
+
+<p>In Python every variable holds an instance of an object. Whenever an object is instantiated, it is assigned a unique object id. The type of object is defined at runtime and cannot be changed afterward; however its state can be changed if its a mutable object.  Immutable objects such as <code class="language-plaintext highlighter-rouge">int</code>, <code class="language-plaintext highlighter-rouge">float</code>, <code class="language-plaintext highlighter-rouge">bool</code>, <code class="language-plaintext highlighter-rouge">string</code>, <code class="language-plaintext highlighter-rouge">Unicode</code> and <code class="language-plaintext highlighter-rouge">tuple</code> cannot be modified.  Immutable objects can only be re-assigned.</p>
+
+<h2 id="python-types">Python types</h2>
 
 <ul>
-  <li>Boolean
-    <ul>
-      <li>8 comparison types</li>
-      <li>and, or, not operations</li>
-    </ul>
-  </li>
+  <li>Boolean (immutable)</li>
   <li>Numeric Types
     <ul>
-      <li>int</li>
-      <li>float</li>
+      <li>int (immutable)</li>
+      <li>float (immutable)</li>
       <li>complex</li>
-      <li>Bitwise Operators and Integer Types</li>
     </ul>
   </li>
   <li>Sequence Types
     <ul>
-      <li>list</li>
-      <li>tuple</li>
+      <li><a href="/python/lists">list</a></li>
+      <li><a href="/python/tuples">tuple (immutable)</a></li>
       <li>range</li>
-      <li>str</li>
+      <li><a href="/python/strings">string</a> (immutable)</li>
     </ul>
   </li>
   <li>Binary Sequence Types
@@ -78,7 +75,7 @@
   </li>
   <li>Set Types
     <ul>
-      <li>set</li>
+      <li><a href="/python/sets">set</a></li>
       <li>frozenset</li>
     </ul>
   </li>

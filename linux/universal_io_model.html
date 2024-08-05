@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Linux Universal File I/O Model | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Linux Universal File I/O Model" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/linux/universal_io_model" />
+<meta property="og:url" content="http://localhost:4000/linux/universal_io_model" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Linux Universal File I/O Model" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Linux Universal File I/O Model","url":"http://localhost:4000/linux/universal_io_model"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Linux Universal File I/O Model</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="universality-of-io">Universality of I/O</h2>
+
+<p>Everything in Linux is a file and the same API calls (open(), read(), write(), close()) are used to perform I/O on all types of files including devices. The kernel translates the applications I/O requests into appropriate file-system or device driver operations that perform I/O on the target file or device. Th kernel essentially provides one file type: a sequential stream of bytes. Universality of I/O means that the I/O access API (read(), write(), close() etc.) will work for any type of file. This is achieved by ensuring that each file system and device driver implements the same set of I/O system calls.</p>
+
+<h2 id="file-descriptors">File descriptors</h2>
+
+<p>All systems performing I/O refer to open files using a <strong>file descriptor</strong> a (usually small) non negative integer. There can be multiple descriptors pointing to the same file. These descriptors may belong to one or multiple processes.</p>
+
+<p>A <strong>file offset</strong> is shared between these open descriptors so if one updates the offset the other descriptor sees that change.</p>
+
+<p><strong>File descriptor</strong> flags (such as close on exec flag) are exclusive to each file descriptor.</p>
+
+<p>By convention most programs expect to use the three standard file descriptors that are opened by the shell on the programs behalf.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>File Descriptor</th>
+      <th>Purpose</th>
+      <th>POSIX name</th>
+      <th>stdio stream</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>standard input</td>
+      <td>STDIN_FILENO</td>
+      <td>stdin</td>
+      <td>the file from which the process takes its input</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>standard output</td>
+      <td>STDOUT_FILENO</td>
+      <td>stdout</td>
+      <td>the file to which the process writes its output</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>standard error</td>
+      <td>STDERRR_FILENO</td>
+      <td>stderr</td>
+      <td>the file to which the process writes error messages and notification of exceptional or abnormal conditions</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The kernel maintains a system wide table of all open file descriptors.  Each descriptor in the table has the following.</p>
+
+<ul>
+  <li>current file offset</li>
+  <li>status flags specified when opening file</li>
+  <li>file access mode</li>
+  <li>settings related to signal driven I/O</li>
+  <li>a reference to the i-node object of this file</li>
+</ul>
+
+<p>In an interactive shell or program these three descriptors are normally connected to the terminal.  In the stdio library they correspond to stdin, stdout, and stderr.  stdio library is the standard C library that provides fopen(), fclose(), scanf(), printf() etc…</p>
+
+<h2 id="io-redirection">I/O Redirection</h2>
+
+<p><code class="language-plaintext highlighter-rouge">$./myscript &gt; results.log 2&gt;&amp;1</code></p>
+
+<p>The 2&gt;&amp;1 informs the shell that we wish to have standard error (file descriptor 2) redirected to the same place to which standard output (file descriptor 1) is being sent.</p>
+
+<h2 id="the-devfd-directory">The /dev/fd Directory</h2>
+
+<p>You can see open file descriptors under <code class="language-plaintext highlighter-rouge">/dev/fd/n</code> where <code class="language-plaintext highlighter-rouge">n</code> is a number corresponding to one of the open file descriptors.</p>
+
+<h2 id="directory-hierarchy-links-and-files">Directory hierarchy, links and files</h2>
+
+<h3 id="file-types">File Types</h3>
+
+<p>Within the file system each file is marked with a type</p>
+
+<ul>
+  <li>regular or plain files</li>
+  <li>directory - special file whose contents take the form of a table of filenames coupled with references to the corresponding files (links) Every directory contains at least two entries . (dot) and .. (dot-dot) which are links to current and parent directory. In the / root directory the . (dot) refers to itself.</li>
+  <li>symbolic link - provides an alternative name for a file. A normal link is a filename plus pointer entry in a directory, a symbolic link is a specially marked file containing the name of another file.</li>
+</ul>
+
+<h3 id="current-working-directory">Current Working Directory</h3>
+
+<p>Each process has a current working directory (sometimes called the process working directory). A process inherits its current working directory from its parent process.</p>
+
+<h2 id="file-io-buffering">File I/O Buffering</h2>
+
+<p>If we are transferring a large amount of data to or from a file, then by buffering data in large blocks, and thus performing fewer sytem calls, we can greatly improve I/O performance.</p>
+
+<p>File systems can be measured by various criteria such as…</p>
+
+<ul>
+  <li>Performance under heavy user load</li>
+  <li>Speed of file creation and deletion</li>
+  <li>Time required to search for a file in a large directory</li>
+  <li>Space required to store small files</li>
+  <li>Maintenance of file integrity in the event of a system crash</li>
+  <li>Application specific benchmarks are best to determine what you need for a specific use case</li>
+  <li>Linux allows an application to bypass the buffer cache when performing disk I/O thus transferring data directly from user space to a file or disk device.  This is called direct I/O or raw I/O.</li>
+</ul>
+
+<h3 id="controlling-kernel-buffering-of-file-io">Controlling Kernel Buffering of File I/O</h3>
+
+<p>It is possible to force flushing of kernel buffers for output files.  Sometimes this is necessary if an application (e.g. a database journaling process) must ensure that output really has been written to the disk (or at least the disk’s hardware cache) before continuing.</p>
+
+<h3 id="synchronized-io-data-integrity-and-synchronized-io-file-integrity">Synchronized I/O data integrity and synchronized I/O file integrity</h3>
+
+<p>Synchronized I/O completion means “an I/O operation that has either been successfully transferred [to the disk] or diagnosed unsuccessful”</p>
+
+<p>File metadata includes information such as the file owner and group; file permissions; file size; number of (hard) links to the file; timestamps indicating the time of the last file access, last file modification, and last metadata change and file data block pointers</p>
+
+<p>Synchronized I/O data integrity completion is concerned with ensuring that a file data update transfers sufficient information to allow a later retrieval of that data to proceed.</p>
+
+<p>For a read operation this means that the requested file data has been transferred (from the disk) to the process. If there were any pending write operations affecting the requested data, these are transferred to the disk before performing the read. For a write operation this means that the data specified in the write request has been transferred (to the disk) and all file metadata required to retrieve that data has also been transferred.  The key point to note here is that not all modified file metadata attributes need to be transferred to allow the file data to be retrieved. An example of a modified file metadata attribute that would need to be transferred is the file size if the write operation extended the file.  By contrast modified file timestamps would not need to be transferred to disk before a subsequent data retrieval could proceed.</p>
+
+<h2 id="file-systems">File Systems</h2>
+
+<h3 id="device-special-files-devices">Device Special Files (Devices)</h3>
+
+<p>A device special file corresponds to a device on the system. Within the kernel, each device type has a corresponding device driver which handles all I/O requests for the device. A device driver is a unit of kernel code that implements a set of operations that (normally) correspond to input and output actions on the associated piece of hardware. The API provided by device drivers is fixed and includes operations corresponding to the system calls <code class="language-plaintext highlighter-rouge">open()</code>, <code class="language-plaintext highlighter-rouge">close()</code>, <code class="language-plaintext highlighter-rouge">read()</code>, <code class="language-plaintext highlighter-rouge">write()</code>, <code class="language-plaintext highlighter-rouge">mmap()</code> and <code class="language-plaintext highlighter-rouge">ioctl()</code></p>
+
+<p>The fact that each device driver provides a consistent interface, hiding the difference in operation of individual devices, allows for universality of I/O.</p>
+
+<p>Some devices are real, such as mice, disks, and tape drives. Others are virtual meaning that there is no corresponding hardware; rather the kernel provides (via device driver) an abstract device with an API that is the same as a real device.</p>
+
+<p>Devices can be divided into two types:</p>
+
+<ul>
+  <li>
+    <p>Character devices handle data on a character by character basis.  Terminals and keyboards are examples of character devices.</p>
+  </li>
+  <li>
+    <p>Block devices handle data a block at a time.  The size of a block depends on the type of device, but is typically a multiple of 512 bytes.  Disks are a common example of block devices.</p>
+  </li>
+</ul>
+
+<p>Device files appear with the file system usually under <code class="language-plaintext highlighter-rouge">/dev</code> directory.</p>
+
+<p>The superuser can create a device file using the <code class="language-plaintext highlighter-rouge">mknod</code> command and the <code class="language-plaintext highlighter-rouge">mknod()</code> system call.</p>
+
+<p>In early versions of linux <code class="language-plaintext highlighter-rouge">/dev</code> contained entries for all possible devices.  This has been fixed with the <code class="language-plaintext highlighter-rouge">udev</code> program. Udev relies on the <code class="language-plaintext highlighter-rouge">sysfs</code> file system, which exports information about devices and other kernel objects into user space via a pseudo-file system mounted under <code class="language-plaintext highlighter-rouge">/sys</code></p>
+
+<h4 id="device-ids">Device IDs</h4>
+
+<p>Each device file has a major ID number and a minor ID number.  The major ID identifies the general class of device, and is used by the kernel to look up the appropriate driver for this type of device. The minor ID uniquely identifies a particular device within a general class. The major and minor  IDs of a device file can be displayed with the <code class="language-plaintext highlighter-rouge">ls -l</code> command. A device’s major and minor IDs are recorded in the i-node for the device file. Each device driver registers its association with a specific major device ID. This association provides the connection between the device special file and the device driver. The name of the device has no relevance when the kernel looks for the device driver.</p>
+
+<h3 id="disks-and-partitions">Disks and partitions</h3>
+
+<p>The command <code class="language-plaintext highlighter-rouge">fdisk -l</code> lists all partitions on a disk.</p>
+
+<p>The Linux specific <code class="language-plaintext highlighter-rouge">/proc/partitions</code> file lists the major and minor device numbers, size and name of each disk.</p>
+
+<p>A disk partition may hold any type of information but usually contains one of the following</p>
+
+<ul>
+  <li>A file system holding regular files and directories.</li>
+  <li>A data area accesses as a raw-mode device</li>
+  <li>A swap area used by kernel for memory management</li>
+</ul>
+
+<p>The Linux specific <code class="language-plaintext highlighter-rouge">/proc/swaps</code> file can be used to display information about currently enabled swap areas on the system.</p>
+
+<h3 id="file-system-types">File system types</h3>
+
+<p>The file system types currently known by the kernel can be viewed in the Linux specific <code class="language-plaintext highlighter-rouge">/proc/filesystem</code> file</p>
+
+<p>A file system contains the following parts…</p>
+
+<ul>
+  <li>Boot block - This is always the first block in a file system.  The boot block is not used by the file system; rather it contains information used to boot the operating system.  Although only one boot block is needed by the operating system, all file systems have a boot block (most of which are unused)</li>
+  <li>Superblock - This is a single block, immediately following the boot block, which contains parameter information about the file system, including:
+    <ul>
+      <li>The size of the i-node table</li>
+      <li>The size of logical blocks in this file system</li>
+      <li>The size of the file system in logical blocks</li>
+    </ul>
+  </li>
+  <li>I-node-table - Each file or directory in the file system has a unique entry in the i-node table.  This entry records various information about the file.  more details a bout i-nodes below.</li>
+  <li>Data blocks - The majority of space in a file system is used for the blocks of data that form the files and directories that reside on the file system.</li>
+</ul>
+
+<p>Different file systems residing on the same physical device can be of different types and sizes, and have different parameter settings (e.g. block size). This is one of the reasons for splitting a disk into multiple partitions.</p>
+
+<h3 id="i-nodes">I-nodes</h3>
+
+<ul>
+  <li>A file systems i-node table contains one i-node (short for index node) for each file residing in the file system.</li>
+  <li>I-nodes are identified numerically by their sequential location in the i-node table.</li>
+  <li>The i-node number is the first field displayed by the ls -li command.</li>
+  <li>The information contained in an i-node includes…
+    <ul>
+      <li>File type (regular file, directory, symbolic link, character device)</li>
+      <li>Owner (also referred to as the user ID or UID) of the file</li>
+      <li>Group (also referred to as the group ID or GID) for the file</li>
+      <li>Access permissions for three categories user owner and group.</li>
+      <li>Three timestamps
+        <ul>
+          <li>last access shown by ls -lu</li>
+          <li>last modified shown by ls -l</li>
+          <li>last status change shown by ls -lc</li>
+        </ul>
+      </li>
+      <li>most Linux systems do not record creation time.</li>
+      <li>Number of hard links to the file</li>
+      <li>Size of file in bytes</li>
+      <li>Number of blocks allocated to the file measured in 512 byte blocks.  This number is not necessarily the file size as a file can contain holes and thus require fewer allocated blocks.</li>
+      <li>Pointers to the data blocks of the file.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="i-nodes-and-data-block-pointers-in-ext2">I-nodes and data block pointers in ext2</h4>
+
+<ul>
+  <li>Like most UNIX file systems, the ext2 file system does not store data blocks of a file contiguously or even in sequential order. It attempts to keep them close but mostly things don’t work out this way.</li>
+  <li>Under ext2 each i-node contains 15 pointers.
+    <ul>
+      <li>First 12 pointers numbered 0 to 11 point to the location in the file system of the first 12 blocks of the file.</li>
+      <li>The next pointer is a pointer to a block of pointers that give the location of the thirteenth and subsequent data blocks of the file.</li>
+      <li>The number of pointers in this block depends on the block size of the file system. Each pointer is 4 bytes so there may be from 256 pointers for a 1024 block size to 1024 pointers for a 4096 byte block size.</li>
+      <li>This allows for large files but for larger files the fourteenth pointer (number 13) is a double indirect pointer.  It points to a block of pointers that in turn point to a block of pointers that in turn point to data blocks.</li>
+      <li>Should the need arise the last 15th pointer is a triple-indirect pointer</li>
+      <li>This complex system allows i-node to be a fixed size while at the same time allowing for files of arbitrary size</li>
+      <li>Additionally, it allows the file system to store the blocks of a file noncontiguously while allowing the data to be accessed randomly via lseek() the kernel just needs to calculate which pointers to follow</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="the-virtual-file-system-vfs">The Virtual File System (VFS)</h3>
+
+<p>Each of the file systems available on Linux differs in the details of its implementation. Such differences include for example the way in which the blocks of a file are allocated and the manner in which directories are organized. If every program that worked with files needed to understand the specific details of each files system the task of writing programs that work with each of these files systems would be nearly impossible. The Virtual File System (VFS) is a kernel feature that resolves this problem by creating an abstraction layer for a file system. The VFS defines a generic interface for file-system operations.  All program that work with files specify their operations in terms of this generic interface. Each file system provides an implementation for the VFS interface. Under this scheme programs need to understand only the VFS interface and ignore details of individual file-system implementations. The VFS interface includes operations corresponding to all of the usual system calls for working with file systems and directories such as…</p>
+
+<ul>
+  <li>open()</li>
+  <li>read()</li>
+  <li>write()</li>
+  <li>lseek()</li>
+  <li>close()</li>
+  <li>truncate()</li>
+  <li>stat()</li>
+  <li>mount()</li>
+  <li>unmount()</li>
+  <li>mmap()</li>
+  <li>mkdir()</li>
+  <li>link()</li>
+  <li>unlink()</li>
+  <li>symlink()</li>
+  <li>rename()</li>
+</ul>
+
+<p>Not all files systems support all of the VFS operations (for example VFAT doesn’t support the notion of symbolic links).  In such cases the underlying file system passed an error code back to the VFS layer indicating the lack of support and the VFS passes this error up to the applications.</p>
+
+<h3 id="journaling-file-systems">Journaling File Systems</h3>
+
+<p>A file system that is not journaled such as ext2 needs to run a file system consistency check (fsck) after a system crash reboot in order to ensure the integrity of the file system. This is necessary because at the time of the crash a file update may have been only partially completed, and the file system metadata (directory entries, i-node information, and file data block pointers) may be in an inconsistent state and the file system may be further damaged if these inconsistencies are not repaired. A file system consistency check ensures the consistency of the file system metadata. Where possible, repairs are performed; otherwise, information that is not retrievable (possibly including file data) is discarded. The problem is that a consistency check requires examining the entire file system. On a small file system, this may take anything from several seconds to a few minutes. On a large file system this may take several hours which is a problem for systems that need high availability.</p>
+
+<p>Journalling file system eliminate the need for lengthy file system consistency checks after a system crash. A journaling file system logs (journals) all metadata updates to a special on-disk journal file before they are actually carried out. The updates are logged in groups of related metadata updates (transactions). In the event of a system crash in the middle of a transaction, on system reboot, the log can be used to rapidly redo any incomplete updates and bring the file system back to a consistent state. To borrow DB terminology we can say that a journaling file system ensures that metadata transactions are always committed as a complete unit. Even very large journaling file systems can typically be available within seconds after a system crash, making them very attractive for systems with high-availability requirements. The most notable disadvantage of journaling is that it adds time to file updates, though good design can make this overhead low.</p>
+
+<p>Journaling File Systems</p>
+
+<ul>
+  <li>XFS</li>
+  <li>ext4
+    <ul>
+      <li>supports extents (reservations of contiguous blocks of storage)</li>
+    </ul>
+  </li>
+  <li>Btrfs (B-tree FS)
+    <ul>
+      <li>supports extents</li>
+      <li>writable snapshots</li>
+      <li>checksums on data and metadata</li>
+      <li>online file-system checking</li>
+      <li>online file-system defragmentation</li>
+      <li>space-efficient packing of small files and space-efficient indexed directories.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="mounting-and-unmounting-file-systems">Mounting and Unmounting File Systems</h3>
+
+<p>A list of currently mounted file systems can be read from the Linux specific <code class="language-plaintext highlighter-rouge">/proc/mounts</code> virtual file system.</p>
+
+<p>The mount and unmount commands automatically maintain the file <code class="language-plaintext highlighter-rouge">/etc/mtab</code> which contains information that is similar to that in <code class="language-plaintext highlighter-rouge">/proc/mount</code> but has slightly more details. The <code class="language-plaintext highlighter-rouge">/etc/mtab</code> provides file system specific options given to the mount command. This file may be inaccurate if some applications calling mount()/unmount() fail to update it.</p>
+
+<p><code class="language-plaintext highlighter-rouge">/etc/fstab</code> is maintained by the system administrator</p>
+
+<p><code class="language-plaintext highlighter-rouge">/etc/fstab</code> <code class="language-plaintext highlighter-rouge">/proc/mounts</code> <code class="language-plaintext highlighter-rouge">/etc/fstab</code> all share a similar format. <code class="language-plaintext highlighter-rouge">/dev/sda9 /boot ext3 rw 0 0</code></p>
+
+<ul>
+  <li>the name of the mounted device</li>
+  <li>The mount point of the device</li>
+  <li>The file system type</li>
+  <li>Mount flags in above example rw means read write</li>
+  <li>A number used to control the operation of file-system backups by dump(8).  This files and next one are only in the fstab file. For /proc/mounts and /etc/mtab it is always set to 0.</li>
+  <li>A number used to conrol the order in which fsck(8) checks file systems at boot time.</li>
+  <li>Flags you can set when mounting (these are ones I though were relevant there are more…)
+    <ul>
+      <li>MS_NOATIME - Don’t update the last access time for files</li>
+      <li>MS_NODIRATIME - Don’t update the last access time for directories</li>
+      <li>MS_NOEXEC - Don’t allow programs to be executed</li>
+      <li>MS_NOSUID - Disable set user ID and set group ID programs</li>
+      <li>MS_RDONLY - Read-only mount; files can’t be created or modified.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="advanced-mount-features">Advanced Mount Features</h4>
+
+<h5 id="stacked-mount-points">Stacked mount points</h5>
+
+<p>Mounting a File System at Multiple Mount Points.  You can mount the same device on two mount points</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>su
+<span class="nb">mkdir</span> /testfs
+<span class="nb">mkdir</span> /demo
+mount /dev/sda12/testfs
+mount /dev/sd12/demo
+</code></pre></div></div>
+
+<p>You can stack multiple mounts on a single mount point. Each new mount hides the directory subtree previously visible at that mount point. When the mount at the top of the stack is unmounted, the previously hidden mount becomes visible once more</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mount /dev/sda12 /testfs
+<span class="nb">touch</span> /testfs/myfile
+mount /dev/sda13/testfs
+</code></pre></div></div>
+
+<p>One use of mount stacking is to stack a new mount point on an existing mount point that is busy.  Processes that hold file descriptors open that are chroot jailed or that have current working directories within the old mount point continue to operate under that mount, but processes making new access to the mount point use the new mount.</p>
+
+<p>Combined with a <code class="language-plaintext highlighter-rouge">MNT_DETACH unmount</code>, this can provide a smooth migration off a file system without needing to take the system into single user-mode.</p>
+
+<p>When stacking or having multiple devices on the same mount point you can have different options per mount.  The options that support this are…</p>
+
+<ul>
+  <li>MS_NOATIME</li>
+  <li>MS_NODEV</li>
+  <li>MS_NODIRATIMVE</li>
+  <li>MS_NOEXEC</li>
+  <li>MS_NOSUID</li>
+  <li>MS_RDONLY</li>
+</ul>
+
+<p>For xxample</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mount /dev/sda12 /testfs
+mount <span class="nt">-o</span> noexec /dev/sda12 /demo
+</code></pre></div></div>
+
+<h5 id="bind-mounts">Bind Mounts</h5>
+
+<p>A bind mount (created using the mount() MS_BIND flag) allows a directory or a file to be mounted at some other location in the file-system hierarchy. This results in the directory or file being visible in both locations.</p>
+
+<p>A bind mount is like a hard link but differs in 2 ways</p>
+
+<ul>
+  <li>A bind mount can cross file system mount points (and even chroot jails)</li>
+  <li>It is possible to make a bind mount for a directory</li>
+</ul>
+
+<p>We can create a bind mount from the shell using the bind option to mount.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">pwd</span>
+/testfs
+<span class="nb">mkdir </span>d1
+<span class="nb">touch </span>d1/x
+<span class="nb">mkdir </span>d2
+mount <span class="nt">-bind</span> d1 d2
+<span class="nb">ls </span>d2
+</code></pre></div></div>
+
+<h5 id="recursive-bind-mounts">Recursive Bind Mounts</h5>
+
+<p>By default if we create a bind mount for a directory using MS_BIND, then only that directory is mounted at the new location.  If there are any sub-mounts under the source directory they are not replicated under the mount target. A recursive bind mount solves this “issue” <code class="language-plaintext highlighter-rouge">mount --rbind top dir2</code></p>
+
+<h5 id="a-virtual-memory-file-system-tmpfs">A Virtual Memory File System: tmpfs</h5>
+
+<p>A virtual file system resides in memory but to applications looks just like any other file system. File operations on a virtual file system are much faster. There are multiple memory based file systems on Linux but tmpfs is one of the more sophisticated ones. tmpfs is a virtual file system which means it not only uses RAM but can also use swap space if space is exhausted</p>
+
+<p>To create a tmpfs file system you use the command <code class="language-plaintext highlighter-rouge">mount -t tmpfs source target</code> for example <code class="language-plaintext highlighter-rouge">mount -t newtmp /tmp</code> It is not necessary to make mkfs file system first because the kernel automatically builds a file system as part of the mount call.</p>
+
+<p>This can be used to improve performance of applications that need a lot of ephemeral I/O. By default, a tmpfs file system can grow to half the size of RAM, but the size=nbytes mount option can be used to set a different ceiling for the file system size. You can do this at creation or later with a remount command.</p>
+
+<p><strong>*Note:</strong> If you un-mount a tmpfs system than all data is lost</p>
+
+<p>Besides user applications tmpfs serves two special purposes</p>
+
+<ul>
+  <li>An invisible tmpfs file system, mounted internally by the kernel is used for implementing System V shared memory and shared anonymous memory mappings.</li>
+  <li>A tmpfs file system mounted at /dev/shm (/run/shm on some systems) is used for the glibc implementation of POSIX shared memory and POSIX semaphores.</li>
+</ul>
+
+<h5 id="information-on-file-systems">Information on File Systems</h5>
+
+<p>Many native Unix and Linux file systems support the notion of reserving a certain portion of the blocks of a file system for the superuser, so that if the file system fills up, the superuser can still log into the system and do some work to resolve the problem.
+If there are reserved blocks in the file system than the difference in values of the <code class="language-plaintext highlighter-rouge">f_bfree</code> and <code class="language-plaintext highlighter-rouge">f_bavail</code> fields in the <code class="language-plaintext highlighter-rouge">statfs</code> structure tells us how many blocks are reserved.</p>
+
+<h3 id="file-attributes">File Attributes</h3>
+
+<h4 id="file-size-blocks-allocated-and-optimal-io-block-size">File size, blocks allocated, and optimal I/O block size</h4>
+
+<p>512-byte is the smallest bock size (historically) for any file systems that have been implemented under Unix. More modern file systems use larger block sizes but they are multiples of 2 (1024, 2048, 4096)</p>
+
+<h4 id="timestamps">Timestamps</h4>
+
+<p>Since kernel 2.6 you could have nanosecond resolution for atime mtime on files. This is supported by JFS, XFS, ext4 and Btrf but not ext2, ext3 and Reiserfs. You can modify a time stamp with the utime() system call. <code class="language-plaintext highlighter-rouge">tar</code> and <code class="language-plaintext highlighter-rouge">unzip</code> commands use this to reset file timestamps when unpacking an archive.</p>
+
+<h4 id="file-ownership">File Ownership</h4>
+
+<h5 id="ownership-of-new-files">Ownership of New Files</h5>
+
+<p>When a new file is created, its user ID is taken from the effective user ID of the process. The group ID of the new file may be taken from either the effective group ID or the group ID of the parent directory Which of these is used is determined by various factors including type of file system.</p>
+
+<p>Ext2 logic for example; when the file system is mounted you can specify the <code class="language-plaintext highlighter-rouge">-o grpid</code> or <code class="language-plaintext highlighter-rouge">-o nogrpid</code> options.</p>
+
+<ul>
+  <li>-o grpid means it will inherit permission from parent directory</li>
+  <li>-o nogrpid means it will take it from the effective gid of the process.</li>
+</ul>
+
+<p>Rules determining the group ownership of a newly created file.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>File system mount option</th>
+      <th>set-group-ID bit enabled on parent directory</th>
+      <th>Group ownership of new file taken from</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>-o grpid, -o bsdgroups</td>
+      <td>(ingored)</td>
+      <td>parent directory group ID</td>
+    </tr>
+    <tr>
+      <td>-o nogrpid, -o sysvgroups</td>
+      <td>no</td>
+      <td>Process effective group ID</td>
+    </tr>
+    <tr>
+      <td>-o nogrpid, -o sysvgroups</td>
+      <td>yes</td>
+      <td>parent directory group ID</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>At time of writing only the following file systems support the grpid and nogrpid flags</p>
+
+<ul>
+  <li>ext2, ext3, ext4</li>
+  <li>XFSj</li>
+</ul>
+
+<p>Other file systems follow the nogrpid rules.</p>
+
+<h4 id="changing-file-ownership">Changing File Ownership</h4>
+
+<p>Un unprivileged process can use <code class="language-plaintext highlighter-rouge">chown()</code> to change the group ID of a file that it owns to any of the groups of which they are a member. If the owner or group of a file is changed, then the set user ID and set group ID permissions bits are both turned off. This is a security precaution to make sure that you cannot enable the set user ID on an executable file and then make it owned by a privileged user or group thereby gaining that privileged identity when executing the file.</p>
+
+<p>When changing the owner or group of a file, the set group ID permission bit is not turned off if the group-execute permission bit is already off or if we are changing the ownership of a directory. In both these cases the set-group ID bit is being used for a purpose other than the creation of a set-group-ID program, and therefore its undesirable to turn the bit off.</p>
+
+<p>These other users are …</p>
+
+<ul>
+  <li>If the group-execute permission bit is off, then he set-group-ID permission bit is being used to enable mandatory file locking</li>
+  <li>In the case of a directory, the set group ID bit is being used to control the ownership of new files created in the directory</li>
+</ul>
+
+<h4 id="permissions-on-directories">Permissions on Directories</h4>
+
+<h5 id="read">Read</h5>
+
+<p>The contents (i.e, the list of filenames) of the directory may be listed (e.g, by ls) if testing be careful that some Linux distros by default alias ls to ls -F and this requires execute permission on the directory. To use an unadulterated ls you can call /bin/ls</p>
+
+<p>We need to have execute permission on the directory to access the I nodes of the files within.</p>
+
+<h5 id="write">Write</h5>
+
+<p>Files may be created in and removed from the directory.  Note that it is not necessary to have the permission on the file itself in order to be able to delete it.</p>
+
+<h4 id="execute">Execute</h4>
+
+<p>Files within the directory may be accessed. Execute permission on a directory is sometimes called search permission. If you have execute permission on a directory but not read than you can access a file inside but only if you know its name.</p>
+
+<p>When accessing a file execute permission is required on all of the directories listed in the pathname.  For example <code class="language-plaintext highlighter-rouge">/home/mtk/x</code> would require execute permission on <code class="language-plaintext highlighter-rouge">/</code>, <code class="language-plaintext highlighter-rouge">/home</code> and <code class="language-plaintext highlighter-rouge">/home/mtk</code> as well as read permission on the file <code class="language-plaintext highlighter-rouge">x</code> itself.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

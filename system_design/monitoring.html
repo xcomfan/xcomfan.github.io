@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Monitoring | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Monitoring" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/system_design/monitoring" />
+<meta property="og:url" content="http://localhost:4000/system_design/monitoring" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Monitoring" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Monitoring","url":"http://localhost:4000/system_design/monitoring"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Monitoring</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="statistics-of-monitoring">Statistics of Monitoring</h2>
+
+<ul>
+  <li>Alerting on a threshold is flawed.  You want to use statistics and compare to collected data in time series database.</li>
+</ul>
+
+<h2 id="server-monitoring-tools">Server monitoring tools</h2>
+
+<ul>
+  <li><strong>Collectd</strong> is a good tool for collecting data and writing to a time series database</li>
+</ul>
+
+<h2 id="application-monitoring">Application monitoring</h2>
+
+<ul>
+  <li>Look into <strong>statsd</strong> it’s a common monitoring stack for applications.</li>
+  <li>For microservices you want to use distributed tracing. Each request is tagged and you use the tag to trace the request as it hits each microservice.</li>
+</ul>
+
+<p>The 4 golden signals according to Google SRE book</p>
+
+<ul>
+  <li>latency</li>
+  <li>traffic</li>
+  <li>errors</li>
+  <li>saturation</li>
+</ul>
+
+<p>Health checks are common and likely already being used if you are doing load balancing or Kubernetes with liveness probes or Consul.</p>
+
+<p>For HTTP services you will want to track requests, successes and failures and time taken by each request.</p>
+
+<p>Depending on your monitoring system tagging things such as which shard or which region or app version can be useful.</p>
+
+<p>Latency and timings is a critical thing to monitor. You want to be as granular as you can here capturing as much as you can across your stack. Get request and response times from we servers, extend to load balancers and proxies, how much time are you spending decrypting SSL etc.</p>
+
+<h2 id="server-monitoring">Server Monitoring</h2>
+
+<h3 id="memory">Memory</h3>
+
+<ul>
+  <li>Buffers and cached memory is essentially free.  The <code class="language-plaintext highlighter-rouge">-+ buffers</code> line in free command output show you the numbers minus cache and buffers.</li>
+  <li>Alert on seeing OOM killer in logs. This is a good alert to set up.</li>
+</ul>
+
+<h3 id="network">Network</h3>
+
+<p>At a minimum you should collect</p>
+
+<ul>
+  <li>octets in and out</li>
+  <li>errors</li>
+  <li>drops</li>
+</ul>
+
+<h3 id="disk">Disk</h3>
+
+<p>essentially you want to collect the <code class="language-plaintext highlighter-rouge">iostat</code> details which are…</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">await</code> is the average time in milliseconds for the issued command to be served by the disk.</li>
+  <li><code class="language-plaintext highlighter-rouge">%util</code> is saturation of the disk. This can be misleading if you are using raid. Want to keep this value below 100%</li>
+  <li><code class="language-plaintext highlighter-rouge">tps+</code> is transfers per second (IOPS) if IOPS over time drops you have a disk issue.</li>
+</ul>
+
+<h3 id="security-monitoring">Security monitoring</h3>
+
+<ul>
+  <li>sudo usage and ssh logins (from logs is one source of this)</li>
+  <li><code class="language-plaintext highlighter-rouge">auditd</code> can be used to track user actions (logins, file access, sudo calls). This can be a second layer of protection as a hacker may disable <code class="language-plaintext highlighter-rouge">rsynclog</code>.</li>
+</ul>
+
+<h4 id="nids-network-intrusion-detection-systems">NIDS (Network Intrusion Detection Systems)</h4>
+
+<p>NIDS use network taps to collect traffic. From these taps information is sent to a <code class="language-plaintext highlighter-rouge">SIEM</code> security information and event management system. Some open source examples are Snort and Bro.</p>
+
+<h2 id="services-monitoring">Services monitoring</h2>
+
+<h3 id="checking-if-something-did-not-happen">Checking if something did not happen</h3>
+
+<p>Below is a script that checks for something that did not happen such as a backup not running. There are more robust offerings out there.</p>
+
+<p>It is generally a good idea to monitor cron job results</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/sh</span>
+    
+    <span class="c"># Time in minutes</span>
+    <span class="nv">TIME_LIMIT</span><span class="o">=</span><span class="k">$((</span><span class="m">60</span><span class="o">*</span><span class="m">60</span><span class="k">))</span>
+    
+    <span class="c"># State file for updating last touch</span>
+    <span class="nv">STATE_FILE</span><span class="o">=</span>deadman.dat
+    
+    <span class="c"># Last access time of the state file (in epoch)</span>
+    <span class="nv">last_touch</span><span class="o">=</span><span class="si">$(</span><span class="nb">stat</span> <span class="nt">-c</span> %Y <span class="nv">$STATE_FILE</span><span class="si">)</span>
+    
+    <span class="c"># Current time (in epoch)</span>
+    <span class="nv">current_time</span><span class="o">=</span><span class="si">$(</span><span class="nb">date</span> +%s<span class="si">)</span>
+    
+    <span class="c"># How much time is remaining before the switch fires</span>
+    <span class="nv">timeleft</span><span class="o">=</span><span class="k">$((</span>current_time <span class="o">-</span> last_touch<span class="k">))</span>
+    
+    <span class="k">if</span> <span class="o">[</span> <span class="nv">$timeleft</span> <span class="nt">-gt</span> <span class="nv">$TIME_LIMIT</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+      </span><span class="nb">echo</span> <span class="s2">"Dead man's switch activated: job failed!"</span>
+<span class="k">fi</span>
+</code></pre></div></div>
+
+<h3 id="ntp">NTP</h3>
+
+<p>You need to monitor for time drift. You can use exit code for <code class="language-plaintext highlighter-rouge">ntpstat</code> which returns error if time is not synced.</p>
+
+<h3 id="web-servers">Web servers</h3>
+
+<p>You want to track the following things</p>
+
+<ul>
+  <li>requests per second</li>
+  <li>http status codes</li>
+  <li>process/response times based on logs</li>
+  <li></li>
+</ul>
+
+<h3 id="databases">Databases</h3>
+
+<ul>
+  <li>Queries per second is an excellent indicator of how busy your applications is</li>
+  <li>Slow queries from logs</li>
+  <li>Number of concurrent threads/connections</li>
+  <li>Replication delay and ensuring if replication is working</li>
+  <li>Stats like table size, query timings, tuples read per query, returned etc. will help with debugging and predicting future performance regressions.</li>
+</ul>
+
+<h3 id="cache-metrics">Cache metrics</h3>
+
+<ul>
+  <li>You want to monitor for cache size, as well as hit/miss ratios and evict rate.</li>
+  <li>miss ration should be as low as possible without risk of storing stale data.</li>
+</ul>
+
+<h3 id="queue-metrics">Queue Metrics</h3>
+
+<p>If you are using message queues to process jobs, you must monitor them.  Look for…</p>
+
+<ul>
+  <li>Producer and consumer counts</li>
+  <li>queue produce rates</li>
+  <li>consumption rates</li>
+  <li>lag and failure are critical numbers to track</li>
+</ul>
+
+<p>Kafka and RabbitMQ publish a bunch of performance data that you will want to monitor.</p>
+
+<h3 id="business-metrics">Business Metrics</h3>
+
+<h2 id="frontend-monitoring">Frontend monitoring</h2>
+
+<p>Two approaches to front end monitoring</p>
+
+<ul>
+  <li>
+    <p>Real monitoring where you have embedded JavaScript to send back metrics. Browsers expose metrics via navigation timing APIs (for example DOM complete - navigation start will give you the user perceived time to load)</p>
+  </li>
+  <li>
+    <p>Synthetic (webpage.org for example)</p>
+  </li>
+</ul>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -43,7 +43,7 @@
   </header>
 
   <div class="post-content">
-    <p>Because a decorator can return any sort of object this allows the decorator to insert a layer of logic to be run on every call. The decorator function is free to return either the original function or a new proxy object that saves teh original function passed to the decorator to be invoked indirectly after the extra logic layer runs.</p>
+    <p>Because a decorator can return any sort of object this allows the decorator to insert a layer of logic to be run on every call. The decorator function is free to return either the original function or a new proxy object that saves the original function passed to the decorator to be invoked indirectly after the extra logic layer runs.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">tracer</span><span class="p">:</span>
 <span class="p">...</span>   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>

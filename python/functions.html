@@ -54,28 +54,28 @@
   </thead>
   <tbody>
     <tr>
-      <td>def f1(a, b):</td>
+      <td><code class="language-plaintext highlighter-rouge">def f1(a, b):</code></td>
       <td>normal args</td>
     </tr>
     <tr>
-      <td>def f2(a, *b):</td>
-      <td>positional varargs</td>
+      <td><code class="language-plaintext highlighter-rouge">def f2(a, *b):</code></td>
+      <td>positional variable args</td>
     </tr>
     <tr>
-      <td>def f3(a, **b):</td>
-      <td>keyword varargs</td>
+      <td><code class="language-plaintext highlighter-rouge">def f3(a, **b):</code></td>
+      <td>keyword variable args</td>
     </tr>
     <tr>
-      <td>def f4(a, *b, **c):</td>
+      <td><code class="language-plaintext highlighter-rouge">def f4(a, *b, **c):</code></td>
       <td>mixed args</td>
     </tr>
     <tr>
-      <td>def f5(a, b=2, c=3):</td>
+      <td><code class="language-plaintext highlighter-rouge">def f5(a, b=2, c=3):</code></td>
       <td>defaults</td>
     </tr>
     <tr>
-      <td>def f6(a, b=2, *c):</td>
-      <td>defaults and positional varargs</td>
+      <td><code class="language-plaintext highlighter-rouge">def f6(a, b=2, *c):</code></td>
+      <td>defaults and positional variable arguments</td>
     </tr>
   </tbody>
 </table>
@@ -100,9 +100,9 @@
 <span class="mi">1</span> <span class="mi">2</span> <span class="mi">6</span>
 </code></pre></div></div>
 
-<h2 id="mutable-values-for-default-arguments-can-retain-state-between-calls">Mutable values for default arguments can retain state between calls.</h2>
+<h2 id="warning-mutable-values-for-default-arguments-retain-state-between-calls">WARNING! Mutable values for default arguments retain state between calls</h2>
 
-<p><strong><em>Note:</em></strong> This is often unexpected</p>
+<p><strong><em>Note:</em></strong> This behavior is often unexpected</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">saver</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="p">[]):</span>
 <span class="p">...</span>   <span class="n">x</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -206,7 +206,7 @@
 
 <h3 id="function-annotation">Function annotation</h3>
 
-<p>You can provide information about arguments and the return type in your code.  This is information only.  The only thing Python does with this is make it available on the <code class="language-plaintext highlighter-rouge">__annotations__</code> attribute.</p>
+<p>You can provide information about arguments and the return type in your code. This is information only. The only thing Python does with this is make it available on the <code class="language-plaintext highlighter-rouge">__annotations__</code> attribute.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="s">'info'</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">c</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="p">...</span>   <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span>

@@ -3,20 +3,20 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>System Design | My References</title>
+<title>Libraries | My References</title>
 <meta name="generator" content="Jekyll v3.9.2" />
-<meta property="og:title" content="System Design" />
+<meta property="og:title" content="Libraries" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://localhost:4000/system_design" />
-<meta property="og:url" content="http://localhost:4000/system_design" />
+<link rel="canonical" href="http://localhost:4000/linux/libraries" />
+<meta property="og:url" content="http://localhost:4000/linux/libraries" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="System Design" />
+<meta property="twitter:title" content="Libraries" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"System Design","url":"http://localhost:4000/system_design"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Libraries","url":"http://localhost:4000/linux/libraries"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
@@ -39,17 +39,27 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">System Design</h1>
+    <h1 class="post-title">Libraries</h1>
   </header>
 
   <div class="post-content">
-    <p><a href="/system_design/reference">System Design Reference</a></p>
+    <h2 id="static-and-shared-libraries">Static and Shared Libraries</h2>
 
-<p><a href="/system_design/monitoring">Monitoring</a></p>
+<h3 id="static-libraries">Static Libraries</h3>
 
-<p><a href="/system_design/observability">Observability</a></p>
+<p>A static library is a structured bundle of compiled object modules. To use functions from a static library, we specify that library in the link command used to build a program.  The linker extracts copies of the required object modules from the library and copies these into the resulting executable file. We call such a program statically linked.</p>
 
-<p><a href="/system_design/ci_cd">CI/CD</a></p>
+<p>The fact that each statically linked program has its own copy the object modules required from the library has some disadvantages</p>
+
+<ul>
+  <li>Duplication of object code in many executable files wastes disk space.</li>
+  <li>If statically linked programs are executed at the same time you also don’t get any memory savings.</li>
+  <li>If a library function is modified you have to recompile all your statically linked programs and re link against new library.</li>
+</ul>
+
+<h3 id="shared-libraries">Shared Libraries</h3>
+
+<p>With a shared library instead of copying modules form the library into the executable, the linker just writes a record into the executable to indicate that at run time the executable needs to use that shared library. When the executable is loaded into memory at run time, a program called the dynamic linker ensures that the shared libraries required by the executable are found and loaded into memory, and performs run time linking to resolve the function calls in the executable. Only one copy of the shared library is kept in memory and multiple executables (processes) can link to it. You can simply rebuild the shared library with an updated function definition and your executables using that function will pick up the change.</p>
 
   </div>
 

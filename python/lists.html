@@ -9,14 +9,14 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://localhost:4000/python/lists_and_tuples" />
-<meta property="og:url" content="http://localhost:4000/python/lists_and_tuples" />
+<link rel="canonical" href="http://localhost:4000/python/lists" />
+<meta property="og:url" content="http://localhost:4000/python/lists" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Python Lists and Tuples" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Python Lists and Tuples","url":"http://localhost:4000/python/lists_and_tuples"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Python Lists and Tuples","url":"http://localhost:4000/python/lists"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
@@ -43,7 +43,8 @@
   </header>
 
   <div class="post-content">
-    <h2 id="defining-a-list">Defining a list</h2>
+    
+<h2 id="defining-a-list">Defining a list</h2>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># List can contain a mix of types
 </span><span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="mi">123</span><span class="p">,</span> <span class="s">'some text'</span><span class="p">,</span> <span class="mf">1.23</span><span class="p">]</span>
@@ -79,153 +80,93 @@
       <td>clear</td>
       <td>Removes all the elements from the list</td>
     </tr>
-    <tr>
-      <td> </td>
-      <td> </td>
-    </tr>
   </tbody>
 </table>
 
-<p><strong>append</strong> - Adds an element to the end of the list</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-</code></pre></div></div>
-
-<p>‘append’, 
-‘clear’, 
-‘copy’, 
-‘count’, 
-‘extend’, 
-‘index’, 
-‘insert’,
-‘pop’,
-‘remove’,
-‘reverse’,
-‘sort’</p>
+<ul>
+  <li>copy</li>
+  <li>count</li>
+  <li>extend</li>
+  <li>index</li>
+  <li>insert</li>
+  <li>pop</li>
+  <li>remove</li>
+  <li>reverse</li>
+  <li>sort</li>
+</ul>
 
 <h2 id="list-slicing">List slicing</h2>
 
 <p>The general syntax for Python list slicing is <code class="language-plaintext highlighter-rouge">Lst[ Initial: End: IndexJump ]</code></p>
 
-<p>Each of the slice elements is optional.  If you leave off the <code class="language-plaintext highlighter-rouge">Initial</code> value (<code class="language-plaintext highlighter-rouge">l[:3]</code>) the default of 0 is used and if you leave of the <code class="language-plaintext highlighter-rouge">End</code> (<code class="language-plaintext highlighter-rouge">l[1:]</code>) it defaults to the remainder of the list.  Leaving off both (<code class="language-plaintext highlighter-rouge">l[:]</code>) will give you a copy of the entire list.  Leaving off the `IndexJump means no index stepping is used.</p>
+<p>Each of the slice elements is optional. If you leave off the <code class="language-plaintext highlighter-rouge">Initial</code> value <code class="language-plaintext highlighter-rouge">l[:3]</code> the default of 0 is used and if you leave of the <code class="language-plaintext highlighter-rouge">End</code> <code class="language-plaintext highlighter-rouge">l[1:]</code> it defaults to the remainder of the list. Leaving off both <code class="language-plaintext highlighter-rouge">l[:]</code> will give you a copy of the entire list.  Leaving off the `IndexJump means no index stepping is used.</p>
 
-<p>The end is not included in the slice.  For example…</p>
+<p>The end is not included in the slice. For example…</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">s</span> <span class="o">=</span> <span class="s">'abcdef'</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span> <span class="c1"># index at 3 is not included in result
 </span><span class="n">bc</span>
 </code></pre></div></div>
 
-<p>The <code class="language-plaintext highlighter-rouge">IndexJump</code> cna be positive or negative.  For positive indexing the first element of the list has the index number 0, and the last element of the list has the index number N-1 where N is the length of the list.  For negative indexing, the last value of the list is at index -1 and the first element is at -N where N is the length of the list.</p>
+<p>The <code class="language-plaintext highlighter-rouge">IndexJump</code> can be positive or negative. For positive indexing the first element of the list has the index number 0, and the last element of the list has the index number N-1 where N is the length of the list.  For negative indexing, the last value of the list is at index -1 and the first element is at -N where N is the length of the list.</p>
 
 <h3 id="operations-with-slicing">Operations with slicing</h3>
 
+<h4 id="reverse-a-list">Reverse a list</h4>
+
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'d'</span><span class="p">,</span> <span class="s">'e'</span><span class="p">,</span> <span class="s">'f'</span><span class="p">]</span>
-<span class="o">&gt;&gt;&gt;</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Reverse a list
-</span><span class="o">&gt;&gt;&gt;</span> <span class="n">l</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">l</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 <span class="p">[</span><span class="s">'f'</span><span class="p">,</span> <span class="s">'e'</span><span class="p">,</span> <span class="s">'d'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'a'</span><span class="p">]</span>
-<span class="o">&gt;&gt;&gt;</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Copy a list
-</span><span class="o">&gt;&gt;&gt;</span> <span class="n">l2</span> <span class="o">=</span> <span class="n">l</span><span class="p">[:]</span>
+</code></pre></div></div>
+
+<h4 id="copy-a-list">Copy a list</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'d'</span><span class="p">,</span> <span class="s">'e'</span><span class="p">,</span> <span class="s">'f'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">l2</span> <span class="o">=</span> <span class="n">l</span><span class="p">[:]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">l2</span>
 <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'d'</span><span class="p">,</span> <span class="s">'e'</span><span class="p">,</span> <span class="s">'f'</span><span class="p">]</span>
-<span class="o">&gt;&gt;&gt;</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Every other or N item of a list
-</span><span class="o">&gt;&gt;&gt;</span> <span class="n">l</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h4 id="every-other-or-n-item-of-a-list">Every other or N item of a list</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'d'</span><span class="p">,</span> <span class="s">'e'</span><span class="p">,</span> <span class="s">'f'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">l</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span>
 <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'e'</span><span class="p">]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">l</span><span class="p">[::</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
 <span class="p">[</span><span class="s">'f'</span><span class="p">,</span> <span class="s">'d'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">]</span>
-<span class="o">&gt;&gt;&gt;</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Get the last N elements of a list
-</span><span class="o">&gt;&gt;&gt;</span> <span class="n">l</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+</code></pre></div></div>
+
+<h4 id="get-the-last-n-elements-of-a-list">Get the last N elements of a list</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'d'</span><span class="p">,</span> <span class="s">'e'</span><span class="p">,</span> <span class="s">'f'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">l</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
 <span class="p">[</span><span class="s">'e'</span><span class="p">,</span> <span class="s">'f'</span><span class="p">]</span>
-<span class="o">&gt;&gt;&gt;</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Re-assign parts of list
-</span><span class="o">&gt;&gt;&gt;</span> <span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s">'B'</span><span class="p">,</span> <span class="s">'C'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h4 id="re-assign-parts-of-list">Re-assign parts of list</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'d'</span><span class="p">,</span> <span class="s">'e'</span><span class="p">,</span> <span class="s">'f'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s">'B'</span><span class="p">,</span> <span class="s">'C'</span><span class="p">]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">l</span>
 <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'B'</span><span class="p">,</span> <span class="s">'C'</span><span class="p">,</span> <span class="s">'d'</span><span class="p">,</span> <span class="s">'e'</span><span class="p">,</span> <span class="s">'f'</span><span class="p">]</span>
 </code></pre></div></div>
 
 <h2 id="math-operations-on-lists">Math operations on Lists</h2>
 
+<h3 id="lists-can-be-added-to-concatenate-them-subtraction-does-not-work">Lists can be added to concatenate them (subtraction does not work)</h3>
+
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">list_a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">list_b</span> <span class="o">=</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">]</span>
-<span class="o">&gt;&gt;&gt;</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Lists can be added to concatenate them (not subtracted though)
-</span><span class="o">&gt;&gt;&gt;</span> <span class="n">list_a</span> <span class="o">+</span> <span class="n">list_b</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">list_a</span> <span class="o">+</span> <span class="n">list_b</span>
 <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">]</span>
-
-<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Lists can be multiplied for repetition
-</span><span class="o">&gt;&gt;&gt;</span> <span class="n">list_b</span> <span class="o">*</span> <span class="mi">3</span>
-<span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">]</span>
 </code></pre></div></div>
 
-<p>[123, ‘spam’, 1.23]</p>
-<blockquote>
-  <blockquote>
-    <blockquote>
-      <p>[‘Ni!’] * 4 # Repetition
-[‘Ni!’, ‘Ni!’, ‘Ni!’, ‘Ni!’]
-L.append(‘NI’)
-L
-[123, ‘spam’, 1.23, ‘NI’]
-L.pop(2) # Removes L[2]
-1.23
-L
-[123, ‘spam’, ‘NI’]
-M = [‘aa’, ‘cc’, ‘bb’]
-M.sort()
-M
-[‘aa’, ‘bb’, ‘cc’]
-M.reverse()
-M
-[‘cc’, ‘bb’, ‘aa’]
-L.extend(3,4,5) # Add multiple items to the list
-Traceback (most recent call last):
-  File “<stdin>", line 1, in <module>
-TypeError: list.extend() takes exactly one argument (3 given)
-L.extend([3,4,5]) # Add multiple items to the list
-L
-[123, 'spam', 'NI', 3, 4, 5]
-L.pop() # remove last item from list and return it
-5
-L = ['spam', 'eggs', 'ham']
-L.index('eggs') # get index of item.  Key error if its not there
-1
-L.index('boris')
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-ValueError: 'boris' is not in list
-L.insert(1,'toast') # insert by position
-L
-['spam', 'toast', 'eggs', 'ham']
-L.remove('eggs') # Remove by value
-L
-['spam', 'toast', 'ham']
-L.pop(1) # remove by position and return value
-'toast'
-['spam', 'ham']
-L.count('spam')
-1
-L = ['spam', 'eggs', 'ham', 'toast']
-del L[0] # Delete one item
-L
-['eggs', 'ham', 'toast']
-del L[1:] # Delete section (same as L[1:] = []
-L
-['eggs']
-L = [1,2,3]
-L1 = L.copy()
-L1.append(4)
-print(L)
-[1, 2, 3]
-print(L1)
-[1, 2, 3, 4]
-```</module></stdin></module></stdin></p>
-    </blockquote>
-  </blockquote>
-</blockquote>
+<h4 id="lists-can-be-multiplied-for-repetition">Lists can be multiplied for repetition</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">lst</span> <span class="o">=</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span><span class="s">'b'</span><span class="p">,</span><span class="s">'c'</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">lst</span> <span class="o">*</span> <span class="mi">3</span>
+<span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">]</span>
+</code></pre></div></div>
 
 <h2 id="sorting-lists">Sorting lists</h2>
 
@@ -251,7 +192,7 @@ print(L1)
 
 <p>List comprehension is a way to build a new list by running an expression on each item in a sequence one at a time.</p>
 
-<p>List comprehension is generally faster than using a loop because they are optimized for the Python interpreter.  In certain circumstances such as when you don’t need a list as the output loops can be faster.</p>
+<p>List comprehension is generally faster than using a loop because they are optimized for the Python interpreter. In certain circumstances such as when you don’t need a list as the output loops can be faster.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">M</span> <span class="o">=</span> <span class="p">[</span>
 <span class="p">...</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
@@ -275,7 +216,7 @@ print(L1)
 
 <h3 id="generator-list-comprehension">Generator List Comprehension</h3>
 
-<p>List comprehension in square brackets produce the result list all at once in memory.  When they are enclosed in parenthesis instead, they have a similar meaning but do not produce the result list all at once.  Instead, generator expressions return a generator object, which yields one item in the result at a time when used in an iteration context.</p>
+<p>List comprehension in square brackets <code class="language-plaintext highlighter-rouge">[]</code> produce the result list all at once in memory. When a list comprehension is enclosed in parenthesis <code class="language-plaintext highlighter-rouge">()</code> instead, they have a similar meaning but do not produce the resulting list all at once. Instead, generator expressions return a generator object, which yields one item in the result at a time when used in an iteration context.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">mygen</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10000000000</span><span class="p">))</span> <span class="c1"># will generate one element at a time instead all at once
 </span><span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">mygen</span><span class="p">)</span>
@@ -317,31 +258,6 @@ print(L1)
 <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">25</span><span class="p">]</span>
 </code></pre></div></div>
 
-<h2 id="tuples">Tuples</h2>
-
-<p>Tuples are just like lists but are immutable.  It is a good practice to use tuples if you need a constant array so that its values cannot be modified by mistake.</p>
-
-<p>Because tuples are immutable they can be used as keys in a dictionary.  A key to a dictionary needs to be an immutable object.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">T</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># Declare a tuple
-</span><span class="o">&gt;&gt;&gt;</span> <span class="n">T</span>
-<span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
-<span class="mi">4</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1"># Cannot modify a tuple
-</span><span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
-  <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="nb">TypeError</span><span class="p">:</span> <span class="s">'tuple'</span> <span class="nb">object</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">support</span> <span class="n">item</span> <span class="n">assignment</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span> <span class="c1"># Repetition
-</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Indexing, slicing
-</span><span class="mi">1</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
-<span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">T</span> <span class="o">=</span> <span class="p">(</span><span class="s">'cc'</span><span class="p">,</span> <span class="s">'aa'</span><span class="p">,</span> <span class="s">'dd'</span><span class="p">,</span> <span class="s">'bb'</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="c1"># Sort a tuple
-</span><span class="p">[</span><span class="s">'aa'</span><span class="p">,</span> <span class="s">'bb'</span><span class="p">,</span> <span class="s">'cc'</span><span class="p">,</span> <span class="s">'dd'</span><span class="p">]</span>
-</code></pre></div></div>
 
   </div>
 

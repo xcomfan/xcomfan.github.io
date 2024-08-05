@@ -43,36 +43,88 @@
   </header>
 
   <div class="post-content">
-    
-<p>PEP 8 naming conventions:</p>
+    <h2 id="pep-8-naming-conventions">PEP 8 naming conventions</h2>
 
-<p>class names should be CamelCase (MyClass)
-variable names should be snake_case and all lowercase (first_name)
-function names should be snake_case and all lowercase (quick_sort())
-constants should be snake_case and all uppercase (PI = 3.14159)
-modules should have short, snake_case names and all lowercase (numpy)
-single quotes and double quotes are treated the same (just pick one and be consistent)
-PEP 8 line formatting:</p>
+<ul>
+  <li><strong>class names</strong> should be <code class="language-plaintext highlighter-rouge">CamelCase</code> (<code class="language-plaintext highlighter-rouge">MyClass</code>)</li>
+  <li><strong>variable names</strong> should be <code class="language-plaintext highlighter-rouge">snake_case</code> and all lowercase (<code class="language-plaintext highlighter-rouge">first_name</code>)</li>
+  <li><strong>function names</strong> should be <code class="language-plaintext highlighter-rouge">snake_case</code> and all lowercase (<code class="language-plaintext highlighter-rouge">quick_sort()</code>)</li>
+  <li><strong>constants</strong> should be <code class="language-plaintext highlighter-rouge">snake_case</code> and all uppercase (<code class="language-plaintext highlighter-rouge">PI = 3.14159</code>)</li>
+  <li><strong>module names</strong> should have short, <code class="language-plaintext highlighter-rouge">snake_case</code> names and all lowercase (<code class="language-plaintext highlighter-rouge">numpy</code>)</li>
+  <li>If you have conflict with a reserved name just add an <code class="language-plaintext highlighter-rouge">_</code> at end instead of misspelling or getting otherwise creative</li>
+</ul>
 
-<p>indent using 4 spaces (spaces are preferred over tabs)
-lines should not be longer than 79 characters
-avoid multiple statements on the same line
-top-level function and class definitions are surrounded with two blank lines
-method definitions inside a class are surrounded by a single blank line
-imports should be on separate lines
-PEP 8 whitespace:</p>
+<h2 id="pep8-quotes">PEP8 Quotes</h2>
 
-<p>avoid extra spaces within brackets or braces
-avoid trailing whitespace anywhere
-always surround binary operators with a single space on either side
-if operators with different priorities are used, consider adding whitespace around the operators with the lowest priority
-don’t use spaces around the = sign when used to indicate a keyword argument
-PEP 8 comments:</p>
+<p>single quotes and double quotes are treated the same (just pick one and be consistent)</p>
 
-<p>comments should not contradict the code
-comments should be complete sentences
-comments should have a space after the # sign with the first word capitalized
-multi-line comments used in functions (docstrings) should have a short single-line description followed by more text</p>
+<h2 id="pep-8-line-formatting">PEP 8 line formatting</h2>
+
+<ul>
+  <li>indent using 4 spaces (spaces are preferred over tabs)</li>
+  <li>lines should not be longer than 79 characters.  For longer lines such as doc strings stick to 72
+    <ul>
+      <li>\ or parenthesis can be used to break up a line.</li>
+      <li>Operators should come before a variable when breaking up a line for example…
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">... + ira_deductions</code> versus <code class="language-plaintext highlighter-rouge">ira_deduction + \n</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>avoid multiple statements on the same line</li>
+  <li>top-level function and class definitions are surrounded with two blank lines</li>
+  <li>method definitions inside a class are surrounded by a single blank line</li>
+  <li>imports should be on separate lines</li>
+  <li>Imports should be grouped in order
+    <ol>
+      <li>Standard library imports</li>
+      <li>Related third party imports</li>
+      <li>Local application / library specific imports</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="pep-8-whitespace">PEP 8 whitespace</h2>
+
+<ul>
+  <li>avoid extra spaces within brackets or braces for example <code class="language-plaintext highlighter-rouge">ham[1]</code> not <code class="language-plaintext highlighter-rouge">ham[ 1 ]</code></li>
+  <li>avoid trailing whitespace anywhere</li>
+  <li>always surround binary operators with a single space on either side</li>
+  <li>if operators with different priorities are used, consider adding whitespace around the operators with the lowest priority</li>
+  <li>don’t use spaces around the = sign when used to indicate a keyword argument</li>
+</ul>
+
+<h2 id="pep-8-comments">PEP 8 comments</h2>
+
+<ul>
+  <li>comments should not contradict the code</li>
+  <li>comments should be complete sentences</li>
+  <li>comments should have a space after the # sign with the first word capitalized</li>
+  <li>Docstring comment for a function should appear after the def line</li>
+  <li>multi-line comments used in functions (docstrings) should have a short single-line description followed by more text</li>
+</ul>
+
+<h2 id="importing">Importing</h2>
+
+<ul>
+  <li>Absolute imports are recommended</li>
+  <li>Avoid wildcard imports</li>
+</ul>
+
+<h2 id="functions">Functions</h2>
+
+<ul>
+  <li>Always have functions return something even if its just a None</li>
+</ul>
+
+<h2 id="object-oriented-conventions">Object oriented conventions</h2>
+
+<ul>
+  <li>Always use self for the first argument to instance methods</li>
+  <li>Always use csl for the first argument to class methods</li>
+  <li>Object type comparisons should always use <code class="language-plaintext highlighter-rouge">isinstance(obj, int)</code> instead of if <code class="language-plaintext highlighter-rouge">type(obj) is type(1)</code></li>
+</ul>
 
   </div>
 

@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Terraform | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Terraform" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/terraform" />
+<meta property="og:url" content="http://localhost:4000/terraform" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Terraform" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Terraform","url":"http://localhost:4000/terraform"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Terraform</h1>
+  </header>
+
+  <div class="post-content">
+    <p><a href="/install_and_configure">Installing and Configuring</a></p>
+
+<h2 id="terraform-commands">Terraform commands</h2>
+
+<p><code class="language-plaintext highlighter-rouge">terraform plan</code> - parse your HCL code and show what will happen.
+<code class="language-plaintext highlighter-rouge">terraform apply</code> - execute the plan
+<code class="language-plaintext highlighter-rouge">terraform destroy</code> - tear down 
+<code class="language-plaintext highlighter-rouge">terraform graph</code> - Show the dependency graph between the objects in your HCL code. You can use Graphviz or <a href="http://dreampuf.github.io/GraphvizOnline">GraphvizOnline</a> to visualize the otput.</p>
+
+<h2 id="adhoc-notes-to-organize">AdHoc notes to organize</h2>
+
+<p>The general syntax for creating a resource in Terraform is as below where <code class="language-plaintext highlighter-rouge">PROVIDER</code> is the name of the provider (such as aws), <code class="language-plaintext highlighter-rouge">TYPE</code> is the type of resource to create in that provider (e.g., <code class="language-plaintext highlighter-rouge">instance</code>) and <code class="language-plaintext highlighter-rouge">NAME</code> is an identifier you can use throughout the Terraform code to refer to this resource (e.g., <code class="language-plaintext highlighter-rouge">my_instance</code>). <code class="language-plaintext highlighter-rouge">CONFIG</code> consists of one or more arguments that are specific to that resource.</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">resource</span> <span class="s2">"&lt;PROVIDER&gt;_&lt;TYPE&gt;"</span> <span class="s2">"&lt;NAME&gt;"</span> <span class="p">{</span>
+ <span class="p">[</span><span class="nx">CONFIG</span> <span class="err">…</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Docs can be found at <a href="https://developer.hashicorp.com/terraform/docs">https://developer.hashicorp.com/terraform/docs</a> and <a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance">https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance</a></p>
+
+<p>In your <code class="language-plaintext highlighter-rouge">.gitignore</code> file for a Terraform repo you should put the following…</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.terraform
+*.tfstate
+*.tfstate.backup
+</code></pre></div></div>
+
+<p>You have a good example of this in your terraform_practice directory, but <code class="language-plaintext highlighter-rouge">&lt;&lt;-EOF</code> and <code class="language-plaintext highlighter-rouge">EOF</code> are Terraform’s <strong>heredoc</strong> syntax which allows you to create multi line strings without having to insert <code class="language-plaintext highlighter-rouge">\n</code> characters all over the place.</p>
+
+<p><code class="language-plaintext highlighter-rouge">user_data_replace_on_change</code> parameter if se to <code class="language-plaintext highlighter-rouge">true</code> when you change the <code class="language-plaintext highlighter-rouge">user_data</code> parameter and run <code class="language-plaintext highlighter-rouge">apply</code> will terminate the original instance and launch a totally new one.  Terraform’s default behavior is to update the original instance in place. Since user data only runs on first boot you need this parameter if you want to change behavior that occurs in the user_data script.</p>
+
+<p>To use a reference in HCL language you use the format of <code class="language-plaintext highlighter-rouge">&lt;PROVIDER&gt;_&lt;TYPE&gt;.&lt;NAME&gt;.&lt;ATTRIBUTE&gt;</code> for example in your example you created a security group instance called “instance” and you can reference it with <code class="language-plaintext highlighter-rouge">aws_security_group.instance.id</code> (see the example for full details)</p>
+
+<p><code class="language-plaintext highlighter-rouge">+-</code> in a <code class="language-plaintext highlighter-rouge">terraform plan</code> output means “replace”. Look for text “forces replacement” in the plan output to figure out what is forcing Terraform to do a replacement.</p>
+
+<p>To allow you to not have to repeat yourself, Terraform lets you to define <strong>input variables</strong>. The syntax for an input variable is …</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">variable</span> <span class="s2">"NAME"</span> <span class="p">{</span>
+    <span class="p">[</span><span class="nx">CONFIG</span> <span class="err">...</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The body of the variable declaration can contain the following optional parameters.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">description</code> - good idea to use this parameter to document how a variable is used.</li>
+  <li><code class="language-plaintext highlighter-rouge">default</code> - There are a number of ways to provide a value for the variable, including passing it in at the command line (using the <code class="language-plaintext highlighter-rouge">-var</code> option), via a file (using the <code class="language-plaintext highlighter-rouge">-var-file</code> option), or via an environment variable (Terraform looks for environment variables of the name <code class="language-plaintext highlighter-rouge">TF_VAR_&lt;variable_name&gt;</code>) If no value is passed in the variable will fall back to its default value.</li>
+  <li><code class="language-plaintext highlighter-rouge">type</code> - Allows you to enforce type constraints. Type supported are <code class="language-plaintext highlighter-rouge">string</code>, <code class="language-plaintext highlighter-rouge">number</code>, <code class="language-plaintext highlighter-rouge">bool</code>, <code class="language-plaintext highlighter-rouge">list</code>, <code class="language-plaintext highlighter-rouge">map</code>, <code class="language-plaintext highlighter-rouge">set</code>, <code class="language-plaintext highlighter-rouge">object</code>, <code class="language-plaintext highlighter-rouge">tuple</code> and <code class="language-plaintext highlighter-rouge">any</code></li>
+  <li><code class="language-plaintext highlighter-rouge">validation</code> - Allows you to define custom validation rules for the input variable that go beyond basic types checks, such as enforcing minimum or maximum values on a number.</li>
+  <li><code class="language-plaintext highlighter-rouge">sensitive</code> - If set to <code class="language-plaintext highlighter-rouge">true</code> on an input variable, Terraform will not log it when you run <code class="language-plaintext highlighter-rouge">plan</code> or <code class="language-plaintext highlighter-rouge">apply</code>. Should be used on secrets passed into Terraform code via variables.</li>
+</ul>
+
+<p>You can also define output variables using syntax …</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">output</span> <span class="s2">"&lt;NAME&gt;"</span> <span class="p">{</span>
+  <span class="nx">value</span> <span class="p">=</span> <span class="err">&lt;</span><span class="nx">VALUE</span><span class="err">&gt;</span>
+  <span class="p">[</span><span class="nx">CONFIG</span> <span class="err">...</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Config can contain</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">description</code></li>
+  <li><code class="language-plaintext highlighter-rouge">sensitive</code></li>
+  <li><code class="language-plaintext highlighter-rouge">depends_on</code> - Normally Terraform automatically figures out your dependency graph, but in rare situations, you have to give it extra hints. For example you have a variable that depends on IP address of a server, but that IP address won’t be accessible until a security group is properly configured. This lets you explicitly tell Terraform there is a dependency between the IP address output variable and the security group.</li>
+</ul>
+
+<p>Note that the ASG uses a reference to fill in the launch configuration name. This leads to a problem: launch configurations are immutable, so if you change any parameter of your launch configuration, Terraform will try to replace it. Normally, when replacing a resource, Terraform would delete the old resource first and then creates its replacement, but because your ASG now has a reference to the old resource, Terraform won’t be able to delete it.
+To solve this problem, you can use a lifecycle setting. Every Terraform resource supports several lifecycle settings that configure how that resource is created, updated, and/or deleted. A particularly useful lifecycle setting is create_before_destroy. If you set create_before_destroy to true, Terraform will invert the order in which it replaces resources, creating the replacement resource first (including updating any references that were pointing at the old resource to point to the replacement) and then deleting the old resource. Add the lifecycle block to your aws_launch_configuration as follows:</p>
+
+<p>There’s also one other parameter that you need to add to your ASG to make it work: subnet_ids. This parameter specifies to the ASG into which VPC subnets the EC2 Instances should be deployed. Each subnet lives in an isolated AWS AZ (that is, isolated datacenter), so by deploying your Instances across multiple subnets, you ensure that your service can keep running even if some of the datacenters have an outage. You could hardcode the list of subnets, but that won’t be maintainable or portable, so a better option is to use data sources to get the list of subnets in your AWS account.</p>
+
+<p>A data source represents a piece of read-only information that is fetched from the provider (in this case, AWS) every time you run Terraform. Adding a data source to your Terraform configurations does not create anything new; it’s just a way to query the provider’s APIs for data and to make that data available to the rest of your Terraform code. Each Terraform provider exposes a variety of data sources. For example, the AWS Provider includes data sources to look up VPC data, subnet data, AMI IDs, IP address ranges, the current user’s identity, and much more.</p>
+
+<p>The syntax for using a data source is very similar to the syntax of a resource:</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">data</span> <span class="s2">"&lt;PROVIDER&gt;_&lt;TYPE&gt;"</span> <span class="s2">"&lt;NAME&gt;"</span> <span class="p">{</span>
+  <span class="p">[</span><span class="nx">CONFIG</span> <span class="err">...</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Here, PROVIDER is the name of a provider (e.g., aws), TYPE is the type of data source you want to use (e.g., vpc), NAME is an identifier you can use throughout the Terraform code to refer to this data source, and CONFIG consists of one or more arguments that are specific to that data source. For example, here is how you can use the aws_vpc data source to look up the data for your Default VPC:</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">data</span> <span class="s2">"aws_vpc"</span> <span class="s2">"default"</span> <span class="p">{</span>
+  <span class="nx">default</span> <span class="p">=</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Note that with data sources, the arguments you pass in are typically search filters that indicate to the data source what information you’re looking for. With the aws_vpc data source, the only filter you need is default = true, which directs Terraform to look up the Default VPC in your AWS account.</p>
+
+<p>To get the data out of a data source, you use the following attribute reference syntax:</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">data</span><span class="err">.&lt;</span><span class="nx">PROVIDER</span><span class="err">&gt;</span><span class="nx">_</span><span class="err">&lt;</span><span class="nx">TYPE</span><span class="err">&gt;.&lt;</span><span class="nx">NAME</span><span class="err">&gt;.&lt;</span><span class="nx">ATTRIBUTE</span><span class="err">&gt;</span>
+</code></pre></div></div>
+
+<p>For example, to get the ID of the VPC from the aws_vpc data source, you would use the following: <code class="language-plaintext highlighter-rouge">data.aws_vpc.default.id</code></p>
+
+<p>You can combine this with another data source, aws_subnets, to look up the subnets within that VPC:</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">data</span> <span class="s2">"aws_subnets"</span> <span class="s2">"default"</span> <span class="p">{</span>
+  <span class="nx">filter</span> <span class="p">{</span>
+    <span class="nx">name</span>   <span class="p">=</span> <span class="s2">"vpc-id"</span>
+    <span class="nx">values</span> <span class="p">=</span> <span class="p">[</span><span class="nx">data</span><span class="err">.</span><span class="nx">aws_vpc</span><span class="err">.</span><span class="nx">default</span><span class="err">.</span><span class="nx">id</span><span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="managing-terraform-state">Managing terraform state</h2>
+
+<p>There are 3 issues that need to be addressed when dealing with Terraform state files. They are in the following sections.</p>
+
+<h3 id="shared-storage-of-state-files">Shared storage of state files</h3>
+
+<p>The issue of each team member needs to be able to access the state file if you are working as a team on your infrastructure.</p>
+
+<p>Storing state file in Git is a bad idea because…</p>
+
+<ul>
+  <li>Manual error - Its too easy to forget to pull down the latest changes before running Terraform or forget to push your changes after running Terraform.</li>
+  <li>Locking - There is no locking that would prevent two people from running <code class="language-plaintext highlighter-rouge">terraform apply</code> on the same state file at the same time.</li>
+  <li>Secrets - All data in Terraform state files is stored in plain text. Certain resources store sensitive data. For example <code class="language-plaintext highlighter-rouge">aws_db_instance</code> resource will store the username and password for the database in the state file in plain text.  This should not go into source control.</li>
+</ul>
+
+<p>Instead of version control you should use Terraform’s built-in support for <a href="https://developer.hashicorp.com/terraform/language/settings/backends/configuration">remote backends</a>.</p>
+
+<p>A Terrafomrm <strong>backend</strong> determines how Terraform loads and stores state. The default backend is the <strong>local backend</strong> which stores the state file on your local disk. <strong>Remote backends</strong> allow you to store the state file in a remote, shared store. There are a number of remote backends that are supported including S3, Azure Storage, Google Cloud Storage, and HashiCorp’s Terraform Cloud and Terraform Enterprise.</p>
+
+<p>Remote backends solve the 3 issues.</p>
+
+<ul>
+  <li>Manual error - after remote backend is configured Terraform will automatically load the state file from that backend every time run <code class="language-plaintext highlighter-rouge">plan</code> or <code class="language-plaintext highlighter-rouge">apply</code> and will automatically store the sate file in that backend after each <code class="language-plaintext highlighter-rouge">apply</code> so there is not chance for manual error.</li>
+  <li>Locking - Most of the remote backends support locking. To run <code class="language-plaintext highlighter-rouge">terraform apply</code>. You can run <code class="language-plaintext highlighter-rouge">apply</code> with the <code class="language-plaintext highlighter-rouge">--lock-timeout=&lt;TIME&gt;</code> parameter to tell Terraform to give up trying to get lock after certain amount of time for example <code class="language-plaintext highlighter-rouge">-lock-timeout=10m</code>.</li>
+  <li>Secrets - Most remote backends natively support encryption in rest and transit. They also usually have a way to restrict access.</li>
+</ul>
+
+<h4 id="using-s3-as-remote-backend">Using S3 as remote backend</h4>
+
+<p>S3 is your best bet for backend.  Its managed, has great availability, supports encryption, supports locking via DynamoDB, supports versioning so every revision is stored and you can roll back to an older version if something goes wrong and its cheap to use.</p>
+
+<p>First you need to create an S3 bucket. You can use Terraform for this but keep it as a separate directory.</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">resource</span> <span class="s2">"aws_s3_bucket"</span> <span class="s2">"terraform_state"</span> <span class="p">{</span>
+  <span class="nx">bucket</span> <span class="p">=</span> <span class="s2">"terraform-up-and-running-state"</span>
+ 
+  <span class="c1"># Prevent accidental deletion of this S3 bucket</span>
+  <span class="nx">lifecycle</span> <span class="p">{</span>
+    <span class="nx">prevent_destroy</span> <span class="p">=</span> <span class="kc">true</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Enable versioning on the bucket</span>
+<span class="nx">resource</span> <span class="s2">"aws_s3_bucket_versioning"</span> <span class="s2">"enabled"</span> <span class="p">{</span>
+  <span class="nx">bucket</span> <span class="p">=</span> <span class="nx">aws_s3_bucket</span><span class="err">.</span><span class="nx">terraform_state</span><span class="err">.</span><span class="nx">id</span>
+  <span class="nx">versioning_configuration</span> <span class="p">{</span>
+    <span class="nx">status</span> <span class="p">=</span> <span class="s2">"Enabled"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Enable encryption on the bucket</span>
+<span class="nx">resource</span> <span class="s2">"aws_s3_bucket_server_side_encryption_configuration"</span> <span class="s2">"default"</span> <span class="p">{</span>
+  <span class="nx">bucket</span> <span class="p">=</span> <span class="nx">aws_s3_bucket</span><span class="err">.</span><span class="nx">terraform_state</span><span class="err">.</span><span class="nx">id</span>
+
+  <span class="nx">rule</span> <span class="p">{</span>
+    <span class="nx">apply_server_side_encryption_by_default</span> <span class="p">{</span>
+      <span class="nx">sse_algorithm</span> <span class="p">=</span> <span class="s2">"AES256"</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Block public access to the bucket</span>
+<span class="nx">resource</span> <span class="s2">"aws_s3_bucket_public_access_block"</span> <span class="s2">"public_access"</span> <span class="p">{</span>
+  <span class="nx">bucket</span>                  <span class="p">=</span> <span class="nx">aws_s3_bucket</span><span class="err">.</span><span class="nx">terraform_state</span><span class="err">.</span><span class="nx">id</span>
+  <span class="nx">block_public_acls</span>       <span class="p">=</span> <span class="kc">true</span>
+  <span class="nx">block_public_policy</span>     <span class="p">=</span> <span class="kc">true</span>
+  <span class="nx">ignore_public_acls</span>      <span class="p">=</span> <span class="kc">true</span>
+  <span class="nx">restrict_public_buckets</span> <span class="p">=</span> <span class="kc">true</span>
+<span class="p">}</span>
+
+<span class="c1"># Create DynamoDB with LockID primary key.</span>
+<span class="nx">resource</span> <span class="s2">"aws_dynamodb_table"</span> <span class="s2">"terraform_locks"</span> <span class="p">{</span>
+  <span class="nx">name</span>         <span class="p">=</span> <span class="s2">"terraform-up-and-running-locks"</span>
+  <span class="nx">billing_mode</span> <span class="p">=</span> <span class="s2">"PAY_PER_REQUEST"</span>
+  <span class="nx">hash_key</span>     <span class="p">=</span> <span class="s2">"LockID"</span>
+
+  <span class="nx">attribute</span> <span class="p">{</span>
+    <span class="nx">name</span> <span class="p">=</span> <span class="s2">"LockID"</span>
+    <span class="nx">type</span> <span class="p">=</span> <span class="s2">"S"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Use <code class="language-plaintext highlighter-rouge">terraform init</code> and <code class="language-plaintext highlighter-rouge">terraform apply</code> to deploy the S3 bucket and DynamoDB.  Now you need to configure Terraform to use the backend storage.</p>
+
+<p>You need to add a backend configuration to your Terraform code. This is a configuration for Terraform itself so it resides in a <code class="language-plaintext highlighter-rouge">terraform</code> block and has the syntax below with <code class="language-plaintext highlighter-rouge">BACKEND_NAME</code> is the backend you want to use (for example s3) and <code class="language-plaintext highlighter-rouge">CONFIG</code> consists of arguments that are specific to that backend.</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">terraform</span> <span class="p">{</span>
+    <span class="nx">backend</span> <span class="s2">"&lt;BACKEND_NAME&gt;"</span> <span class="p">{</span>
+        <span class="p">[</span><span class="nx">CONFIG</span><span class="err">...</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>below is the configuration for an S3 bucket.  <code class="language-plaintext highlighter-rouge">key</code> is the file path within the s3 bucket where the Terrafrom state file should be written. <code class="language-plaintext highlighter-rouge">encrypt</code> is telling Terraform to encrypt the state, so you get both s3 and Terraform encryption.</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">terraform</span> <span class="p">{</span>
+  <span class="nx">backend</span> <span class="s2">"s3"</span> <span class="p">{</span>
+    <span class="c1"># Replace this with your bucket name!</span>
+    <span class="nx">bucket</span>         <span class="p">=</span> <span class="s2">"terraform-up-and-running-state"</span>
+    <span class="nx">key</span>            <span class="p">=</span> <span class="s2">"global/s3/terraform.tfstate"</span>
+    <span class="nx">region</span>         <span class="p">=</span> <span class="s2">"us-east-2"</span>
+
+    <span class="c1"># Replace this with your DynamoDB table name!</span>
+    <span class="nx">dynamodb_table</span> <span class="p">=</span> <span class="s2">"terraform-up-and-running-locks"</span>
+    <span class="nx">encrypt</span>        <span class="p">=</span> <span class="kc">true</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Once you have the above definition in place you run <code class="language-plaintext highlighter-rouge">terraform init</code> again to configure the backend.  The init command is idempotent so you can run it multiple times. After this command you will store your config in the s3 bucket.</p>
+
+<p>You can use the below to confirm things are working. Run <code class="language-plaintext highlighter-rouge">terraform apply</code> after you add them.</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">output</span> <span class="s2">"s3_bucket_arn"</span> <span class="p">{</span>
+  <span class="nx">value</span>       <span class="p">=</span> <span class="nx">aws_s3_bucket</span><span class="err">.</span><span class="nx">terraform_state</span><span class="err">.</span><span class="nx">arn</span>
+  <span class="nx">description</span> <span class="p">=</span> <span class="s2">"The ARN of the S3 bucket"</span>
+<span class="p">}</span>
+
+<span class="nx">output</span> <span class="s2">"dynamodb_table_name"</span> <span class="p">{</span>
+  <span class="nx">value</span>       <span class="p">=</span> <span class="nx">aws_dynamodb_table</span><span class="err">.</span><span class="nx">terraform_locks</span><span class="err">.</span><span class="nx">name</span>
+  <span class="nx">description</span> <span class="p">=</span> <span class="s2">"The name of the DynamoDB table"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="limitations-with-terraform-backends">Limitations with Terraform Backends</h4>
+
+<p>The fist limitation is the chicken egg situation of using Terraform to create the S3 bucket to store your Terraform state. You first write the Terraform code to create the s3 bucket and Dynamo DB table and deploy that code with a local backend. You then add the remote backend to your Terraform code and run <code class="language-plaintext highlighter-rouge">terraform init</code> to cpy your local state to S3. If you ever want to delete the S3 bucket and DynamoDB table, you’d have to do this two step process in reverse.  Fist remove the backend in your Terraform code and run <code class="language-plaintext highlighter-rouge">terraform init</code> to copy the Terraform state back to local disk. Then you run <code class="language-plaintext highlighter-rouge">terraform destroy</code> to delete the S3 bucket and DynamoDB table.</p>
+
+<p>Note that you can share a single S3 bucket and DynamoDB table across all of your Terraform code.</p>
+
+<p>The second limitation is that the <code class="language-plaintext highlighter-rouge">backend</code> block in Terraform does not allow you to use any variables or references. This means that you need to manually copy and past the S3 bucket name, region, and DynamoDB table name, etc into every one of your Terraform modules. You also must be very careful not to copy and paste the <code class="language-plaintext highlighter-rouge">key</code> value but unsure a unique <code class="language-plaintext highlighter-rouge">key</code> for every Terraform module you deploy so that you don’t accidentally over write the state of some other module. One option for reducing the copy and paste is to use <strong>partial configurations</strong>  where you omit certain parameters from the backend configuration in your Terraform code and instead pass those in via <code class="language-plaintext highlighter-rouge">-backend-config</code> command-line arguments when calling <code class="language-plaintext highlighter-rouge">terraform init</code>. For example you can extract the repeated arguments such as <code class="language-plaintext highlighter-rouge">bucket</code> and <code class="language-plaintext highlighter-rouge">region</code>, into a separate file called <code class="language-plaintext highlighter-rouge">backend.hcl</code></p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># backend.hcl</span>
+<span class="nx">bucket</span>         <span class="err">=</span> <span class="s2">"terraform-up-and-running-state"</span>
+<span class="nx">region</span>         <span class="err">=</span> <span class="s2">"us-east-2"</span>
+<span class="nx">dynamodb_table</span> <span class="err">=</span> <span class="s2">"terraform-up-and-running-locks"</span>
+<span class="nx">encrypt</span>        <span class="err">=</span> <span class="kc">true</span>
+</code></pre></div></div>
+
+<p>Only the <code class="language-plaintext highlighter-rouge">key</code> parameter remains in the Terraform code, since you still need to set a different <code class="language-plaintext highlighter-rouge">key</code> for each module.</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Partial configuration. The other settings (e.g., bucket, region) </span>
+<span class="c1"># will be passed in from a file via -backend-config arguments to </span>
+<span class="c1"># 'terraform init'</span>
+<span class="nx">terraform</span> <span class="p">{</span>
+  <span class="nx">backend</span> <span class="s2">"s3"</span> <span class="p">{</span>
+    <span class="nx">key</span> <span class="p">=</span> <span class="s2">"example/terraform.tfstate"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>To put all your partial configurations together, run <code class="language-plaintext highlighter-rouge">terraform init</code> with the <code class="language-plaintext highlighter-rouge">-backend-config</code> argument as in <code class="language-plaintext highlighter-rouge">terraform init -backend-config=backend.hcl</code>. Terraform will merge the partial configuration in <code class="language-plaintext highlighter-rouge">backend.hcl</code> with the partial configuration in your Terraform code to produce the full configuration.</p>
+
+<p>Another option to reduce the copy pasting is to use <a href="https://terragrunt.gruntwork.io">Terragrunt</a> an open source tool that can help keep your entire <code class="language-plaintext highlighter-rouge">backend</code> configuration DRY (Don’t Repeat Yourself) by defining all the basic <code class="language-plaintext highlighter-rouge">backend</code> settings in one file and automatically setting the <code class="language-plaintext highlighter-rouge">key</code> argument to the relative folder path of the module`</p>
+
+<h3 id="locking-state-files">Locking state files</h3>
+
+<p>Need to solve the issue of what happens if two team members run Terraform at the same time. (I believe the backend solves this for us need to remove section or clarify in rewrite)</p>
+
+<h3 id="isolating-state-files">Isolating state files</h3>
+
+<p>If you keep all your Terraform code in a single file or directory all your Terraform state will also end up in one file which means one break can break everything. You want to separate your dev, test staging etc environments. There are two ways you can isolate environments.</p>
+
+<ul>
+  <li>Isolation via workspaces - useful for quick isolated tests on the same configuration</li>
+  <li>Isolation via file layout - Useful for production use cases for which you need strong separation between environments.</li>
+</ul>
+
+<h4 id="isolation-via-workspaces">Isolation via workspaces</h4>
+
+<p><a href="https://www.terraform.io/language/state/workspaces">Terraform workspaces</a> allow you to store your Terraform state in multiple, separate, named workspaces. You use the default workspace by default. To create a new workspace or switch between workspaces, you use the <code class="language-plaintext highlighter-rouge">terraform workspace</code> commands. You can see which workspace you are using with the <code class="language-plaintext highlighter-rouge">terraform workspace show</code> command. To create a new workspace use a command similar to <code class="language-plaintext highlighter-rouge">terraform workspace new example1</code>. The state files in each workspace are isolated from each other. For example if your create an EC2 instance in default workspace that instance will not be there in the example workspace state file and thus a new instance will be created.  To switch workspaces you would use the <code class="language-plaintext highlighter-rouge">terraform workplace select example1</code>. On the backend in the s3 bucket Terraform will create a directory structure with a directory for each your workspaces in the <code class="language-plaintext highlighter-rouge">env</code> directory.</p>
+
+<p>This is handy for when you have a Terraform module deployed and want to do some experiments.</p>
+
+<p>Below is an example of using a ternary expression to set instancy type based on which workspace you are in.</p>
+
+<div class="language-hcl highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">resource</span> <span class="s2">"aws_instance"</span> <span class="s2">"example"</span> <span class="p">{</span>
+  <span class="nx">ami</span>           <span class="p">=</span> <span class="s2">"ami-0fb653ca2d3203ac1"</span>
+  <span class="nx">instance_type</span> <span class="p">=</span> <span class="err">(</span>
+    <span class="nx">terraform</span><span class="err">.</span><span class="nx">workspace</span> <span class="p">==</span> <span class="s2">"default"</span> <span class="err">?</span> <span class="s2">"t2.medium"</span> <span class="err">:</span> <span class="s2">"t2.micro"</span>
+  <span class="err">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Workspaces are good for quick experiments, but have some drawbacks.</p>
+
+<ul>
+  <li>State files are stored in the same backend which means same authentication and access controls are used for all the workspaces. This makes them unsuitable for isolating environments.</li>
+  <li>Workspaces are not visible in code or in console unless you check with <code class="language-plaintext highlighter-rouge">terraform workspace</code> command. When browsing a module the code can be deployed to one or 10 workspaces which makes it hard to track your infrastructure.</li>
+  <li>Its easy to forget what workspace you are in and deploy to the wrong one or worse run terraform destroy in production workspace instead of staging one. As same auth is used for both there is no safety net.</li>
+</ul>
+
+<h4 id="isolation-via-file-layout">Isolation via file layout</h4>
+
+<p>To achieve full isolation between environments, you need to 1. Put the Terraform configuration files for each environment into a separate folder. For example, all of the configurations for the staging environment can be in a folder called stage and all the configurations for the production environment can be in a folder called prod. 2. Configure a different backend for each environment, using different authentication mechanisms and access controls. Each environment could live in separate AWS account with separate s3 buckets as a backend.</p>
+
+<p>With this approach its clear which environment you are making changes in due to the separate folders and separate authentication for each environment makes it less likely that a screw up in one environment will impact another.</p>
+
+<p>You can further isolate things into components. For example the networking configuration rarely changes so you can have the be separate from the more frequently changing web servers. Its a good idea to break these out into separate state files.</p>
+
+<p>Below is a recommended file layour.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>stage
+    vpc
+    services
+        frontend-app
+        backend-app
+            variables.tf
+            outputs.tf
+            main.tf
+        data-storate
+            mysql
+            redis
+prod
+    vpc
+    services
+        frontend-app
+        backend-app
+    data-storage
+        mysql
+        redis
+mgmt
+    vpc
+    services
+    bastion-host
+    jenkins
+global
+    iam
+    s3
+</code></pre></div></div>
+
+<p>When you run Terraform it simply looks for files in the current directory with the <code class="language-plaintext highlighter-rouge">.tf</code> extension so filenames are up to you.</p>
+
+<p>Some options beyond the conventions above</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">dependencies.tf</code> - its common to put all your data sources in a <code class="language-plaintext highlighter-rouge">dependencies.tf</code> file to make it easier to see what external things the code depends on.</li>
+  <li><code class="language-plaintext highlighter-rouge">providers.tf</code> - You may want to put your providers block into <code class="language-plaintext highlighter-rouge">providers.tf</code> so you can see at a glance what providers the coded talks to and what authentication you have to provide.</li>
+  <li><code class="language-plaintext highlighter-rouge">main-xxx.tf</code> - break up the main file into some smaller logical resources. For example main-iam.tf main-s3.tf.</li>
+</ul>
+
+<p>A drawback of the breaking things into directory is you can no longer run one single file which will bring up the entire environment. You can work around this with <code class="language-plaintext highlighter-rouge">Terragrunt</code> using the <code class="language-plaintext highlighter-rouge">run-all</code> command.</p>
+
+<h4 id="the-terraform_remote_state-data-source">The terraform_remote_state data source</h4>
+
+<p>Similar to the <code class="language-plaintext highlighter-rouge">aws_subnets</code> data source we used before to get a list of subnets in our VPC, there is another data source that is particularly useful when working with state. The <code class="language-plaintext highlighter-rouge">terraform_remote_state</code> can be used to fetch the Terraform state file stored by another set of Terraform configurations.</p>
+
+<p>Lets say we have the following content in the file <code class="language-plaintext highlighter-rouge">stage/data-stores/mysql/main.tf</code> in our directory structure.</p>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">provider</span> <span class="s2">"aws"</span> <span class="p">{</span>
+    <span class="nx">region</span> <span class="p">=</span> <span class="s2">"us-east-2"</span>
+<span class="p">}</span>
+
+<span class="k">resource</span> <span class="s2">"aws_db_instance"</span> <span class="s2">"example"</span> <span class="p">{</span>
+  <span class="nx">identifier_prefix</span>   <span class="p">=</span> <span class="s2">"terraform-up-and-running"</span>
+  <span class="nx">engine</span>              <span class="p">=</span> <span class="s2">"mysql"</span>
+  <span class="nx">allocated_storage</span>   <span class="p">=</span> <span class="mi">10</span>
+  <span class="nx">instance_class</span>      <span class="p">=</span> <span class="s2">"db.t2.micro"</span>
+  <span class="nx">skip_final_snapshot</span> <span class="p">=</span> <span class="kc">true</span>
+  <span class="nx">db_name</span>             <span class="p">=</span> <span class="s2">"example_database"</span>
+  <span class="c1"># How should we set the username and password?</span>
+  <span class="nx">username</span> <span class="p">=</span> <span class="kd">var</span><span class="p">.</span><span class="nx">db_username</span>
+  <span class="nx">password</span> <span class="p">=</span> <span class="kd">var</span><span class="p">.</span><span class="nx">db_password</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Note that above we are not specifying the username and password.  In a later section we will cover how to manage secretes when working with Terraform, but for now we will just keep the secrets in a separate file without default values so that we are prompted for them.</p>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># stage/data-stores/mysql/variables.tf</span>
+<span class="k">variable</span> <span class="s2">"db_username"</span> <span class="p">{</span>
+  <span class="nx">description</span> <span class="p">=</span> <span class="s2">"The username for the database"</span>
+  <span class="nx">type</span>        <span class="p">=</span> <span class="nx">string</span>
+  <span class="nx">sensitive</span>   <span class="p">=</span> <span class="kc">true</span>
+<span class="p">}</span>
+
+<span class="k">variable</span> <span class="s2">"db_password"</span> <span class="p">{</span>
+  <span class="nx">description</span> <span class="p">=</span> <span class="s2">"The password for the database"</span>
+  <span class="nx">type</span>        <span class="p">=</span> <span class="nx">string</span>
+  <span class="nx">sensitive</span>   <span class="p">=</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now we configure the module to store its state in S3 bucket we created earlier.</p>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">terraform</span> <span class="p">{</span>
+  <span class="nx">backend</span> <span class="s2">"s3"</span> <span class="p">{</span>
+    <span class="c1"># Replace this with your bucket name!</span>
+    <span class="nx">bucket</span>         <span class="p">=</span> <span class="s2">"terraform-up-and-running-state"</span>
+    <span class="nx">key</span>            <span class="p">=</span> <span class="s2">"stage/data-stores/mysql/terraform.tfstate"</span>
+    <span class="nx">region</span>         <span class="p">=</span> <span class="s2">"us-east-2"</span>
+
+    <span class="c1"># Replace this with your DynamoDB table name!</span>
+    <span class="nx">dynamodb_table</span> <span class="p">=</span> <span class="s2">"terraform-up-and-running-locks"</span>
+    <span class="nx">encrypt</span>        <span class="p">=</span> <span class="kc">true</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Finally we add two output variables</p>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># stage/data-stores/mysql/output.tf</span>
+<span class="k">output</span> <span class="s2">"address"</span> <span class="p">{</span>
+  <span class="nx">value</span>       <span class="p">=</span> <span class="nx">aws_db_instance</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">address</span>
+  <span class="nx">description</span> <span class="p">=</span> <span class="s2">"Connect to the database at this endpoint"</span>
+<span class="p">}</span>
+
+<span class="k">output</span> <span class="s2">"port"</span> <span class="p">{</span>
+  <span class="nx">value</span>       <span class="p">=</span> <span class="nx">aws_db_instance</span><span class="p">.</span><span class="nx">example</span><span class="p">.</span><span class="nx">port</span>
+  <span class="nx">description</span> <span class="p">=</span> <span class="s2">"The port the database is listening on"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>You can pass the values in when you run the code at the prompt or you can set them in your shell environment.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">export </span><span class="nv">TF_VAR_db_username</span><span class="o">=</span><span class="s2">"(YOUR_DB_USERNAME)"</span>
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">TF_VAR_db_password</span><span class="o">=</span><span class="s2">"(YOUR_DB_PASSWORD)"</span>
+</code></pre></div></div>
+
+<p>Now you can run <code class="language-plaintext highlighter-rouge">terraform init</code> and <code class="language-plaintext highlighter-rouge">terraform apply</code> to create the database.</p>
+
+<p>Now if we go back to our cluster code, we can get the web server to read those outputs (for the database) from the state file using <code class="language-plaintext highlighter-rouge">terraform_remote_state</code></p>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">data</span> <span class="s2">"terraform_remote_state"</span> <span class="s2">"db"</span> <span class="p">{</span>
+  <span class="nx">backend</span> <span class="p">=</span> <span class="s2">"s3"</span>
+
+  <span class="nx">config</span> <span class="p">=</span> <span class="p">{</span>
+    <span class="nx">bucket</span> <span class="p">=</span> <span class="s2">"(YOUR_BUCKET_NAME)"</span>
+    <span class="nx">key</span>    <span class="p">=</span> <span class="s2">"stage/data-stores/mysql/terraform.tfstate"</span>
+    <span class="nx">region</span> <span class="p">=</span> <span class="s2">"us-east-2"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Like all Terraform data sources, the data returned by <code class="language-plaintext highlighter-rouge">terraform_remote_state</code> is read only.   Your read the data with the syntax <code class="language-plaintext highlighter-rouge">data.terraform_remote_state.&lt;NAME&gt;.outputs.&lt;ATTRIBUTE&gt;</code> for example …</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user_data <span class="o">=</span> <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh">
+#!/bin/bash
+echo "Hello, World" &gt;&gt; index.html
+echo "</span><span class="k">${</span><span class="nv">data</span><span class="p">.terraform_remote_state.db.outputs.address</span><span class="k">}</span><span class="sh">"&gt;&gt;index.html
+echo "</span><span class="k">${</span><span class="nv">data</span><span class="p">.terraform_remote_state.db.outputs.port</span><span class="k">}</span><span class="sh">"&gt;&gt;index.html
+nohup busybox httpd -f -p </span><span class="k">${</span><span class="nv">var</span><span class="p">.server_port</span><span class="k">}</span><span class="sh"> &amp;
+</span><span class="no">EOF
+</span></code></pre></div></div>
+
+<p>A side not here its kind of a pain to have your bash script inside of your terraform code.  You can sue the <code class="language-plaintext highlighter-rouge">template</code> built in functionality to externalize the script.</p>
+
+<p>You would use the Terraform function (there are other functions you can explore) <code class="language-plaintext highlighter-rouge">templatefile(&lt;PATH&gt;, &lt;VARS&gt;)</code> to do this.</p>
+
+<p>We can put our bash script int ot he file <code class="language-plaintext highlighter-rouge">stage/services/webserver-cluster/user-data.sh</code> as in the example below. Not that <code class="language-plaintext highlighter-rouge">${...}</code> is used where we need to substitute variables. The script will only have access to variables passed in via the second function parameter.  The script below also added some HTML style syntax to make the output look nicer.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+<span class="nb">cat</span> <span class="o">&gt;</span> index.html <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh">
+&lt;h1&gt;Hello, World&lt;/h1&gt;
+&lt;p&gt;DB address: </span><span class="k">${</span><span class="nv">db_address</span><span class="k">}</span><span class="sh">&lt;/p&gt;
+&lt;p&gt;DB port: </span><span class="k">${</span><span class="nv">db_port</span><span class="k">}</span><span class="sh">&lt;/p&gt;
+</span><span class="no">EOF
+
+</span><span class="nb">nohup </span>busybox httpd <span class="nt">-f</span> <span class="nt">-p</span> <span class="k">${</span><span class="nv">server_port</span><span class="k">}</span> &amp;
+</code></pre></div></div>
+
+<p>Once we have script created, we need to update the <code class="language-plaintext highlighter-rouge">user_data</code> parameter of the <code class="language-plaintext highlighter-rouge">aws_launch_configuration</code> resource to call the <code class="language-plaintext highlighter-rouge">templatefile</code> function and pass in the variables it needs as a map.</p>
+
+<div class="language-terraform highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">resource</span> <span class="s2">"aws_launch_configuration"</span> <span class="s2">"example"</span> <span class="p">{</span>
+  <span class="nx">image_id</span>        <span class="p">=</span> <span class="s2">"ami-0fb653ca2d3203ac1"</span>
+  <span class="nx">instance_type</span>   <span class="p">=</span> <span class="s2">"t2.micro"</span>
+  <span class="nx">security_groups</span> <span class="p">=</span> <span class="p">[</span><span class="nx">aws_security_group</span><span class="p">.</span><span class="nx">instance</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span>
+
+  <span class="c1"># Render the User Data script as a template</span>
+  <span class="nx">user_data</span> <span class="p">=</span> <span class="nx">templatefile</span><span class="p">(</span><span class="s2">"user-data.sh"</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">server_port</span> <span class="p">=</span> <span class="kd">var</span><span class="p">.</span><span class="nx">server_port</span>
+    <span class="nx">db_address</span>  <span class="p">=</span> <span class="k">data</span><span class="p">.</span><span class="nx">terraform_remote_state</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">outputs</span><span class="p">.</span><span class="nx">address</span>
+    <span class="nx">db_port</span>     <span class="p">=</span> <span class="k">data</span><span class="p">.</span><span class="nx">terraform_remote_state</span><span class="p">.</span><span class="nx">db</span><span class="p">.</span><span class="nx">outputs</span><span class="p">.</span><span class="nx">port</span>
+  <span class="p">})</span>
+
+  <span class="c1"># Required when using a launch configuration with an ASG.</span>
+  <span class="nx">lifecycle</span> <span class="p">{</span>
+    <span class="nx">create_before_destroy</span> <span class="p">=</span> <span class="kc">true</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>You can experiment with Terraform functions using the <code class="language-plaintext highlighter-rouge">terraform console</code> command. This will give you an interactive console where you can experiment. The Terraform console is read only so you don’t need to worry about accidentally changing infrastructure state.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

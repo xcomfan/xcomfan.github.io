@@ -3,9 +3,9 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Python Strings | My References</title>
+<title>Python General Syntax | My References</title>
 <meta name="generator" content="Jekyll v3.9.2" />
-<meta property="og:title" content="Python Strings" />
+<meta property="og:title" content="Python General Syntax" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
@@ -14,9 +14,9 @@
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Python Strings" />
+<meta property="twitter:title" content="Python General Syntax" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Python Strings","url":"http://localhost:4000/python/general_syntax"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Python General Syntax","url":"http://localhost:4000/python/general_syntax"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
@@ -39,73 +39,137 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Python Strings</h1>
+    <h1 class="post-title">Python General Syntax</h1>
   </header>
 
   <div class="post-content">
-    <h2 id="python-strings-general-information">Python strings general information</h2>
+    <h2 id="ternary-operator">Ternary Operator</h2>
 
-<p><a href="/python/strings/immutability">Python strings are immutable</a></p>
+<h3 id="if-else-format">if else format</h3>
 
-<h2 id="formatting-python-strings">Formatting Python Strings</h2>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">condition</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="s">'yes'</span><span class="p">)</span> <span class="k">if</span> <span class="n">condition</span> <span class="k">else</span> <span class="k">print</span><span class="p">(</span><span class="s">'no'</span><span class="p">)</span>
+<span class="n">yes</span>
+</code></pre></div></div>
 
-<p><a href="/python/strings/f_strings">f strings</a></p>
+<h3 id="or-format">or format</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="bp">True</span> <span class="ow">or</span> <span class="s">"Some"</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="bp">False</span> <span class="ow">or</span> <span class="s">"Some"</span>
+<span class="s">'Some'</span>
+</code></pre></div></div>
 
-<p><a href="/python/strings/formatters">String formatters</a></p>
+<h2 id="true-and-false">True and False</h2>
 
-<p><a href="/python/strings/raw_strings">Raw strings</a></p>
+<p>An object is considered true if it is either a nonzero number or a nonempty collection object.  The built in words <code class="language-plaintext highlighter-rouge">True</code> and <code class="language-plaintext highlighter-rouge">False</code> are essentially predefined to have the same meaning as integers 1 and 0 respectively.</p>
 
-<h2 id="string-methods">String methods</h2>
+<h2 id="built-in-vs-object-methods">Built In Vs. Object Methods</h2>
 
-<p>capitalize()	Converts the first character to upper case
-casefold()	Converts string into lower case
-center()	Returns a centered string
-count()	Returns the number of times a specified value occurs in a string
-encode()	Returns an encoded version of the string
-endswith()	Returns true if the string ends with the specified value
-expandtabs()	Sets the tab size of the string
-find()	Searches the string for a specified value and returns the position of where it was found
-format()	Formats specified values in a string
-format_map()	Formats specified values in a string
-index()	Searches the string for a specified value and returns the position of where it was found
-isalnum()	Returns True if all characters in the string are alphanumeric
-isalpha()	Returns True if all characters in the string are in the alphabet
-isascii()	Returns True if all characters in the string are ascii characters
-isdecimal()	Returns True if all characters in the string are decimals
-isdigit()	Returns True if all characters in the string are digits
-isidentifier()	Returns True if the string is an identifier
-islower()	Returns True if all characters in the string are lower case
-isnumeric()	Returns True if all characters in the string are numeric
-isprintable()	Returns True if all characters in the string are printable
-isspace()	Returns True if all characters in the string are whitespaces
-istitle()	Returns True if the string follows the rules of a title
-isupper()	Returns True if all characters in the string are upper case
-join()	Converts the elements of an iterable into a string
-ljust()	Returns a left justified version of the string
-lower()	Converts a string into lower case
-lstrip()	Returns a left trim version of the string
-maketrans()	Returns a translation table to be used in translations
-partition()	Returns a tuple where the string is parted into three parts
-replace()	Returns a string where a specified value is replaced with a specified value
-rfind()	Searches the string for a specified value and returns the last position of where it was found
-rindex()	Searches the string for a specified value and returns the last position of where it was found
-rjust()	Returns a right justified version of the string
-rpartition()	Returns a tuple where the string is parted into three parts
-rsplit()	Splits the string at the specified separator, and returns a list
-rstrip()	Returns a right trim version of the string
-split()	Splits the string at the specified separator, and returns a list
-splitlines()	Splits the string at line breaks and returns a list
-startswith()	Returns true if the string starts with the specified value
-strip()	Returns a trimmed version of the string
-swapcase()	Swaps cases, lower case becomes upper case and vice versa
-title()	Converts the first character of each word to upper case
-translate()	Returns a translated string
-upper()	Converts a string into upper case
-zfill()	Fills the string with a specified number of 0 values at the beginning</p>
+<p>As a general rule generic operations that apply to multiple types show up as built-in functions or expressions.  For example <code class="language-plaintext highlighter-rouge">len(x)</code>, <code class="language-plaintext highlighter-rouge">x[0]</code>.  Type specific operations are method calls.  For example <code class="language-plaintext highlighter-rouge">aString.upper()</code></p>
 
-<p>‘capitalize’, ‘casefold’, ‘center’, ‘count’, ‘encode’, ‘endswith’, ‘expandtabs’, ‘find’, ‘format’, ‘format_map’, ‘index’, ‘isalnum’, ‘isalpha’, ‘isascii’, ‘isdecimal’, ‘isdigit’, ‘isidentifier’, ‘islower’, ‘isnumeric’, ‘isprintable’, ‘isspace’, ‘istitle’, ‘isupper’, ‘join’, ‘ljust’, ‘lower’, ‘lstrip’, ‘maketrans’, ‘partition’, ‘removeprefix’, ‘removesuffix’, ‘replace’, ‘rfind’, ‘rindex’, ‘rjust’, ‘rpartition’, ‘rsplit’, ‘rstrip’, ‘split’, ‘splitlines’, ‘startswith’, ‘strip’, ‘swapcase’, ‘title’, ‘translate’, ‘upper’, ‘zfill’]</p>
+<h2 id="multiple-statements-on-a-single-line">Multiple Statements On a Single Line</h2>
 
-<h5 id="using-vars-for-variable-access">Using <code class="language-plaintext highlighter-rouge">vars()</code> For Variable Access</h5>
+<p>Non compound statements can be placed on a single line separated by a colon</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="k">print</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+<span class="mi">3</span>
+</code></pre></div></div>
+
+<p>You can also write conditionals on a single line if the body is not a compound statement</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">y</span><span class="p">:</span> <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="p">...</span> 
+<span class="mi">2</span>
+</code></pre></div></div>
+
+<h2 id="breaking-a-statement-into-multiple-lines">Breaking a Statement Into Multiple Lines</h2>
+
+<p>To have a statement span multiple lines enclose it in brackets <code class="language-plaintext highlighter-rouge">()</code>, <code class="language-plaintext highlighter-rouge">[]</code>, or <code class="language-plaintext highlighter-rouge">{}</code>.  Your statement won’t end until Python reaches the part with the closing bracket pair.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">mylist</span> <span class="o">=</span> <span class="p">[</span><span class="mi">111</span><span class="p">,</span>
+<span class="p">...</span> <span class="mi">222</span><span class="p">,</span>
+<span class="p">...</span> <span class="mi">333</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">mylist</span><span class="p">)</span>
+<span class="p">[</span><span class="mi">111</span><span class="p">,</span> <span class="mi">222</span><span class="p">,</span> <span class="mi">333</span><span class="p">]</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">X</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">+</span>
+<span class="p">...</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">4</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="mi">10</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="k">if</span><span class="p">(</span><span class="mi">1</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span>
+<span class="p">...</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">3</span><span class="p">):</span>
+<span class="p">...</span>   <span class="k">print</span><span class="p">(</span><span class="s">'hello'</span><span class="p">)</span>
+<span class="p">...</span> 
+<span class="n">hello</span>
+</code></pre></div></div>
+
+<h2 id="scoping">Scoping</h2>
+
+<h3 id="scoping-of-variables">Scoping of variables</h3>
+
+<ul>
+  <li>If a variable is assigned inside a <code class="language-plaintext highlighter-rouge">def</code>, it is local to that function.</li>
+  <li>If a variable is assigned inside an enclosing def, it is non-local to nested functions.</li>
+  <li>If a variable is assigned outside all defs, it is global to the entire file.</li>
+</ul>
+
+<h3 id="legb-rule">LEGB rule</h3>
+
+<p>When you use an unqualified name inside a function, Python searches up to four scopes.</p>
+
+<p><strong>L</strong> - Local scope</p>
+
+<p><strong>E</strong> - Enclosing scope (def and lambdas)</p>
+
+<p><strong>G</strong> - Global scope (module level scope)</p>
+
+<p><strong>B</strong> - Built in scope (built in functions and exceptions)</p>
+
+<h3 id="the-global-keyword">The global keyword</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">global</code> statement tells Python that a function plans to change one or more global names (names in the enclosing scope).</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">88</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">func</span><span class="p">():</span>
+<span class="p">...</span>   <span class="k">global</span> <span class="n">x</span>
+<span class="p">...</span>   <span class="n">x</span> <span class="o">=</span> <span class="mi">99</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span>
+<span class="mi">88</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">func</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span>
+<span class="mi">99</span>
+</code></pre></div></div>
+
+<h3 id="you-can-redefine-built-in-names-for-better-or-worse">You can redefine built in names (for better or worse)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">hider</span><span class="p">():</span>
+    <span class="nb">open</span> <span class="o">=</span> <span class="s">'hello world'</span>
+    <span class="p">...</span>
+    <span class="nb">open</span><span class="p">(</span><span class="s">'data.txt'</span><span class="p">)</span> <span class="c1"># error this no longer opens a file in this scope
+</span></code></pre></div></div>
+
+<h3 id="the-nonlocal-keyword">The nonlocal keyword</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">nonlocal</code> keyword is used to work with variables inside nested functions, where the variable should not belong to the inner function.  Use the <code class="language-plaintext highlighter-rouge">nonlocal</code> keyword to declare that the variable is not local.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">my_outer_func</span><span class="p">():</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">def</span> <span class="nf">my_inner_func</span><span class="p">():</span>
+        <span class="k">nonlocal</span> <span class="n">x</span> <span class="c1"># without the nonlocal keyword cannot use x for closure scope.
+</span>        <span class="n">x</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span>
+    <span class="n">my_inner_func</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="n">my_outer_function</span><span class="p">()</span> <span class="c1"># returns "hello"
+</span></code></pre></div></div>
+
+<p><strong><em>Note:</em></strong> The <code class="language-plaintext highlighter-rouge">nonlocal</code> keyword is only needed for primitive types which are passed in Python by value.  You do not need it if an object is passed by reference as is the case for Object types.</p>
+
+<h3 id="using-vars-for-variable-access">Using <code class="language-plaintext highlighter-rouge">vars()</code> For Variable Access</h3>
 
 <p>You can use the build in <code class="language-plaintext highlighter-rouge">vars()</code> method to access all in scope variables to utilize in your strings.  <code class="language-plaintext highlighter-rouge">vars()</code> will return a dictionary of all in scope variables</p>
 
@@ -117,76 +181,23 @@ zfill()	Fills the string with a specified number of 0 values at the beginning</p
 '</span><span class="mi">10</span> <span class="n">more</span> <span class="n">spam</span><span class="s">'
 </span></code></pre></div></div>
 
-<h2 id="string-operations">String Operations</h2>
+<h2 id="objects">Objects</h2>
 
-<h3 id="repetition">Repetition</h3>
+<h3 id="comparing-objects">Comparing Objects</h3>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="s">'Ni!'</span> <span class="o">*</span> <span class="mi">4</span>
-<span class="s">'Ni!Ni!Ni!Ni!'</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">M</span> <span class="o">=</span> <span class="n">L</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">==</span> <span class="n">M</span> <span class="c1"># Same values
+</span><span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="ow">is</span> <span class="n">M</span> <span class="c1"># Same object
+</span><span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">M</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">==</span> <span class="n">M</span> <span class="c1"># Same values
+</span><span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="ow">is</span> <span class="n">M</span> <span class="c1"># Different objects
+</span><span class="bp">False</span>
 </code></pre></div></div>
-
-<h3 id="character-operations">Character Operations</h3>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="nb">ord</span><span class="p">(</span><span class="s">'s'</span><span class="p">)</span> <span class="c1"># Get the ASCII binary value
-</span><span class="mi">115</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">chr</span><span class="p">(</span><span class="mi">115</span><span class="p">)</span> <span class="c1"># Get the character of binary value
-</span><span class="s">'s'</span>
-</code></pre></div></div>
-
-<h3 id="joining">Joining</h3>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">my_list</span> <span class="o">=</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'d'</span><span class="p">]</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">my_string</span> <span class="o">=</span> <span class="s">','</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">my_list</span><span class="p">)</span> <span class="c1"># yields 'a,b,c,d'
-</span><span class="o">&gt;&gt;&gt;</span> <span class="n">my_string</span>
-<span class="s">'a,b,c,d'</span>
-</code></pre></div></div>
-
-<h2 id="string-slicing">String Slicing</h2>
-
-<p>The general form <code class="language-plaintext highlighter-rouge">s[i:j]</code> means “give me everything in s from offset, but not including offset j”</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">s</span> <span class="o">=</span> <span class="s">'yeti'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
-<span class="s">'et'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-<span class="s">'eti'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
-<span class="s">'yet'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">s</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="s">'yet'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">s</span><span class="p">[:]</span>
-<span class="s">'yeti'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">s</span> <span class="o">=</span> <span class="s">'abcdefghijklmnopqrstuvwxyz'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># Grab every other (2nd) item from offset 1-9
-</span><span class="s">'bdfhj'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="s">'hello'</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># Use negative stride to reverse a string
-</span><span class="s">'olleh'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">s</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># If using negative stride the first two arguments are essentially reversed
-</span><span class="s">'fedc'</span>
-</code></pre></div></div>
-
-<h2 id="encoding">Encoding</h2>
-
-<p>Most non-UTF codecs handle only a small subset of Unicode characters. When converting test to bytes, if a character is not defined in the target encoding, <code class="language-plaintext highlighter-rouge">UnicodeEncodeError</code> will be raised, unless special handling is provided by passing an <code class="language-plaintext highlighter-rouge">errors</code> argument to the encoding method.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">city</span> <span class="o">=</span> <span class="s">'São Paulo'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">city</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'utf_8'</span><span class="p">)</span>
-<span class="sa">b</span><span class="s">'S</span><span class="se">\xc3\xa3</span><span class="s">o Paulo'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">city</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'iso8859_1'</span><span class="p">)</span>
-<span class="sa">b</span><span class="s">'S</span><span class="se">\xe3</span><span class="s">o Paulo'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">city</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'cp437'</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s">'ignore'</span><span class="p">)</span>
-<span class="sa">b</span><span class="s">'So Paulo'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">city</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'cp437'</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s">'replace'</span><span class="p">)</span>
-<span class="sa">b</span><span class="s">'S?o Paulo'</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">city</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s">'cp437'</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s">'xmlcharrefreplace'</span><span class="p">)</span>
-<span class="sa">b</span><span class="s">'S&amp;#227;o Paulo'</span>
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">error='ignore'</code> Skips characters that cannot be encoded.  Usually bad as it leads to lost data.</p>
-
-<p><code class="language-plaintext highlighter-rouge">error='replace'</code> Substitutes character that cannot be encoded with <code class="language-plaintext highlighter-rouge">?</code>; data is also lost but user is given a hint that something changed.</p>
-
-<p><code class="language-plaintext highlighter-rouge">error='xmlcharrefreplace</code> Replaces un-encodable characters with an XML entity.  If you can’t use UTF, and you can’t afford to loose data this is the only option.</p>
 
   </div>
 

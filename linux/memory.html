@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Memory Management | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Memory Management" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/linux/memory" />
+<meta property="og:url" content="http://localhost:4000/linux/memory" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Memory Management" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Memory Management","url":"http://localhost:4000/linux/memory"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Memory Management</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="virtual-memory-management">Virtual Memory Management</h2>
+
+<p>Memory is a limited resource that the kernel needs to manage in an equitable and efficient fashion. Linux uses virtual memory management which has the following benefits.</p>
+
+<ul>
+  <li>Processes are isolated from each other and from the kernel so that one process can’t read or modify memory of another.</li>
+  <li>Only part of a process needs to be kept in memory.  Allowing more processes to run in the RAM available.</li>
+</ul>
+
+<p><strong>Spatial locality</strong> is the tendency of a program to reference memory addresses that are near those that were recently accessed (because of sequential processing of instructions and sometimes sequential processing of data structures).</p>
+
+<p><strong>Temporal locality</strong> is the tendency of a program to access the same memory addresses in the near future that is accessed in the recent past (because of loops)</p>
+
+<p><code class="language-plaintext highlighter-rouge">/proc/kallsysm</code> - provides addresses of virtual memory mapped into processes, but not accessible to program.</p>
+
+<p>A virtual memory scheme splits the memory used by each program into small, fixed size units called pages.  Correspondingly RAM is divided into a series of page frames of the same size. At any one time only some of the pages of a program need to be resident in physical memory page frames. These pages form the sol called resident set. Copies of the unused pages of a program are in the swap area. When a process references a page that is not currently resident in physical memory, a page fault occurs, at which point the kernel suspends execution of the process while the page is loaded from disk into memory. In order to support this organization, the kernel maintains a page table for each process. The page table describes the location of each page in the process’s <strong>virtual address space</strong> (the set of all virtual memory pages available to the process). Each entry in the page table either indicates the location of a virtual page in RAM or indicates that it currently resides on disk. Virtual memory management separate the Virtual address space of a process from the physical. This has many advantages.</p>
+
+<ul>
+  <li>
+    <p>Processes are isolated from one another and the kernel, so that one process can’t read or modify the memory of another process or the kernel.</p>
+  </li>
+  <li>
+    <p>Where appropriate two or more processes can share memory.  The kernel makes this possible by having page-table entries in different processes refer to the same pages of RAM. Memory sharing occurs in two common circumstances.</p>
+
+    <ul>
+      <li>Multiple processes executing the same program can share a single (read only) copy of the program code.</li>
+      <li>Processes can share the <code class="language-plaintext highlighter-rouge">shmget()</code> and <code class="language-plaintext highlighter-rouge">mmap()</code> system calls to explicitly request sharing of memory regions with other processes.  This is done for Inter-process communication.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>You can have memory protection schemes such as page table entries controlling if memory pages are readable, writable, executable or some combination of these. Programmers and tools such as compilers and linkers can utilize memory without having to worry about the physical layout of memory. Because only a part of a program needs to reside in memory, the program can load and run much faster.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

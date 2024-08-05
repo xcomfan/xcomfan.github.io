@@ -3,20 +3,20 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>System Design | My References</title>
+<title>System and User Space | My References</title>
 <meta name="generator" content="Jekyll v3.9.2" />
-<meta property="og:title" content="System Design" />
+<meta property="og:title" content="System and User Space" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://localhost:4000/system_design" />
-<meta property="og:url" content="http://localhost:4000/system_design" />
+<link rel="canonical" href="http://localhost:4000/linux/user_and_system_space" />
+<meta property="og:url" content="http://localhost:4000/linux/user_and_system_space" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="System Design" />
+<meta property="twitter:title" content="System and User Space" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"System Design","url":"http://localhost:4000/system_design"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"System and User Space","url":"http://localhost:4000/linux/user_and_system_space"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
@@ -39,17 +39,33 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">System Design</h1>
+    <h1 class="post-title">System and User Space</h1>
   </header>
 
   <div class="post-content">
-    <p><a href="/system_design/reference">System Design Reference</a></p>
+    <h2 id="kernel-mode-and-user-mode">Kernel Mode and User Mode</h2>
 
-<p><a href="/system_design/monitoring">Monitoring</a></p>
+<p>Modern processors operate in at least two modes. User mode and kernel mode. Hardware instructions allow switching from one mode to the other.</p>
 
-<p><a href="/system_design/observability">Observability</a></p>
+<p>Areas of virtual memory can be marked as being part of user space or kernel space.  When running in user mode the CPU cannot access kernel space memory. In kernel mode the CPU can access both user space and kernel space. Attempts to access kernel space in user mode will result in a hardware exception.</p>
 
-<p><a href="/system_design/ci_cd">CI/CD</a></p>
+<p>Certain operations can only be performed when processor is in kernel mode.  Some examples are…</p>
+
+<ul>
+  <li>heart instruction</li>
+  <li>accessing the memory management hardware</li>
+  <li>initiating device I/O operation</li>
+</ul>
+
+<h2 id="process-versus-kernel-view-of-the-system">Process versus kernel view of the system</h2>
+
+<h3 id="process-view">Process view</h3>
+
+<p>Many things happen transparently for a process. A process doesn’t know where it is located in RAM or even if its in RAM or a swap area. It does not know where on disk the files its accessing are, and can’t communicate directly with I/O. Process operates in isolation. It can’t directly communicate with another process, create a new process or even end its own existence.</p>
+
+<h3 id="kernel-view">Kernel view</h3>
+
+<p>Kernel facilitates running of all processes on the system, and kernel decides which process will obtain access to the CPU next and for how long. Kernel maintains data structures with information about all running processes and updates these structures as processes are created, change state and terminate. The Kernel maintains low level data structures that map the virtual memory of each process into the physical memory of the computer and the swap areas on disk. All communication between processes is done via mechanisms provided by the kernel. In response to requests from processes the kernel creates and terminates processes. The kernel (in particular device drivers) performs all direct communication with input and output devices transferring information to and from user processes as required.</p>
 
   </div>
 

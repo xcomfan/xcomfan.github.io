@@ -64,15 +64,7 @@
 
 <h2 id="tryexcept">try/except</h2>
 
-<p>Catch and recover from exception raised by Python or by you.  Once you have caught the exception, control continues after the entire <code class="language-plaintext highlighter-rouge">try</code> that caught the exception, not after the statem
-ent that kicked it off.  In fact Python clears the memory of any functions that were exited as a result of the exception like fetcher in the above example.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span><span class="p">:</span>
-    <span class="n">fetcher</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
-<span class="k">except</span> <span class="nb">IndexError</span><span class="p">:</span>
-    <span class="k">print</span><span class="p">(</span><span class="s">'got exception'</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="s">'continuing'</span><span class="p">)</span>
-</code></pre></div></div>
+<p>Catch and recover from exception raised by Python or by you. Once you have caught the exception, control continues after the entire <code class="language-plaintext highlighter-rouge">try</code> that caught the exception, not after the statement that kicked it off. In fact Python clears the memory of any functions that were exited as a result of the exception.</p>
 
 <h2 id="tryfinally">try/finally</h2>
 
@@ -112,15 +104,45 @@ ent that kicked it off.  In fact Python clears the memory of any functions that 
     <span class="k">print</span><span class="p">(</span><span class="s">'got exception'</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>There are 3 variations of <code class="language-plaintext highlighter-rouge">raise</code></p>
+<h3 id="there-are-3-variations-of-raise">There are 3 variations of raise</h3>
 
-<p><code class="language-plaintext highlighter-rouge">raise IndexError()</code> Raises instance of class (lets you pass arguments)</p>
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">raise IndexError()</code> Raises instance of class (lets you pass arguments)</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">raise IndexError</code> Make and raise instance of class: makes an instance (if you don’t want to pass arguments)</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">raise</code> Raise the most recent exception</p>
+  </li>
+</ul>
 
-<p><code class="language-plaintext highlighter-rouge">raise IndexError</code> Make and raise instance of class: makes an instance (if you don’t want to pass arguments)</p>
+<h3 id="displaying-exceptions">Displaying Exceptions</h3>
 
-<p><code class="language-plaintext highlighter-rouge">raise</code> Raise the most recent exception</p>
+<p>Any constructor arguments you pass to Exception classes or their children (via inheritance) are saved in the instances args tuple attribute, and are automatically displayed when the instances is printed. An empty tuple and display string is used if no constructor arguments are passed, and a single argument is displayed as itself, not a tuple.</p>
 
-<h2 id="sysexc_info-exception-details">sys.exc_info (exception details)</h2>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">raise</span> <span class="nb">IndexError</span>                       
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>         
+    <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>      
+<span class="nb">IndexError</span>                                 
+<span class="o">&gt;&gt;&gt;</span> <span class="k">raise</span> <span class="nb">IndexError</span><span class="p">(</span><span class="s">'spam'</span><span class="p">)</span>               
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>         
+    <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>      
+<span class="nb">IndexError</span><span class="p">:</span> <span class="n">spam</span>                           
+<span class="o">&gt;&gt;&gt;</span> <span class="n">I</span> <span class="o">=</span> <span class="nb">IndexError</span><span class="p">(</span><span class="s">'spam'</span><span class="p">)</span>                 
+<span class="o">&gt;&gt;&gt;</span> <span class="n">I</span><span class="p">.</span><span class="n">args</span>                                 
+<span class="p">(</span><span class="s">'spam'</span><span class="p">,)</span>                                  
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>                               
+<span class="n">spam</span>                                       
+<span class="o">&gt;&gt;&gt;</span> <span class="k">raise</span> <span class="nb">IndexError</span><span class="p">(</span><span class="s">"spam"</span><span class="p">,</span> <span class="s">'is'</span><span class="p">,</span> <span class="s">'ham'</span><span class="p">)</span>  
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>         
+    <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>      
+<span class="nb">IndexError</span><span class="p">:</span> <span class="p">(</span><span class="s">'spam'</span><span class="p">,</span> <span class="s">'is'</span><span class="p">,</span> <span class="s">'ham'</span><span class="p">)</span>          
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<h2 id="getting-exception-details-with-sysexc_info">Getting exception details with sys.exc_info</h2>
 
 <p>If no exception is being handled a call to <code class="language-plaintext highlighter-rouge">sys.exc_info()</code> will return a tuple with 3 <code class="language-plaintext highlighter-rouge">None</code> elements.  If however an exception is being handled than you get a tuple with type, value and traceback.</p>
 
@@ -147,27 +169,6 @@ Traceback of exception is &lt;traceback object at 0x7f8811c741c0&gt;
 &gt;&gt;&gt;
 </span></code></pre></div></div>
 
-<h2 id="assert">assert</h2>
-
-<p>The <code class="language-plaintext highlighter-rouge">assert</code> statement lets you conditionally trigger an exception in your code.</p>
-
-<p>The syntax is <code class="language-plaintext highlighter-rouge">assert test data</code> where the data part is optional.</p>
-
-<p>If the test validates false, Python raises an exception.  The data item if provided is used as the exception’s constructor argument.  Like all exceptions an <code class="language-plaintext highlighter-rouge">AssertionError</code> will kill your program if not caught with a <code class="language-plaintext highlighter-rouge">try</code>.</p>
-
-<p>Assertions are typically used to verify program conditions during development.  When displayed their error messages automatically include source code line information and the value listed in the assert statement.  Python will trap programming errors so you want to use assert for user defined restrictions.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-<span class="p">...</span>   <span class="k">assert</span> <span class="n">x</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span> <span class="s">'x must be negative'</span>
-<span class="p">...</span>   <span class="k">return</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span>
-<span class="p">...</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
-  <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-  <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2</span><span class="p">,</span> <span class="ow">in</span> <span class="n">f</span>
-<span class="nb">AssertionError</span><span class="p">:</span> <span class="n">x</span> <span class="n">must</span> <span class="n">be</span> <span class="n">negative</span>
-</code></pre></div></div>
-
 <h2 id="built-in-exception-classes">Built in exception classes</h2>
 
 <p><code class="language-plaintext highlighter-rouge">BaseException</code> - topmost root, printing and constructor defaults</p>
@@ -180,7 +181,7 @@ Traceback of exception is &lt;traceback object at 0x7f8811c741c0&gt;
 
 <h2 id="user-defined-exceptions">User Defined Exceptions</h2>
 
-<p>Exceptions are just object and being objects there are a number of benefits.  Exception objects can be organized into catagories, have state information and behavior and they support inheritance.  With inheritance to can <code class="language-plaintext highlighter-rouge">except</code> a certain exception type and match any subclass which can be convenient.</p>
+<p>Exceptions are just object and being objects there are a number of benefits. Exception objects can be organized into catagories, have state information and behavior and they support inheritance. With inheritance you can <code class="language-plaintext highlighter-rouge">except</code> a certain exception type and match any subclass which can be convenient.</p>
 
 <p><strong><em>Note</em></strong> To print a custom message overload the <code class="language-plaintext highlighter-rouge">__str__</code> and <code class="language-plaintext highlighter-rouge">__repr__</code> methods.</p>
 
@@ -214,35 +215,32 @@ Traceback of exception is &lt;traceback object at 0x7f8811c741c0&gt;
 <span class="n">Error</span> <span class="n">at</span><span class="p">:</span> <span class="n">spam</span><span class="p">.</span><span class="n">txt</span> <span class="mi">42</span>
 </code></pre></div></div>
 
-<h3 id="displaying-exceptions">Displaying Exceptions</h3>
+<h2 id="assert">assert</h2>
 
-<p>Any constructor arguments you pass to Exception classes or their children (via inheritance) are saved in the instances args tuple attribute, and are automatically displayed when the instances is printed.  An empty tuple and display string is used if no constructor arguments are passed, and a single argument is displayed as itself, not a tuple.</p>
+<p>The <code class="language-plaintext highlighter-rouge">assert</code> statement lets you conditionally trigger an exception in your code.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">raise</span> <span class="nb">IndexError</span>                       
-<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>         
-    <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>      
-<span class="nb">IndexError</span>                                 
-<span class="o">&gt;&gt;&gt;</span> <span class="k">raise</span> <span class="nb">IndexError</span><span class="p">(</span><span class="s">'spam'</span><span class="p">)</span>               
-<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>         
-    <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>      
-<span class="nb">IndexError</span><span class="p">:</span> <span class="n">spam</span>                           
-<span class="o">&gt;&gt;&gt;</span> <span class="n">I</span> <span class="o">=</span> <span class="nb">IndexError</span><span class="p">(</span><span class="s">'spam'</span><span class="p">)</span>                 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">I</span><span class="p">.</span><span class="n">args</span>                                 
-<span class="p">(</span><span class="s">'spam'</span><span class="p">,)</span>                                  
-<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>                               
-<span class="n">spam</span>                                       
-<span class="o">&gt;&gt;&gt;</span> <span class="k">raise</span> <span class="nb">IndexError</span><span class="p">(</span><span class="s">"spam"</span><span class="p">,</span> <span class="s">'is'</span><span class="p">,</span> <span class="s">'ham'</span><span class="p">)</span>  
-<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>         
-    <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>      
-<span class="nb">IndexError</span><span class="p">:</span> <span class="p">(</span><span class="s">'spam'</span><span class="p">,</span> <span class="s">'is'</span><span class="p">,</span> <span class="s">'ham'</span><span class="p">)</span>          
-<span class="o">&gt;&gt;&gt;</span>
+<p>The syntax is <code class="language-plaintext highlighter-rouge">assert test data</code> where the data part is optional.</p>
+
+<p>If the test validates false, Python raises an exception.  The data item if provided is used as the exception’s constructor argument.  Like all exceptions an <code class="language-plaintext highlighter-rouge">AssertionError</code> will kill your program if not caught with a <code class="language-plaintext highlighter-rouge">try</code>.</p>
+
+<p>Assertions are typically used to verify program conditions during development. When displayed their error messages automatically include source code line information and the value listed in the assert statement. Python will trap programming errors so you want to use assert for user defined restrictions.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="p">...</span>   <span class="k">assert</span> <span class="n">x</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">,</span> <span class="s">'x must be negative'</span>
+<span class="p">...</span>   <span class="k">return</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">f</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+  <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2</span><span class="p">,</span> <span class="ow">in</span> <span class="n">f</span>
+<span class="nb">AssertionError</span><span class="p">:</span> <span class="n">x</span> <span class="n">must</span> <span class="n">be</span> <span class="n">negative</span>
 </code></pre></div></div>
 
 <h2 id="exception-usage-idioms">Exception Usage Idioms</h2>
 
 <h3 id="exceptions-arent-always-errors">Exceptions aren’t always errors</h3>
 
-<p>In Python all errors are exceptions but not all exceptions are errors.  For example we can use exceptions to signal an end of file.</p>
+<p>In Python all errors are exceptions but not all exceptions are errors. For example we can use exceptions to signal an end of file.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>

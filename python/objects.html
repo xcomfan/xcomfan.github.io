@@ -3,9 +3,9 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Python Objects | My References</title>
+<title>Python Dictionaries | My References</title>
 <meta name="generator" content="Jekyll v3.9.2" />
-<meta property="og:title" content="Python Objects" />
+<meta property="og:title" content="Python Dictionaries" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
@@ -14,9 +14,9 @@
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Python Objects" />
+<meta property="twitter:title" content="Python Dictionaries" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Python Objects","url":"http://localhost:4000/python/objects"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Python Dictionaries","url":"http://localhost:4000/python/objects"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
@@ -39,24 +39,113 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Python Objects</h1>
+    <h1 class="post-title">Python Dictionaries</h1>
   </header>
 
   <div class="post-content">
-    <h2 id="comparing-objects">Comparing Objects</h2>
+    <h2 id="creating-a-dictionary">Creating a Dictionary</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">M</span> <span class="o">=</span> <span class="n">L</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">==</span> <span class="n">M</span> <span class="c1"># Same values
-</span><span class="bp">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="ow">is</span> <span class="n">M</span> <span class="c1"># Same object
-</span><span class="bp">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">M</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="o">==</span> <span class="n">M</span> <span class="c1"># Same values
-</span><span class="bp">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">L</span> <span class="ow">is</span> <span class="n">M</span> <span class="c1"># Different objects
-</span><span class="bp">False</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">bob1</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Bob'</span><span class="p">,</span> <span class="n">job</span><span class="o">=</span><span class="s">'dev'</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">bob1</span>
+<span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'Bob'</span><span class="p">,</span> <span class="s">'job'</span><span class="p">:</span> <span class="s">'dev'</span><span class="p">,</span> <span class="s">'age'</span><span class="p">:</span> <span class="mi">40</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">bob2</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">([</span><span class="s">'name'</span><span class="p">,</span><span class="s">'job'</span><span class="p">,</span><span class="s">'age'</span><span class="p">],[</span><span class="s">'Bob'</span><span class="p">,</span><span class="s">'dev'</span><span class="p">,</span><span class="mi">40</span><span class="p">]))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">bob2</span>
+<span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'Bob'</span><span class="p">,</span> <span class="s">'job'</span><span class="p">:</span> <span class="s">'dev'</span><span class="p">,</span> <span class="s">'age'</span><span class="p">:</span> <span class="mi">40</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">dict</span><span class="p">([(</span><span class="s">'name'</span><span class="p">,</span><span class="s">'Bob'</span><span class="p">),</span> <span class="p">(</span><span class="s">'age'</span><span class="p">,</span><span class="mi">40</span><span class="p">)])</span>
+<span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'Bob'</span><span class="p">,</span> <span class="s">'age'</span><span class="p">:</span> <span class="mi">40</span><span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="avoiding-error-on-missing-key">Avoiding error on missing key</h2>
+
+<h3 id="using-get-method">Using get method</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">D</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">A</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">D</span>
+<span class="p">{</span><span class="s">'A'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">'B'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">'C'</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># get returns None by default
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">value</span> <span class="o">=</span> <span class="n">D</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'X'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+<span class="bp">None</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># you can use a default value with get
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">D</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'X'</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="mi">0</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># manual way to set default
+</span><span class="o">&gt;&gt;&gt;</span> <span class="n">value</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="s">'X'</span><span class="p">]</span> <span class="k">if</span> <span class="s">'X'</span> <span class="ow">in</span> <span class="n">D</span> <span class="k">else</span> <span class="mi">0</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">value</span>
+<span class="mi">0</span>
+</code></pre></div></div>
+
+<h3 id="using-defaltdict-from-collections-module">Using defaltdict from collections module</h3>
+
+<p>You can use a default dict and pass a function to the constructor for generating a default value.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">d</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="n">gen_default_value</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">d</span><span class="p">[</span><span class="s">"a"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="n">defaultdict</span><span class="p">(</span><span class="o">&lt;</span><span class="n">function</span> <span class="n">gen_default_value</span> <span class="n">at</span> <span class="mh">0x7fa949dd9510</span><span class="o">&gt;</span><span class="p">,</span> <span class="p">{</span><span class="s">'a'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s">"x"</span><span class="p">])</span>
+<span class="n">my</span> <span class="n">default</span> <span class="n">value</span>
+</code></pre></div></div>
+
+<p>You an also use a lambda shorthand to avoid defining the default function</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">l_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="s">'my default value'</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">l_dct</span><span class="p">[</span><span class="s">'abc'</span><span class="p">]</span>
+<span class="s">'my default value'</span>
+</code></pre></div></div>
+
+<p>There are build in generators</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="c1"># The default is 0
+</span><span class="n">a_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="c1"># the default is 0.0
+</span><span class="n">a_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="c1"># the default is ""
+</span><span class="n">a_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span> <span class="c1"># the default is []
+</span><span class="n">a_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">tuple</span><span class="p">)</span> <span class="c1"># the default is ()
+</span><span class="n">a_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span> <span class="c1"># the default is False
+</span><span class="n">a_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span> <span class="c1"># the default is set()
+</span><span class="n">a_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">frozenset</span><span class="p">)</span> <span class="c1"># the default frozenset()
+</span><span class="n">a_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span> <span class="c1"># the default is {}
+</span></code></pre></div></div>
+
+<h2 id="dictionary-operations">Dictionary Operations</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">DC</span> <span class="o">=</span> <span class="p">{</span><span class="s">'Batman'</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s">'Superman'</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s">'Wonder Woman'</span><span class="p">:</span><span class="mi">3</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Get dictionary values as a list
+</span><span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">DC</span><span class="p">.</span><span class="n">values</span><span class="p">())</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="n">DC</span><span class="p">.</span><span class="n">values</span><span class="p">())</span>
+<span class="o">&lt;</span><span class="k">class</span> <span class="err">'</span><span class="nc">dict_values</span><span class="s">'&gt;
+
+&gt;&gt;&gt; # Get all items in dictionary as a list
+&gt;&gt;&gt; list(DC.items())
+[('</span><span class="n">Batman</span><span class="s">', 1), ('</span><span class="n">Superman</span><span class="s">', 2), ('</span><span class="n">Wonder</span> <span class="n">Woman</span><span class="s">', 3)]
+&gt;&gt;&gt; type(DC.items())
+&lt;class '</span><span class="n">dict_items</span><span class="s">'&gt;
+
+&gt;&gt;&gt; Marvel = {'</span><span class="n">Hulk</span><span class="s">':1, '</span><span class="n">Iron</span> <span class="n">Man</span><span class="s">':2, '</span><span class="n">Captain</span> <span class="n">America</span><span class="s">':3}
+&gt;&gt;&gt; # Concatenate dictionaries
+&gt;&gt;&gt; DC.update(Marvel)
+&gt;&gt;&gt; DC
+{'</span><span class="n">Batman</span><span class="s">': 1, '</span><span class="n">Superman</span><span class="s">': 2, '</span><span class="n">Wonder</span> <span class="n">Woman</span><span class="s">': 3, '</span><span class="n">Hulk</span><span class="s">': 1, '</span><span class="n">Iron</span> <span class="n">Man</span><span class="s">': 2, '</span><span class="n">Captain</span> <span class="n">America</span><span class="s">': 3}
+
+&gt;&gt;&gt; # Remove single item by key
+&gt;&gt;&gt; DC.pop('</span><span class="n">Wonder</span> <span class="n">Woman</span><span class="s">')
+3 # the value is returned when you pop
+&gt;&gt;&gt; DC
+{'</span><span class="n">Batman</span><span class="s">': 1, '</span><span class="n">Superman</span><span class="s">': 2, '</span><span class="n">Hulk</span><span class="s">': 1, '</span><span class="n">Iron</span> <span class="n">Man</span><span class="s">': 2, '</span><span class="n">Captain</span> <span class="n">America</span><span class="s">': 3}
+</span></code></pre></div></div>
+
+<h2 id="iterate-over-key-values-pairs-of-a-dictionary">Iterate over key values pairs of a dictionary</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">DC</span> <span class="o">=</span> <span class="p">{</span><span class="s">'Batman'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">'Superman'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">'Hulk'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">'Iron Man'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">'Captain America'</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">DC</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+<span class="p">...</span>   <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'key is </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s"> value is </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="n">key</span> <span class="ow">is</span> <span class="n">Batman</span> <span class="n">value</span> <span class="ow">is</span> <span class="mi">1</span>
+<span class="n">key</span> <span class="ow">is</span> <span class="n">Superman</span> <span class="n">value</span> <span class="ow">is</span> <span class="mi">2</span>
+<span class="n">key</span> <span class="ow">is</span> <span class="n">Hulk</span> <span class="n">value</span> <span class="ow">is</span> <span class="mi">1</span>
+<span class="n">key</span> <span class="ow">is</span> <span class="n">Iron</span> <span class="n">Man</span> <span class="n">value</span> <span class="ow">is</span> <span class="mi">2</span>
+<span class="n">key</span> <span class="ow">is</span> <span class="n">Captain</span> <span class="n">America</span> <span class="n">value</span> <span class="ow">is</span> <span class="mi">3</span>
 </code></pre></div></div>
 
   </div>

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Trouble Shooting Reference | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Trouble Shooting Reference" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/troubleshooting" />
+<meta property="og:url" content="http://localhost:4000/troubleshooting" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Trouble Shooting Reference" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Trouble Shooting Reference","url":"http://localhost:4000/troubleshooting"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Trouble Shooting Reference</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="linux-troubleshooting-commands">Linux Troubleshooting Commands</h2>
+
+<h3 id="strace">strace</h3>
+
+<h4 id="attaching-multiple-processes-to-single-strace-output">Attaching Multiple Processes to single strace output</h4>
+
+<p><code class="language-plaintext highlighter-rouge">ps -auxw | grep sbin/httpd | grep -v grep | awk '{print"-p " $2}' | xargs strace</code></p>
+
+<h5 id="arguments">Arguments</h5>
+
+<p>-f Trace child processes as they are created
+-e Just show you the open</p>
+
+<h4 id="problems-people-solve-with-strace">Problems people solve with strace</h4>
+
+<ul>
+  <li>
+    <p>Where is the config file?</p>
+  </li>
+  <li>What other files does this program depend on?
+    <ul>
+      <li>Which .so file is it grabbing?</li>
+      <li>SSL root certificates</li>
+      <li>A games save files</li>
+      <li>which node_mdules are not being used?</li>
+    </ul>
+  </li>
+  <li>Why is this program hanging?
+    <ul>
+      <li>You can run strace -p PID and see what system call is currently running</li>
+      <li>May be polling with select()</li>
+      <li>may be wait() for a sub process to finish</li>
+      <li>making network requests to something that is not responding</li>
+      <li>doing a write() but it’s blocked because the buffer is full</li>
+      <li>doing a read() on stdin and waiting for input</li>
+      <li>strace df -h you can find why df is hanging (may be a stuck mount that needs to be un-mounted)</li>
+    </ul>
+  </li>
+  <li>Why is this program stuck?
+    <ul>
+      <li>Variation of number 3.  If you see the program making system calls its not stuck.  Sometimes you just want to know if a program is stuck or not.</li>
+      <li>Why is this program slow?</li>
+      <li>strace -t will show the timestamp of each system call
+        <ul>
+          <li>You can look for big gaps and find the culprit</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Hidden permission errors
+    <ul>
+      <li>Sometimes when program is mysteriously not working it may be a permission issue that the program is failing to report.  You can figure this out by running the program with strace</li>
+    </ul>
+  </li>
+  <li>What command line arguments are being used
+    <ul>
+      <li>Sometimes a script will run another program.  You want to know what command line flags its passing.</li>
+    </ul>
+  </li>
+  <li>Why is this network connection failing?
+    <ul>
+      <li>You can find out which domain/IP address the network connection is being made to.  You can look at the DNS request or the connect() request.</li>
+    </ul>
+  </li>
+  <li>Why does this program succeed when run one way and fail when run in another way?
+    <ul>
+      <li>You can compare system calls being made to get a hint.</li>
+    </ul>
+  </li>
+  <li>How does this Linux kernel API work
+    <ul>
+      <li>See an example to supplement documentation.</li>
+    </ul>
+  </li>
+  <li>General reverse engineering.</li>
+</ul>
+
+<h3 id="pstop">ps/top</h3>
+
+<p><code class="language-plaintext highlighter-rouge">-p &lt;pid1, pid2, …&gt;</code>
+<code class="language-plaintext highlighter-rouge">-u &lt;uid&gt;</code>
+<code class="language-plaintext highlighter-rouge">-g &lt;gid&gt;</code></p>
+
+<h3 id="ss---socket-statistics">ss - socket statistics</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>arg</th>
+      <th>purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>-t</td>
+      <td>Display the TCP socket family</td>
+    </tr>
+    <tr>
+      <td>-u</td>
+      <td>display the UDP sockets</td>
+    </tr>
+    <tr>
+      <td>-x</td>
+      <td>is for Unix domain sockets</td>
+    </tr>
+    <tr>
+      <td>-n</td>
+      <td>show port numbers instead of trying to resolve service names</td>
+    </tr>
+    <tr>
+      <td>-h</td>
+      <td>get help</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="grep">grep</h3>
+
+<p>-n will print line numbers of on which line in the file there was a match</p>
+
+<h3 id="curl">curl</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>arg</th>
+      <th>purpose</th>
+      <th>example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>-I</td>
+      <td>return only the HTTP headers of URL</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>-o</td>
+      <td>output to a file</td>
+      <td><code class="language-plaintext highlighter-rouge">curl -o myfile.html www.google.com</code></td>
+    </tr>
+    <tr>
+      <td>-O</td>
+      <td>output to a file using its name as on server</td>
+      <td><code class="language-plaintext highlighter-rouge">curl -O www.google.com</code></td>
+    </tr>
+    <tr>
+      <td>-H</td>
+      <td>modify your header</td>
+      <td><code class="language-plaintext highlighter-rouge">curl -H "X-Header: value" https://www.keycdn.com</code></td>
+    </tr>
+    <tr>
+      <td>-v</td>
+      <td>verbose</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>-D</td>
+      <td>report download speed of</td>
+      <td><code class="language-plaintext highlighter-rouge">curl -D - https://www.keycdn.com/ -o /dev/null</code></td>
+    </tr>
+    <tr>
+      <td>-L</td>
+      <td>follow redirects</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="post-call-using-curl">Post call using curl</h4>
+
+<p><code class="language-plaintext highlighter-rouge">curl -X POST http://www.yourwebsite.com/login/ -d 'username=yourusername&amp;password=yourpassword'</code></p>
+
+<h4 id="fetch-multiple-files">fetch multiple files</h4>
+
+<p><code class="language-plaintext highlighter-rouge">curl -O URL 1 -O URL2</code></p>
+
+<h2 id="important-tools-for-troubleshooting-a-problem-per-school-of-sre">Important Tools for troubleshooting a problem per School of SRE</h2>
+
+<h3 id="for-networking">For networking</h3>
+
+<ul>
+  <li>nc</li>
+  <li>netcat</li>
+  <li>traceroute</li>
+  <li>mtr</li>
+  <li>ping</li>
+  <li>route</li>
+  <li>tcpdump</li>
+  <li>ss</li>
+  <li>ip</li>
+</ul>
+
+<h3 id="for-dns">For DNS</h3>
+
+<ul>
+  <li>dig</li>
+  <li>host</li>
+  <li>nslookup</li>
+</ul>
+
+<h3 id="for-tracing-system-calls">For tracing system calls</h3>
+
+<ul>
+  <li>strace</li>
+</ul>
+
+<h3 id="for-parallel-execution-over-ssh">For parallel execution over ssh</h3>
+
+<ul>
+  <li>gnu parallel</li>
+  <li>xargs + ssh</li>
+</ul>
+
+<h3 id="http-checks">HTTP checks</h3>
+
+<ul>
+  <li>curl</li>
+  <li>wget</li>
+</ul>
+
+<h3 id="for-list-of-open-files">For list of open files</h3>
+
+<ul>
+  <li>lsof</li>
+</ul>
+
+<h3 id="for-modifying-attributes-of-the-system-kernel">For modifying attributes of the system kernel</h3>
+
+<ul>
+  <li>sysctl</li>
+</ul>
+
+<h3 id="performance-analysis-commands">Performance analysis commands</h3>
+
+<ul>
+  <li>htop - like top, but a bit more interactive</li>
+  <li>iotop</li>
+  <li>vmstat</li>
+  <li>iostat</li>
+  <li>free</li>
+  <li>sar</li>
+  <li>mpstat</li>
+  <li>perf</li>
+</ul>
+
+<h3 id="profiling-tools">Profiling Tools</h3>
+
+<ul>
+  <li>
+    <p>FlameGraph - Flame graphs are visualization of profiled software, allowing the most frequent code-paths to be identified quickly and accurately.</p>
+  </li>
+  <li>
+    <p>Valgrind - Is a programming tool for memory debugging, memory leak detection and profiling.</p>
+  </li>
+  <li>
+    <p>Gprof - GNU profiler tool uses a hybrid of instrumentation and sampling. Instrumentation is used to collect function call information, and sampling is used to gather runtime profiling information.</p>
+  </li>
+</ul>
+
+<h3 id="benchmarking">Benchmarking</h3>
+
+<p>Benchmarking - is a process of measure the best performance of the service.  Like how much QPS service can handle, its latency when load is increasing, host resource utilization, loadavg etc.  The regression testing (i.e load testing) is a must before deploying the service to production.</p>
+
+<h4 id="benchmarking-tools">Benchmarking tools</h4>
+
+<ul>
+  <li>
+    <p>Apache Benchmark Tool - Simulates high load on webapp and gather’s data for analysis.</p>
+  </li>
+  <li>
+    <p>Httperf - Sends request at a web server at a specified rate and gathers stats.  Increases till it finds the saturation point.</p>
+  </li>
+  <li>
+    <p>Apache Jmeter - Open source measures web application performance</p>
+  </li>
+  <li>
+    <p>Wrk: another tool to put load on your web server and give you latency, requests per second, transer per second, etc details.</p>
+  </li>
+  <li>
+    <p>Locust: Easy to use scriptable and scalable performance testing tool.</p>
+  </li>
+  <li>
+    <p>Python has a built in tool called tracemalloc that can help you review memory usage and spot memory leaks.</p>
+    <ul>
+      <li>see for example here <a href="https://linkedin.github.io/school-of-sre/level102/system_troubleshooting_and_performance/troubleshooting-example/">https://linkedin.github.io/school-of-sre/level102/system_troubleshooting_and_performance/troubleshooting-example/</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="10-system-performance-commands-for-troubleshooting-a-host">10 System performance commands for troubleshooting a host</h2>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">uptime</code> - you already knew everything they had to say about it.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">dmesg | tail</code> - This views the last 10 system messages.  Look for any that may be performance related such as oom-killer.</p>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">vmstat</code> - show multiple statistics and at various intervals since boot
+    <ul>
+      <li>r - number of processes running on CPU and waiting for a turn.  Unlike uptime load averages this does not take runtime into consideration.  An r value greater than cpu count is saturation.</li>
+      <li>free - Free memory in kilobytes.</li>
+      <li>si, so: swap ins and swap outs.  You want these to be low.</li>
+      <li>us, sy, id, wa, st: These are breakdowns of CPU time, on average across all CPUs. User time system time (kernel) idle, wait I/O, and stolen time (by other guests or with Xen the guests own isolated driver domain) for VMs I guess.</li>
+    </ul>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">mpstat -P ALL 1</code> - this command prints CPU time breakdowns per CPU, which can be used to check for an imbalance. A single host CPU can be evidence of a single threaded application.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">pidstat 1</code> - like top for processes but rolling so that you can copy paste for investigation.  The CPU column is cumulative to a value of 1591% means that you are using nearly 16 cores.</p>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">iostat -xz 1</code> - This is a great tool for understanding block devices.
+    <ul>
+      <li>r/s, w/s, rkB/s, wKb/s: These are the delivered reads, writes, read Kbytes and write Kbytes per second to the device.  Use these for workload characterization.</li>
+      <li>await: Average time for IO in milliseconds. Includes both time queues and time being serviced.</li>
+      <li>avgqu-sz: The average number of requests issues to the device.  Values greater than 1 can be evidence of saturation (although devices can typically operate on requests in parallel, especially virtual devices which front multiple back end disks)</li>
+      <li>%util - Device utilization.  This is really a busy percent, showing the time each second that the device was doing work.  Values greater than 60% typically lead to poor performance (which should be seen in await), Values close to 100% usually indicate saturation.</li>
+      <li>100% IO may not necessarily be an issue.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">free -m</code>
+    <ul>
+      <li>buffers: For the buffer cache, used for block device I/O</li>
+      <li>cached: For the page cache, used by file systems.</li>
+      <li>Want to make sure that these numbers are not near 0 which can lead to higher disk I/O (confirm using <code class="language-plaintext highlighter-rouge">iostat</code>) and worse performance.</li>
+      <li>The -/x buffers/cache provides less confusing values for used and free memory.  Linux uses free memory for the caches, but can reclaim it quickly if an application needs it, so cached memory should be included in the free memory column, which this line does.</li>
+      <li>ZFS has its own file system cache that is not reflected properly by free -m columns.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">sar -n DEV 1</code>
+    <ul>
+      <li>Use this tool to check network interface throughput: rxkB/s and txkB/s as a measure of workload and also to check if any limit has been reached.</li>
+      <li>Also has a %ifutil for device utilization (max of both directions for full duplex)</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">sar -n TCP,ETCP 1</code>
+    <ul>
+      <li>This is a summarized view of some key TCP metrics.</li>
+      <li>active/s: number of locally-initiated TCP connections per second (e.g. via connect())</li>
+      <li>passive/s: number of remotely-initiated TCP connections per second (e.g. via accept())</li>
+      <li>retrans/s: Number of TCP retransmits per second.</li>
+      <li>The active passive counts are useful as a rough measure of server load.</li>
+      <li>retransmits are a sign of network or server issue. or may be due to a server being overloaded.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">top</code></li>
+</ul>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

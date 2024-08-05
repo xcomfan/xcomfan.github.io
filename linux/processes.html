@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Process Scheduling and Management | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Process Scheduling and Management" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://localhost:4000/linux/processes" />
+<meta property="og:url" content="http://localhost:4000/linux/processes" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Process Scheduling and Management" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Process Scheduling and Management","url":"http://localhost:4000/linux/processes"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Process Scheduling and Management</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="processes-and-programs">Processes and Programs</h2>
+
+<p>A <strong>process</strong> is an instance of an executing program. A <strong>program</strong>  is a file containing a range of information that describes how to construct a process at run time. This information includes the following. One program can be used to construct many processes.</p>
+
+<ul>
+  <li>
+    <p>Binary format identification - describes the format of the executable file.  In modern systems it is usually ELF (Executable and Linking Format)</p>
+  </li>
+  <li>
+    <p>Machine language instructions</p>
+  </li>
+  <li>
+    <p>Program entry-point address</p>
+  </li>
+  <li>
+    <p>Data values used to initialize variables and literal constants (strings) used by the program.</p>
+  </li>
+  <li>
+    <p>Symbol and relocation tables which describe the location and names of functions and variables within the program. Used for debugging and run time symbol resolution.</p>
+  </li>
+  <li>
+    <p>Shared library and dynamic linking information</p>
+  </li>
+</ul>
+
+<p>From the kernel point of view a process consists of user-space memory containing program code and variables used by that code, and a range of kernel data structures which maintain information about the state of the process.</p>
+
+<h3 id="process-memory-layout">Process memory layout</h3>
+
+<p>A process is logically divided into the following parts, known as segments</p>
+
+<ul>
+  <li>Text - The instructions of the program</li>
+  <li>Data - The static variables used by the program</li>
+  <li>Heap - An area from which programs can dynamically allocate extra memory</li>
+  <li>Stack - A piece of memory that grows and shrinks as functions are called and return and that is used to allocate storage for local variables and function call linkage information.</li>
+</ul>
+
+<h2 id="process-scheduling">Process scheduling</h2>
+
+<p>Linux is a preemptive multitasking operating system.  Multitasking means that multiple processes can simultaneously reside in memory and each may receive use of the CPU(s). Preemptive means that rules governing which processes receive use of the CPU and for how long are determined by the kernel process scheduler (rather than by the processes themselves).</p>
+
+<h2 id="process-creation-and-program-execution">Process creation and program execution</h2>
+
+<p>A process can create a new process using the <code class="language-plaintext highlighter-rouge">fork()</code> system call. The process that calls fork() is referred to as the parent process and the new process is called the child process. The kernel creates the child process by making a duplicate of the parent process. The child inherits copies of the parent’s data, stack and heap segments which it may then modify independently of the parent’s copies. The program text, which is placed in memory marked as read-only, is shared by the two processes. The child process goes on to either execute a different set of functions in the same code as the parent, or frequently to use the <code class="language-plaintext highlighter-rouge">execve()</code> system call to load and execute an entirely new program. <code class="language-plaintext highlighter-rouge">An execve()</code> call destroys the existing text, data, stack and heap segments, replacing them with new segments based on the code of the new program.</p>
+
+<h2 id="process-termination-and-termination-status">Process termination and termination Status</h2>
+
+<p>A process can terminate in one of two ways</p>
+
+<ul>
+  <li>By requesting its own termination using the <code class="language-plaintext highlighter-rouge">_exit()</code> system call or related <code class="language-plaintext highlighter-rouge">exit()</code> library function.</li>
+  <li>By being killed by the delivery of a signal.</li>
+</ul>
+
+<p>In either case the process yields a termination status. A small nonnegative integer value that is available for inspection by the parent process using the <code class="language-plaintext highlighter-rouge">wait()</code> system call. In the case of a call to <code class="language-plaintext highlighter-rouge">_exit()</code> the process explicitly specifies its own termination status. If a processes is killed by a signal the termination status is set based on the type of signal.</p>
+
+<p>By convention termination status of 0 indicates that the process succeeded, and a nonzero status indicates that some error occurred. Most shells make the termination status available in the <code class="language-plaintext highlighter-rouge">$?</code> variable.</p>
+
+<h3 id="the-init-process">The init process</h3>
+
+<p>When booting the system the kernel creates a special process called <code class="language-plaintext highlighter-rouge">init</code> the parent of all processes which is derived from the program file <code class="language-plaintext highlighter-rouge">/sbin/init</code>. All processes on the system are created using <code class="language-plaintext highlighter-rouge">fork()</code> either by <code class="language-plaintext highlighter-rouge">init</code> or one of its decedents. Init process always has the <code class="language-plaintext highlighter-rouge">PID</code> of <code class="language-plaintext highlighter-rouge">1</code> and runs with superuser privileges. Init process cannot be killed even by the superuser and terminates only when system is shut down. The main task of <code class="language-plaintext highlighter-rouge">init</code> is to create and monitor a range of processes required by a running system. For details see the init(8) man page.</p>
+
+<h2 id="process-id-and-parent-process-id">Process ID and Parent Process ID</h2>
+
+<ul>
+  <li>The parent process ID of any process can be found in the <code class="language-plaintext highlighter-rouge">/proc/PID/status</code> file</li>
+  <li>The process family tree can be seen by calling the <code class="language-plaintext highlighter-rouge">pstree</code> command.</li>
+</ul>
+
+<h2 id="command-line-arguments">Command Line Arguments</h2>
+
+<p>Every C program must have a function called main() which is the point where execution of the program starts.</p>
+
+<p>Command line arguments (the separate words parsed by the shell) are made available via two arguments to the function main()</p>
+
+<ul>
+  <li>The first <code class="language-plaintext highlighter-rouge">argc</code> indicates how many arguments we have</li>
+  <li>The second <code class="language-plaintext highlighter-rouge">argv</code> is an array of pointers to the command-line arguments.</li>
+  <li><code class="language-plaintext highlighter-rouge">argv[0]</code> will be the name of the program itself</li>
+</ul>
+
+<p>The command line arguments of any process can be found in <code class="language-plaintext highlighter-rouge">/proc/PID/cmdline</code> file.  A program can access its own command line arguments via <code class="language-plaintext highlighter-rouge">/proc/self/cmdline</code>.</p>
+
+<h2 id="environment-list">Environment List</h2>
+
+<p>A program will inherit the environment list from parent.  This can be used as a very basic version of inter process communication. Within a C program, the environment list can be accessed using the global variable <code class="language-plaintext highlighter-rouge">char **environ</code></p>
+
+<h2 id="process-credentials">Process Credentials</h2>
+
+<p>Every process has a set of associated numeric user identifiers (UIDs) and group identifiers (GIDs).  Sometimes, these are referred to as process credentials. These credentials are as follows.</p>
+
+<ul>
+  <li>real user ID and group ID
+    <ul>
+      <li>Identify the user and group to which the process belongs.</li>
+      <li>As part of login process a login shell gets its real user and group IDs from the third and fourth fields of the user’s password record in <code class="language-plaintext highlighter-rouge">/etc/passwd</code> file.</li>
+      <li>When a new process is created (when shell executes a program), it inherits these identifiers from its parent.</li>
+    </ul>
+  </li>
+  <li>effective user ID and group ID
+    <ul>
+      <li>Normally, the effective user and group IDs have the same values as the corresponding real IDs, but there are two ways in which the effective IDs can assume different values.
+        <ul>
+          <li>via system calls TBD</li>
+          <li>via execution of set-user-ID and set-group-ID programs</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>saved set-user-ID and saved set-group-ID
+    <ul>
+      <li>A set-userID program allows a process to gain privileges it would not normally have, by setting the process’s effective user ID to the same value as the user ID (owner) of the executable file.</li>
+      <li>A set-groupID program tasks with the process effective group ID.</li>
+      <li>These are set with the <code class="language-plaintext highlighter-rouge">chmod +s</code> command</li>
+      <li>When these programs are run the kernel sets the effective user or group ID accordingly.</li>
+      <li>This allows you to grant permissions to a process it would not normally have. For example is program is owned by root and has the suid set, then when you run that program you have root permissions. This works for all users not just root.</li>
+    </ul>
+  </li>
+  <li>file system user ID and group ID
+    <ul>
+      <li>supplementary group IDs
+        <ul>
+          <li>These are the additional groups that a user belongs to and the permissions that are inherited by processes based on that.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>The credentials of any process can be found by examining the Uid, Gid and Groups lines provided in the <code class="language-plaintext highlighter-rouge">/proc/PID/status</code> file. The Uid and Gid lines list the identifiers in the order real, effective, saved set and file system.</p>
+
+<h2 id="resource-limits">Resource limits</h2>
+
+<p>A process can establish upper limits on its consumption of various resources using the <code class="language-plaintext highlighter-rouge">setrlimit()</code> system call. Each resource limit has two associated values.</p>
+
+<ul>
+  <li>A soft limit which limits the amount of resource the process may consume.</li>
+  <li>A hard limit which is a ceiling on the value to which the soft limit may be set.</li>
+</ul>
+
+<p>An unprivileged process may change its soft limit for a particular resource to any value up to the hard limit, but can only lower its hard limit. Resource limits of the shell can be adjusted using the <code class="language-plaintext highlighter-rouge">ulimit</code> command.  These limits are inherited by the child processes that the shell creates to execute commands.</p>
+
+<h2 id="inter-process-communication-and-synchronization">Inter-process Communication and Synchronization</h2>
+
+<p>Linux supports the following methods for processes to communicate with each other</p>
+
+<ul>
+  <li>signals - used to indicate that an event has occurred</li>
+  <li>pipes - FIFOs which can be used to transfer data between processes directly related to the shell <code class="language-plaintext highlighter-rouge">|</code> concept</li>
+  <li>sockets - can be used to transfer data from one file to another either on the same computer or over a network.</li>
+  <li>file locking - allows a process to lock a region of a file in order to prevent other processes from reading or updating the file contents</li>
+  <li>message queues - used to exchange messages (packets of data) between processes.</li>
+  <li>semaphores - used to synchronize the actions of processes</li>
+  <li>shared memory - allows two or more processes to share a piece of memory.  When one process makes a change in memory the other processes instantly see it.</li>
+</ul>
+
+<h3 id="signals">Signals</h3>
+
+<p>Signals are often called software interrupts. The arrival of a signal informs a process that some event or exceptional condition has occurred. Each signal type is identified by a different integer defined with symbolic names of the form <code class="language-plaintext highlighter-rouge">SIGxxxx</code>. Signals can be sent to a process by the kernel, by another process (with suitable permission) or by the process itself.</p>
+
+<p>The kernel can send a signal to a process for any of the following reasons.</p>
+
+<ul>
+  <li>User typed the interrupt character (usually Control-C)</li>
+  <li>one of the processes children has terminated</li>
+  <li>a timer (alarm clock) set by the process has expired</li>
+  <li>the process attempted to access an invalid memory address.</li>
+  <li>Within the shell the kill command and the kill() system call can be used to send a signal to a process.</li>
+</ul>
+
+<p>When a process receives a signal it takes one of the following actions depending on the signal.</p>
+
+<ul>
+  <li>it can ignore the signal</li>
+  <li>it can be killed by the signal</li>
+  <li>it can be suspended until later being resumed by receipt of a special-purpose signal.</li>
+  <li>It can run a signal handler to act on the signal.</li>
+</ul>
+
+<p>signal handler is a function that is automatically invoked when a signal is called.</p>
+
+<p>The interval between the time a signal is generated and the time it is delivered the signal is said to be pending for a process. Normally a pending signal is delivered as soon as the receiving process is scheduled to run or immediately if the process is already running. It is also possible to block a signal by adding it to the processes signal mask. If a signal is generated while it is blocked, it remains pending until it is later unblocked.(removed from signal mask)</p>
+
+<h2 id="threads">Threads</h2>
+
+<p>Each process can have multiple threads of execution. Threads can be though of as processes that share the same virtual memory as well as other attributes. Each thread executes the same program code and shares the same data area and heap, however each thread has its own stack containing local variables and function call linkage information. Threads can communicate with each other via the global variables they share. The threading API provides condition variables and mutexes which are primitives that enable threads of a process to communicate and synchronize their actions. Threads can also communicate with each other using the IPC and synchronization mechanism.</p>
+
+<h2 id="process-groups-and-shell-job-control">Process Groups and Shell Job Control</h2>
+
+<p>Each program executed by the shell is started in a new process. All major shells except the Bourne shell provide an interactive feature called job control which allows a user to simultaneously execute and manipulate multiple commands or pipelines. In job control shells, all of the processes in a pipeline are placed in a new process group or job. Each process in a process group has the same integer process group identifier which is the same as one of the process IDs of one of the processes in the group.  This process is called the process group leader. Kernel allows for signals to be delivered to on all members of a process group.  Job control shells use this feature to allow the user to suspend or resume all of the processes in a pipeline.</p>
+
+<h2 id="sessions-controlling-terminals-and-controlling-processes">Sessions, Controlling Terminals, and Controlling Processes</h2>
+
+<p>A session is a collection of process groups (jobs).  All of the processes in a session have the same session identifier. A session leader is the process that created the session, and its process ID becomes the session ID. Sessions are used mainly by job control shells. All of the process groups created by a job-control shell belong to the same session as the shell, which is the session leader. Sessions usually have an associated controlling terminal. The controlling terminal is established when the session leader process first opens a terminal device. For a session created by an interactive shell, this is the terminal at which the user logged in. A terminal may be the controlling terminal of at most one session. As a consequence of opening the controlling terminal, the session leader becomes the controlling process for the terminal. The controlling process receives a SIGHUP signal if a terminal disconnect occurs. At any point in time, one process group in a session is the foreground process group (foreground job) which may read input from the terminal and send output to it. If the user types the interrupt character (usually Control-C) or the suspend character (usually Control-Z) on the controlling terminal, then the terminal driver sends a signal that kills or suspends (stops) the foreground process group. A session can have any number of background process groups (backend jobs), which are created by terminating a command with the ampersand (&amp;) character.</p>
+
+<h2 id="process-information">Process Information</h2>
+
+<h3 id="the-proc-file-system">The /proc File System</h3>
+
+<p><code class="language-plaintext highlighter-rouge">/proc</code> is a virtual file system that provides an interface to kernel data structures in a form that looks like files and directories. <code class="language-plaintext highlighter-rouge">/proc/PID</code> allows you to view information about each process running on the system. In most cases a process must be privileged to write to the <code class="language-plaintext highlighter-rouge">/proc</code> directory.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">init</code> process has a PID of 1 and details for it can always be fond under <code class="language-plaintext highlighter-rouge">/proc/1</code></p>
+
+<p>There is a file at <code class="language-plaintext highlighter-rouge">/proc/PID/status</code> that provides a lot of information about a process in one file.</p>
+
+<p>Generally it is recommended to use grep to parse files in the <code class="language-plaintext highlighter-rouge">/proc/PID</code> directory instead of looking for a specific line as the order can vary.</p>
+
+<p>Below are some notable files in the /proc/PID directory</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>cmdline</td>
+      <td>command line arguments delimited by <code class="language-plaintext highlighter-rouge">\0</code></td>
+    </tr>
+    <tr>
+      <td>cwd</td>
+      <td>Symbolic link to current working directory</td>
+    </tr>
+    <tr>
+      <td>environ</td>
+      <td>Environment list <code class="language-plaintext highlighter-rouge">NAME=value</code> pairs, delimited by <code class="language-plaintext highlighter-rouge">\0</code></td>
+    </tr>
+    <tr>
+      <td>exe</td>
+      <td>Symbolic link to file being executed</td>
+    </tr>
+    <tr>
+      <td>fd</td>
+      <td>Directory containing symbolic links to files opened by this process</td>
+    </tr>
+    <tr>
+      <td>maps</td>
+      <td>Memory mappings</td>
+    </tr>
+    <tr>
+      <td>mem</td>
+      <td>Process virtual memory (must <code class="language-plaintext highlighter-rouge">lseek()</code> to valid offset before I/O)</td>
+    </tr>
+    <tr>
+      <td>mounts</td>
+      <td>Mount points for this process</td>
+    </tr>
+    <tr>
+      <td>root</td>
+      <td>Symbolic link to root directory</td>
+    </tr>
+    <tr>
+      <td>status</td>
+      <td>Various information (process IDs, credentials, memory usage, signals)</td>
+    </tr>
+    <tr>
+      <td>task</td>
+      <td>Contains one subdirectory for each thread in process</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="the-procpidfd-directory">The /proc/PID/fd directory</h3>
+
+<p>Each symbolic link found in the <code class="language-plaintext highlighter-rouge">/proc/PID/fd</code> directory has a name that matches the descriptor number; for example <code class="language-plaintext highlighter-rouge">/proc/1968/fd/1</code> is a symbolic link to the standard output of process 1968.</p>
+
+<p>As a convenience a process can access its own /proc/PID directory using the symbolic link <code class="language-plaintext highlighter-rouge">/proc/self</code></p>
+
+<h3 id="threads-the-procpidtask-directory">Threads: the /proc/PID/task directory</h3>
+
+<p>Under <code class="language-plaintext highlighter-rouge">/proc/PID/task/TID</code> (where <code class="language-plaintext highlighter-rouge">TID</code> stands for Thread ID) is a set of files and directories exactly like those that are found under /proc/PID. Since threads share many attributes with their parent you will have a similar layout, but you will also have distinct information there.</p>
+
+<h3 id="system-information-under-proc">System Information Under /proc</h3>
+
+<p>Various files and subdirectories under /proc provide system wide information.  Some of these are…</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">/proc</code> - Various system information</li>
+  <li><code class="language-plaintext highlighter-rouge">/proc/net</code> - Status information about networking and sockets</li>
+  <li><code class="language-plaintext highlighter-rouge">/proc/sys/fs</code> - Settings related to file systems</li>
+  <li><code class="language-plaintext highlighter-rouge">/proc/sys/kernel</code> - Various general kernel settings</li>
+  <li><code class="language-plaintext highlighter-rouge">/proc/sys/net</code> - Networking and sockets settings</li>
+  <li><code class="language-plaintext highlighter-rouge">/proc/sys/vm</code> - Memory management settings</li>
+  <li><code class="language-plaintext highlighter-rouge">/proc/sysvipc</code> - Information about System V IPC objects</li>
+</ul>
+
+<h3 id="accessing-proc-file">Accessing /proc File</h3>
+
+<p>It’s a common practice to access files in <code class="language-plaintext highlighter-rouge">/proc</code> as part of scripts. Some files under <code class="language-plaintext highlighter-rouge">/proc</code> will be read only. Some <code class="language-plaintext highlighter-rouge">/proc</code> files can only be accessed by the file owner or a privileged process. Other than the files owned by the owner of a process most files under <code class="language-plaintext highlighter-rouge">/proc</code> will be owned by root</p>
+
+<h2 id="signals-fundamental-concepts">Signals Fundamental Concepts</h2>
+
+<h3 id="concepts-and-overview">Concepts and overview</h3>
+
+<p>A signal is a notification to a process that an event has occurred. Signals are sometimes described as <strong>software interrupts</strong>. Signals are analogous to hardware interrupts in that they interrupt the normal flow of execution of a program. In most cases it is not possible to predict exactly when a signal will arrive. One process can (if it has permission) send a signal to another process. In this use case signals can be employed as a synchronization technique, or even as a primitive form of inter process communication. It is also possible for a process to send a signal to itself. The usual source of many signals sent to a process is from the kernel. The following are some events that can cause kernel to send a signal to a process.</p>
+
+<ul>
+  <li>A hardware exception occurred, meaning that the hardware detected a fault condition that was notified to the kernel which in turn sent a corresponding signal to the process concerned. Examples of hardware exceptions are …
+    <ul>
+      <li>executing a malformed machine language instruction</li>
+      <li>dividing by 0</li>
+      <li>referencing part of memory that is inaccessible.</li>
+      <li>User typing one of the terminal characters that generate signals.</li>
+      <li>interrupt usually Control-C or suspend usually Control-Z</li>
+      <li>A software event occurred.  For example, input became available on a file descriptor, the terminal window has resized, a timer went off, the process’s CPU time limit was exceeded, or a child of this process terminated.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Each signal is defined as a unique (small) integer, starting sequentially form 1. These integers are defined in <code class="language-plaintext highlighter-rouge">signal.h</code> with symbolic names of the form <code class="language-plaintext highlighter-rouge">SIGxxxx</code>. Since the actual number vary in implementations the symbolic names are used in programs.</p>
+
+<p>Signals fall into two broad categories. The first set contains the traditional or standard  signals, which are used by the kernel to notify processes of vents. On Linux the standard signals are numbered from 1 to 31. The second set consists of realtime signals.</p>
+
+<p>A signal is said to be generated by some event. Once generated, a signal is later delivered to a process which then takes some action in response to the signal. Between the time a signal is generated and the time it is delivered, a signal is said to be <strong>pending</strong>. Normally a pending signal is delivered to a process as soon as it is next scheduled to run or immediately if the process is already running (if process sent a signal to itself). Sometimes you need to make sure a segment of code is not interrupted by a signal. To do so we can add a signal to the process’s signal mask (a set of signals whose delivery is blocked). If a signal is generated while its blocked it remains pending until it is later unblocked (removed from signal mask). Upon delivery of a signal, a process carries out one of the following default actions, depending on the signal.</p>
+
+<ul>
+  <li>The signal is ignored; that is it is discarded by the kernel and has no effect on the process (The process never knows that it occurred).</li>
+  <li>The process is terminated (killed).  This is sometimes referred to as abnormal process termination.  As opposed to normal process exit via exit() call.</li>
+  <li>A core dump file is generated, and the process is terminated. A core dump file contains an image of the virtual memory of the process which can be loaded into a debugger in order to inspect the state of the process at the time that it terminated.</li>
+  <li>The process is stopped - execution of the process is suspended.</li>
+  <li>Execution of the process is resumed after previously being stopped.</li>
+  <li>Instead of accepting the default for a particular signal, a program can change the action that occurs when the signal is delivered. This is known as setting the disposition of the signal. A program can set one of the following dispositions for a signal.
+    <ul>
+      <li>The default action should occur.  This is useful to undo an earlier change of the disposition of the signal to something other than its default.</li>
+      <li>The signal is ignored - this is useful for a signal whose default action would be to terminate the process.</li>
+      <li>A signal handler is executed. A signal handler is a function, written by the programmer that performs appropriate tasks in response to the delivery of a signal. For example the shell has a handler for the <code class="language-plaintext highlighter-rouge">SIGINT</code> signal generated by the interrupt character Contorl-C that causes it to stop what it is currently doing and return control to the main input loop. Notifying the kernel that a handler function should be invoked is usually referred to as installing or establishing a signal handler. When a signal handler is invoked in response to the delivery of a signal, we say that the signal has been handled or caught.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Signal delivery is typically asynchronous, meaning that the point at which the signal interrupts execution of the process is unpredictable.</p>
+
+<h3 id="signal-types-and-default-actions">Signal types and default actions</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Signal</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SIGABRT</td>
+      <td>A process is sent this signal when it calls the abort() function. By default this signal terminates the process with a core dump. This is used to exit a process with a core dump for debugging.</td>
+    </tr>
+    <tr>
+      <td>SIGALRM</td>
+      <td>The kernel generates this signal upon the expiration of a real-time timer set by a call to alarm() or settimer(). A real timer is one that counts according to wall clock time.</td>
+    </tr>
+    <tr>
+      <td>SIGBUS</td>
+      <td>This signal is generated to indicate certain kinds of memory access errors. For example if you try to access memory outside the memory mapped file allocated to your process.</td>
+    </tr>
+    <tr>
+      <td>SIGCHLD</td>
+      <td>This signal is sent by the kernel to a parent process when on of its children terminates. It may also be sent to a process when one of its children is stopped or resumed by a signal.</td>
+    </tr>
+    <tr>
+      <td>SIGCONT</td>
+      <td>When sent to a stopped process this signal causes the process to resume. When received by a process that is not currently stopped, this signal is ignored by default. A process may catch this signal so that it carries out some action when resumed.</td>
+    </tr>
+    <tr>
+      <td>SIGFPE</td>
+      <td>This signal is generated for certain types of arithmetic error such as divide by 0. FPE stands for floating point error.</td>
+    </tr>
+    <tr>
+      <td>SIGHUP</td>
+      <td>When a terminal disconnect (hangup) occurs, this signal is sent to the controlling process of the terminal. A second use of SIGHUP is with daemons. Many daemons are designed to respond to the receipt of a SIGHUP by re-initializing themselves and rereading their configuration files.</td>
+    </tr>
+    <tr>
+      <td>SIGINT</td>
+      <td>When the user types the terminal interrupt character (usually Control-C) the terminal driver sends this signal to the foreground process group. The default action for this signal is to terminate the process.</td>
+    </tr>
+    <tr>
+      <td>SIGKILL</td>
+      <td>This is the sure kill signal. It can’t be blocked, ignored, or caught by a handler, and thus always terminates a process.</td>
+    </tr>
+    <tr>
+      <td>SIGPIPE</td>
+      <td>This signal is generated when a process tries to write to a pipe, a FIFO or a socket for which there is no corresponding reader process.  This normally occurs because the reading process has closed its file descriptor for the IPC channel.</td>
+    </tr>
+    <tr>
+      <td>SIGQUIT</td>
+      <td>When user types the quit character (usually Control-) on the keyboard this signal is sent to the foreground process group. By default this terminates the process and causes it to produce a core dump.  Using SIGQUIT in this manner is useful for debugging a program stuck in an infinite loop.</td>
+    </tr>
+    <tr>
+      <td>SIGSEGV</td>
+      <td>This very popular signal is generated when a program makes an invalid memory reference. A memory reference may be invalid because it references a page that doesn’t exist.</td>
+    </tr>
+    <tr>
+      <td>SIGSTOP</td>
+      <td>This is the sure stop signal. It can’t be blocked, ignored, or caught by a handler; thus it always stops a process.</td>
+    </tr>
+    <tr>
+      <td>SIGTERM</td>
+      <td>This is the standard signal used for terminating a process and is the default signal sent by the kill and killall commands. A well designed application will have a handler for SIGTERM that causes the application to exist gracefully. Killing a process with SIGKILL bypasses the SIGTERM handler.</td>
+    </tr>
+    <tr>
+      <td>SIGTRAP</td>
+      <td>This signal is used to implement debugger breakpoints and system call tracing as performed by strace()</td>
+    </tr>
+    <tr>
+      <td>SIGSTP</td>
+      <td>This is the job control stop signal, sent to stop the foreground process group when the user types the suspend character (usually Control-Z) on the keyboard.  The name of this signal is derived form erminal Stop</td>
+    </tr>
+    <tr>
+      <td>SIGURG</td>
+      <td>This signal is sent to a process to indicate the presence of out of band (also known as urgent) data on a socket.</td>
+    </tr>
+    <tr>
+      <td>SIGXCPU</td>
+      <td>This signal is sent to a process when it exceeds its CPU time resource limit (RLIMIT_CPU)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="introduction-to-signal-handlers">Introduction to signal handlers</h3>
+
+<p>A signal handler also knows as a signal catcher is a function that is called when a specified signal is delivered to a process. Invocation of a signal handler may interrupt the main program flow at any time; the kernel calls the handler on the process’s behalf, and when the handler returns, execution of the program resumes at the same point where the handler interrupted it. When the kernel invokes a signal handler, it passes the number of the signal that caused the invocation as an integer argument to the handler. We can establish the same handler to catch different types of signals and use this argument to determine which signal caused the handler to be invoked.</p>
+
+<h3 id="sending-signals-kill">Sending signals: kill()</h3>
+
+<p>One process can send a signal to another process using the <code class="language-plaintext highlighter-rouge">kill()</code> system call, which is the analog of the kill shell command. The term kill was chosen because the default action for most signals in early Unix systems was to kill the process. The PID argument identifies one or more processes to which the signal is to be sent. Four different cases determine how PID is interpreted.</p>
+
+<ul>
+  <li>If PID is greeter than 0, the signal is sent to the process with the process ID specified by PID</li>
+  <li>If PID equals 0, the signal is sent to every process in the same process group as the calling process, including the calling process itself.</li>
+  <li>If PID is less than -1, the signal is sent to all of the processes in the process group whose ID equals the absolute value of the PID.  Sending a signal to all of the processes in a group finds particular use in shell job control.</li>
+  <li>If PID equals -1, the signal is sent to every process for which the calling process has permission to send a signal, except init (process ID 1) and the calling process. If a privileged process makes this call, then all processes on the system will be signaled, except for these last two. For obvious reasons, signals sent in this way are sometime called broadcast signals.</li>
+</ul>
+
+<p>The init process (process ID 1), which runs with user and group of root, is a special case.  It can be sent only signals for which it has a handler installed. This prevents the system admin from accidentally killing init, which is fundamental to the operation of the system.</p>
+
+<p>An unprivileged process can send a signal to another process if the real or effective user ID of the sending process matches the real user ID or saved set user-ID of the receiving process. This rule allows users to send signals to set-user-ID programs that they have started, regardless of the current setting of the target process’s effective user ID.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">SIGCONT</code> signal is treated specially. An unprivileged process may send this signal to any other process in the same session, regardless of user ID checks. This rule allows job-control shells to restart stopped jobs (process groups), even if the processes of the job have changed their user IDs. (i.e. they are privileged processes that have used system calls).</p>
+
+<h3 id="checking-or-existence-of-a-process">Checking or existence of a process</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">kill()</code> system call can serve another purpose. If the sig argument is specified as 0 (the so-called null signal), then no signal is sent. Instead <code class="language-plaintext highlighter-rouge">kill()</code> merely performs error checking to see if the process can be signaled.  This means that we can use the null signal to see if a process with a specific ID exists. If sending a null signal fails with the error <code class="language-plaintext highlighter-rouge">ESRCH</code>, then we know the process doesn’t exist. If the call fails with the error <code class="language-plaintext highlighter-rouge">EPERM</code> (meaning the process exists, but we don’t have permission to it) or succeeds (meaning we do have permission to it) then we know the process exists.</p>
+
+<p>Other techniques can be used to check whether a particular process is running, including the following.</p>
+
+<ul>
+  <li>Semaphores and exclusive file locks: if the process that is being monitored continuously holds a semaphore or a file lock, then, if we can acquire the semaphore or lock, we know the process has terminated.</li>
+  <li>The /proc/PID interface. If the process with the process ID exists than /proc/ID will exist and we can check for that with a <code class="language-plaintext highlighter-rouge">stat()</code> call.</li>
+</ul>
+
+<h3 id="the-signal-mask-blocking-signal-delivery">The signal mask (blocking signal delivery)</h3>
+
+<p>For each  process, the kernel maintains a signal mask:k a set of signals whose delivery to the process is currently blocked. If a signal that is blocked is sent to a process, delivery of that signal is delayed until it is unblocked by being removed rom the process signal mask.</p>
+
+<p>A signal may be added to the signal mask in the following ways.</p>
+
+<ul>
+  <li>When a signal handler is invoked, the signal that caused its invocation can be automatically added to the signal mask. Whether or not this occurs depends on the flags used when the handler is established using <code class="language-plaintext highlighter-rouge">sigaction()</code></li>
+  <li>When a signal handler is established with <code class="language-plaintext highlighter-rouge">sigaction()</code> it is possible to specify an additional set of signals that are to be blocked when the handler is invoked. The <code class="language-plaintext highlighter-rouge">sigprocmask()</code> system call can be used at any time to explicitly add signals to, and remove signals from, the signal mask. If we unblock a pending signal it is delivered to the process immediately.</li>
+</ul>
+
+<p>Attempts to block SIGKILL and SIGSTOP are silently ignored. If we attempt to block these signals, <code class="language-plaintext highlighter-rouge">sigprocmask()</code> neither honors the request nor generates an error.</p>
+
+<h3 id="pending-signals">Pending Signals</h3>
+
+<p>If a process receives a signal that it is currently blocking, that signal is added to the process’s set of pending signals.  When and if the signal is later unblocked, it is then delivered to the process.</p>
+
+<h3 id="signals-are-not-queued">Signals are not queued</h3>
+
+<p>The set of pending signals is only a mask. It indicates whether or not a signal has occurred, but not how many times it has occurred. In other words, if the same signal is generated multiple times while it is blocked, then it is recorded in the set of pending signals, and later delivered, just once.</p>
+
+<p>A blocked signal is delivered only once, no matter how may times it is generated. Even if a process doesn’t block signals, it may receive fewer signals than are sent to it. This can happen if the signals are sent so fast they arrive before the receiving process has a chance to be scheduled for execution by the kernel, with the result that the multiple signals are recorded just once in the process’s pending signal set.</p>
+
+<h3 id="waiting-for-a-signal-pause">Waiting for a signal: pause()</h3>
+
+<p>Calling <code class="language-plaintext highlighter-rouge">pause()</code> suspends execution of the process until the call is interrupted by a signal handler (or until an unhandled signal terminates the process)</p>
+
+<h2 id="signal-handlers">Signal handlers</h2>
+
+<h3 id="designing-signal-handlers">Designing Signal Handlers</h3>
+
+<p>The signal handler sets a global flag and exits. The main program periodically checks this flag, and if it is set, takes appropriate action. The signal handler performs some type of cleanup and then either terminates the process or uses a non-local goto to unwind the stack and return control to a predetermined location in the main program.</p>
+
+<h3 id="signals-are-not-queued-revisited">Signals Are Not Queued (Revisited)</h3>
+
+<p>If the signal is generated more than once while the handler is executing, then it is still marked as pending, and it will later be delivered only once. We can’t reliably count the number of times a signal is generated. Furthermore, we may need to code our signal handlers to deal with the possibility that multiple events of the type corresponding to the signal have occurred.</p>
+
+<h3 id="reentrant-and-async-signal-safe-functions">Reentrant and Async-Signal Safe Functions</h3>
+
+<h4 id="reentrant-and-non-reentrant-functions">Reentrant and non-reentrant functions</h4>
+
+<p>The main program and the signal handler in effect form two independent (although not concurrent) threads of execution within the same process. A function is said to be reentrant if it can safely be simultaneously executed by multiple threads of execution in the same process. In this context “safe” means that the function achieved its expected result, regardless of the state of execution of any other thread of execution. A function may be non-reentrant if it updates global o static data structures.</p>
+
+<h4 id="standard-async-signal-safe-functions">Standard async-signal safe functions</h4>
+
+<p>An async-signal-safe function is one that the implementation guarantees to be safe when called from a signal handler. A function is async-signal-safe either because it is reentrant or because it is not interruptible by a signal handler.</p>
+
+<p>When writing signal handlers we have two choices</p>
+
+<ul>
+  <li>Ensure that the code of the signal handler itself is reentrant and that it calls only async-signal-safe functions.</li>
+  <li>Block delivery of signals while executing code in the main program that calls unsafe functions or works with global data structures also updated by the signal handler.</li>
+</ul>
+
+<p>We must not call unsafe functions from within a signal handler.</p>
+
+<h3 id="other-methods-of-terminating-a-signal">Other Methods of Terminating a Signal</h3>
+
+<ul>
+  <li>Use <code class="language-plaintext highlighter-rouge">_exit()</code> to terminate the process. Beforehand, the handler may carry out some cleanup actions. Note that we can’t use <code class="language-plaintext highlighter-rouge">exit()</code> to terminate a signal handler, because it is not one of the safe functions. It is unsafe because it flushes stdio  buffers prior to calling <code class="language-plaintext highlighter-rouge">_exit()</code>.</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">kill()</code> or <code class="language-plaintext highlighter-rouge">raise()</code> to send a signal that kills the process (i.e. signal whose default action is process termination).</li>
+  <li>Perform a non-local GoTo from the signal handler.</li>
+  <li>Use the abort() function to terminate the process with a core dump.</li>
+</ul>
+
+<h2 id="signals-advanced-features">Signals Advanced Features</h2>
+
+<h3 id="core-dump-files">Core dump files</h3>
+
+<table>
+  <tbody>
+    <tr>
+      <td>One way of causing a program to produce a core dump is to type the quit character (usually Control -</td>
+      <td>), which causes the <code class="language-plaintext highlighter-rouge">SIGQUIT</code> signal to be generated:</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ulimit</span> <span class="nt">-c</span> unlimited <span class="c"># see below why this is needed.</span>
+<span class="nv">$ </span><span class="nb">sleep </span>30
+Type Control - |
+Quit <span class="o">(</span>core dumped<span class="o">)</span>
+<span class="nb">ls</span> <span class="nt">-l</span> core
+<span class="nt">-rw--------</span> 1 mtc <span class="nb">users </span>57344 Nov 30 12:39 core
+</code></pre></div></div>
+
+<p>The core dump file gets created in the working directory of the process with the name core. The <code class="language-plaintext highlighter-rouge">/prox/sys/kernel/core_pattern</code> file controls the naming of all core dump files produced on the system. By default this file contains the string core.  A privileged user can define this file to use format specifiers.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Format Specifier</th>
+      <th>Replaced By</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>%c</td>
+      <td>Core file size soft resource limit (bytes; since Linux 2.6.24)</td>
+    </tr>
+    <tr>
+      <td>%e</td>
+      <td>Executable filename without prefix</td>
+    </tr>
+    <tr>
+      <td>%g</td>
+      <td>Read group ID of dumped process</td>
+    </tr>
+    <tr>
+      <td>%h</td>
+      <td>Name of host system</td>
+    </tr>
+    <tr>
+      <td>%p</td>
+      <td>Process ID of dumped process</td>
+    </tr>
+    <tr>
+      <td>%s</td>
+      <td>Number of signal that terminated process</td>
+    </tr>
+    <tr>
+      <td>%t</td>
+      <td>Time of dump, in seconds since epoch</td>
+    </tr>
+    <tr>
+      <td>%u</td>
+      <td>Read user ID of dumped process</td>
+    </tr>
+    <tr>
+      <td>%%</td>
+      <td>A single % character</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Circumstances in which core dump files are not produced</p>
+
+<ul>
+  <li>The process doesn’t have permission to write the core dump file. No write permission to directory or core file exists already and no permission to over write.</li>
+  <li>A regular file with the same name already exists.</li>
+  <li>The directory in which the core dump file is to be created doesn’t exist.</li>
+  <li>The process resource limit on the size of a core dump file is set to 0.</li>
+  <li>In example above we use ulimit command to ensure that there is no limit on the size of core files.</li>
+  <li>The binary executable file that the process is executing doesn’t have read permission enabled. This prevents users from using a core dump to obtain a copy of the code of a program that they would otherwise be unable to read.</li>
+  <li>The file system on which the current working directory resides is mounted read-only, if full, or has run out of i-nodes.  Alternatively the user has reached their quota limit on the file system.</li>
+  <li>Set-user-ID programs executed by a user other than the file owner (group owner) don’t generate core dumps. This prevents malicious users from dumping memory of a secure program and examining it for sensitive information such as passwords.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">/proc/PID/coredump_filter</code> can be used on a per process basis to determine which types of memory mappings are written to a core dump file. The value in this file is a mask of four bits corresponding to the four types of memory mappings outlined below. The default value of the file provides traditional Linux behavior: only private anonymous and shared anonymous mappings are dumped.
+    <ul>
+      <li>private anonymous mappings</li>
+      <li>private file mappings</li>
+      <li>shared anonymous mappings</li>
+      <li>shared file mappings</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="special-cases-for-delivery-disposition-and-handling">Special Cases for Delivery, Disposition, and Handling</h3>
+
+<h4 id="sigkill-and-sigstop">SIGKILL and SIGSTOP</h4>
+
+<p>It is not possible to change the default action for SIGKILL, which always terminates a process, and SIGSTOP which always stops a process. These two signals also can’t be blocked.  This is a deliberate design decision.  Disallowing changes to the default actions of these signals means that they can always be used to kill or stop a runaway process.</p>
+
+<h4 id="sigcont-and-stop-signals">SIGCONT and stop signals</h4>
+
+<p>If a process is currently stopped, the arrival of a SIGCONT signal always causes the process to resume, even if the process is currently blocking or ignoring SIGCONT. This feature is necessary because it would otherwise be impossible to resume such stopped processes.  (if the stopped process was blocking SIGCONT, and had established a handler for SIGCONT, then after the process is resumed, the handler is invoked only when SIGCONT is later unblocked)</p>
+
+<p>If any other signal is sent to a stopped process, the signal is not actually delivered to the process until it is resumed via receipt of a SIGCONT signal. The one exception is SIGKILL, which always kills a process even one that is currently stopped.</p>
+
+<p>Whenever SIGCONT is delivered to a process, any pending stop signals for the process are discarded (i.e, the process never sees them). Conversely if any of the stop signals is delivered to a process, then any pending SIGCONT signal is automatically discarded. These steps are taken in order to prevent the action of SIGCONT signal from being subsequently undone by a stop signal that was actually sent beforehand, and vice versa.</p>
+
+<h3 id="interruptible-and-uninterruptible-process-sleep-states">Interruptible and Uninterruptible Process Sleep States</h3>
+
+<p>At various times the kernel may put a process to sleep, and the two sleeps states are distinguished:</p>
+
+<h4 id="task_interuptible">TASK_INTERUPTIBLE</h4>
+
+<p>The process is waiting for some event. For example, it is waiting for terminal input, for data to be written to a currently empty pipe, or for the value of a System V semaphore to be increased. A process may spend an arbitrary length of time in this state. If a signal is generated for a process in this state, then the operation is interrupted and the process is woken up by the delivery of a signal. When listed by ps(1) process in the <code class="language-plaintext highlighter-rouge">TASK_INTERRUPTIBLE</code> state are marked by the letter S in the STAT (process state) field.</p>
+
+<h4 id="task_uninterruptible">TASK_UNINTERRUPTIBLE</h4>
+
+<p>The process is waiting on certain special classes of event such as the completion of a disk I/O. If a signal is generated for a process in this state, then the signal is not delivered until the process emerges from this state. Processes in the <code class="language-plaintext highlighter-rouge">TASK_UNINTERRUPTIBLE</code> state are listed by ps(1) with a D in the STATE field.</p>
+
+<p>Because a process normally spends only very brief periods in the <code class="language-plaintext highlighter-rouge">TASK_UNINTERRUPTIBLE</code> state, the fact that a signal is delivered only when the process leaves this state is invisible. However in rare circumstances a process may remain hung in this state. This can happen as a result of a hardware failure, an NFS problem, or a kernel bug. In such cases, SIGKILL won’t terminate the hung process. If the underlying problem can’t otherwise be resolved, then we must restart the system in order to eliminate the process.</p>
+
+<p>Starting with kernel 2.6.25, Linux adds a third state <code class="language-plaintext highlighter-rouge">TASK_KILLABLE</code> This state is like <code class="language-plaintext highlighter-rouge">TASK_UNINTERRUPTILBE</code>, but wakes the process if a fatal signal (i.e, one that would kill the process is received) By converting relevant parts of the kernel code to use this state, various scenarios where a hung process requires a system restart can be avoided.</p>
+
+<h3 id="hardware-generated-signals">Hardware generated signals</h3>
+
+<p><code class="language-plaintext highlighter-rouge">SIGBUS</code>, <code class="language-plaintext highlighter-rouge">SIGFPE</code>, <code class="language-plaintext highlighter-rouge">SIGILL</code>, and <code class="language-plaintext highlighter-rouge">SIGSEGV</code> can be generated as a consequence of a hardware exception or less usually by being sent by kill. In the case of a hardware exception, SUSv3 specified that the behavior of a process is undefined if it returns from a handler for the signal, or if it ignores or blocks the signal. The reason for this is as follows. The correct way to deal with hardware generated signals is to either accept their default action (process termination) or to write handlers that don’t perform a normal return.  The reasons for this are detailed below.</p>
+
+<h4 id="returning-from-the-signal-handler">Returning from the signal handler.</h4>
+
+<p>Suppose that a machine-language instruction generates one of these signals, and a signal handler is consequently invoked. On normal return from the handler, the program attempts to resume execution at the point where it was interrupted. But this is the very instruction that generated the signal in the first place, so the signal is generated once more. The consequence is usually that the program goes into an infinite loop, repeatedly calling the signal handler.</p>
+
+<h4 id="ignoring-the-signal">Ignoring the signal</h4>
+
+<p>It makes little sense to ignore a hardware-generated signal, as it is unclear how a program should continue execution after, say an arithmetic exception. When one of these signals is generated as a consequence of a hardware exception, Linux forces its delivery, even if the program has requested that the signal be ignored.</p>
+
+<h4 id="blocking-the-signal">Blocking the signal</h4>
+
+<p>As with the previous case, it makes little sense to block a hardware-generated signal, as it is unclear how a program should then continue execution. On Linux 2.4 and earlier, the kernel simply ignores attempts to block a hardware-generated signal; the signal is delivered to the process anyway, and then either terminates the process or is caught by a signal handler, if one has been established. Starting with Linux 2.6, if the signal is blocked, then the process is always immediately killed by that signal, even I the process has installed a handler for the signal.</p>
+
+<h3 id="timing-and-order-of-signal-delivery">Timing and Order of Signal Delivery</h3>
+
+<h4 id="when-is-a-signal-delivered">When is a signal delivered?</h4>
+
+<p>When a process sends itself a signal using raise(), the signal is delivered before the raise() call returns. When a signal is generated asynchronously, there may be a (small) delay while the signal is pending between the time when it was generated and the time it is actually delivered, even if we have not blocked the signal. The reason for this is that the kernel delivers a pending signal to a process only at the next switch from kernel mode to user mode while executing that process. In practice this means the signal is delivered at one of the following times. When the process is rescheduled after it earlier timed out (i.e at the start of a time slice) or at completion of a system call (delivery of the signal may cause blocking system call to complete prematurely)</p>
+
+<h4 id="order-of-delivery-of-multiple-unblocked-signals">Order of delivery of multiple unblocked signals</h4>
+
+<p>As currently implemented, the Linux kernel delivers the signals in ascending order. For example, if pending <code class="language-plaintext highlighter-rouge">SIGINT</code> (signal 2) and <code class="language-plaintext highlighter-rouge">SIGQUIT</code> (signal 3) were both simultaneously unblocked then SIGINT would be delivered before <code class="language-plaintext highlighter-rouge">SIGQUIT</code>, regardless of the order in which the two signals were generated. We can’t rely on (standard) signals being delivered in any particular order, since SUSv3 says that delivery order of multiple signals is implementation defined. When multiple unblocked signals are awaiting delivery, if a switch between kernel mode and user mode occurs during the execution of a signal handler, then the execution of that handler will be interrupted by the invocation of a second signal handler (and so on).</p>
+
+<h4 id="realtime-signals">Realtime signals</h4>
+
+<p>Realtime signals were defined in POSIX.1b to remedy a number of limitation of standard signals. They have the following advantages over standard signals. Realtime signals provide an increased range of signals that can be used for application-defined purposes. Only two standard signals are freely available for application-defined purposes: <code class="language-plaintext highlighter-rouge">SIGUSR1</code> and <code class="language-plaintext highlighter-rouge">SIGUSER2</code></p>
+
+<p>Realtime signals are queued. If multiple instances of a realtime signal are sent to a process, then the signal is delivered multiple times. By contrast if we send further instances of a standard signal that is already pending for a process, that signal is delivered only once.</p>
+
+<p>When sending a realtime signal, it is possible to specify data (an integer or pointer value) that accompanies the signal.  The signal handler in the receiving process can retrieve this data. The order of delivery of different realtime signals is guaranteed.  If multiple different realtime signals are pending, then the lowest numbered signal is delivered first. In other words, signals are prioritized with lower numbered signals having higher priority. When multiple signals of the same type are queued, they are delivered along with their accompanying data in the order which they were sent.</p>
+
+<h5 id="limits-on-the-number-of-queued-signals">Limits on the number of queued signals</h5>
+
+<p>Queuing realtime signals (with associated data) requires that the kernel maintain data structures listing the signals queued to each process. Since the data structures consume kernel memory, the kernel places limits on the number of realtime signals that may be queued.</p>
+
+<h3 id="inter-process-communication-with-signals">Inter process communication with signals</h3>
+
+<p>From one viewpoint we can consider signals as a form of inter process communication (IPC) however signals suffer a number of limitations as an IPC mechanism. Programming with signals is cumbersome and difficult for the following reasons. There are better IPC methods that we will cover later. The asynchronous nature of signals means that we face various problems, including re-entrancy requirements, race condition and the correct handling of global variables from signal handlers. Standard signals are not queued. Even for realtime signals, there are upper limits on the number of signals that may be queued. This means that in order to avoid loss of information, the process receiving the signals must have a method of informing the sender that it is ready to receive another signal. The most obvious method of doing this is for the receiver to send a signal to the sender. A further problem is that signals carry limited information.</p>
+
+<h2 id="process-creation">Process Creation</h2>
+
+<h3 id="overview-of-fork-exit-wait-and-execve">Overview of fork(), exit(), wait(), and execve()</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">fork()</code> system call allows one process, the parent, to create a new process, the child. This is done by making the new child process an (almost) exact duplicate of the parent. The child obtains copies of the parent’s stack, data, heap and text segments. The term fork derives from the fact that we can envisage the parent process as dividing to yield two copies of itself.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">exit(status)</code> library function terminates a process, making all resources (memory, open file descriptors, and so on) used by the process available for subsequent reallocation by the kernel. The status argument is an integer that determines the termination status of the process. Using the <code class="language-plaintext highlighter-rouge">wait()</code> system call, the parent can retrieve this status.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">wait(&amp;stats)</code> system call has two purposes. First, if a child of this process has not yet terminated by calling <code class="language-plaintext highlighter-rouge">exit()</code>, then <code class="language-plaintext highlighter-rouge">wait()</code> suspends execution of the process until one of its children has terminated.Second the termination status of the child is returned in the status arguments of <code class="language-plaintext highlighter-rouge">wait()</code>.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">execve(pathname, argv, envp)</code> system call loads a new program (pathname, with argument list argv, and environment list envp) into a process’s memory. The existing program text is discarded, and the stack, data, and heap segments are freshly created for the new program. This operation is often referred to as <code class="language-plaintext highlighter-rouge">execing</code> a new program.</p>
+
+<p>Putting it together thing of a shell executing a command.  The shell continuously executes a loop that reads a command, performs various processing on it, and then forks a child process to exec the command. The use of <code class="language-plaintext highlighter-rouge">execve()</code> is optional as sometimes its useful to have the child carry on executing the same program as the parent.  In either cae the execution of the child is ultimately terminated by a call to <code class="language-plaintext highlighter-rouge">exit()</code> (or by delivery of a signal), yielding a termination status that the parent can obtain via <code class="language-plaintext highlighter-rouge">wait()</code>. The call to wait() is likewise optional.  The parent can simply ignore its child and continue executing.  However, we’ll see later that the use of wait() is usually desirable, and is often employed within  a handler for the <code class="language-plaintext highlighter-rouge">SIGCHLD</code> signal, which the kernel generates for a parent process when one of its children terminates.</p>
+
+<h3 id="creating-a-new-process-fork">Creating a new process: fork()</h3>
+
+<p>In many applications creating multiple processes can be a useful way of dividing up a task. For example, a network server process may listen for incoming client requests and create a new child process to handle each request; meanwhile, the server process continues to listen for further client connection. Dividing tasks up in this way often makes applications design simpler.  It also permits greater concurrency (i.e. more tasks or requests can be handled simultaneously). The <code class="language-plaintext highlighter-rouge">fork()</code> system call creates a new process, the child, which is an almost exact duplicate of the calling process, the parent. The key point to understanding <code class="language-plaintext highlighter-rouge">fork()</code> is to realize that after it has completed its work, two processes exist, and in each process execution continues from the point where <code class="language-plaintext highlighter-rouge">fork()</code> returns. The two processes are executing the same program text, but they have separate copies of the stack, data, and heap segments. The child’s stack, data, and heap segments are initially exact duplicates of the corresponding parts of the parent’s memory. After the <code class="language-plaintext highlighter-rouge">fork()</code>, each process can modify the variables in its stack, data, and heap segments without affecting the other process. Within the code of a program, we can distinguish the two processes via the value returned from <code class="language-plaintext highlighter-rouge">fork()</code>. For the parent <code class="language-plaintext highlighter-rouge">fork()</code> returns the process ID of the newly created child. This is useful because the parent may create and thus track several children via <code class="language-plaintext highlighter-rouge">wait()</code> or one of its relatives. For the child, <code class="language-plaintext highlighter-rouge">fork()</code> returns 0. If necessary the child can obtain its own process ID using <code class="language-plaintext highlighter-rouge">getpid()</code>, and the process ID of its parent using <code class="language-plaintext highlighter-rouge">getppid()</code>. It is important to realize that after a fork(), it is indeterminate which of the two processes is next scheduled to use the CPU.</p>
+
+<h4 id="file-sharing-between-parent-and-child">File Sharing Between Parent and Child</h4>
+
+<p>When a <code class="language-plaintext highlighter-rouge">fork()</code> is performed, the child receives duplicates of all of the parent’s file descriptors. These duplicates are made in the manner of <code class="language-plaintext highlighter-rouge">dup()</code>, which means that corresponding descriptors in the parent and the child refer to the same open file description. The open file description contains the current file offset (as modified by <code class="language-plaintext highlighter-rouge">read()</code>, <code class="language-plaintext highlighter-rouge">write()</code>, <code class="language-plaintext highlighter-rouge">lseek()</code>) and the open file status flags (set by <code class="language-plaintext highlighter-rouge">open()</code> and changed by <code class="language-plaintext highlighter-rouge">fcntl()</code>). Consequently, these attributes of an open file are shared between the parent and child. For example, if the child updates the file offset, this change is visible though the corresponding descriptor in the parent. Sharing of open file attributes between the parent and child process is frequently useful. For example, if the parent and child are both writing to a file, sharing the file offset ensures that the two process don’t overwrite each other’s output. It does not, however, prevent the output of the two processes from being randomly intermingled.</p>
+
+<h4 id="memory-semantics-of-fork">Memory Semantics of fork()</h4>
+
+<p>Making a full copy of the text, data, and heap when executing fork() would be wasteful. Main reason is that fork() is frequently followed by execve() which replaces the process’ data heap and stack. Most modern Linux interpretations use two techniques to avoid wasteful copying. The kernel marks the text segment of each process as read-only, so that a process can’t modify it sown code. This means that the parent and child can share the same text segment. The fork() system call creates a text segment for the child by building a set of per-process page-table entries that refer to the same physical memory page frames already used by the parent.</p>
+
+<p>For pages in the data, heap and stack segments of the parent process, the kernel employs a technique known as copy on write. Initially the kernel sets things up so that the page-table entries for these segments refer to the same physical memory pages as the corresponding page-table entries in the parent, and the pages themselves are marked read-only. After the fork(), the kernel traps any attempts by either the parent or the child to modify one of these pages, and makes a duplicate copy of the about to be modified page. This new page copy is assigned to the faulting process, and the corresponding page-table entry for the other process is adjusted appropriately. From this point on, the parent and child can each modify their private copies of the page, without the changes being visible to the other process.</p>
+
+<h3 id="avoiding-race-conditions-by-synchronizing-with-signals">Avoiding Race Conditions by Synchronizing with Signals</h3>
+
+<p>After a fork(), if either process needs to wait for the other to complete an action, then the active process can send a signal after completing the action; the other process waits for the signal.</p>
+
+<h2 id="process-termination">Process Termination</h2>
+
+<h3 id="terminating-a-process-_exit-and-exit">Terminating a Process: _exit() and exit()</h3>
+
+<p>A process can terminate either abnormally (caused by delivery of a signal whose default action is to terminate the process) or via an exit call. A process is always successfully terminated by _exit() (i.e <code class="language-plaintext highlighter-rouge">_exit()</code> never returns). Performing a return without specifying a value, or falling off the end of the main() function, also results in the caller of <code class="language-plaintext highlighter-rouge">main()</code> invoking <code class="language-plaintext highlighter-rouge">exit()</code>, but with results that vary depending on the version of the C standard supported and compilation options employed.</p>
+
+<h3 id="details-of-process-termination">Details of Process Termination</h3>
+
+<p>During both normal and abnormal termination of a process, the following actions occur. Open file descriptors, directory steams, message catalog descriptors and conversion descriptors are closed. As a consequence of closing file descriptors, any file locks help by this process are released. Any attached System V shared memory segments are detached, and the <code class="language-plaintext highlighter-rouge">shm_nattch</code> counter corresponding to each segment is decremented by one. For each system V semaphore for which a <code class="language-plaintext highlighter-rouge">semadj</code> value has been set by the process, that <code class="language-plaintext highlighter-rouge">semadj</code> value is added to the semaphore value. If this is the controlling process for a controlling terminal, then the SIGHUP signal is sent to each process in the controlling terminal’s foreground process group, and the terminal is disassociated from the session. Any POSIX named semaphores that are open in the calling process are closed as though sem_close() were called. Any POSIX message queues that are open in the calling porcess are closed as though mq_close() were called. If, as a consequence of this process exiting, a process group becomes orphaned and there are any stopped processes in that group, then all process in the group are sent a SIGHUP signal followed by a SIGCONT signal. Any memory locks established by this process using <code class="language-plaintext highlighter-rouge">mlock()</code> or  <code class="language-plaintext highlighter-rouge">mlockall()</code> are removed. Any memory mappings established by this process using <code class="language-plaintext highlighter-rouge">mmap()</code>  are unmapped.</p>
+
+<h3 id="exit-handlers">Exit Handlers</h3>
+
+<p>An exit handler is a programmer-supplied function that is registered at some point during the life of the process and is then automatically called during normal process termination via <code class="language-plaintext highlighter-rouge">exit()</code>. Exit handlers are not called if a program calls <code class="language-plaintext highlighter-rouge">_exit()</code> directly or if the process is terminated abnormally by a signal.</p>
+
+<h2 id="monitoring-child-processes">Monitoring child processes</h2>
+
+<h3 id="waiting-on-a-child-process">Waiting on a child process</h3>
+
+<h4 id="the-wait-system-call">The wait() System Call</h4>
+
+<p>The <code class="language-plaintext highlighter-rouge">wait()</code> system call waits for one of the children of the calling process to terminate and return the termination status of that child in the buffer pointed to by status.</p>
+
+<p><code class="language-plaintext highlighter-rouge">pid_t wait(int *status);</code></p>
+
+<p>The <code class="language-plaintext highlighter-rouge">wait()</code> system call does the following</p>
+
+<ul>
+  <li>If no (previously un-waited for) child of the calling process has yet terminated, the call blocks until one of the children terminates.</li>
+  <li>If status is not NULL, information about how the child terminated is returned in the integer to which status points.</li>
+  <li>The kernel adds the process CPU times and resource usage statistics to running totals for all children of this parent process.</li>
+  <li>As its function result, wait() returns the process ID of the child that has terminated.</li>
+  <li>On error, wait() returns -1.  One possible error is that the calling process has no (previously un-waited-for) children, which is indicated by the errno value ECHILD.</li>
+</ul>
+
+<p>We can use the following loop to wait for all children of the calling process to terminate.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while</span><span class="p">((</span><span class="n">childId</span> <span class="o">=</span> <span class="n">wait</span><span class="p">(</span><span class="nb">NULL</span><span class="p">))</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+  <span class="k">continue</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span><span class="n">errno</span> <span class="o">!=</span> <span class="n">ECHILD</span><span class="p">)</span> <span class="cm">/* An unexpected error… */</span>
+  <span class="n">errExit</span><span class="p">(</span><span class="s">"wait"</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h4 id="the-waitpid-system-call">The waitpid() System Call</h4>
+
+<p>The <code class="language-plaintext highlighter-rouge">wait()</code> system call has a number of limitations, which <code class="language-plaintext highlighter-rouge">waitpid()</code> was designed to address. If a parent process has created multiple children, it is not possible to wait() for the completions of a specific child; we can only wait for the next child that terminates. If no child has yet terminated, wait() always blocks. Sometimes, it would be preferable to perform a non-blocking wait so that if no child has yet terminated, we obtain an immediate indication of this fact. Using <code class="language-plaintext highlighter-rouge">wait()</code>, we can find out only about children that have terminated.  It is not possible to be notified when a child is stopped by a signal (such as <code class="language-plaintext highlighter-rouge">SIGSTOP</code> or <code class="language-plaintext highlighter-rouge">SIGINT</code>) or when a stopped child is resumed by delivery of a <code class="language-plaintext highlighter-rouge">SIGCONT</code> signal. The return value and status arguments of <code class="language-plaintext highlighter-rouge">waitpid()</code> are the same as for wait().  The pid <code class="language-plaintext highlighter-rouge">arugment</code> enables the selection of the child to be waited for, as follows.</p>
+
+<ul>
+  <li>If pid is greater than 0, wait for the child whose process ID equals pid.</li>
+  <li>If pid equals 0, wait for any child in the same process group as the caller (parent)</li>
+  <li>If pid is less than -1, wait for any child whose process group identifier equals the absolute value of pid</li>
+  <li>If pid equals -1, wait for any child.  The call <code class="language-plaintext highlighter-rouge">wait(&amp;status)</code> is equivalent to the call <code class="language-plaintext highlighter-rouge">(waitpid(-1,&amp;status0))</code></li>
+</ul>
+
+<h4 id="the-wait-status-value">The Wait Status Value</h4>
+
+<p>The status value returned by <code class="language-plaintext highlighter-rouge">wait()</code> and <code class="language-plaintext highlighter-rouge">waitpid()</code> allows us to distinguish the following events for the child.</p>
+
+<ul>
+  <li>The child terminated by calling _exit() or exit(), specifying an integer exit status.</li>
+  <li>The child was terminated by the delivery of an unhandled signal.</li>
+  <li>The child was stopped by a signal, and waitpid() was called with the <code class="language-plaintext highlighter-rouge">WUNTRACED</code> flag</li>
+  <li>The child was resumed by SIGCONT signal, and waitpid() was called with <code class="language-plaintext highlighter-rouge">CONTINUED</code> flag.</li>
+</ul>
+
+<h2 id="monitoring-child-processes-again">Monitoring child processes (again?)</h2>
+
+<h3 id="orphans-and-zombies">Orphans and Zombies</h3>
+
+<p>The lifetimes of parent and child processes are usually not the same; either the parent outlives the child or vice versa. This raises two questions.</p>
+
+<ul>
+  <li>Who becomes the parent of an orphaned child?
+    <ul>
+      <li>The orphaned child is adopted by init the ancestor of all processes, whose process ID is 1. This can be used to determine if a child’s true parent is till alive (assuming the child was created by a process other than init)</li>
+    </ul>
+  </li>
+  <li>What happens to a child that terminates before its parent has had a chance to perform a wait()?
+    <ul>
+      <li>The point here is that, although the child has finished its work, the parent should still be permitted to perform a wait() at some later time to determine how the child terminated.</li>
+      <li>The kernel handles this situation by turning the child into a zombie.
+        <ul>
+          <li>This means that most of the resources held by the child are released back to the system to be reused by other processes.</li>
+          <li>The only part of the process that remains is an entry in the kernel’s process table recording (among other things) the child process ID, termination status, and resource usage statistics.</li>
+        </ul>
+      </li>
+      <li>A zombie process can’t be killed by a signal, not even SIGKILL. This ensures that the parent can eventually perform a wait().</li>
+      <li>When the parent does perform a wait(), the kernel removed the zombie, since the last remaining information about the child is no longer required.</li>
+      <li>On the other hand if the parent terminates without doing a wait(), then the init process adopts the child and automatically performs a wait(), thus removing the zombie process from the system.</li>
+      <li>If a parent creates a child, but fails to perform a wait() then an entry for the zombie child will be maintained indefinitely in the kernel’s process table. If a large number of such zombie children are created, they will eventually fill the kernel process table, preventing the creation of new processes.</li>
+      <li>Since zombies can’t be killed by a signal, the only way to remove them from the system is to kill their parent (or wait for it to exit) at which time the zombies are adopted and waited on by init, and consequently removed from the system.</li>
+      <li>These semantics have important implications for the design of long-lived parent processes, such as netowrk servers and shells, that create numerous children. Such applications, a parent process should perform wait() calls in order to ensure that dead children are always removed from the system, rather than becoming long-lived zombies. The parent may perform such wait() calls either synchronously or asynchronously in response to delivery of the <code class="language-plaintext highlighter-rouge">SIGCHLD</code> signal.</li>
+      <li>If you see <code class="language-plaintext highlighter-rouge">&lt;defunct&gt;</code> in ps output that means the process is a zombie</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="the-sigchld-signal">The SIGCHLD Signal</h3>
+
+<p>The termination of a child process is an event that occurs asynchronously. A parent can’t predict when one of its children will terminate. The parent can call <code class="language-plaintext highlighter-rouge">wait()</code> or <code class="language-plaintext highlighter-rouge">waitpid()</code>  without specifying the <code class="language-plaintext highlighter-rouge">WNOHAND</code> flag, in which case the call will block if a child has not already terminated. The parent can periodically perform a non-blocking check (a poll) for dead children via a call to <code class="language-plaintext highlighter-rouge">waitpid()</code> specifying the <code class="language-plaintext highlighter-rouge">WNOHANG</code> flag.</p>
+
+<p>Both of these approaches can be inconvenient. On the one hand, we may not want the parent to be blocked waiting for a child to terminate. On the other hand , making repeated non-blocking waitpid() calls wastes CPU time and adds complexity to an application design. To get around these problems, we can employ a handler for the <code class="language-plaintext highlighter-rouge">SIGCHLD</code> signal</p>
+
+<h4 id="establishing-a-handler-for-sigchld">Establishing a Handler for SIGCHLD</h4>
+
+<p>The <code class="language-plaintext highlighter-rouge">SIGCHLD</code> signal is sent to a parent process whenever one of its children terminates. By default, this signal is ignored, but we can catch it by installing a signal handler. Within the signal handler, we can use <code class="language-plaintext highlighter-rouge">wait()</code> (or similar) to reap the zombie child.</p>
+
+<p>There are some subtleties to consider with this approach</p>
+
+<ul>
+  <li>When a signal handler is called, the signal that caused its invocation is temporality blocked (unless the sigaction() SA_NODEFER flag was specified)</li>
+  <li>The standard signals, of which SIGCHLD is one, are not queued.</li>
+  <li>Consequently if a second and third child terminate in quick succession while a SIGCHLD handler is executing for an already terminated child, then although SIGCHLD is generated twice, it is queued only once to the parent. As a result, if the parent’s SIGCHLD handler called wait() only once each time it was invoked, the handler might fail to reap some zombie children. The solution is to loop inside the SIGCHLD handler, repeatedly calling waitpid() with the WNOHANG flag until there are no more dead children processes to be reaped.</li>
+</ul>
+
+<p>Often the body of a SIGCHLD handler simply consists of the following code, which reaps any dead children without checking their status:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while</span><span class="p">(</span><span class="n">waitpid</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">WNOHANG</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="k">continue</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>The above loop continues until <code class="language-plaintext highlighter-rouge">waitpid()</code> returns either 0 indicating no more zombie children, or -1 indicating an error (probably ECHILD, meaning that there are no more children).</p>
+
+<h4 id="ignoring-dead-child-processes">Ignoring Dead Child Processes</h4>
+
+<p>Explicitly setting the disposition of SIGCHLD to SIG_IGN causes any child process that subsequently terminates to be immediately removed from the system instaed of being converted into a zombie. In this case, since the status of the child process is simply discarded, a subsequent call to wait() (or similar) can’t return any information for the terminated child.</p>
+
+<h2 id="program-execution">Program Execution</h2>
+
+<h3 id="executing-a-new-program-execve">Executing a new program: execve()</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">execve()</code> system call loads a new program into a process’s memory.  During this operation, the old program is discarded, and the process’s stack, data, and heap are replaced by those of the new program. After executing various C library run-time startup code and program initialization code (e.g., C++ static constructors or C functions declared with the gcc constructor attribute) the new program commences execution at its main() function. The most frequent use of <code class="language-plaintext highlighter-rouge">execve()</code> is in the child produced by a <code class="language-plaintext highlighter-rouge">fork()</code>, although it is also occasionally used in applications without a preceding <code class="language-plaintext highlighter-rouge">fork()</code></p>
+
+<p>Below is the <code class="language-plaintext highlighter-rouge">execve()</code> function prototype. It never returns on success; returns -1 on error</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;unistd.h&gt;
+</span><span class="kt">int</span> <span class="nf">execve</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">pathname</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="k">const</span> <span class="n">argv</span><span class="p">[],</span> <span class="kt">char</span> <span class="o">*</span><span class="k">const</span> <span class="n">envp</span><span class="p">[]);</span>
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">pathname</code> argument contains the pathname of the new program to be loaded into the process’s memory. This pathname can be absolute (indicated by an initial /) or relative to the current working directory of the calling process.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">argv</code> argument specified the command-line arguments to be passed to the new program.  This array corresponding to, and has the same form as, the second (argv) argument to a C main() function. It is a NULL terminated list of pointers to character strings. The value supplied for argv[0] corresponds to the command name.</p>
+
+<p>The final argument <code class="language-plaintext highlighter-rouge">envp</code>, specifies the environment list for the new program. The envp argument corresponds to the environ array of the new program. It is a NULL terminated list of pointers to character stings of the name=value</p>
+
+<p>The Linux specific <code class="language-plaintext highlighter-rouge">/proc/PID/exe</code> file is a symbolic link containing the absolute pathname of the executable file being run by the corresponding process</p>
+
+<p>After an <code class="language-plaintext highlighter-rouge">execve()</code>, the process ID of the process remains the same, because the same process continues to exist. A few other process attributes also remain unchanged. If the set-user-ID (set-group-ID) permission bit of the program file specified by pathname is set, then when the file is execed, the effective user (group) ID of the process is changed to be the same as the owner (group) of the program file. This is a mechanism for temporarily granting privileges to user while running a specific program. After optionally changing the effective IDs, and regardless of whether they were changed, an <code class="language-plaintext highlighter-rouge">execve()</code> copies the value of the process’s effective user ID into its saved set-user-ID, and copies the value of the process’s effective group ID into its saved set-group-ID. Since it replaces the program that called it, a successful <code class="language-plaintext highlighter-rouge">execve()</code> never returns. We never need to check the return value from <code class="language-plaintext highlighter-rouge">execve()</code> it will always be -1.  The very fact that it returned informs us that an error occurred, and, as usual we can use errno to determine the cause. The following are some of the errors that we may see.</p>
+
+<ul>
+  <li>EACCES - The pathname argument does not refer to a regular file, the file doesn’t have execute permission enabled, or one of the directory components of pathname is not searchable.  Alternatively the file may reside on a file system that was mounted with the MS_NOEXEC flag.</li>
+  <li>ENOENT - The file referred to by pathname doesn’t exist.</li>
+  <li>ENOEXEC - The file referred to by pathname is marked as being executable, but it is not in a recognizable executable format.  Possibly it is a script that doesn’t begin with a line (starting with the characters #!) specifying the script interpreter.</li>
+  <li>ETXTBSY - The file referred to by pathname is open for writing by one or more processes</li>
+  <li>E2BIG - The total space required by the argument list and environment list exceeds the allowed maximum.</li>
+</ul>
+
+<p>The errors above may also be generated if any of these conditions apply to the interpreter file defined to execute a script. or the ELF interpreter being used to execute the program.</p>
+
+<p>The Executable and Linking Format (ELF) is a widely implemented specification describing the layout of executable files.</p>
+
+<p>Normally during an exec, a process image is constructed using the segments of the executable file.  However the ELF specification also allows for an executable file to define an interpreter (the PT_INTERP ELF program header element) to be used to execute the program. 
+        □ If an interpreter is defined, the kernel constructs the process image from the segments of the specified interpreter executable file.  It is then the responsibility of the interpreter to load and execute the program.</p>
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -3,20 +3,20 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>System Design | My References</title>
+<title>Observability | My References</title>
 <meta name="generator" content="Jekyll v3.9.2" />
-<meta property="og:title" content="System Design" />
+<meta property="og:title" content="Observability" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://localhost:4000/system_design" />
-<meta property="og:url" content="http://localhost:4000/system_design" />
+<link rel="canonical" href="http://localhost:4000/system_design/observability" />
+<meta property="og:url" content="http://localhost:4000/system_design/observability" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="System Design" />
+<meta property="twitter:title" content="Observability" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"System Design","url":"http://localhost:4000/system_design"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Observability","url":"http://localhost:4000/system_design/observability"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
@@ -39,17 +39,31 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">System Design</h1>
+    <h1 class="post-title">Observability</h1>
   </header>
 
   <div class="post-content">
-    <p><a href="/system_design/reference">System Design Reference</a></p>
+    <h2 id="core-analysis-loop">Core Analysis loop</h2>
 
-<p><a href="/system_design/monitoring">Monitoring</a></p>
+<p>Below is the core loop which is the basis of debugging from first principles. You can use this loop as a brute force method to cycle though all available dimensions to identify which ones explains or correlate with the outlier in question. In theory no prior knowledge of the system is required.</p>
 
-<p><a href="/system_design/observability">Observability</a></p>
+<p>For observability domain <strong>rows</strong> pertain to individual telemetry events and <strong>columns</strong> pertain to the fields and attributes of those events.</p>
 
-<p><a href="/system_design/ci_cd">CI/CD</a></p>
+<ol>
+  <li>Start with the overall view of what prompted your investigation: what did the customer tell you?</li>
+  <li>Verify that what you know so far is true: is a notable change in performance happening somewhere in this system? Data visualizations can identify changes of behavior (think os a spike of a graph).</li>
+  <li>
+    <p>Search for dimensions that might drive that change in performance.  Approaches to accomplish this might include.</p>
+
+    <p>a. Examining sample rows (events) from the area that shows the change: are there any outliers in the columns (details of event) that might give you a clue?</p>
+
+    <p>b. Slicing those rows across various dimensions looking for patterns: do any of those views highlight distinct behavior across one or more dimensions?  Try an experimental group by status code.</p>
+
+    <p>c. Filtering for particular dimensions or values within those rows to better expose potential outliers.</p>
+  </li>
+  <li>Do you know enough about what might be occurring? If yes you are done if not filter your view to isolate this area of performance as your next starting point and return to step 3.</li>
+</ol>
+
 
   </div>
 

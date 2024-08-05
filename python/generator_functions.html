@@ -43,11 +43,13 @@
   </header>
 
   <div class="post-content">
-    <p>You use a generator function when you need to return a value from a big set of data and you only need the next value, not the entire list.  This can be very memory efficient as you are not computing and returning an entire set of data, but just the next value you need.</p>
+    <h2 id="generator-functions">Generator functions</h2>
 
-<p>The <code class="language-plaintext highlighter-rouge">yield</code> keyword is used to return he values in this manner.</p>
+<p>You use a generator function when you need to return a value from a big set of data and you only need the next value, not the entire list. This can be very memory efficient as you are not computing and returning an entire set of data, but just the next value you need.</p>
 
-<p>One important not is that generator functions and generator expressions are their own iterators and thus you can’t have multiple iterators at multiple positions like you can in some built in structures.  If you want to scan a generator’s values multiple times you must either create a new generator for each scan or build a re-scannable list out of the generator’s values.</p>
+<p>The <code class="language-plaintext highlighter-rouge">yield</code> keyword is used to return the values in this manner. <code class="language-plaintext highlighter-rouge">yield</code> produces a value but suspends the function until the next call to <code class="language-plaintext highlighter-rouge">__next__()</code>.</p>
+
+<p>One important note is that generator functions and generator expressions are their own iterators and thus you can’t have multiple iterators at multiple positions like you can in some built in structures. If you want to scan a generator’s values multiple times you must either create a new generator for each scan or build a re-scannable list out of the generator’s values.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">gensquares</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
 <span class="p">...</span>   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
@@ -72,6 +74,426 @@
 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
   <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
 <span class="nb">StopIteration</span>
+</code></pre></div></div>
+
+<p>A generator function can be a much more convenient way to write an iterator as you don’t have to worry about the iterator protocol (<code class="language-plaintext highlighter-rouge">__next__</code>, <code class="language-plaintext highlighter-rouge">__iter__</code>, etc).</p>
+
+<h2 id="generator-expressions">Generator expressions</h2>
+
+<p>A generator expression has some important differences from list comprehension.</p>
+
+<ul>
+  <li>Generator expressions do not construct a list, they construct a generator object</li>
+  <li>Only useful purpose for generator comprehensions is iteration.</li>
+  <li>Once generator expression is consumed it cannot be re-used.</li>
+</ul>
+
+<p>below is an example of a generator comprehension vs a list.  The general syntax for a generator expression is <code class="language-plaintext highlighter-rouge">(expression for i in s if condition)</code></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">a</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">a</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c</span>
+<span class="o">&lt;</span><span class="n">generator</span> <span class="nb">object</span> <span class="o">&lt;</span><span class="n">genexpr</span><span class="o">&gt;</span> <span class="n">at</span> <span class="mh">0xffff8e824120</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<p>Both generator expressions and generator functions give us an object which can be iterated over with a <code class="language-plaintext highlighter-rouge">for</code> loop</p>
+
+<h2 id="yield-from-expression">Yield from expression</h2>
+
+<p><code class="language-plaintext highlighter-rouge">yield from</code> is a way to delegate iteration.  Small example below for explanation.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">count_down</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="p">...</span>   <span class="k">while</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="p">...</span>     <span class="k">yield</span> <span class="n">n</span>
+<span class="p">...</span>     <span class="n">n</span> <span class="o">-=</span> <span class="mi">1</span>
+<span class="p">...</span> 
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">count_up</span><span class="p">(</span><span class="n">stop</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="k">while</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">stop</span><span class="p">:</span>
+<span class="p">...</span>     <span class="k">yield</span> <span class="n">n</span>
+<span class="p">...</span>     <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="p">...</span> 
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">count_up_and_down</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="p">...</span>   <span class="k">yield</span> <span class="k">from</span> <span class="n">count_up</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="p">...</span>   <span class="k">yield</span> <span class="k">from</span> <span class="n">count_down</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="p">...</span> 
+<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">count_up_and_down</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+<span class="p">...</span>   <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="p">...</span> 
+<span class="mi">1</span>
+<span class="mi">2</span>
+<span class="mi">3</span>
+<span class="mi">2</span>
+<span class="mi">1</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<h2 id="shutting-down-generators">Shutting down generators</h2>
+
+<p>Generators can be shut down using <code class="language-plaintext highlighter-rouge">.close()</code> below is an example</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kn">import</span> <span class="nn">time</span>
+
+<span class="k">def</span> <span class="nf">follow</span><span class="p">(</span><span class="n">the_file</span><span class="p">):</span>
+  <span class="n">the_file</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="p">.</span><span class="n">SEEK_END</span><span class="p">)</span> <span class="c1"># End of file
+</span>  <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">the_file</span><span class="p">.</span><span class="n">readline</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+      <span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>    <span class="c1"># Sleep briefly
+</span>      <span class="k">continue</span>
+    <span class="k">yield</span> <span class="n">line</span>
+
+<span class="n">lines</span> <span class="o">=</span> <span class="n">follow</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s">"access-log"</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+  <span class="k">print</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>
+    <span class="n">lines</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>When <code class="language-plaintext highlighter-rouge">.close()</code> is used inside the generator a <code class="language-plaintext highlighter-rouge">GeneratorExit</code> exception is raised.  This is a good opportunity to clean up resources. Note that you cannot ignore <code class="language-plaintext highlighter-rouge">GeneratorExit</code> to continue the generator. You will get an error.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">time</span>
+<span class="k">def</span> <span class="nf">follow</span><span class="p">(</span><span class="n">the_file</span><span class="p">):</span>
+  <span class="n">the_file</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="p">.</span><span class="n">SEEK_END</span><span class="p">)</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+      <span class="n">line</span> <span class="o">=</span> <span class="n">the_file</span><span class="p">.</span><span class="n">readline</span><span class="p">()</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+        <span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="k">continue</span>
+      <span class="k">yield</span> <span class="n">line</span>
+  <span class="k">except</span> <span class="nb">GeneratorExit</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Follow: Shutting down"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="generators-can-receive-values-using-send">Generators can receive values using .send()</h2>
+
+<p>This form of a generator is a co-routine.  Its sometimes called a reverse-generator. Coroutines can be though of as receivers or consumers. They receive values sent to them. To get a co-routine to run properly, you have to ping it with a <code class="language-plaintext highlighter-rouge">.send(None)</code> operation first. This advances to the first yield where it will receive its first value. The having to call <code class="language-plaintext highlighter-rouge">.send(None)</code> can be more elegantly handled by using a decorator which is shown in the example below.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">consumer</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">c</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">c</span>
+    <span class="k">return</span> <span class="n">start</span>
+
+<span class="c1"># this function receives values rather than generating them
+</span><span class="o">@</span><span class="n">consumer</span>
+<span class="k">def</span> <span class="nf">recv_count</span><span class="p">():</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="k">yield</span> <span class="c1"># Yield expression
+</span>            <span class="k">print</span><span class="p">(</span><span class="s">"T-minus"</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">GeneratorExit</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">"Kaboom!"</span><span class="p">)</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">recv_count</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="n">r</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="s">'''
+Yields the output
+T-minus 5
+T-minus 4
+T-minus 3
+T-minus 2
+T-minus 1
+Kaboom!
+'''</span>
+</code></pre></div></div>
+
+<h2 id="processing-data-files-with-generators">Processing data files with generators</h2>
+
+<p>The following contents is based on the excellent talk by Based on the <a href="https://www.dabeaz.com/generators">excellent talk</a> by David M. Beazley. I just worked though the examples in his talk and summarized notes for myself here.</p>
+
+<h3 id="problem-statement">Problem statement</h3>
+
+<p>The code in the following section is a way of using generators to create a data pipeline which can process hundreds of httpd access logs in a directory. Below is a sample of the log file content being processed by the program for reference. This is not a real log just an example.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>81.107.39.38 - - [21/Apr/2021:00:08:59 -0600] "GET ..." 200 7587
+81.107.39.39 - - [21/Apr/2021:00:08:59 -0600] "GET ..." 200 133
+81.107.39.38 - - [21/Apr/2021:00:08:59 -0600] "GET ..." 200 23903
+81.107.39.40 - - [21/Apr/2021:00:08:59 -0600] "GET ..." 200 9732
+81.107.39.38 - - [21/Apr/2021:00:08:59 -0600] "GET ..." 200 2934
+81.107.39.41 - - [21/Apr/2021:00:08:59 -0600] "GET ..." 200 124
+81.107.39.38 - - [21/Apr/2021:00:08:59 -0600] "GET ..." 200 9923
+81.107.39.41 - - [21/Apr/2021:00:08:59 -0600] "GET ..." 200 485667
+81.107.39.38 - - [21/Apr/2021:00:08:59 -0600] "GET ..." 200 9875860
+81.107.39.42 - - [21/Apt/2021:00:08:59 -0600] "GET ..." 200 1048957856
+</code></pre></div></div>
+
+<h3 id="implementation">Implementation</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">gzip</span><span class="p">,</span> <span class="n">bz2</span><span class="p">,</span> <span class="n">re</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+
+<span class="c1"># NOTE: I am pretty sure this will not close the files. In context of this example this makes sense
+# but in real implementation the file handles probably should be kept out of the pipeline.
+# This is also a good example of handling multiple file type options
+</span><span class="k">def</span> <span class="nf">open_file_generator</span><span class="p">(</span><span class="n">paths</span><span class="p">):</span>
+
+    <span class="s">"""Open a sequence of paths returning open file objects"""</span>
+
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">path</span><span class="p">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s">".gz"</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">gzip</span><span class="p">.</span><span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s">"rt"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span><span class="p">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s">".bz2"</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">bz2</span><span class="p">.</span><span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s">"rt"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s">'rt'</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">concat_files_generator</span><span class="p">(</span><span class="n">sources</span><span class="p">):</span>
+
+    <span class="s">"""concatenate items from one or more sources into a single sequence of items"""</span>
+
+    <span class="k">for</span> <span class="n">src</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">:</span>
+        <span class="c1"># See yield from explanation above if this does not make sense
+</span>        <span class="k">yield</span> <span class="k">from</span> <span class="n">src</span>
+
+<span class="k">def</span> <span class="nf">field_map</span><span class="p">(</span><span class="n">dict_seq</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+
+  <span class="s">"""helper function for running a function on a property of a dictionay"""</span>
+
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dict_seq</span><span class="p">:</span>
+        <span class="n">d</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+        <span class="k">yield</span> <span class="n">d</span>
+
+<span class="c1"># Just example values form my system.
+</span><span class="n">log_dir</span> <span class="o">=</span> <span class="s">"/home/ubuntu/python_practice/generator_pipeline"</span>
+<span class="c1"># Path.rglob is using a generator under the hood thus fits neatly in our pipeline of generators model
+</span><span class="n">file_names</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">log_dir</span><span class="p">).</span><span class="n">rglob</span><span class="p">(</span><span class="s">"sample*"</span><span class="p">)</span>
+
+<span class="n">log_files</span> <span class="o">=</span> <span class="n">open_file_generator</span><span class="p">(</span><span class="n">file_names</span><span class="p">)</span>
+<span class="n">log_lines</span> <span class="o">=</span> <span class="n">concat_files_generator</span><span class="p">(</span><span class="n">log_files</span><span class="p">)</span>
+
+<span class="n">log_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s">"(\S+) (\S+) (\S+) \[(.*?)\] (\S+) (\S+) (\S+) (\S+)"</span>
+<span class="n">compiled_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nb">compile</span><span class="p">(</span><span class="n">log_pattern</span><span class="p">)</span>
+
+<span class="c1"># groups here is the groups returned by re.match
+</span><span class="n">groups</span> <span class="o">=</span> <span class="p">(</span><span class="n">compiled_pattern</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">log_lines</span><span class="p">)</span>
+<span class="n">tuples</span> <span class="o">=</span> <span class="p">(</span><span class="n">g</span><span class="p">.</span><span class="n">groups</span><span class="p">()</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">groups</span> <span class="k">if</span> <span class="n">g</span><span class="p">)</span>
+
+<span class="c1"># convert the tuples and col_names to dictionaries to make working with data easier
+</span><span class="n">col_names</span> <span class="o">=</span> <span class="p">(</span><span class="s">'host'</span><span class="p">,</span><span class="s">'referrer'</span><span class="p">,</span><span class="s">'user'</span><span class="p">,</span><span class="s">'datetime'</span><span class="p">,</span> <span class="s">'method'</span><span class="p">,</span><span class="s">'request'</span><span class="p">,</span><span class="s">'status'</span><span class="p">,</span> <span class="s">'bytes'</span><span class="p">)</span>
+<span class="n">log_contents</span> <span class="o">=</span> <span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">col_names</span><span class="p">,</span> <span class="n">t</span><span class="p">))</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tuples</span><span class="p">)</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">field_map</span><span class="p">(</span><span class="n">log_contents</span><span class="p">,</span> <span class="s">"status"</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">field_map</span><span class="p">(</span><span class="n">log_contents</span><span class="p">,</span> <span class="s">"bytes"</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span> <span class="k">if</span> <span class="n">s</span> <span class="o">!=</span> <span class="s">"_"</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))</span>
+
+<span class="c1"># Now that we have the one or more log files as a generator of dictionaries we can do some fun queries
+</span>
+<span class="c1"># find which requests are throwing 404s
+</span><span class="n">stat404</span> <span class="o">=</span> <span class="p">{</span><span class="n">r</span><span class="p">[</span><span class="s">'request'</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">log</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s">'status'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">404</span><span class="p">}</span>
+
+<span class="c1"># print all requests that transferred more than a megabyte
+</span><span class="n">large</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">log</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s">'bytes'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1000000</span><span class="p">)</span>
+
+<span class="c1"># find the largest data transfer
+</span><span class="k">print</span><span class="p">(</span><span class="s">"%d %s"</span> <span class="o">%</span> <span class="nb">max</span><span class="p">((</span><span class="n">r</span><span class="p">[</span><span class="s">'bytes'</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s">'request'</span><span class="p">])</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">log</span><span class="p">))</span>
+
+<span class="c1"># collect all unique host IP addresses
+</span><span class="n">hosts</span> <span class="o">=</span> <span class="p">{</span> <span class="n">r</span><span class="p">[</span><span class="s">'host'</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">log</span> <span class="p">}</span>
+
+<span class="c1"># find out who has been hitting robots.txt
+</span><span class="n">addresses</span> <span class="o">=</span> <span class="p">{</span> <span class="n">r</span><span class="p">[</span><span class="s">'host'</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">log</span> <span class="k">if</span> <span class="s">'robots.txt'</span> <span class="ow">in</span> <span class="n">r</span><span class="p">[</span><span class="s">'request'</span><span class="p">]</span> <span class="p">}</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="n">addresses</span><span class="p">:</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">socket</span><span class="p">.</span><span class="n">gethostbyaddr</span><span class="p">(</span><span class="n">addr</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+  <span class="k">except</span> <span class="n">socket</span><span class="p">.</span><span class="n">herror</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="explanation-and-notes-on-above-solution">Explanation and notes on above solution</h3>
+
+<p>Think of the solution above as a processing pipeline where each step is defined by iteration/generation</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js"></script>
+<div class="mermaid">
+ flowchart LR
+
+   access-log--&gt;wwwlog--&gt;bytecolumn--&gt;bytes_sent--&gt;sum--&gt;total
+
+</div>
+
+<p>There are some benefits to this approach over a regular for loop implementation.</p>
+
+<ul>
+  <li>Can be a little bit faster than the for loop implementation.</li>
+  <li>Less code</li>
+  <li>relatively easy to read</li>
+  <li>does not require creating large lists in memory thus can be used on very large data sets</li>
+  <li>Can plug in various “pipeline” components with this approach</li>
+  <li>Similar to Unix approach of performing complex tests by piping data</li>
+  <li>Generators decouple iteration from the code that uses the results of the iteration.  In the last line of the program we are performing a calculation on a sequence of lines. It does not matter where or how those lines are generated.  Thus we can plug any number of components together up front as long as they eventually produce a line sequence.</li>
+  <li>This paradigm is not limited to files. You can use this with any objects such as sockets to send data across network or just about any other uses.</li>
+</ul>
+
+<h4 id="packaging">packaging</h4>
+
+<p>Below is an example of multiple pipeline stages inside a function which becomes a general purpose component that can be used as a single element in other pipelines.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="k">def</span> <span class="nf">lines_from_dir</span><span class="p">(</span><span class="n">filepat</span><span class="p">,</span> <span class="n">dirname</span><span class="p">):</span>
+ <span class="n">names</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">dirname</span><span class="p">).</span><span class="n">rglob</span><span class="p">(</span><span class="n">filepat</span><span class="p">)</span>
+ <span class="n">files</span> <span class="o">=</span> <span class="n">gen_open</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+ <span class="n">lines</span> <span class="o">=</span> <span class="n">gen_cat</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+ <span class="k">return</span> <span class="n">lines</span>
+</code></pre></div></div>
+
+<p>Below is another example of parsing an Apache log into dicts.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">apache_log</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+ <span class="n">groups</span> <span class="o">=</span> <span class="p">(</span><span class="n">logpat</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">)</span>
+ <span class="n">tuples</span> <span class="o">=</span> <span class="p">(</span><span class="n">g</span><span class="p">.</span><span class="n">groups</span><span class="p">()</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">groups</span> <span class="k">if</span> <span class="n">g</span><span class="p">)</span>
+ <span class="n">colnames</span> <span class="o">=</span> <span class="p">(</span><span class="s">'host'</span><span class="p">,</span><span class="s">'referrer'</span><span class="p">,</span><span class="s">'user'</span><span class="p">,</span><span class="s">'datetime'</span><span class="p">,</span><span class="s">'method'</span><span class="p">,</span> <span class="s">'request'</span><span class="p">,</span><span class="s">'proto'</span><span class="p">,</span><span class="s">'status'</span><span class="p">,</span><span class="s">'bytes'</span><span class="p">)</span>
+ <span class="n">log</span> <span class="o">=</span> <span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">colnames</span><span class="p">,</span> <span class="n">t</span><span class="p">))</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tuples</span><span class="p">)</span>
+ <span class="n">log</span> <span class="o">=</span> <span class="n">field_map</span><span class="p">(</span><span class="n">log</span><span class="p">,</span> <span class="s">"bytes"</span><span class="p">,</span>
+ <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span> <span class="o">!=</span> <span class="s">'-'</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+ <span class="n">log</span> <span class="o">=</span> <span class="n">field_map</span><span class="p">(</span><span class="n">log</span><span class="p">,</span> <span class="s">"status"</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+ <span class="k">return</span> <span class="n">log</span>
+
+<span class="c1"># example use
+</span><span class="n">lines</span> <span class="o">=</span> <span class="n">lines_from_dir</span><span class="p">(</span><span class="s">"access-log*"</span><span class="p">,</span> <span class="s">"www"</span><span class="p">)</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">apache_log</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">log</span><span class="p">:</span>
+  <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="things-to-consider">Things to consider</h4>
+
+<ul>
+  <li>When creating pipeline components it’s critical to focus on the inputs and outputs.</li>
+  <li>You will get the most flexibility when you use a standard set of data types.</li>
+  <li>It is simpler to have a bunch of components that all operate on dictionaries or to have components that require inputs/outputs to be different kinds of user-defined instances.</li>
+  <li>Error handling with this program style is tricky because you have lots of components chained together.</li>
+  <li>Need to pay careful attention to debugging, reliability and other issues.</li>
+</ul>
+
+<h3 id="processing-infinite-data">Processing infinite data</h3>
+
+<p>The code below uses a generator to reproduce the functionality fo <code class="language-plaintext highlighter-rouge">tail -f</code></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="k">def</span> <span class="nf">follow</span><span class="p">(</span><span class="n">the_file</span><span class="p">):</span>
+    <span class="n">the_file</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="p">.</span><span class="n">SEEK_END</span><span class="p">)</span> <span class="c1"># End-of-file
+</span>    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">the_file</span><span class="p">.</span><span class="n">readline</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span> <span class="c1"># Sleep briefly
+</span>            <span class="k">continue</span>
+        <span class="k">yield</span> <span class="n">line</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">log_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"sample.log"</span><span class="p">)</span>
+    <span class="n">log_lines</span> <span class="o">=</span> <span class="n">follow</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">log_lines</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">""</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>We can use this generator in our log processing pipeline utilities with a caveat that functions that consume the entire iterable such as min, max, sum etc. will not complete.  This is an example that we can write processing steps that operate on an infinite data stream.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">log_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"access-log"</span><span class="p">)</span>
+<span class="n">log_lines</span> <span class="o">=</span> <span class="n">follow</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">apache_log</span><span class="p">(</span><span class="n">loglines</span><span class="p">)</span> <span class="c1"># recall that apache_log consumes a generator
+</span>
+<span class="c1"># print out all 404 requests as they happen
+</span><span class="n">r404</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">log</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s">'status'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">404</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">r404</span><span class="p">:</span>
+  <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s">'host'</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s">'datetime'</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="s">'request'</span><span class="p">])</span>
+</code></pre></div></div>
+
+<h2 id="debugging-generators">Debugging generators</h2>
+
+<p>Any single argument function is easy to turn into a generator function. For example…</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">gen_func</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+      <span class="k">yield</span> <span class="n">func</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">gen_func</span>
+
+<span class="c1"># example
+</span><span class="n">gen_sqrt</span> <span class="o">=</span> <span class="n">generate</span><span class="p">(</span><span class="n">math</span><span class="p">.</span><span class="n">sqrt</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">gen_sqrt</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">)):</span>
+  <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="debug-tracing">Debug tracing</h3>
+
+<p>A debugging function that will print items going through a generator</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">trace</span><span class="p">(</span><span class="n">source</span><span class="p">):</span>
+  <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">source</span><span class="p">:</span>
+    <span class="c1"># can you logging module here
+</span>    <span class="k">print</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="n">item</span>
+
+<span class="c1"># This can be placed around any generator
+</span><span class="n">lines</span> <span class="o">=</span> <span class="n">follow</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s">"access-log"</span><span class="p">))</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">trace</span><span class="p">(</span><span class="n">apache_log</span><span class="p">(</span><span class="n">lines</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h3 id="recording-the-last-item-generated-in-a-generator">Recording the last item generated in a generator</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">storeLast</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+    <span class="bp">self</span><span class="p">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">sources</span>
+  
+  <span class="k">def</span> <span class="nf">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">source</span><span class="p">.</span><span class="n">__next__</span><span class="p">()</span>
+    <span class="bp">self</span><span class="p">.</span><span class="n">last</span> <span class="o">=</span> <span class="n">item</span>
+    <span class="k">return</span> <span class="n">item</span>
+  
+  <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span>
+    <span class="k">return</span> <span class="bp">self</span>
+
+<span class="c1"># this can be wrapped around a generator
+</span><span class="n">lines</span> <span class="o">=</span> <span class="n">storeLast</span><span class="p">(</span><span class="n">follow</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s">"access-log"</span><span class="p">)))</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">apache_log</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">log</span><span class="p">:</span>
+  <span class="k">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+  <span class="k">print</span><span class="p">(</span><span class="n">lines</span><span class="p">.</span><span class="n">last</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="yield-as-print">Yield as print</h2>
+
+<p>Generator functions can use <code class="language-plaintext highlighter-rouge">yield</code> like a print statement. This is useful if you are producing I/O output but you want flexibility in how it gets handled.</p>
+
+<p>This technique of producing output leaves the exact output method unspecified so the code is not hardwired to use files, sockets or any other specific kind of output.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">print_count</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+  <span class="k">yield</span> <span class="s">"Hello World</span><span class="se">\n</span><span class="s">"</span>
+  <span class="k">yield</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span>
+  <span class="k">yield</span> <span class="s">"Look at me count to %d</span><span class="se">\n</span><span class="s">"</span> <span class="o">%</span> <span class="n">n</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">yield</span> <span class="s">"   %d</span><span class="se">\n</span><span class="s">"</span> <span class="o">%</span> <span class="n">i</span>
+  <span class="k">yield</span> <span class="s">"I'm done!</span><span class="se">\n</span><span class="s">"</span>
+
+<span class="c1"># generate the output
+</span><span class="n">out</span> <span class="o">=</span> <span class="n">print_count</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Turn it into a string
+</span><span class="n">out_str</span> <span class="o">=</span> <span class="s">""</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+<span class="c1"># Write it to a file
+</span><span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"out.txt"</span><span class="p">,</span> <span class="s">"w"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+
+<span class="c1"># Send it across a network socket
+</span><span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+  <span class="n">s</span><span class="p">.</span><span class="n">sendall</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 </code></pre></div></div>
 
   </div>
