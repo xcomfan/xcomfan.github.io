@@ -31,7 +31,7 @@ In Python every variable holds an instance of an object. Whenever an object is i
 * Set Types
   * [set]({% link python/built_in_types/sets.md %})
   * frozenset
-  * [enumerations]({ link python/built_in_types/enumerations.md})
+  * [enumerations]({% link python/built_in_types/enumerations.md %})
 * Mapping Types
   * dict
 * Context Manager Types

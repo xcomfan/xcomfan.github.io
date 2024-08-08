@@ -6,13 +6,14 @@ permalink: /python/objects
 
 ## What are enumerations?
 
-You can think of an enum as a set of constants. They are useful for defining immutable discrete values such as days of the week, months, seasons, program status codes etc.
+You can think of an enum as a set of constants. They are useful for defining immutable discrete values such as days of the week, months, seasons, program status codes etc. Enumeration allows you to group these numeric constants and assign them readable and descriptive names that you can use and reuse in your code.
 
 The `enum` module which provides the `Enum` class, is available as part of the Python standard library as of Python 3.4. A `enum34` backport is available if you are on an version of Python prior to 3.4.
 
 From PEP 435:
 
 > An enumeration is a set of symbolic names bound to unique constant values. Within an enumeration, the values can be compared by identity, and the enumeration itself can be iterated over.
+
 
 Benefits of using enumerators are...
 
@@ -671,4 +672,143 @@ You can use `IntFlag` as a base class for enumerations that support the bitwise 
 `IntFlag` also supports integer operations but these types of operations return integer rather than member objects.
 
 ```python
+>>> from enum import IntFlag
+>>> class Role(IntFlag):
+...   OWNER = 8
+...   POWER_USER = 4
+...   USER = 2
+...   SUPERVISOR = 1
+...   ADMIN = OWNER | POWER_USER | USER | SUPERVISOR
+...
+>>> john_roles = Role.USER | Role.SUPERVISOR
+>>> john_roles
+<Role.USER|SUPERVISOR: 3>
+>>> type(john_roles)
+<enum 'Role'>
+>>> if Role.USER in john_roles:
+...   print("John, you're a user")
+...
+John, you're a user
+>>> if Role.SUPERVISOR in john_roles:
+...   print("John, you're a supervisor")
+...
+John, you're a supervisor
+>>> Role.OWNER in Role.ADMIN
+True
+>>> Role.SUPERVISOR in Role.ADMIN
+True
+>>> Role.ADMIN + 1
+16
+>>> Role.ADMIN - 2
+13
+>>> Role.ADMIN / 3
+5.0
+>>> Role.ADMIN < 20
+True
+>>>
+```
+
+There is also the `Flag` type which works similar to `IntFlag` but does not support integer operations so you cannot for example use a member of type `Role` in an integer type operation. As wit the `IntFlag` values of members should be powers of 2 and that does not apply to the combinations such as `ADMIN` in the below example.
+
+```python
+>>> from enum import Flag
+>>> class Role(Flag):
+...   OWNER = 8
+...   POWER_USER = 4
+...   USER = 2
+...   SUPERVISOR = 1
+...   ADMIN = OWNER | POWER_USER | USER | SUPERVISOR
+...
+>>> john_roles = Role.USER | Role.SUPERVISOR
+>>> john_roles
+<Role.USER|SUPERVISOR: 3>
+>>> type(john_roles)
+<enum 'Role'>
+>>> if Role.USER in john_roles:
+...   print("John, you're a user")
+...
+John, you're a user
+>>> if Role.SUPERVISOR in john_roles:
+...   print("John, you're a supervisor")
+...
+John, you're a supervisor
+>>> Role.OWNER in Role.ADMIN
+True
+>>> Role.SUPERVISOR in Role.ADMIN
+True
+>>> ROLE.ADMIN + 1
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'ROLE' is not defined. Did you mean: 'Role'?
+>>>
+```
+
+## Examples of using enumerations in code
+
+### Example HTTP call without using enumeration
+
+```python
+>>> from http.client import HTTPSConnection
+>>> def process_response(response):
+...   match response.getcode():
+...     case 200:
+...       print("Success!")
+...     case 201:
+...       print("Successfully created!")
+...     case 400:
+...       print("Bad request")
+...     case 404:
+...       print("Not Found")
+...     case 500:
+...       print("Internal server error")
+...     case _:
+...       print("unexpected status")
+...
+>>> connection = HTTPSConnection("www.python.org")
+>>> try:
+...   connection.request("GET", "/")
+...   response = connection.getresponse()
+...   process_response(response)
+... finally:
+...   connection.close()
+...
+Success!
+```
+
+### Example HTTP call with enumeration
+
+```python
+>>> from enum import IntEnum
+>>> from http.client import HTTPSConnection
+>>> class HTTPStatusCode(IntEnum):
+...   OK = 200
+...   CREATED = 201
+...   BAD_REQUEST = 400
+...   NOT_FOUND = 404
+...   SERVER_ERROR = 500
+...
+>>> def process_response(response):
+...   match response.getcode():
+...     case HTTPStatusCode.OK:
+...       print("Success!")
+...     case HTTPStatusCode.CREATED:
+...       print("Successfully created!")
+...     case HTTPStatusCode.BAD_REQUEST:
+...       print("Bad request")
+...     case HTTPStatusCode.NOT_FOUND:
+...       print("Not found")
+...     case HTTPStatusCode.SERVER_ERROR:
+...       print("Internal server error")
+...     case _:
+...       print("Unexpected status")
+...
+>>> connection = HTTPSConnection("www.python.org")
+>>> try:
+...   connection.request("GET", "/")
+...   response = connection.getresponse()
+...   process_response(response)
+... finally:
+...   connection.close()
+...
+Success!
 ```
