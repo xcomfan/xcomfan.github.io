@@ -23,8 +23,8 @@ apt-get install -y kubeadm kubectl kubelet
 
 ## Content of the kube.sh script once fixed
 
-kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/cloud/deploy.yaml
+kubectl apply -f <https://docs.projectcalico.org/manifests/calico.yaml>
+kubectl apply -f <https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/cloud/deploy.yaml>
 
 ## Chapter 2 Lab notes
 
@@ -54,9 +54,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 
 use the pv.yaml file in your repo and run the command `kubectl create -f pv.yaml`
 
-
 Example of sorting the volumes by how much storage capacity they have. `kubectl get pv --sort=.spec.capacity.storage`
-
 
 ### Lab 4 - Performing a Kubernetes upgrade with kubeadm
 
@@ -64,7 +62,7 @@ Example of sorting the volumes by how much storage capacity they have. `kubectl 
 
 Because the book I am using sucks, I need to do some hacking with versions to be able to rproduce the lab so all the commands below are just notes, I did not verify them.
 
-* Upgrade kubeadm on the control plane node. 
+* Upgrade kubeadm on the control plane node.
 * Drain the control plane node `kubectl drain ip-172-31-21-95 --ignore-daemonsets`
 * Plan the upgrade (kubeadm upgrade plan)
 * Apply the upgrade (kubeadm upgrade apply) `sudo apt-get update && sudo apt-get install -y --allow-change-held-packages kubeadm=1.27.2-00 && kubeadm upgrade apply v1.27.2`
@@ -78,7 +76,6 @@ Because the book I am using sucks, I need to do some hacking with versions to be
 * Upgrade the kubelet configuration (kubeadm upgrade node) `sudo kubeadm upgrade node`
 * Upgrade kubelet and kubectl `sudo apt-get install -y --allow-change-held-packages kubectl=1.27.2-00 kubelet=1.27.2-00 && systemctl daemon reload && systemctl restart kubelet`
 * Uncordon the node `kubectl uncordon HOSTNAME`
-
 
 #### Lab 5 - Working with namespaces
 
@@ -124,7 +121,7 @@ Kompose is a tool that can convert docker compose files into kubernetes objects 
 
 #### kustomize
 
-Kustomize is like helm, but it has a concept of layering where you have a base version and layering yaml artifacts (referred to as patching). This is a strong approach as most firms construct their project from a set of internally developed and off the shelf apps. You can leverage kustomize to absorb any base file modifications for your underlying components while preserving use-case-specific customization overrides. 
+Kustomize is like helm, but it has a concept of layering where you have a base version and layering yaml artifacts (referred to as patching). This is a strong approach as most firms construct their project from a set of internally developed and off the shelf apps. You can leverage kustomize to absorb any base file modifications for your underlying components while preserving use-case-specific customization overrides.
 
 ### Safely Draining a K8s Node
 
@@ -149,6 +146,15 @@ Following are the steps to upgrade the control plan node:
 * Plan the upgrade (kubeadm upgrade plan)
 * Apply the upgrade (kubeadm upgrade apply)
 * Uncordon the control plane node
+* Upgrade kubelet and kubectl on the control plane node
+
+#### Worker node upgrade steps (now with more info)
+
+* Upgrade kubeadm
+* Drain the node
+* Upgrade the kubelet configuration (kubeadm upgrade node)
+* Upgrade kubelet and kubectl
+* Uncordon the node
 
 #### Recovering from a Failure State
 
@@ -157,5 +163,281 @@ If the kubeadm upgrade fails and does not roll back for example if you lost powe
 During the upgrading process, kubeadm creates the following backup directories in `/etc/kubernetes/tmp`
 
 * `kubeadm-backup-etcd-<date>-<time>` - backup of this control plane nodes local etcd member data. If upgrade fails contents of this folder can be manually restored in /var/lib/etcd.
-* `kubeadm-backup-manifests-<date>-<time>` - copieds this control plane node's static Pod manifest files. If an upgrade fails and the automated reollback also fails, the contents of this folder can be manually restored in `/etc/kubernetes/manifests`.
+* `kubeadm-backup-manifests-<date>-<time>` - copies this control plane node's static Pod manifest files. If an upgrade fails and the automated reollback also fails, the contents of this folder can be manually restored in `/etc/kubernetes/manifests`.
+
+### Overview of upgrading K8s with Kubeadm
+
+#### Steps/commands to upgrade a control plane node
+
+Command to drain control plane node looks like `kubectl drain k8s-control --ignore-daemonsets`
+
+Command to execute the given update kubeadm looks like `sudo apt-get && sudo apt-get install -y --allow-change-held-packages kubeadm=1.22.2-00` (this is from the crappy book real command is just similar)
+
+To check kubeadm version use `kubeadm version`
+
+To "plan the upgrade" use the command `sudo kubeadm upgrade plan v1.22.2`
+
+To upgrade the control plan components the command looks like `sudo kubeadm upgrade apply v1.22.2`
+
+To upgrade kubelet and kubectl on the control plan node use the command `sudo apt-get update && sudo apt-get install -y --allow-change-held-packages kubelet=1.22.2-00 kubectl=1.22.2-00`
+
+To reload the daemon use the command `sudo systemctl daemon-reload`
+
+To restart kubelet use the command `sudo systemctl restart kubelet`
+
+To uncordon the control plane node use the command `kubectl uncordon k8s-control`
+
+To verify the control plane is working use `kubectl get nodes`
+
+#### Steps/commands to upgrade worker node
+
+To drain worker node use the command `kubectl drain k8s-worker1 --ignore-daemonsets --force`
+
+To upgrade kubeadm on the worker node `sudo apt-get update && sudo apt-get install -y --allow-change-held=packages kubeadm=1.22.2-00`
+
+To upgrade the kubelet configuration on the worker node `sudo kubeadm upgrade node`
+
+To upgrade kubelet and kubectl on the worker node use `sudo apt-get update && sudo apt-get install -y --allow-change-held-packages kubelet=1.22.2-00 kubectl=1.22.2-00`
+
+To reload the daemon on worker node `sudo systemctl daemon-reload`
+
+To restart kubelet on worker node 1 `sudo systemctl restart kubelet`
+
+To uncordon the worker node `kubectl uncordon k8s-worker1`
+
+To verify the worker node is working `kubectl get nodes`
+
+### Backing up and restoring the etcd cluster data
+
+Some noteworthy features of etcd are
+
+* Fully replicated - Each node in an etcd cluster has full access to the datastore
+* Highly Available - etcd is intended to have no single point of failure and endures hardware failures and network partitions gracefully
+* Reliably Consistent - Each data 'read' returns the most recent write from all clusters
+* Fast - The benchmark for etcd is 10,000 writes per second
+* Secure - etcd supports automated Transport Layer Security (TLS) and optional SSL client certificate authentication. Its a best practice to use least priviledge to etcd as etcd maintains critical and highly sensitive configuration data.
+* Simple - Using standard HTTP/JSON tools, any application may read or publish data to etcd
+
+#### Backing up and restoring etcd
+
+Etcd is where all Kubernetes object are kept. Backing up the etcd cluster data is critical for recovering Kubernetes cluster in catastrophe scenarios, such as losing all control plane nodes. All Kubernetes states and crucial information is contained int he snapshot file. Encrypt the snapshot files to keep important Kubernetes data safe.
+
+There are two ways to back up an etcd cluster, built-in snapshots and volume snapshots.
+
+##### Built in Snapshot
+
+You can backup etcd data using the etcd command-line tool `etcdctl` and its snapshot save command.  Example of running a backup below...
+
+```bash
+$ ETCDCTL_API=3 etcdctl --endpoints $ENDPOINT
+snapshot save <file name>
+```
+
+another example below because the book I am using is trash.
+
+`ETCDCTL_API=3 etcdctl --endpoints $ENDPOINT snapshot save snapshotdb`
+
+To verity the snapshot use `ETCDCTL_API=3 etcdctl --write-out=table snapshot status snapshotdb`
+
+The snapshot would be taken on a live member. Taking the backup does not impact the members performance.
+
+When using etcdctl there are some options to be aware of.  Below is an example of providing a an endpoint certificate.
+
+`ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacerts=<trusted-ca-file> --cert=<cert-file> --key=<key-file> snapshot save <backup-file-location>`
+
+To restore etcd the command would look like `ETCDCTL_API=3 etcdctl snaphsot restore <file-name>` There are options you can add to this command one of which has the restore creating a new logical cluster. The snapshot file could be from a backup or from a directory that still exits.
+
+If the access URLs of the restored cluster differ from those of the prior cluster. In that case, the Kubernetes API server must be adjusted. You would do that by restarting the API server with the `--etcd-servers=$NEW_ETCD_CLUSTER $OLD_ETCD_CLUSTER` (replace the variables with the new and old cluster IPs). If a load balancer is in front of etcd cluster that may need to be adjusted as well.
+
+A full example of the backup command is below which has hints on where to get certificates from.
+
+```bash
+export ETCDCTL_API=3
+etcdctl snapshot save --ednpoints=127.0.0.1:2379 \
+--cacert=/etc/kubernetes/pki/etcd/ca.crt \
+--cert=/etc/kubernetes/pki/etcd/server.crt \
+--key=/etc/kubernetes/pki/etcd/server.key \
+/home/ubuntu/myk8scluster2.db
+```
+
+To get your nodes information go to the manifests directory look for the `etcd.yaml` file in `/etc/kubernetes/manifests/` that will have all the info you need for parameters in the backup command.
+
+If its not obvious what restoring etcd would do: If for example you took an etcd backup and proceeded to delete a pod that was running when backup was taken.  When you restore the deleted pod would come back.
+
+##### Volume Snapshot
+
+This approach backs up etc data by taking a snapshot of the storage volume operating on a storage volume that supports backup such as Amazon EBS.
+
+## KCA book chapter 4 notes (Kubernetes object management)
+
+### Overview of kubectl
+
+kubectl looks for a file named `config` in the `$HOME/.kube` directory for configuration. You can use the `KUBECONFIG` environment variable or the `kubeconfig` flag to spacify different config files.
+
+Syntax of the kubectl command is `kubectl [command] [TYPE] [NAME] [flags]` where...
+
+* command - defines the action you want to take on one or more resources, such as create, get, describe, or delete full list in table below.
+* TYPE - Indicates the type of resource. You can provide singular or plural or shortened forms of resource types, which are case-insensitive.
+* NAME - Specifies the resource's name. Case matters. If the name is missing all resources of the type are displayed.
+* flags - Optional flags for the command. Flags will override any default values and environment variables.
+
+kubectl commands
+[comment]: <> (TODO: The syntax column is not very usable need to review and improve)
+
+| Operation | Syntax | Description |
+| --------- | ------ | ----------- |
+| create | `kubectl create -f FILENAME [flags]` | Create one or more resources from a file or stdin |
+| delete | `kubectl delete (-f FILENAME or TYPE or NAME or NAME or -l label or --all) [flags]` | Delete resources either from file, or stdin, or specifying label selectors, names resource selectors, or resources |
+| describe | `kubectl describe (-f FILENAME or TYPE  [NAME_PREFIX or NAME or -l label]) [flags]` | Display the detailed state of one or more resources |
+| exec | `kubectl exec POD [-c CONTAINER] [-i] [-t] [flags] [--COMMANDS] [args]` | Execute a command against a container in a pod |
+| get | `kubectl get (-f FILENAME or TYPE or [NAME or /NAME or -l label]) [--watch][--sort-by=FIELD][[-o or --output]=OUTPUT_FORMAT][FLAGS]` | List one or more resources |
+| apply | `kubectl apply -f FILENAME [flags]` | Apply a configuration change to a resource from a file or stdin.
+
+### Lab: exploring a Kubernetes Cluster with kubectl
+
+To get a capacity sorted list of persistent volumes use the command: `kubectl get pv --sort-by=.spec.capacity.storage`
+
+To run a command inside the "Quark Pod's" container use `kubectl exec quark -n beebox-mobile -- cat /etc/key/key.txt`
+
+To create a deployment using a spec file use `kubectl apply -f /home/deployment.yml`
+
+### Kubectl tips
+
+Breakdown of kubernetes management techniques:
+
+You get undefined behavior if you mix these techniques. Pick one and use that.
+
+| Management technique | Description | Operates on | Recommended environment | Supported writers | Notes |
+| -------------------- | ----------- | ----------- | ----------------------- | ----------------- | ----- |
+| Imperative commands | User operates directly on live items in a cluster | Live objects | Development projects | 1+ | Does not provide history of past configurations because it works on live objects |
+| Imperative object configuration | DESC | Individual files | Production projects | 1 | |
+| Declarative object configuration | DESC | Directories of files | Production projects | 1+ | |
+
+The `--record` flag can be used to write the command that was run in the kubernetes.io/change-cause resource annotation. The documented change can be used as a reference point in the future. For example, it can be used to look at the commands that were run in each Deployment revision.
+
+### Managing K8s role based access control (RBAC)
+
+RBAC is a Kubernetes feature that allows you to control who has access to what in the cluster.
+
+There are 4 types of Kubernetes objects declared via the RBAC API.
+
+* Role
+* ClusterRole
+* RoleBinding
+* ClusterRoleBinding
+
+### Role and ClusterRole
+
+An RBAC Role is a collection of rules that reflect a set of permissions. Permission are only used in conjunction (there are no deny rules). A Role always sets permissions within a specific namespace thus when creating a role you must specify the namespace to which it belongs.
+
+A ClusterRole is a nameless resources. Because a Kubernetes object can only be namespaced or not namespaced the resources Role and ClusterRole have different names.  ClusterRoles can be used to ...
+
+* Permissions on namespaced resources can be defined and granted within each namespace
+* Permissions on named resources can be defined and granted across all namespaces
+* Permissions on cluster-scoped resources can bed defined.
+
+TLDR: Use a Role to define a role within a namespace and a ClusterRole to define a role that spans the entire cluster.
+
+#### Role example
+
+Below is an example of a role that can be used to allow read access to pods in the "default" namespace
+
+```yaml
+apiVersion:rbac.authorization.k8s.io/v1
+kind: role
+metadata:
+  namespace: default
+  name: pod-reader
+rules:
+- apiGroups: [""] # "" indicates the core API group
+    resources: ["pods"]
+    verbs: ["get", "watch", "list"]
+```
+
+#### Cluster role example
+
+Cluster role can grant same permissions as a role but it has cluster scope.  Below are a few examples of permissions that make sense as cluster scope.
+
+* Resources with a cluster scope such as nodes
+* Endpoints that are not resources such as `/healthz`
+* Spanning all namespaces, namespaced resources such as Pods
+
+For example a ClusterRole can allow a certain user to perform kubectl obtain pods --all-namespaces.
+
+Below is an example of a ClusterRole used to allow read access to secrets across all namespaces.
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  # "namespace" omitted since ClusterRoles are not namespaced
+  name: secret-reader
+rules:
+- apiGroups: [""]
+    #
+    # at the HTTP level, the name of the resource for accessing Secret
+    # objects is "secrets"
+    resources: ["secrets"]
+    verbs: ["get", "watch", "list"]
+```
+
+### Role binding and ClusterRole bindin
+
+A role binding assigns a user or group of users the permissions indicated in a role. It contains a list of topics (users, groups, or service accounts) and a reference to the role that is being assigned. A valid path segment name must be used as the name of a roleBinding or ClusterRoleBinding object.
+
+#### Role binding examples
+
+Within the "default" namespace, below is an example of a roleBinding that grants the "pod-reader" Role to the user "jane".
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+# This role binding allows "jane" to read pods in the "default" namespace.
+# You need to already have a Role named "pod-reader" in that namespace.
+kind: RoleBinding
+metadata:
+  name: read-pods
+  namespace: default
+subjects:
+# You can specify more than one "subject"
+- kind: User
+    name: jane # "name" is case sensitive
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  # 'roleRef' specifies the binding to a Role / ClusterRole
+  kind: Role # this must be Role or ClusterRole
+  name: pod-reader # this must match the name of the Role or ClusterRole you wish to bind to
+  apiGroup: rbac.authorization.k8s.io
+```
+
+A ClusterRole can be referenced by a RoleBinding to provide the rights described in that ClusterRole to resources inside the RoleBinding's namespace. This type of reference enables you to define a set of shared roles for your cluster and then reuse them across multiple namespaces.
+
+#### ClusterRoleBinding example
+
+A `ClusterRoleBinding` can be used to provide permissions across an entire cluster. Any user in the group `manager` can read secrets in any namespace using the `ClusterRoleBinding` below.
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+# This cluster role binding allows anyone in the "manager" group to read secrets in any namespace
+kind: ClusterRoleBinding
+metadata:
+  name: read-secrets-global
+subjects:
+- kind: Group
+    name: manager # Name is case sensitive
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: secret-reader
+  apiGroup: rbac.authorization.k8s.io
+```
+
+You cannot change the Role or ClusterRole that a binding refers to once created. You will get a validation error if you try to alter the roleRef of a binding. If you want to update a binding's roleRef, you must first remove the binding object and construct a replacement.
+
+### Creating a service account
+
+Kubernetes service accounts are resources generated and managed using the Kubernetes API. They are used to authenticate in-cluster Kubernetes-produced entities like Pods to the Kubernetes API server or external services.
+
+A service account in Kubernetes is an account that container processes in pods use to authenticate with the Kubernetes API. If your pods need to communicate with the API, you can restrict their access via service accounts. Service accounts use role-based access control objects for access control, just like any other user account. Therefor we can use ClusterRoles or ClusterRoleBindings to bind service accounts to give Kubernetes API functionality to our pods that use those service accounts.
+
+### Inspecting Pod Resource Usage
 
