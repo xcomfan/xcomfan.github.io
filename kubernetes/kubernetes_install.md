@@ -441,3 +441,13 @@ A service account in Kubernetes is an account that container processes in pods u
 
 ### Inspecting Pod Resource Usage
 
+#### kubectl top
+
+The kubectl top command shows current CPU and memory usage for all pods or nodes in a cluster or a single pod or node if one is specified.  For example to see resource utilization across nodes use the command `kubectl top node`
+
+Another good example of kubectl top usage: `kubectl top pod -n beebox-mobile --sort-by-cpu --selector app=auth`
+
+#### Kubernetes metrics server
+
+You can install kubernetes metric server with the command `kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/metrics-server-helm-chart-3.8.2/components.yaml%20-0%20metric-server-components.yaml` (THe address here is probably wrong).  You can then validate that the metric server is running with the command `kubectl get --raw /apis/metrics.k8s.io/`
+
