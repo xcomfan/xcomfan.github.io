@@ -34,6 +34,8 @@ In Python every variable holds an instance of an object. Whenever an object is i
   * [enumerations]({% link python/built_in_types/enumerations.md %})
 * Mapping Types
   * dict
+* Collections
+  * [Counter]({% link python/built_in_types/counter.md %})
 * Context Manager Types
 * Type Annotation Types
   * Generic Alias
