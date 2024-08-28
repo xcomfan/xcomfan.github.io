@@ -451,3 +451,174 @@ Another good example of kubectl top usage: `kubectl top pod -n beebox-mobile --s
 
 You can install kubernetes metric server with the command `kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/metrics-server-helm-chart-3.8.2/components.yaml%20-0%20metric-server-components.yaml` (THe address here is probably wrong).  You can then validate that the metric server is running with the command `kubectl get --raw /apis/metrics.k8s.io/`
 
+## KCA Book chapter 5 notes (pods and container)
+
+### Kubernetes Pods
+
+A Pod is the lowest deployment and management unit in Kubernetes. 
+
+### Managing Application Configuration
+
+You will probably at some point want to pass dynamic values to your applications at runtime to control how they behave. This process is known as application configuration, where you are just passing data to containers that control what they do and how they run.
+
+1. A file that defines the configuration for a Kubernetes object is known as an object **configuration file** or just **configuration file**. Configuration files are often kep in source control system like Git.
+
+2. Live object configuration or **live configuration** is the values of an objects live configuration as monitored by the Kubernetes cluster. These are often saved in the Kubernetes cluster storage `etcd`.
+
+3. A declarative configuration writer or declarative writer is a human or software component that modified a live object.
+
+### ConfigMaps
+
+A **ConfigMap** is simply a Kubernetes object representing a key-value store of configuration data. If you have configuration that you need to pass into your pods and your containers it is often a good idea to store those configuration in a ConfigMap that would offer you a centralized place to store your configuration data within the Kubernetes cluster. Once you have that key-value data inside your ConfigMap, you can pass it into your containers so they can use it. If you need to update those configurations, it is just a matter of updating the ConfigMap and potentially restarting any pods using that data.
+
+There are two primary ways to store configuration data in Kubernetes: ConfigMap and Secrets. Secrets are very similar to ConfigMpas, but they are designed to store sensitive data securely. 
+
+### Environment Variables
+
+You can pass ConfigMap and secret data to containers using environment variables and those variables are visible at runtime to the container process. In the containers spec, you define an environment variable that you pull from a particular key within a ConfigMap, which will be passed as a container process environment variable. To set Kubernetes environment variables you may utilize the `env` or `envFrom` fields. 
+
+### Configuration Volumes
+
+The other way to pass data to containers is through configuration volumes. Within the configuration volume, configuration data from ConfigMaps or Secret is passed in the form of a mounted volume. It means that configuration data appear in files available on the container file system. Specifically, you have a file for each top-level key in the configuration data, and the contents of that file are going to be all of the data and sub-keys associated with that top-level key. To utilize a volume, describe where to mount those volumes into containers `in.spec.containers` and specify the volumes to supply for the Pod `in.spec.volumes[*]` Volumes are mounted within the image at the provided paths.
+
+below is an example ConfigMay specification. You can create this using the command `kubectl create -f my-configmap.yml` and display it using `kubectl describe configmap my-configmap`
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-configmap
+data:
+  key1: Hello, world!
+  key2: |
+    Test
+    multiple lines
+    more lines
+```
+
+below is an example of a Secret specification. You need to store the secret in base 64 encryption which you can generate with `echo -n 'secret' | base64`
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-secret
+type: Opaque
+data:
+  secretkey1: base_64_value_goes_here
+  secretkey2: another_base_64_value_here
+```
+
+Below is an example of secrets  being used in a Pod configuration naturally you would create this pod with the command `kubectl create -f env-pod.yml`
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: env-pod
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ['sh', '-c', 'echo "configmap: $CONFIGMAPVAR secret: $SECRETVAR"']
+    env:
+    - name: CONFIGMAPVAR
+      valueFrom:
+        configMapKeyRef:
+          name: my-configmap
+          key: key1
+    - name: SECRETVAR
+      valueFrom:
+        secretKeyRef:
+          name: my-secret
+          key: secretkey1
+```
+
+Below is an example of exposing data using configuration volumes. You an create this pod with `kubectl create -f volume-pod.yml` and execute it with `kubectl exec volume-pod -- ls /etc/config/configmap` or `kubectl exec volume-pod -- cat /etc/config/configmap/key1` (you get the idea)
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: volume-pod
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ['sh', '-c', 'while true; do sleep 3600; done']
+    volumeMounts:
+    - name: configmap-volume
+      mountPath: /etc/config/configmap
+    - name: secret-volume
+      mountPath: /etc/config/secret
+  volumes:
+  - name: configmap-volume
+    configMap:
+    name: my-configmap
+  - name: secret-volume
+    secret:
+      secretName: my-secret
+```
+
+### Managing container resources
+
+Kubernetes has the ability to specify the resource requirements of each container. A containers memory and CPU requirements and resource limits can be defined in the spec. 
+
+#### Resource Requests
+
+When you specify a resource request for a Pod's containers, the kube-scheduler utilized this information to choose which node to deploy the Pod on. When you establish a resource limit for a container, the kubelet enforces those limitations preventing the running container from using more of that resource than the limit you specified. the kubelet additionally reserve the requested quantity of that system resource for that container's exclusive usage. It is important to note the containers can use more than the requested resources. The resource requests do not force the container to stay within that limit, as resource requests only affect scheduling. Resource requests allow you to specify the number of necessary resources to run a container. They govern which worker nodes the containers should be scheduled on. When Kubernetes is getting ready to run a particular pod, it chooses a worker node based on the resource requests of that Pod's containers. Kubernetes uses those values to choose a node with enough resources to run that Pod. If the Pod node has enough resources available, a container may (and is permitted) utilize more resources than its requested for that resource specifies. On the other hand, a container cannot exceed its resource limit.
+
+Below is an example of setting resource limits in a spec.  Memory is measured in bytes, and CPU is measured in CPU units which are 1/1000 of one CPU.  In example below 250m or milli-CPUs is being requested which equates to 25% of one CPU.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    resources:
+      requests:
+        cpu: "250m"
+        memory: "128Mi"
+```
+
+#### Resource Limits
+
+Resource limits provide us with a way to limit the amount of resources containers can use and stop containers from using more resource thant hey should. It is important to note that the container runtime is responsible for enforcing resource limits when you use resource limits. Different containers runtimes do this in different ways; for example, some runtimes might enforce resource limits by terminating the container process.If you are using resource limits your containers may get stopped if they attempt to use more resources then specified in the limit.
+
+Resource limits allow you to put some constraints on how many resources you container can use and to prevent certain containers from consuming a bunch of resources and running away with all the resources in your cluster, potentially causing issues for other containers and applications. If you specify a 4GiB memory limit ofr that container, the kubelet (and container runtime) enforces it. The container is prevented from exceeding the set resource limit by the runtime. For example, suppose a process in the container attempts to use more memory than is permitted. In that case, the system kernel end the process with an Out-Of-Memory (OOM) error.
+
+Below is an example of what resource limits look like in a container spec.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+  -name: busybox
+  image: busybox
+  resources:
+    limits:
+      cpu: "250m"
+      memory: "128Mi"
+```
+
+### Monitoring Container Health with Probes
+
+#### Container health
+
+Kubernetes has the ability to restart unhealthy containers. To make this work Kubernetes needs to accurately determine the status of applications.
+
+#### Pod lifecycle
+
+Pods have a specified lifetime that begins with the **Pending** phase and progresses to the **Running** phase if at least one of its primary containers starts normally. then comes the **Succeeded** or **Failed** phases, depending on whether any container in the Pod failed.
+
+While a Pod is operation, the kubelet can restart containers to manage various issues. Kubernetes tracks different container statuses within a Pod and determines the action to to take to restore the Pod's health. Pods have a specification and a real status in the Kubernetes API. A Pod object's state comprises a set of Pod conditions. If your application requires it, you may integrate specific readiness information into the condition data. Pods can only be scheduled once in their lives. When a Pod is scheduled (assigned) to a Node, it runs on that Node until it is stopped or terminated.
+
+#### Pod lifetime
+
