@@ -622,3 +622,39 @@ While a Pod is operation, the kubelet can restart containers to manage various i
 
 #### Pod lifetime
 
+Kubernetes uses a higher-level abstraction known as a **controller** to manage the relatively disposable Pod instances. Pods are generated, given a Unique ID (UID), and allocated to nodes, where they remain until tey are terminated (according to the restart policy) or deleted. A given Pod (as specified by a UID) is never "rescheduled" to a different node. Instead, Pod can be replaced by a new and nearly identical one with a different UID. When a volume is said to have the same lifetime as a Pod it means that the object lives for as long as that precise Pod (with the exact UID). If that Pod is removed for any reason, the linked item (volume in this case) is destroyed and recreated.
+
+#### Container states
+
+Kubernetes maintains the status of each container within a Pod in addition to the overall phase of the Pod. Con-tainer lifecycle hooks can trigger events at certain stages in a containers's lifespan. Once a Pod is assigned to a node by the scheduler, the kubelet begins building containers for that Pod using a container runtime. Containers can be in one of three states: waiting, Running or Terminated. Each state has a distinct meaning.
+
+* Waiting - A container in the waiting state is still doing the actions required for a successful startup, such as retrieving the container image from a container image registry. Kubectl will shwo you the reason a container is in waiting state when you `kubectl describe pod pod-name`
+
+* Running - This status means container is running normally. If a postStart hook was configured, it was al-ready run and completed.
+
+* Terminated - This state means the container either completed or failed for some reason. When use use kubectl to query a Pod with a terminated container, you will see a reason, an exit code, and the start and end times for the container's runtime duration. If a preStop hook is configured on a container, it is executed before the container reaches terminated state.
+
+#### Container Probes
+
+A probe may be used to inspect a container using one of the following mechanisms. A probe is a diagnostic done on a container regularly by Kubernetes.
+
+* Exec - Inside the container, it executes a specific command. If the command exists with a status code of 0, the diagnostic is considered successful
+
+* gRPC - Uses gRPC to make a remote procedure call, and gRPC health checks should be implemented by the target. If the status of the answer is SERVING, the diagnostic is regarded as successful. gRPC probes are an alpha feature that may be accessed only by enabling the gRPC ContainerProbe feature gate.
+
+* httpGet - Executes an HTTP GET request on a given port and route against the Pod's IP address. The diagnostic is considered successful if the answer is more than or equals 200 but less than 400.
+
+* tcpSocket - Performs a TCP check on a given port against the Pod's IP address. If the port is open, the diagnostic is considered successful. It is considered healthy if the distant system (the container) instantly shuts the connection once it opens.
+
+#### Types of probes
+
+On a running container, the kubelet can optionally execute and respond to three types of probes:
+
+* LivenessProbe - Liveness probes allow us to automatically determine whether or ot a container application is in a healthy state. By default, Kubernetes only considers a container to be down or broken if the container process stops, but liveness probes can allow us to customize this detection mechanism and make it more sophisticated. A container could be running, and the process has not stopped, but things are still broken. With liveness probes you can detect more sophisticated and subtle situations where things are not working, but the container is still running.
+
+* StartupProbe - These are very similar to liveness probes, but they constantly run on a schedule. Startup probes only run at container startup and stop once they succeed. Essentially, startup probes detect when the application has successfully started up. They monitor container health during hte startup process. Startup probes are useful for legacy applications with long startup times. If a StartupProbe is used, all other probes are blocked until the StartupProbe succeeds. If a startup probe fails, the kubelet terminates the container and subjects it to the restart policy.
+
+* ReadinessProbe - Applications are occasionally unavailable to serve traffic for a short period of time. For example, during startup, an application may need to load massive data or configuration files, or it may need to rely on external services. You do not want to destroy the application in this situation, but you also do not want to send it requests. To detect and mitigate these issues, Kubernetes provides readiness probes. A Pod with container reporting that they are not ready does not receive traffic.
+
+### Building self-healing Pods with Restart Policies
+
