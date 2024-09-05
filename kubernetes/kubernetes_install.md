@@ -658,3 +658,76 @@ On a running container, the kubelet can optionally execute and respond to three 
 
 ### Building self-healing Pods with Restart Policies
 
+#### Restart Policies
+
+There are 3 possible restart policies in Kubernetes: Always, OnFailure, and Never. The default setting is Always and the restart policy is specified in the Pod spec. All containers in the Pod are affected by the restartPolicy.
+
+[comment]: <> (TODO: Because the book is garbage when I see it somewhere else need to get a better explainer of what happens if a container runs to completion with this policy.)
+**Always** Wit this policy containers are always restarted if they stop or become unhealthy. This policy should be used for an application that should essentially just always be running.
+
+**OnFailure** If you have some software designed to run once to successful completion and then stop, and it does not need to be run again you want to use the OnFailure policy. This policy automatically restarts an application if it fails, but will not be restarted if it succeeds or finishes.
+
+**Never** With this restart policy no matter what happens, if a container completes successfully, it will never be restarted. It would be best to use this for applications that only run once and never restart automatically.
+
+### Creating Multi Container Pods
+
+#### Multi Container Pod
+
+In a multi-container pod, the containers share resources such as network and storage that can interact, working together to provide functionality. 
+
+#### Cross Container Interaction
+
+Once you have multiple containers in the same pod, how do they interact with each other? Containers in the same Pod can communicate with each other using shared resources. One such shared resources is the network so containers in the same Pod can communicate with each other on any port event if that port is not exported to the cluster. They can also share storage and use same volumes to share data within a Pod.
+
+#### Shared Volumes in Kubernetes Pod
+
+A shared volume is a siple and effective way to transfer data amongst containers in a Pod in Kubernetes. Data on Kubernetes Volumes can survive container restarts, but theses volumes have the same lifetime as the Pod. 
+
+#### Inter-Container Network Communication
+
+Containers in a Pod can be accessing using "localhost" and share the same network namespace. In addition, for containers the observable hostname is the name of the Pod. Because containers share the same IP address and port space you need to coordinate port usage for apps within a Pod.
+
+#### Inter Process Communication (IPC)
+
+Containers in a Pod share the same IPC namespace thus they are able to interact via normal inter-process communication such as SystemV semaphores or POSIX shared memory.
+
+#### Multi-Container Pods Use Case
+
+### Introduction to Init Containers
+
+An init container in Kubernetes is the one that starts and executes before other containers in the same Pod. Its purpose is to carry out initialization logic for the primary application hosted on the Pod. Create the appropriate user credentials, make database migrations, and design schemas. You can have more than one init containers in a Pod. Before the next init container can begin, the previous one must finish successfully. If a Pod's init container fails the Pod wil be continuously restarted till it succeeds unless you have a restart policy of Never in which case the init container failing will fail the whole Pod. If you provide several init containers for a Pod, kubelet executes each init container in the order specified before the next init container may execute the previous one must succeed. 
+
+#### How Init Containers Differ From Regular Containers
+
+All app container fields and features, including resource limitations, volumes, and security settings, are supported by init containers. The resource demands and limits for an init container, on the other hand, are handled differently. In addition because they must run to completion before a Pod may start, init containers do not support lifecycle, livenessProbe, readinessProbe, or startupProbe.
+
+#### Detailed behavior of init containers
+
+Kubelet pauses launching init containers at Pod startup until networking and storage are available. All init containers must execute again if a Pod is restarted. 
+
+#### Use cases for init containers
+
+* Pause a pod to wait for another service to become available. For example you can use an init container to pause startup until a service or another pod becomes available.
+* Perform sensitive startups steps (such as loading secrets/certificates) outside of app containers. 
+* Populate data into a shared volume at startup.
+* Communicate with another external service for example if you need to register Pod with some external service.
+
+#### The yaml spec for an init containers
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: init-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.19.1
+  initContainers:
+  - name: delay
+    image: busybox
+    command: ['sleep', '30']
+```
+
+## Chapter 6: Advanced Pod Allocation
+
