@@ -798,7 +798,7 @@ Static pods are used when you want tot urn them on a node without the involvemen
 To set up a static pod...
 
 1. Log into a worker node
-2. Apply a manifest similar to the one below using the command ``
+2. Create the manifest file in the location `/etc/kubernetes/manifests/beebox-diagnostic.yml`
 
 ```yaml
 apiVersion: v1
@@ -812,3 +812,7 @@ spec:
     ports:
     - containerPort: 80
 ```
+
+3. Start the static pod by restarting kubelet to get it to pick up the static config file. `sudo systemctl restart kubelet` Once that is done you should be able to see the status of the static pod via the `kubectl get pods` command. The static pod you see when you run `kubectl get pods` is just a mirror of the static pod and if you try to `kubectl delete pod beebox-diagnostic-k8s-worker1` it will just re-appear because the API has no control over it.
+
+## Chapter 7 Deployments.
