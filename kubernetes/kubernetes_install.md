@@ -731,3 +731,84 @@ spec:
 
 ## Chapter 6: Advanced Pod Allocation
 
+### Intro
+
+The kube-scheduler in Kubernetes is in charge of scheduling pods to specific nodes in the cluster. By default nodes are picked based on each container's resource demands and restrictions in the produced Pod. While scheduling pods based on resource limits works in many cases sometimes you want to assign ods to specific nodes. This is where advanced pod scheduling comes in.
+
+## Exploring K8s Scheduling
+
+### Scheduling
+
+The kube-scheduler does the scheduling. The scheduler does the scheduling based on 1. whether or not the resources requests specified in a pod can be fulfilled by the available resources in a node. 2. Different configuration that affect the label of the node and nodeSelector specified in a pod to select a suitable node for it.
+
+#### nodeSelector
+
+nodeSelector is a field in the pod descriptor file to specify the node(s) on which it is to be run. The node's label is used in the nodeSelector field to select and schedule a specif node.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  nodeSelector:
+    special: "true"
+  containers:
+  - name: nginx
+    image: nginx:1.19.1
+```
+
+#### nodeName
+
+If you want to bypass regular scheduling mechanisms you can it by using the name of a node rathern thatn the label of that node.  Under spec in the pod descriptor file, nodeName is the field used to specify the node's name to select.
+
+## Using DaemonSets
+
+A **DaemonSet** is an object runs a copy of a pod on each node automatically. When new node are added to the cluster, pod copies are added. If you delete a DaemonSet, all the copies of pods that DaemonSet created will also be deleted.
+
+Example of a DaemonSet descriptor file
+
+```yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: my-daemonset
+spec:
+  selector:
+    matchLabels:
+      app: my-daemonset
+  template:
+    metadata:
+      labels:
+        app: my-daemonset
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.19.1
+```
+
+In a simple case, one DaemonSet could be used for each type of daemon, covering all nodes. In a comlex case, multiple DaemonSets could be sued for a single type of daemon with different minimum requirements of the CPU and memory usage for different types of hardware.
+
+### Advanced Scheduling and Pod Affinity and Anti Affinity
+
+You can establish rules for how pods should be arranged in relations to other pods using pod affinity and anti affinity. Custom labels on nodes and label selectors supplied in pods are used to define the rules.
+
+## Using Static Pods
+
+Static pods are used when you want tot urn them on a node without the involvement of the control plane. You cannot manage these static pods through the k8s API server. These static pods are managed by kubelet instead of by the K9s API server.
+
+To set up a static pod...
+
+1. Log into a worker node
+2. Apply a manifest similar to the one below using the command ``
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: beebox-diagnostic
+spec:
+  containers:
+  - name: beebox-diagnostic
+    image: acgorg/beebox-diagnostic:1
+    ports:
+    - containerPort: 80
+```
