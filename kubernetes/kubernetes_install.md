@@ -815,4 +815,83 @@ spec:
 
 3. Start the static pod by restarting kubelet to get it to pick up the static config file. `sudo systemctl restart kubelet` Once that is done you should be able to see the status of the static pod via the `kubectl get pods` command. The static pod you see when you run `kubectl get pods` is just a mirror of the static pod and if you try to `kubectl delete pod beebox-diagnostic-k8s-worker1` it will just re-appear because the API has no control over it.
 
-## Chapter 7 Deployments.
+## Chapter 7 Deployments
+
+### K8s Deployments Overview
+
+#### What is a Deployment?
+
+A Deployment is a Kubernetes object described in a yaml descriptor file. It is used to create replicas of a pod. For example you would use a deployment when you wish to create five pods with similar specifications. You do not need to create each pod individually. Deployment is used to define the desired state for replicas of the pods. The deployment controller changes the original state to the desired state and maintains the desired state by deleting, creating, and replacing pods with new configurations.
+
+Example of descriptor file for a deployment.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-deployment
+  template:
+    metadata:
+      labels:
+        app: my-deployment
+  spec:
+    containers:
+    - name: nginx
+      image: nginx:1.19.1
+      ports:
+      - containerPort: 80
+```
+
+#### Desired State
+
+The number of replicas of the pods, a selector, and a template are all considered the desired state.
+
+* **Replicas** - Number of pod replicas managed by the deployment
+
+* **Selector** - A selector used to identify the replica pods based on their labels, to be managed by the deployment
+
+* **Template** - A pod definition template used to create replica pods
+
+#### Benefits of Kubernetes Deployment
+
+Since a Kubernetes deployment controller constantly monitors the status of pods and nodes, it can replace a failing pod or bypass down nodes, ensuring that vital applications continue to run.
+
+Deployments have several use cases, such as:
+
+1. An applications can easily be scaled up or down by increasing or decreasing the number of replicas.
+2. Rolling updates can be performed by deploying a newer version of the application.
+3. An application acn be rolled back to a previous version
+4. A new state of the pods can be declared by updating the specifications of the pod template. Pods are moved from the old replicaSet to the new replicaSet at a controlled rate by deployment.
+5. The rollout of a deployment can be paused to make multiple changes or fixes to its template specifications and then resumed after that.
+6. Find out if a rollout has stuck by using the deployment status(progressing, complete, or fail to progress as an indicator)
+7. Old replicaSets that are not needed anymore can be removed.
+
+#### Deployment Strategies
+
+##### Recreate Deployment
+
+The recreate strategy 'recreates' existing pod instances by terminating them and replacing them with the new versions. This is most commonly utilized in dev environments where user impact is not an issue. Recreate completely refreshes the pods and the applications state. As a result, both the shutdown of the old deployment and the recommencement of instances of the new deployment cause downtime.
+
+##### Rolling Update Deployment
+
+ling update allows for a smooth gradual transition from one application version to the next. A new ReplicaSet containing the new version is launched, and replicas of the old version are terminated as replicas of the new version are launched. All of the previous version pods are eventually decommissioned and replaced by the new version.
+
+##### Blue/Green Deployment
+
+The Blue/Green strategy allows for a quick transition from old to new version once the new version has been tested. The new 'green' version is used alongside the previous 'blue' version. When the 'green' version is confirmed to be working as intended, the version label in the selector field of the Kubernetes Service object that handles load balancing is replaced. This automatically redirects traffic to the latest version. Although this method allows for a quick rollout while avoiding versioning concerns, it consumes twice the resources because both versions are active until cut-over.
+
+##### Canary Deployment
+
+A smaller group of users is routed to the new version of an application operating on a smaller subset of pods to test functionality in a production environment in a canary deployment. Once testing has been completed with out errors, clones of the new version are scaled up, and the old version is gradually phased out. Canary deployments are useful for testing new functionality on a small sample of users and can be easily undone.
+
+#### Rollback
+
+All the deployment versions are kept in Kubernetes so when needed they can be rolled back. Only the template specification part of the deployment can be updated or degraded as a rolling update or rollback. Any change made to this part creates a new revision or a new deployment version. 
+
+[comment]: <> (TODO: Sentance above int he book does not make sense, I need to verify)
+
