@@ -895,3 +895,167 @@ All the deployment versions are kept in Kubernetes so when needed they can be ro
 
 [comment]: <> (TODO: Sentance above int he book does not make sense, I need to verify)
 
+## Chapter 8 Networking
+
+### K8s Networking Architectural Overview
+
+#### Pods
+
+Kubernetes uses an "IP-per-pod" architecture, in which each pod is given its IP address, and all containers in a pod share the same network namespace and IP address. The IP address of each Pod is unique to the cluster. The Pod is a group of containers that share the same node's networking and storage resources. Each Pod has its own IP address, and all of the containers in the Pod share storage, IP addresses, and port space (network namespace).  All containers in a Pod can reach each others localhost port and thus that all container in a pod must coordinate port usage.
+
+#### Containers
+
+Containers networking allows containers to communicate with other containers, a host, and external networks.
+
+#### Nodes
+
+Using a Pod's IP address, any Pod can contact another Pod. This builds a virtual network that allows Pods to connect no matter which node they are on. In this way the Kubernetes network makes nodes completely transparent. For a pod to communicate with another Pod, there is no need to know what node its running on.
+
+With the exception of intentional network segmentation regulations Kubernetes imposes the following criteria on any networking implementation.
+
+1. Pods on a node can connect with all pods on all nodes without the use of NAT agents. For example, system daemons and kubelets can communicate with all pods on a node.
+
+2. Without NAT, pods in a node's host network can communicate with pods on all other nodes.
+
+### How does networking in Kubernetes work?
+
+Because in Kubernetes the internal network is insulated from the external network, one of the issues of Kubernetes networking is dealing with how internal (east-west) and external (north-south) traffic interact. External traffic can be injected into a Kubernetes cluster in a number of different ways.
+
+#### LoadBalancer
+
+In this scenario redirects all external traffic to a service and every service is assigned a unique IP address.
+
+#### ClusterIP
+
+The default Kubernetes service for internal communication is ClusterIP. External traffic, on the other hand, can use a proxy to connect to the default Kubernetes ClusterIP service. This is important for troubleshooting services and viewing internal dashboards.
+
+#### NodePort
+
+NodPort is a service that opens ports on nodes or virtual machines and forwards traffic form the ports to the service. This is mostly used for services that do not need to be online all of the time such as demos.
+
+#### Ingress
+
+Ingress is a load balancer that functions as a router or controller, routing traffic to services. It is useful if you wish to provide various services using the same IP address.
+
+### CNI Plugins Overview
+
+Kubernetes network plugins are knows as **CNI plugins**. These plugins offer network communication between pods by the Kubernetes network model's specification.
+
+#### Selecting a Network Plugin
+
+CNI plugins are compliant with the Container Network Interface (CNI) specification, designed to ensure interoperability. The CNI specification v0.4.0 is followed by Kubernetes.
+
+**kubenet plugin** uses the bridge and host-local CNI plugins to implement basic cbr0.
+
+Kubernetes nodes will stay in the NotReady state until a network plugin is implemented. As a result, unless you install that network plugin, you cannot run ods in your cluster because none of the nodes will be available, and any pods you try to create will remain pending, waiting for a node to become ready.
+
+#### Installing a Network Plugin
+
+The kubelet comes with a single default network plugin and a cluster-wide default network. when it first starts up, it looks for plugins, remembers what it finds, and runs the selected plugin at the relevant points in the pod's lifespan (this is only true for Docker, as CRI manages its own CNI plugins). When utilizing kubelet plugins, there are two command-line parameters to remember.
+
+1. cni-bin-dir - On initialization, kubelet looks for plugins in this directory.
+2. network plugin - The cni-bin-dir network plugin to utilize. It has to be the same name as a plugin from the plugin directory that has been probed.
+
+### Understanding K8s DNS
+
+Kube-DNS and CoreDNS are two well known DNS solutions for configuring DNS naming rules and mapping pod and service DNS to cluster IP addresses. Kubernetes services can be identified by a name that corresponds to any number of backend pods maintained by the service. DNS has a consistent naming convention, making the addresses of multiple services easier to remember. Services can be referred to not just by their Fully Qualified Domain Name (FQDN) but also by their own names.
+
+#### How does Kubernetes DNS work?
+
+You may build up a DNS system in Kubernetes using two well-supported add-ons: Core DNS and Kube-DNS. CoreDNS is a recent add-on that, as of Kubernetes v1.12, has become the default DNS server.
+
+Kubernetes DNS schedules a DNS Pod and Service on the cluster, then configures the kubelets to notify individual containers to resolve DNS names using the DNS Service's IP. A DNS name is assigned to each service defined in the cluster (including the DNS server itself)
+
+The DNS system assigns domain and subdomain names to pods, ports and services, allowing the components in your Kubernetes cluster to find them. DNS-based service discovery is extremely powerful as you do not have to hard-code network information like IPs and ports into your application.
+
+#### Service DNS Record
+
+A records, CNAME records, and SRV records are all supported by Kubernetes.
+
+##### A Records
+
+The most basic sort of DNS record is an A record which is used to point a domain or subdomain to a certain IP address. The domain name, the IP address used to resolve it, and the TTL in seconds are all included in the record.
+
+##### CNAME
+
+A domain or subdomain can point to another hostname using CNAME records. CNAME accomplish this by using the existing A record as their value. An A record, on the other hand, resolves to a specific IP address. CNAME records can also be utilized for cross-cluster service discovery with federated services in Kubernetes. There is a common service across several Kubernetes clusters in this instance. This service is discoverable by all pods, regardless of which cluster they are in. Such an approach enabled cross-cluster services discovery, which is a large topic in and of itself.
+
+##### SRV Records
+
+By specifying the protocol(s) and address of some services, SRV records aid service discovery. An SRV record defines the priority, weight, port, and target for a given service adn the symbolic name and transport protocol (e.g, TCP) used as part of the domain name.
+
+#### Pod's DNS Records
+
+##### A Records (pod)
+
+If DNS is enabled, pods are given a DNS address. Pod-ip-address.my-namespace.pod.cluster.local is a record type. An entry of form 172-12-3-4.default.pod.cluster.local would be created for a pod with IP 172.12.3.4 in the namespace default and a DNS name of cluster.local.
+
+##### Pods Hostname and Subdomain Field
+
+The metadata.name value of a pod determines its default hostname. The default hostname can be changed by entering a new value in the optional hostname box. In the subdomain box, users can also choose a custom subdomain name. For example, a pod in namespace my-namespace with the hostname custom-host and the subdomain custom-subdomain will have the Fully Qualified Domain Name custom-host.custom-subdomain.my-namespace.svc.cluster.local.
+
+### NetworkPolicies
+
+A network policy is an object that lets you manage the flow of network traffic to and from your pods. This enabled you to create a more secure cluster network by isolating pods from the traffic they do not require.
+
+#### Pod Selector
+
+The pod selector specifies which pods in the namespace are affected by the network policy. The pod selector can use labels to choose pods.  All pods in a cluster are isolated by default
+
+#### A network policy can apply to ingress traffic, egress traffic, or both types of traffic
+
+Ingress traffic is network traffic that enters the pod from a source outside the pod, whereas egress traffic is network traffic that leaves the pod for another location. Therefore, network policies can regulate traffic entering a pod, traffic leaving a pod, or both. The network policy determines which traffic is allowed via the from and to selectors related to entrance and egress.
+
+#### From and To selectors
+
+##### From Selector
+
+Ingress traffic will be allowed if it is selected from the selector. It determines which inbound traffic is permitted to enter the pod.
+
+##### To Selector
+
+For the outgoing egress traffic, a "to selector" achieves the same thing. It chooses which outgoing traffic will be allowed. Depending on on whether the policy applies to egress, ingress or both, we will find our from selectors in the ingress section and our to selectors in the egress section of the network policy definition. There are multiple selector types that are available for to and from.
+
+1. We can use a pod selector to choose pods based on their labels. if we use it in conjunction with an ingress rule in our from selector, pods with that app equal db label will be able to communicate with the network policy affected pods.
+
+2. We can choose a namespace based on labels, and then the network policy will allow any traffic coming from or going to pods within those namespaces.
+
+3. The ipBlock selector can be used to choose an IP range using CIDR notation. As a result, an IP range is chosen to allow incoming and outgoing traffic.
+
+#### Limiting Resource Usage
+
+The number and capacity of resources available to a namespace are limited by resource quota. This is most commonly used to limit how much CPU, RAM or persistent disk a namespace can allocate, but it can also be used to limit how many pods, services, or volumes each namespace can have.
+
+#### Network access restrictions
+
+Application writers can use a namespace's network policies to limit which pods from other namespaces can access pods and ports within their namespaces. Many of the Kubernetes networking providers that are supported now adhere to network policies.
+
+Quota and limit ranges can also be used to govern whether users can request node ports or load-balanced services, which can affect whether those users' applications are visible outside of the cluster on many clusters.
+
+Additional precautions such as per-node firewalls, physically separating cluster nodes to avoid cross-talk, or advanced networking policies, may be available that manage network rules on a per-plugin or per-environment basis.
+
+#### Restricting Cloud Metadata API access
+
+Metadata services are frequently exposed locally to instances by cloud platforms (AWS, Azure, GCE and so on). By default, pods running on an instance can access these APIs, which can contain cloud credentials for that node or provisioning data like kubelet credentials. This account's credentials can be sued to elevate within the cluster or to other cloud services. Limit the permissions given to instance credentials when running Kubernetes on a cloud platform, use network policies to restrict pod access to the metadata API, and avoid using provisioning data to deliver secrets.
+
+#### Default Deny
+
+You can use the default deny network policy to block all traffic except for what is needed to avoid potential malicious traffic. Default deny network blocks all traffic by default unless we explicitly allow network communication.
+
+Example of a default deny policy below and you can apply it with the command `kubectl create -f default-deny-all-np.yml`
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: nptest
+spec:
+  podSelector: {}
+  policyType:
+  - Ingress
+  - Egress
+```
+
+## Chapter 09: Services
+
