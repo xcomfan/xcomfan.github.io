@@ -1059,3 +1059,112 @@ spec:
 
 ## Chapter 09: Services
 
+### K8s Services Overview
+
+#### What is a Service?
+
+Kubernetes Services is an object which can bre created as a descriptor file in a yaml format.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: MyApp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+```
+
+The Kubernetes service provides a method for uncovering applications running as a bunch of pods without the client needed to know about any of the pods.
+
+#### Service Routing
+
+Service is an abstract layer on to of pods. When users make requests to a service; Kubernetes routes the traffic to the pods backing a services so that the load is balanced among the pods.
+
+#### Endpoints
+
+An Endpoint is a Kubernetes object that can be defined as a yaml descriptor file.
+
+```yaml
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: my-service
+subsets:
+  - addresses:
+      - ip: 192.0.2.42
+    ports:
+      - port: 9376
+```
+
+Endpoints are created automatically when the service is defined with a pod(s) selector, but if the service is defined without a pod selector, you have to create an endpoint object manually.
+
+Traffic is proxies to the endpoints, and endpoints are mapped to pods.
+
+Endpoints are the back end entities to which services redirect traffic. For a service that courses traffic to numerous pods, each pod has an endpoint related to that service.
+
+The name of the Endpoint object must be a valid DNS subdomain name which follow the below rules.
+
+1. A maximum of 253 characters are allowed.
+2. Lowercase alphanumeric characters or '.' or '-' are allowed.
+3. The fist and last characters must be alphanumeric.
+4. No uppercase character is allowed.
+
+### Using K8s Services
+
+#### Service Types
+
+There are four types of services. The service types differ by how and where they will uncover your application.
+
+1. ClusterIP
+2. NodePort
+3. LoadBalancer
+4. ExternalName (outside the scope of CKA)
+
+##### Cluster IP Services
+
+ClusterIP Services uncover applications inside the same network (within the cluster). They are used at the point when the clients are other Pods inside the same cluster. This type can be used to expose the deployment's Pods inside the cluster network.
+
+##### NodePort Services
+
+NodePort Services uncover applications outside of the network of the cluster. They are used at the point when the clients are other users or applications outside the cluster. This type can be used to expose the Pods externally.
+
+##### LoadBalancer Services
+
+LoadBalancer Services uncover applications outside the cluster's network like NodePort Services, but they utilize an external cloud-based load balancer to do this. They are used at the point when the clients are other users or applications outside the cluster and traffic is gone through the load balancer to access the service. This can be used to expose the Pods externally and only works with the cloud platform with load balancing functionalities.
+
+#### Discovering K8s Services with DNS
+
+Recall that Kubernetes schedules a Pod to run a DNS service and configures the kubelet to have individual containers use that DNS service. A DNS name is assigned to each service defined in the cluster (including the DNS service itself). The DNS search list of a client Pod includes the Pod's own namespace and the cluster's default domain by default.
+
+##### Service DNS Names
+
+The default domain of the cluster is **cluster.local**.
+
+##### Service DNS and Namespaces
+
+A service can be accesses from any namespace within the cluster using the fully qualified domain ame of that Service.  Consider the format `my-service.my-namespace.svc.cluster.local`. Just the services name not FQDN can be used if the pods are in the same namespace. DNS queries that do not specify a namespace are limited to the pod's namespace.
+
+You can control where a pod searches by modifying its `/etc/resolve.conf` files which is controlled by Kubelet.
+
+#### Managing Access from Outside with K8s Ingress
+
+An Ingress is a Kubernetes object that allows access to a Service from outside the cluster (Ingress itself is inside the cluster). It can be considered an advanced version of the NodePort Service. It can perform functions like SSL termination, advanced load balancing, or name-based virtual hosting. Ingress uncovers Http and Https routes to the services inside the cluster. Rules defined on the Ingress resource control the traffic routing. It does not uncover irregular or other ports or protocols except HTTP and HTTPS to the internet. 
+
+##### Ingress Controllers
+
+Ingress Controllers control the Ingress because they do not do tasks by themselves. Several kinds of Ingress Controllers can be installed. They all carry out various strategies for allowing external access to the services and are not automatically started with the cluster.
+
+##### Routing to a Service
+
+There is a set of routing rules defined by the Ingress. In the ingress specifications, under the rules, there are paths defined. Requests that match the paths will be routed to their associated backend.
+
+##### Routing to a Service with a Named Port
+
+In case a Service uses the port's name instead of its number, Ingress uses this port name to determine to which port it should route the requests.
+
+## Chapter 10 Storage

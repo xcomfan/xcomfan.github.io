@@ -11,3 +11,4 @@ You can install Dash with pip using the command `pip install dash==2.0.0` (you d
 In the lesson we also installed Pandas so the full command was `pip install dash==2.0.0 pandas==1.3.3`
 
 To actually get it running I had to downgrade `numpy` to version `1.26.4` and run the latest version of `dash` `2.18.1` and the above `pandas` `1.3.3`
+
