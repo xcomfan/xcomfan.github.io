@@ -1168,3 +1168,117 @@ There is a set of routing rules defined by the Ingress. In the ingress specifica
 In case a Service uses the port's name instead of its number, Ingress uses this port name to determine to which port it should route the requests.
 
 ## Chapter 10 Storage
+
+### K8s Storage Overview
+
+#### Container File Systems
+
+Container files system are ephemeral. If a container stops running, data on the file system will be lost. Whenever a container is restarted, it has not previous data.
+
+#### Volumes
+
+Volumes are external storage that does not depend on the lives of the container pods. Volumes allow storing data outside the container file system accessible by the container at runtime, hence data will not be lost even after a container has been restarted or removed.
+
+#### PersistentVolumes
+
+Persistent Volumes are in clusters like nodes and outside of pods. To use a persistent volume you need to use a PersistentVolumeClaim to request the storage resource and specify how much size of storage you need and what should be the access mode such as `ReadWriteOnce`, `ReadWriteMany` or `ReadOnlyMany`. One of the difference between a Volume and a PersistentVolume is Volumes are specified and mounted within a Pod descriptor file while PersistentVolumes are API object created separately like pods.
+
+#### Volume Types
+
+Both Volumes and PersistentVolumes have several types that determine how these storages are handled. These volume types are used as plugins.
+
+1. awsElasticBlockStore - EBS
+2. azureFile - Azure File
+3. azureDisk - Azure Disk
+4. fc - Fibre channel storage
+5. nfs - Network File system (NFS) storage
+6. local - Local storage devices mounted on nodes
+
+##### awsElasticBlockStore
+
+The EBS restrictions apply here just as with EC2. You need to use an EC2 instance as the node on which a pod is executing. The EBS volume must also be in the same availability zone and region as the node. An EBS volume can only be mounted by a single EC2 instance at a time.
+
+##### emptyDir
+
+When a pod is assigned to a node, an emptyDir volume is created, and it exists as long as the Pod is running on that node. The empyDir volume is, as its name implies, initially empty. The empyDir volume can be mounted at the same or different directories in each container, allowing all containers in the Pod to read and write the same files. The data in the emptyDir is permanently erased when a Pod is removed from a node for whatever reason. 
+
+Reasons to use emptyDir are...
+
+1. If you are using disk-mased merge sort, you will need some scratch space.
+2. For crash recovery, checking in a long computation.
+3. Storing files that are fetched by a content-manager container and served by a webserver container.
+
+EmptyDir volumes are stored on whichever medium backs the node, such as disk, SSD, or network storage, depending on your setup. If you change the emptyDir.medium option to "Memory", Kubernetes instead mounts a tmpfs (RAM-backed filesystem). While tmpfs is quick, keep in mind that, unlike disks, it is cleaned when the node reboots, and any files you write count towards your containers memory limit.
+
+##### nfs
+
+An nfs volume is used to mount an existing NFS share into a Pod. Because NFS volume lives on the NFS host data can be pre populated with an NFS volume. Multiple writers can mount NFS at the same time.
+
+##### local
+
+A mounted local storage device, such as a disk, partition, or direcotry, is represneted by a local volume. Local volumes can only be utilized as PersistentVolumes that have been statically built. The use of dynamic provisioning is not permitted. Local voluems, as opposed to hostPath volumes are used in a more durable and portable manner wthout the need to manually schedule pods to nodes. By looking at the node affinity on the PersistentVolume, the system is aware of the volume's node limitations.
+
+Local volumes, on the other hand, are dependent on the underlying node's availability and are not suited for many appliations. When a node become sick the pod looses access to the local volume.
+
+##### Ephemeral Volumes
+
+Some applications requrie storage but are unconcerend about whether that data is retained across restarts. Caching, configuration information are examples of this use case. Ephemerla volumes are meant for this scenario. Kubernetes offers a variety of ephemeral volume options.
+
+1. emtyDir
+2. CSI ephemeral volumes 
+3. Generic ephemeral volumes: can be created by any storage driver that supports persistentVolumes.
+
+
+#### Storage Classes
+
+Administrators can use a StorageClass to specify the "classes" of storage they supply. Different classes could correspond to different quality of service levesl, backup policies, or arbitratry policies set by cluster administrators. This is what we call profiles in other storage systems.
+
+#### The StorageClass Resource
+
+Provisioner, parameters, and reclaimPolicy are field in each storageClass that are utilized when a persistenVolume belonging to the class has to be dynamically provisioned. The name of a storageClass object is mportant because it determines how users can request a certain class.
+
+#### Volume Snapshots
+
+A VolumeSnapshot is a user reqeust for a volume snapshot. It works in the same way as a PersistentVolume Claim. VolumeSnapshtos give Kubernetes users a standerdized way to dupliate the contents of a volume at a specific moment. This may be an otption for backing up databases.
+
+#### Projected Volume
+
+Serverl existing volume sources are mapped into the same directory via a projected volume. The following sorts of volume sources can be projected.
+
+1. secret
+2. downwardAPI
+3. configMap
+4. serviceAccountToken
+
+### Using K8s Volumes
+
+#### Sharing Volumes Between Containers
+
+A pod can have multiple containesr that you can run by creating a multi-container pod. A volume specified in the pod spec can be mounted on multiple containers useing volumeMounts. This is the benefit of volumeMount. Therefore, you can share a single volume between contaienrs by mounting it multipe times.
+
+#### Common Volumes Types
+
+1. hostPath - This type of voluem allows storing data in a specified location on the disk.
+2. emptyDir - covered this one above.
+
+### Exploring K8s Persisten Volumes
+
+#### PersistentVolumes
+
+A PersistentVolume (PV) is a piece of storage in a cluster that has been provided either manually or dynamically using StorageClasses. If functions as a cluster resource in thes ame way that a node does. A PV can be resused according to a propery called `PersistentVolumeReclaimPolicy`. It reclaims a PersistenVOlume to be used again if the PersistentVOlumeClaim associated with this PV is deleted. It has the following policies to be implemented.
+
+1. Retain - It keeps all the data, and the admin has to clean it up manually to make PV resusable.
+2. Delte - This only works iwhen the storage resource is provided by a cloud service. It deletes the storage automatically.
+3. Recycle - It deletes all the data in the storage and makes it reusable.
+
+#### StorageClasses
+
+StorageClass has an attribute called allowVolumeExpansion that allows the expansion or resizing of volumes after they are created.
+
+#### PersistentVolumeClaims
+
+Persistnt Volumes are consumed by Persistent Volume Claims much like node resources are consumed by pods.
+
+## Chapter 11: Troubleshooting
+
+
