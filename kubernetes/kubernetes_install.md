@@ -1281,4 +1281,204 @@ Persistnt Volumes are consumed by Persistent Volume Claims much like node resour
 
 ## Chapter 11: Troubleshooting
 
+### Kube API Server
 
+The Kubernetes API server checks and configures data for API objects such as pods, sevices, and replication controllers. The API server handles REST operations and serves as the interface to the cluster's share dstate, via which all other components communicate.
+
+The Kubernetes API server is the primary way you interat with the Kubernets cluster. If the Kubernets API server is down, you cannot use kubectl to interact with the cluster becasue kubectl depends on the Kube API server.
+
+I you Kube API server is down, some possible fixes might include ensuring that the Docker and Kubelet services are up and running on your contorl plan nodes.
+
+The API server is a Kubernetes contorl plane component that exposes The Kubernets API. The Kubernetes control plane's frontent is the API server. The main Kubernetes API server implementation is kube-apiserver. The kube-apiserver is intended to scale horizontally, i.e. by deploying extra instances. You may run many instances of kube-apiserver and balance traffic between them.
+
+### Checking Node Status
+
+You can use `kubectl get nodes` to see the overall status of each node. You can use `kubectl describe node` to get more information on any nodes, not in the ready state.
+
+If a node has problems, it may be because of ubernets service is down on that node. Hence, each node runs kubelet, and you are also running docker as a service. You can use `systemctl status` on any of those services to view the tatus of a service, and if a service is down, you might just try starting it an enabling it via `systemctl`.
+
+### Checking System Pods
+
+In a kubeadm cluster several of the Kubernetes components run as pods in the Kube system namespace. You can check the status of those components simply with kubectl get pdos and kubectl describe pod within that kube-system namespace.
+
+### Checking Cluster and Node Logs
+
+#### Basics of Kubernete Logging
+
+Because pods might be many and short-lived, this form of log gathering is discouraged in Kubernetes. Ku-bernete suggests allowing the application to output logs to stdout and stderr. Each node runs its own Kubelet, which collects the segmented output logs and merges them into a single log file. The log files for each container will be handled automatically and limited to 10MB.
+
+#### Types of Logs
+
+It shoudl be remembered that ther are two sorts of logs in Kubernetes. Ther are two types of logs: node logs and component logs. Node loga re logs created by node and the services that operate on those nodes. On the other hadn, pods, Containers, Kubernetes components, DaemonSets, and other Kubernetes Services create component logs. Each node in a kubernetes Cluster runs services to host Pods, accepts instructions, and connects with other nodes. The host operating system determines the format of those logs and where they are stored. For example, on a Linux server, you may obtain the logs by using journalctl -u kubelet; however, on other platforms, Kubernetes stores the logs in the /var/log directory by default.
+
+On the other hand, component logs are collected by Kubernetes and are normally accessible using the kubernets API. The greatest example would be pods, and all communications from applications are wirtten to STDOUT and STDERR.
+
+#### Kubernetes node Logging
+
+The continer engine streams evertying that a containerize application writes to stdout or stderr someplace in Docker's instance, to a logging driver. These logs are often stored in yoru hosts /var/log/containers directory. When a container restarts, the kubelet stores logs on the node. Kubernete has a log rotation stragety to avoid logs from taking up all of the available space on the node. As a result, when a pod is evicted from a node, all connected contaienrs, along with their logs, are likewise evicted.
+
+Depending on your operatin system and services, you can collect variou node-level logs, such as kernel logs or systemd logs. On systemd nodes, both the kubelet and the contaienr runtime write to journald. They write to .log files in the `/var/log` directory if systemd is not present. The journalctl command allows you to see system logs, giving you a list of log lines.
+
+#### Kubernetes Cluster Logging
+
+Kubernetes cluster logs relate to Kubernetes and all of its system component logs, and you can distinguish between components that operate in a continer and components that do not. Each serves a distinct puprose in providing information about hte health of your Kubernetes system. Kube-scheduler, kube-apiserver, etcd, and kube-proxy, for example run within contaienrs, but kubelet and the conteiner runtime run on the operatin system level often as a systemd service.
+
+System components running outside of containrs, by default, publish files to journald, whereas components running within containers write to the `/var/log` directory. However, the container engine may be configured to send logs to a specific place. 
+
+Kubernetes does not have native solution for cluster-level logging. Thear are however additonal optoins accessible to you:
+
+* Make use of a node-level logging agent that operates on all nodes.
+* Within the application pod, add a sidecar container for logging.
+* Logs may be accessed straight from the application.
+
+#### Service Logs
+
+You can check the logs of your Kubernetes-related services on each node using journalctl. You can do somethign like journalctl -u kubelet or journalctl -u Docker to get the logs for kubelets and Docker, respectively.
+
+#### Cluster Component Logs
+
+Another type of log you might want to check out is cluster component logs. In a Kubernetes cluster, components redirect log output to `/var/log` For example, you could look at `/var/log/kube-apiserver.log` to see the kube API server logs. You might need to be aware of these locations when working with Kubernetes in the real world, but node that these log files do not appear for clusters created using kubeadm. You might want to be aware of these log locatiosn, but the reason those are not going to show up in a kubeadm cluster is that all of these components run as system pods. They do not run directly on the host or within containers. those log files do not sow up on the host in a kubeadm cluster, but in a kubeadm cluster, you can still access those logs by using the kubectl logs command on those sytem pods.
+
+`/var/log/kube-apiserver.log`
+
+`/var/log/kube-scheduler.log`
+
+`/var/log/kube-controler-manager.log`
+
+The following command can be used to check the logs for your Kubernetes services `sube journalctl -u kubelet` You can use **Shift+G** to jump to the end of the logs. 
+
+To list sytem pods use the command `kubectl get pods -n kube-system`
+
+### Checking Node Status
+
+Suppose that the kube API server is healthy, and you can interact with the clsuter using kubectl. The next step is to check the nodes status.
+
+`kubectl get nodes`
+
+`kubectl describe node <Node-Name>`
+
+`systemctl status kubelet` -> `systemctl start kubelet` -> `systemctl enable kubelet`
+
+### Checking System Pods
+
+If your services are healthy, you might need to look into your system pods.
+
+`kubectl get pods -n kube-system`
+
+`kubectl describe pod <Pod-Name> -n kube-system`
+
+### Service Logs
+
+Service logs are an importatnt part of troubleshooting a Kubernets cluster. You can check the logs for your Kubernets-related services on each node using journalctl.
+
+`sudo journalctl -u kubelet`
+
+`sudo journalctl -u Docker`
+
+### Troubeshooting Your Application
+
+#### Checking Pod Status
+
+You can see a pod's status simply with the kubectl get pods command, and you can ue kubectl describe Pod to get more information about what may be hapenning with an unhealthy pod. hence, it is kubectl describe Pod followed by the name of that Pod.
+
+`kubectl get pods`
+
+`kubectl descirbe pod <Pod-Name>`
+
+#### My Pod stays pending
+
+You may not have enough resources or the host port may be in use.
+
+#### My Pod stays waiting
+
+If a Pod is in the Waiting state, it means it has been assigned to a worker node but is unable to function ont hat node. Reviewing the information from `kubectl describe` can be helpful in diagnosing the issue. The most common reason for waiting pods is the inability to retrieve the image. Ther are three specific things to check for: 
+
+1. Make certain that the image's name is right.
+2. make sure you have installed the image in the registry.
+3. Try manually pulling hte image to see if it can be pulled. Fore example `docker pull <image> if you use Docker on yoru PC`
+
+#### My Pod is running but not doing what I told it to do
+
+The first step is to remove your Pod and recreate it using the `--validate` option. Run `kubectl --validate -f mypod.yaml` as an example. If will ensure you have not issues in your manifest.
+
+The next step is to determine whetehr the Pod on the apiserver corresonds to the POd you intened to build (e.g. in a yaml file on yoru local machine). `kubectl get pods/mypod -o yaml > mypod-on-apiserver.yaml` and then manually check the origin pod description to the one returned. There will almost always be some lines on the "apiserver" version that do not appear on that original version. that is normal. Beyond that if you find differences there is an issue with your spec.
+
+#### Debugging Replication Controllers
+
+Replications controllers either can or cannot generate Pods. If they cannot build pods, follow the pod troubleshooting steps. You can also use `kubectl describe rc <CONTROLLER NAME>` to see replication controller events.
+
+#### Debugging Services
+
+Load balancing over a collection of pods is provided via services. First, ensure that the service has endpoints. The apiserver makes an endpoints resourse available for each Service object. You may access the resource by using:
+
+`kubectl get endpoitns ${Service Name}`
+
+Check that the endpoitns correspond to the number of pods you plan to be members of your service. If your Service is for an nginx continer with three replicas, you would expect to see three separate IP addresses in the service's endpoints.
+
+#### Running Commands Inside Containers
+
+You can use kubectl exec to run commands inside containers. If ther are multiple containers in a pod, use `-c` to specify the container name, and then you do two dashes, and after that the command you want to run.
+
+`kubeclt exec podname -c containername -- <command>`
+
+You may connect to containers within yoru cluster using `kubectl exec`. It is a omponent of kubect CLI utlity, which is used to interface with Kubernetes deployments. The exec command, like ssh or docker exec, feds a shell session int your terminal.
+
+`kubeclt exec -it demo-pod -- /bin/sh`
+
+The `-it` option is equl to the `--stdin` `(-i)` and `--tty` `(-t)` flags. 
+
+You d on not ahve to start a shell in the contienr; instead you may run an arbitraty process, provide it with interactive input, and recieve its output:
+
+`kubectl exec -it demo-pod --node my-script.js`
+
+### Checking Container Logs
+
+#### kubectl logs
+
+Kubernete has its build-in monitoring solution for simpel debugging or rapid troubleshooting. You can read logs and view basic metrics with kubectl. You can use the kubeclt logs command to view a container's logs. You must specify which contaienr you want to get logs for using the -c flag.
+
+`kubectl logs podname -c container-name`
+
+#### kubectl logs -previous
+
+The `-previous` flag to get the logs from a previously operating container.
+
+#### kubectl logs -follow
+
+Adding `-follow` allow syou to stream logs from the operating system in real time.
+
+### Metrics
+
+#### kubectl top
+
+In Kubernetes kubectl restursn two main sets of metrics: one for pods and one for nodes. You may use kubectl top pods to see how much CPU and RAM each pod uses. You may use kubeclt top nodes to examine a node's CPU and RAM use. These simple instructions provide a basic yet consise summary of your resource utilization.
+
+### Troubleshooting Network Issues.
+
+#### Kube-proxy & DNS
+
+The kube-proxy is a network proxy that runs on each node in your cluster and implements a component of the Kubernetes Servcie concept. kube proxy keeps netwrok rules up to doat on nodes. These netwok rules enable network connectivity to your Pods from network sessions inside and outside your cluster. If the operating system has a packet filtering layer available, kube-proxy utilizes it. Otherwise, the traffic is sent by kube proxy.
+
+On each node, the Kubernetes netwrok proxy is running. It represents the services described in the Kubernetes API on each node and can do basic TCP, UDP, and SCTP steram forwarding and round-robin TCP, UDP, and SCTP forwarding over a group of backends. Service cluster IPs and ports are currently discovered using Docker-links-compatible environment variables that indicate ports opened by the service proxy. An optional addon is available that offers cluster DNS for these cluster IPs. To configure the proxy, the user needs first establish a service using the apiserver API.
+
+Kubernetes DNS schedules a DNS Pod and Services on teh cluster and configures the kubelets to notify individual contaienrs to resolve DNS names using the DNS Services IP address.
+
+In addition to checking on things like your networking plugin in Kubernete or potentially even your underlying networking infrastructure, you might want to look at kube-proxy and the Kubernetes DNS if you are experiencing roblems with thigns communicating with one another and yoru Kubernets cluster. In a kubeadm cluster, the DNS and kube-proxy both run as pods in the kube-system namespace. Hence, you can check out those kube-system pods to see any Kubernetes DNS or issues.
+
+#### Netshoot
+
+If you need to troubleshoot networking, sometimes you need to do that from the perspective of somethign running in the cluster. There is a particular container image that is a great tool for this. It is called nicolaka/netshoot. This image contains a variety of different networking exploration and troubleshooting tools. Crteate a contaienr runnig this image. You can then use kubectl exec to run commands inside that netshoot container and explore away within your Kubernets network.
+
+Network namespaces isolate the system resources involved in networking. Docker creates an isolated invironment for each continer using networks and various namespaces (pid, mount, user). Everyting, including interfaces, route, and IP addressses, is segregated wthing the containers network namespace.
+
+Kubernetes makes use of netwrok namespaces as well. The kubelets generate a network namespace for each Pod, and all containers in that pod use that netwrok namespace (eths, IP, tcp, sockets). It is a significant distinction between Docker contaienrs and Kubernetes pods.
+
+The cool thign about namespaces is that they can be switched between. you can access a separate container's netwrok namesapce and debug its network stack using tools not even installed on that container. Netshoot may also be used to troubleshoot the host by utilizing the host's network namespace.
+
+If you with to create a temporary contienr for debugging purposes.
+
+`kubectl run tmp-shell -rm -i -tty --image nicolaka/netshoot -- /bin/bash`
+
+If you wish to start a container in the network namespace of the host.
+
+`kubectl run tmp-shell --rm -i --tty --overrides='{"spec":{"hostNetwork":tunnel}}' --image nicolaka/netshoot -- /bin/bash`
