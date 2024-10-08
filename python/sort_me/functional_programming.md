@@ -347,7 +347,323 @@ pprint(result)
 
 ## How to Use Python Lambda Functions
 
+Lambda function are ...
+
+* Intended for single use
+* Defined in a single line
+* Can be named or anonymous
+* Return at least one value
+
+### How to Test Lambda Functions
+
+```python
+import unittest
+
+squared = lambda x: x ** 2
+
+class LambdaTest(unittest.TestCase):
+    def test_squared(self):
+        self.assertEqual(squared(2),4)
+
+    def test_zero(self):
+        self.assertEqual(squared(0), 0)
+
+    def test_negative(self):
+        self.assertEqual(squared(-2), 4)
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
+```
+
 ## Python Inner Functions
+
+### Overview
+
+Inner functions are the functions that are defined inside another function.
+
+They are useful for 
+
+* Encapsulation of code
+* Closures
+* Decorators
+
+### Basics of Inner Functions
+
+Below is an example of how you can use inner function to not have two define two functions for recursive factorial.
+
+Example not using inner functions.
+
+```python
+def _recursive_factorial(num):
+    if num <= 1:
+        return 1
+    
+    return num * _recursive_factorial(num -1)
+
+def factorial(num):
+    if not isinstance(num, int):
+        raise TypeError("Bad parameter, 'num' must be an integer")
+    
+    if num < 0:
+        raise ValueError("Bad parameter, 'num' must be >=0")
+    
+    return _recursive_factorial(num)
+```
+
+Example using inner function.
+
+```python
+def factorial(num):
+
+    def _recursive_factorial(num):
+        if num <= 1:
+            return 1
+    
+        return num * _recursive_factorial(num -1)
+
+
+    if not isinstance(num, int):
+        raise TypeError("Bad parameter, 'num' must be an integer")
+    
+    if num < 0:
+        raise ValueError("Bad parameter, 'num' must be >=0")
+    
+    return _recursive_factorial(num)
+```
+
+The inner function version is a bit cleaner and prevents inner factorial from being called from outside the function. This is a matter of preference, no right or wrong with each approach.
+
+### Function 
+
+If an outer function returns a reference to an inner function which has access to variables inside the outer function those variables are the **captured variables** that can be used to manage state.
+
+Below is an example of using closure. This is how functional programming languages would simulate object oriented.  This demonstrates closures, but you are likely better off using object oriented for this scenario.
+
+```python
+import time
+
+def factorial(num):
+
+    def _recursive_factorial(num):
+        if num <= 1:
+            return 1
+    
+        return num * _recursive_factorial(num -1)
+
+
+    if not isinstance(num, int):
+        raise TypeError("Bad parameter, 'num' must be an integer")
+    
+    if num < 0:
+        raise ValueError("Bad parameter, 'num' must be >=0")
+    
+    return _recursive_factorial(num)
+
+def mean():
+    sample = []
+    current = 0
+
+    def inner_mean(number):
+        nonlocal current
+
+        sample.append(number)
+        current = sum(sample) / float(len(sample))
+        return current
+    
+    def value():
+        nonlocal current
+        return current
+
+    def reset():
+        nonlocal sample, current
+        current = 0
+        sample = []
+
+    inner_mean.value = value
+    inner_mean.reset = reset
+
+    return inner_mean
+
+if __name__ == "__main__":
+    temps = mean()
+    print(temps.value())
+    temps(25)
+    print(temps.value())
+    temps(28)
+    print(temps.value())
+    temps.reset()
+    print(temps.value())
+```
+
+Note the use of `nonlocal` which lets you specify that you want the value from the enclosing scope instead of a new variable. You don't need to use `nonlocal` with `sample` because sample is referenced and current is assigned.
+
+### Decorators
+
+Below is a basic example of a decorator that times how long a decorated function takes to ru.
+
+```python
+def fn_timer(func):
+    def time_wrapper(*args, **kwargs):
+        start = time.perf_counter()
+        func(*args, **kwargs)
+        diff = time.perf_counter() - start
+        print(f"{func.__name__} took {diff}ms")
+
+    return time_wrapper
+
+@fn_timer
+def count(num):
+    for x in range(0, num):
+        pass
+
+
+if __name__ == "__main__":
+    count(10000)
+
+    print(count.__name__)
+    print(count.__doc__)
+```
+
+Executing of the above yields ...
+
+```text
+count took 0.0002966610190924257ms
+time_wrapper
+None
+```
+
+Note that the function name and doc string are obscured. This can be fixed with `functools` by decorating your decorator with `wrap` as in example below.
+
+```python
+import time
+from functools import wraps
+
+def fn_timer(func):
+    @wraps(func)
+    def time_wrapper(*args, **kwargs):
+        start = time.perf_counter()
+        func(*args, **kwargs)
+        diff = time.perf_counter() - start
+        print(f"{func.__name__} took {diff}ms")
+
+    return time_wrapper
+
+@fn_timer
+def count(num):
+    "This is the docstring"
+    for x in range(0, num):
+        pass
+
+
+if __name__ == "__main__":
+    count(10000)
+
+    print(count.__name__)
+    print(count.__doc__)
+```
+
+The above code yields
+
+```text
+count took 0.0002064660075120628ms
+count
+This will be in docstring
+```
+
+#### Decorators With Arguments
+
+Decorators are just functions so they can take arguments.
+
+Below is a basic example of a decorator that takes an argument.  Note that the argument is mandatory we will have example of optional arguments further.
+
+```python
+from functools import wraps
+
+def who_says(name):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if name.lower() == 'simon':
+                return func(*args, **kwargs)
+            else:
+                raise AttributeError("Simon didn't say")
+        return wrapper
+    return decorator
+
+if __name__ == "__main__":
+
+    @who_says("Simon")
+    def add(a, b):
+        return a + b
+    
+    @who_says("Bob")
+    def minus(a, b):
+        return a - b
+    
+    print(add(1,2))
+    print(minus(2,1))
+```
+
+The above code yields
+
+```text
+3
+Traceback (most recent call last):
+  File "/home/ubuntu/python_practice/real_python/real_python_examples/functional_programming/inner_functions.py", line 84, in <module>
+    print(minus(2,1))
+  File "/home/ubuntu/python_practice/real_python/real_python_examples/functional_programming/inner_functions.py", line 69, in wrapper
+    raise AttributeError("Simon didn't say")
+AttributeError: Simon didn't say
+```
+
+Below is how you would do a decorator with optional arguments.
+
+```python
+def gift(method_or_options=[]):
+    def decorator(func):
+        fields = []
+        if not callable(method_or_options):
+            fields = method_or_options
+
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if callable(method_or_options):
+                print("Gift had no options")
+            else:
+                print("Gift had", fields)
+            
+            return func(*args, **kwargs)
+        return wrapper
+
+    # if no parameters instantiate the decorator and return it
+    if callable(method_or_options):
+        return decorator(method_or_options)
+    
+    return decorator
+
+if __name__ == "__main__":
+
+    @gift
+    def add(a, b):
+        return a + b
+
+    print(add(1,2))
+
+    @gift("foo_bar")
+    def minus(a, b):
+        return a - b
+    
+    print(minus(2,1))
+```
+
+The above code yields
+
+```text
+Gift had no options
+3
+Gift had foo_bar
+1
+```
 
 ## Python's map() Function: Transforming Iterables
 
