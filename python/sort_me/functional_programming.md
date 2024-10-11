@@ -671,4 +671,17 @@ Gift had foo_bar
 
 ## Recursion in Python
 
+Python has a recursion limit. If you get stuck in an infinite call loop in a recursing function you will get an error similar to "RecursionError: maximum recursion depth exceeded while calling a Python object" 
+
+The default value for the recursion limit is 1000 but you can check and set it via...
+
+```python
+>>> from sys import getrecursionlimit
+>>> getrecursionlimit()
+1000
+>>> from sys import setrecursionlimit
+>>> setrecursionlimit(10)
+```
+
+
 ## Thinking Recursively in Python
