@@ -7,11 +7,12 @@ title: Contents
 ---
 
 [comment]: <> (TODO: Fix metadata around the site and see if you can update the styling to have a breadcrumb at the top.)
+[comment]: <> (TODO: Move Javascript to programming languages catagory that fans out when you write your python reference)
 
 ## [Algorithms]({% link algorithms/algorithms.md %})
 ## [AWS]({% link AWS/aws.md %})
+## [Docker]({% link docker/docker.md %})
 ## [Git]({% link gitref/gitref.md %})
-[comment]: <> (TODO: Move Javascript to programming languages catagory that fans out when you write your python reference)
 ## [Go]({% link go/go.md%})
 ## [JavaScript]({% link javascript/javascript.md %})
 ## [Jekyll]({% link jekyllref/jekyllref.md %})

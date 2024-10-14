@@ -1,3 +1,9 @@
+---
+layout: page
+title: "Docker Quick Reference"
+permalink: /docker/quick_ref
+---
+
 # Container lifecycle management
 
 ## Start or stop a container
