@@ -85,3 +85,51 @@ spec:
 ```
 
 If you are repeatedly pulling from the same registry, you can add the secrets to the default service account associated with each Pod to avoid having to specify the secrets in every Pod you create.
+
+## Managing ConfigMaps and Secrets
+
+Secrets and ConfigMaps are managed through the Kubernetes API. The usual `create`, `delete`, `get` and `describe` commands work for manipulating these objects.
+
+### Listing
+
+`kubectl get secrets`
+
+[comment]: <> (TODO: Need to verify that below command works for secrets)
+
+`kubectl describe secrets my-config`
+
+### Creating
+
+The easiest way to create a Secret is via `kubectl create secret generic` There are a variety of ways to specify the data items that go into the secret. These can be combined in a single command.
+
+* `--from-file=<filename>` - Load from the file with the secret data key the same as the filename
+
+* `--from-file=<key>=<filename>` - Load from the file with the secret data key explicitly specified
+
+* `--from-file=<directory>` - Load all files in the specified directory where the filename is an acceptable key name
+
+* `--from-literal=<key>=<value>` - Use the specified key/value pair directly
+
+### Updating
+
+You can update a Secret and have it reflected in running programs. There is no need to restart if the application is configured to reread configuration values. This is a rare feature but might be something you can add to your applications.
+
+Below are three ways to update Secrets.
+
+#### Update from file
+
+[comment]: <> (TODO: Need to double check that this applies to Secrets and work though some examples to make more understandable.)
+
+If you have a manifest for your Secret, you can just edit it directly and push a new version with `kubectl replace -f <filename>` You can also use `kubectl apply -f <filename>` if you previously created the resource with kubectl apply. Due to the way that data files are encoded into these objects, updating a configuration can be a bit cumbersome as there is no provision in `kubectl` to load data from an external file. The data must be stored directly in the YAML manifest. The most common use case is when the Secret is defined as part of a directory or list of resources and everything is created and updated together. Oftentimes these manifests will be checked into source control. Be careful not put push secrets into a public location.
+
+#### Recreate and update
+
+If you store the inputs into your Secrets as separate files on disk (as opposed to embedded into YAML directly), you can use `kubectl` to recreate the manifest and then use it to update the object. This will look something like...
+
+`kubectl create secret generic kuard-tls --from-file=kuard.crt --from-file=kuard.key --dry-run -o yaml | kubectl replace -f -`
+
+This command line first creates a new secret with the same name as our existing secret. If we just stopped there, the Kubernetes API server would return an error complaining that we are tying to create a secret that already exists. Instead, we tell `kubectl` not to actually send the data to the server but instead to dump the YAML that it *would have* sent to the API server to `stdout`. We then pipe that to `kubectl` replace and use `-f -` to tell it to read from `stdin`. In this way we can update a secret from files on disk without having to manually base64 encode the data.
+
+#### Live updates
+
+Once a Secret is updated using the API, it will automatically be pushed to all volumes that use that ConfigMap or secret. This update may take a few seconds. Currently there is not built in way to signal an application when a new version of ConfigMap is deployed. It is up to the application or some helper script to look for the config files to change and reload them.
