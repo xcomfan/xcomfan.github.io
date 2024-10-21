@@ -37,4 +37,8 @@ permalink: /python/
 
 [Working with files and directories]({% link python/working_with_files_and_directories.md %})
 
+[Virtual Environments]({% link python/virtual_environments.md %})
+
 [Unsorted]({% link python/sort_me/flask_for_deploying_to_web.md %})
+
+
