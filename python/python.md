@@ -39,6 +39,6 @@ permalink: /python/
 
 [Virtual Environments]({% link python/virtual_environments.md %})
 
-[Unsorted]({% link python/sort_me/flask_for_deploying_to_web.md %})
+[Unsorted]({% link python/sort_me/unsorted.md %})
 
 
