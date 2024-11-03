@@ -24,3 +24,4 @@ title: Contents
 ## [System Design]({% link system_design/system_design.md %})
 ## [Terraform]({% link terraform/terraform.md %})
 ## [Windows]({% link windows/windows_terminal.md %})
+## [YAML]({% link yaml.md %})
