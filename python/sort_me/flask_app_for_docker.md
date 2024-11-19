@@ -24,7 +24,7 @@ Once the [`pyproject.toml`](https://github.com/xcomfan/real_python_examples/blob
   
 `python -m pip freeze --exclude-editable > constraints.txt`
   
-The reasoning of these commands is that to generate to generate the constraints file you must first install your page-tracker project into the active virtual environment which will bring the required external libraries from PyPI. Even though we have not code yet, Python will recognize and install your package placeholder (we scaffolded the project with the below structure). We install the project in [editable mode](https://setuptools.pypa.io/en/latest/userguide/development_mode.html) for development. This allows us to make changes to source code and have them reflected in the virtual environment immediately without a re-install. In the second command we execute we are excluding the editable package from the constraints file.
+The reasoning of these commands is that to generate to generate the constraints file you must first install your page-tracker project into the active virtual environment which will bring the required external libraries from PyPI. Even though we have no code yet, Python will recognize and install your package placeholder (we scaffolded the project with the below structure). We install the project in [editable mode](https://setuptools.pypa.io/en/latest/userguide/development_mode.html) for development. This allows us to make changes to source code and have them reflected in the virtual environment immediately without a re-install. In the second command we execute we are excluding the editable package from the constraints file.
 
 ```text
 page-tracker/
@@ -66,7 +66,7 @@ To list the networks in Docker use the command `docker network ls`
 
 Next we connect our `redis-server` containers to the network we created with the command `docker network connect page-tracker-network redis-server`
 
-Now we can run the second redis containers in CLI mode with the command...
+Now we can run the second redis container in CLI mode with the command...
 
 `docker run --rm -it --name redis-client --link redis-server:redis-client redis redis-cli -h redis-server`.
 
@@ -141,7 +141,7 @@ dev = [
 
 Once we update teh toml file, we need to reinstall our Python package with the optional dependencies using the command `python -m pip install --editable ".[dev]"`. You can use the square brackets to list the optional dependencies you want to install. The reason they are in quotes is a best practice to prevent the shell from potentially doing file expansion.
 
-Since we are following the `src` layout in the project, we don't have to keep the test modules in the same folder or event he same package as the code we are testing.  Our project tree should look like.
+Since we are following the `src` layout in the project, we don't have to keep the test modules in the same folder or even the same package as the code we are testing.  Our project tree should look like.
 
 ```text
 page-tracker/
@@ -262,7 +262,7 @@ The main difference between this E2E test and the integration test we did earlie
 
 As before after adding the `requests` dev dependency re-install your project package with the command `python -m pip install --editable ".[dev]"` and create the [`.../test/e2e/test_app_redis_http.py`](https://github.com/xcomfan/real_python_examples/blob/d11c7be4114cba61b549114336302bb1413e47f0/page-tracker/test/e2e/test_app_redis_http.py) test file.
 
-The test function here receives the `flask_url` as an argument which `pytest` injects as a fixture. 
+The test function here receives the `flask_url` as an argument which `pytest` injects as a fixture.
 
 The other change we need to make is to our app because currently it expects the Redis server to always be running on localhost. The changed version can be seen [here](https://github.com/xcomfan/real_python_examples/blob/d11c7be4114cba61b549114336302bb1413e47f0/page-tracker/src/page_tracker/app.py).
 
@@ -284,7 +284,7 @@ We will add the following tools to our [`pyproject.toml`](https://github.com/xco
 * isort - organize import statements according to [official recommendation](https://peps.python.org/pep-0008/#imports)
 * pylint
 
-Without the `--check` flag both `black` and `isort` will auto fixe the file for you.
+Without the `--check` flag both `black` and `isort` will auto fix the file for you.
 
 ```bash
 python -m black src/
@@ -335,7 +335,7 @@ The `USER` and `WORKDIR` directives makes it so that code runs as the `realpytho
 
 Because Linux systems need a global Python installation we still need to set up a virtual environment in our container to avoid version conflicts. We do that with the following lines.
 
-Here we set an environment variable `VIRTUALENV` and install our virtual environment there. Instead of activating the virtual environment we update the `PATH` variable. The reason for this is activating the environment int he typical way would be only temporary and wouldn't affect Docker containers derived from your image. Furthermore if you activated the environment via the docker `RUN` command it would only last until the next instruction in your Dockerfile because each starts a new session.
+Here we set an environment variable `VIRTUALENV` and install our virtual environment there. Instead of activating the virtual environment we update the `PATH` variable. The reason for this is activating the environment in the typical way would be only temporary and wouldn't affect Docker containers derived from your image. Furthermore if you activated the environment via the docker `RUN` command it would only last until the next instruction in your Dockerfile because each starts a new session.
 
 When installing the dependencies and your project package in a Dockerfile you want to split those two steps to take advantage of layer caching as the dependencies will change less frequently than your package.
 
@@ -353,7 +353,7 @@ We copy the `src/` and `test/` folders from our host machine then we install the
 
 At this point we just run the unit tests because we don't have the Redis containers available to run the integration and end to end tests.
 
-The last step is tot ell the containers what command to run. At this point we will have the containers start using the Flask built in development server. Note that we are binding the host to the `0.0.0.0` address in order to make our application accessible from outside the Docker container.
+The last step is to tell the containers what command to run. At this point we will have the containers start using the Flask built in development server. Note that we are binding the host to the `0.0.0.0` address in order to make our application accessible from outside the Docker container.
 
 Putting it all together we git [this Dockerfile](https://github.com/xcomfan/real_python_examples/blob/0935c4472276a1e5f9899f7a54c182b429db5b73/page-tracker/Dockerfile) and you can build it with the command `docker build -t page-tracker .`. This command will look for Docker file in the current directory `.` and tag the resulting image with the default label `latest` so the full image name will be `page-tracker:lates`.
 
@@ -444,7 +444,7 @@ If you are using Docker Desktop; Docker Compose is bundled with it.
 
 ### Define a Multi Container Docker Application
 
-Because we are defining a multi container Docker applications that could potentially grow to include many more services, its worthwhile to re-arrance the folder structure of our project. We will create a new subfolder called `web` in the root of the project where all the files related to our Flask web service will live. The virtual environment directory belongs to this new subfolder because other services might be implemented in a different language such as Jva or C++. 
+Because we are defining a multi container Docker applications that could potentially grow to include many more services, its worthwhile to re-arrange the folder structure of our project. We will create a new subfolder called `web` in the root of the project where all the files related to our Flask web service will live. The virtual environment directory belongs to this new subfolder because other services might be implemented in a different language such as Jva or C++. 
 
 You can't just move the virtual environment folder as that would break the script in the virtual environment. You need to deactivate the environment remove the directory and create a new one.
 

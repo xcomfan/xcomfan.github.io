@@ -70,9 +70,9 @@ Most certificates are packaged up in **PEM (Privacy Enhanced Email)** files. The
 
 **PEM** encoded certificates typically have a `.pem`, `.crt`. or `.cer` extension. A raw certificate encoded using **DER** will usually carry a `.der` extension. You will encounter inconsistency on this.
 
-Certificates can be wrapped in several envelope formats. When some things ask for a "certificate" what they really want is a certificate wrapped in one of these envelopes. The envelope formats are part of a standard knowns as **PKCS (PUblic Key Cryptography Standards)**.
+Certificates can be wrapped in several envelope formats. When some things ask for a "certificate" what they really want is a certificate wrapped in one of these envelopes. The envelope formats are part of a standard knowns as **PKCS (Public Key Cryptography Standards)**.
 
-The first is **PKCS#7** rebranded as **CMS ([Cryptographic Message Syntax](https://tools.ietf.org/html/rfc5652))** which can contain one or more certificates (encoding a full certificate chain). **PKCS#7** is commonly used by Java and common extensions are `.p7b` and `p7c`.
+The first is **PKCS#7** re-branded as **CMS ([Cryptographic Message Syntax](https://tools.ietf.org/html/rfc5652))** which can contain one or more certificates (encoding a full certificate chain). **PKCS#7** is commonly used by Java and common extensions are `.p7b` and `p7c`.
 
 The other common envelope type is **PKCS#12** which can contain a certificate chain (like PKCS#7) along with an encrypted private key. **#PKCS#12** is commonly used in Microsoft products and common extensions are `.pfx` and `.p12`. Usually both of these are encoded with DER.
 
@@ -84,7 +84,7 @@ To sum up. ASN.1 is used to define data types like certificate and keys. DER is 
 
 ## Public key Infrastructure
 
-**Public key infrastructure (PKI)** is the umrella term for all of the stuff we need in order to issue, distribute, store, use, verify, revoke, and otherwise manage and interact with certificates and keys. In addition to certificates and certificate authorities PKI also includes libraries, cron jobs, protocols, convention, clients, servers, people, processes etc.
+**Public key infrastructure (PKI)** is the umbrella term for all of the stuff we need in order to issue, distribute, store, use, verify, revoke, and otherwise manage and interact with certificates and keys. In addition to certificates and certificate authorities PKI also includes libraries, cron jobs, protocols, convention, clients, servers, people, processes etc.
 
 ## Web PKI vs Internal PKI
 
@@ -106,11 +106,11 @@ Earlier we defined a certificate as a claim "issue cays subject's public key is 
 
 The manner in which this pre-configuration occurs in an important aspect of any PKI. One option is to bootstrap from another PKI: you could have some automation tool use SSH to copy root certificates to relying parties, leveraging the SSH PKI. If you are running in the cloud your SSH PKI is bootstrapped off of Web PKI plus whatever authentication your cloud vendor set up when creating your account. Follow the chain long enough and at the core is always people.
 
-Root certificates in trust stores are **self signed**. The issuer and the subject are the same. The signature on a self-signed certificate provides assurance that the subject/issuer knows the relevant private key, but anyone can generate a self-signed certificate with any name want in it. A self signed certificate should only be trusted insofar as the process by which it made its way into the **trust store**.
+Root certificates in trust stores are **self signed**. The issuer and the subject are the same. The signature on a self-signed certificate provides assurance that the subject/issuer knows the relevant private key, but anyone can generate a self-signed certificate with any name they want in it. A self signed certificate should only be trusted insofar as the process by which it made its way into the **trust store**.
 
-On macOS the trust store is managed by the keychain. On many Linux distributions it's simly some file(s) in `/etc` or elsewhere on disk. If users can modify these files you better trust all your users.
+On macOS the trust store is managed by the keychain. On many Linux distributions it's simply some file(s) in `/etc` or elsewhere on disk. If users can modify these files you better trust all your users.
 
-For Web PKI the most important relying parties are web browsers. The trust stores used by default by the major browsers and pretty much everything else that uses TLS are maintained by [Apple's root certificate program](http://www.apple.com/certificateauthority/ca_program.html) used by iOS and macOS, [Microsoft's root certificate program](https://social.technet.microsoft.com/wiki/contents/articles/31633.microsoft-trusted-root-program-requirements.aspx) used by Windows, [Mozilla's root certificate program](https://www.mozilla.org/en-US/about/governance/policies/security-group/certs/) used by their products and, becuse of its open and transparent process, used as the basis for many other trust stores (many Linux distributions), and [Google's root certificate program](https://g.co/chrome/root-policy) used by Chrome and all platforms except iOS. These trust stores usually ship with the OS or browser and are updated with software updates (usually signed using yet another PKI). The major CAs are included in these trust stores such as LetsEncrypt, Symantec, DigiCert, Entrust etc.
+For Web PKI the most important relying parties are web browsers. The trust stores used by default by the major browsers and pretty much everything else that uses TLS are maintained by [Apple's root certificate program](http://www.apple.com/certificateauthority/ca_program.html) used by iOS and macOS, [Microsoft's root certificate program](https://social.technet.microsoft.com/wiki/contents/articles/31633.microsoft-trusted-root-program-requirements.aspx) used by Windows, [Mozilla's root certificate program](https://www.mozilla.org/en-US/about/governance/policies/security-group/certs/) used by their products and, because of its open and transparent process, used as the basis for many other trust stores (many Linux distributions), and [Google's root certificate program](https://g.co/chrome/root-policy) used by Chrome and all platforms except iOS. These trust stores usually ship with the OS or browser and are updated with software updates (usually signed using yet another PKI). The major CAs are included in these trust stores such as LetsEncrypt, Symantec, DigiCert, Entrust etc.
 
 Cloudflare [cfssl](https://github.com/cloudflare/cfssl) project maintains a github repository that included trusted certificates from various trust stores to assist with certificate bundling.  You can also query [Censys](https://censys.io/) to see which certificates are trusted by Mozilla, Apple, and Microsoft. 
 
@@ -146,9 +146,9 @@ The process of getting a certificate from a CA eventfully is a subscriber genera
 
 ### Naming
 
-A Common Name is all you need in a certificate. Locality, country, organizaiton, unit is all pretty irrelevant. Same for distinguished names. The modern best practice is to leverage the [subject alternative name (SAN) X.509 extension](https://tools.ietf.org/html/rfc5280#section-4.2.1.6).
+A Common Name is all you need in a certificate. Locality, country, organization, unit is all pretty irrelevant. Same for distinguished names. The modern best practice is to leverage the [subject alternative name (SAN) X.509 extension](https://tools.ietf.org/html/rfc5280#section-4.2.1.6).
 
-There are 4 sorts of SANs in common use, all of which bind names that are boradly used and understood.
+There are 4 sorts of SANs in common use, all of which bind names that are broadly used and understood.
 
 * Domain names (DNS)
 * email addresses
