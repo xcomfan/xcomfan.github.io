@@ -153,3 +153,7 @@ When you rebase you are abandoning existing commits and creating new ones that a
 ### Rebase vs. merge
 
 When you merge branches you see the full history of your repository.  ALl the experimental and dead end branches will be visible in the repository history.  Rebasing lets you have a cleaner history.
+
+## Using rebasing to pull remote code to your local working branch.
+
+`git pull --rebase origin master` resolve any merge conflicts and use `git rebase --continue`.

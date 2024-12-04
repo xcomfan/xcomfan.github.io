@@ -20,6 +20,7 @@ title: Contents
 ## [Linux]({% link linux/linux.md %})
 ## [Troubleshooting]({% link system_design/troubleshooting.md %})
 ## [Networking]({% link networking/networking.md %})
+## [Open Telemetry]({% link otel/otel.md %})
 ## [PKI]({% link pki.md %})
 ## [Python]({% link python/python.md %})
 ## [System Design]({% link system_design/system_design.md %})

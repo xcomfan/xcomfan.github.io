@@ -228,3 +228,17 @@ There are some options such as Certificate Revocation Lists (CRLs) and Online Ce
 ## Summary
 
 [Smallsetp Certificate Manager](https://smallstep.com/certificate-manager) can help with building and internal PKI.
+
+
+## Handy openssl Commands
+
+```bash
+openssl x509 -in my_cert.pem -noout -subject
+openssl x509 -in my_cert.pem -noout -issuer
+openssl x509 -in my_cert.pem -noout -subject
+openssl x509 -in my_cert.pem -noout -issuer
+openssl x509 -in my_cert.pem -noout -fingerprint
+openssl x509 -in my_cert.pem -noout -serial
+```
+
+These flags can be combined to get multiple output at the same time.

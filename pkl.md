@@ -479,7 +479,7 @@ output {
 Thus to use the above pipeline your "filling out of the form" would look like...
 
 ```pkl
-amends "AcmeCICD.pkl"
+// cicd.pkl
 
 amends "AcmeCICD.pkl"
 
@@ -492,4 +492,303 @@ pipelines {
 }
 ```
 
-Because there is no pipeline object to amend; the `new` keyword gives you an object to amend. There is no object to amend. Writing `myNewPipeline { ... }` defines a property, but listings may only include elements. This is where you use the keyword `new`. `new` gives you an object to amend. Pkl derives from context which `new` is used and what the object to amend should look like. This is called default value for the context. 
+Because there is no pipeline object to amend; the `new` keyword gives you an object to amend. Writing `myNewPipeline { ... }` defines a property, but listings may only include elements. This is where you use the keyword `new`; which gives you an object to amend. Pkl derives from context which `new` is used and what the object to amend should look like. This is called default value for the context. 
+
+## Writing a Template
+
+As we see in the example above (AcmeCICD) Pkl provides validation of our configuration. This section covers Pkl techniques that are useful for writing Templates.
+
+### Basic Types
+
+In the  below example we annotate the code with type signatures. This is a good example of Pkl making it easy to unit errors.
+
+```pkl
+name: String = "Writing a Template"
+
+part: Int = 3
+
+hasExercises: Boolean = true
+
+amountLearned: Float = 13.37
+
+duration: Duration = 30.min
+
+bandwidthRequirementPerSecond: DataSize = 52.4288.mb
+```
+
+### Types objects, properties and amending
+
+Having a notation for basic types, we can now write typed objects.
+
+```pkl
+class Language {
+  name: String
+}
+
+bestForConfig: Language = new {
+  name = "Pkl"
+}
+```
+
+Here we define a class `Language` and make a property definition, using the `Language` class. In other words you can be certain that every instance of `Language` has a property `name` of type String.
+
+***Note:*** Though not envorced its customary to name properties starting with a lower-case letter. Class names start with upper-case letters.
+
+When your configuration describes different parts like this, you can define one instance and amend it for every other instance.
+
+```pkl
+class TutorialPart {
+  name: String
+
+  part: Int
+
+  hasExercises: Boolean
+
+  amountLearned: Float
+
+  duration: Duration
+
+  bandwidthRequirementPerSecond: DataSize
+}
+
+pklTutorialPart1: TutorialPart = new {
+  name = "Basic Configuration"
+  part = 1
+  hasExercises = true
+  amountLearned = 13.37
+  duration = 30.min
+  bandwidthRequirementPerSecond = 50.mib.toUnit("mb")
+}
+
+pklTutorialPart2: TutorialPart = (pklTutorialPart1) {
+  name = "Filling out a Template"
+  part = 2
+}
+
+pklTutorialPart3: TutorialPart = (pklTutorialPart1) {
+  name = "Writing a Template"
+  part = 3
+}
+```
+
+When evaluated to the Pkl default pcf you get
+
+```text
+$ pkl eval pklTutorialParts.pkl
+pklTutorialPart1 {
+  name = "Basic Configuration"
+  part = 1
+  hasExercises = true
+  amountLearned = 13.37
+  duration = 30.min
+  bandwidthRequirementPerSecond = 52.4288.mb
+}
+pklTutorialPart2 {
+  name = "Filling out a Template"
+  part = 2
+  hasExercises = true
+  amountLearned = 13.37
+  duration = 30.min
+  bandwidthRequirementPerSecond = 52.4288.mb
+}
+pklTutorialPart3 {
+  name = "Writing a Template"
+  part = 3
+  hasExercises = true
+  amountLearned = 13.37
+  duration = 30.min
+  bandwidthRequirementPerSecond = 52.4288.mb
+}
+```
+
+A few notes that the guide was not great at explaining via examples. Pkl does not render a class defintion and every module is a class by default and every `.pkl` file is a module. Thus if you do something like the below. You can have a mix of values that have to be set when you amend the module (`name` and `part`)
+
+
+```pkl
+// TutorialPart.pkl
+name: String
+
+part: Int
+
+hasExercises: Boolean = true
+
+amountLearned: Float = 13.37
+
+duration: Duration = 30.min
+
+bandwidthRequirementPerSecond: DataSize = 52.4288.mb
+``
+
+To amend the above you would do ...
+
+```pkl
+amends "TutorialPart.pkl"
+
+name = "Writing a Template"
+
+part = 3
+```
+
+And it woud evaluate to ...
+
+```text
+$ pkl eval pklTutorialPart3.pkl
+name = "Writing a Template"
+part = 3
+hasExercises = true
+amountLearned = 13.37
+duration = 30.min
+bandwidthRequirementPerSecond = 52.4288.mb
+```
+
+Its important to note that amending something never changes its type.
+
+### A New Template
+
+The content below is a full configuration that we are starting with. We will make a template based on this configuration.
+
+```pkl
+title = "Pkl: Configure your Systems in New Ways"
+interactive = true
+seats = 100
+occupancy = 0.85
+duration = 1.5.h
+`abstract` = """
+  With more systems to configure, the software industry is drowning in repetitive and brittle configuration files.
+  YAML and other configuration formats have been turned into programming languages against their will.
+  Unsurprisingly, they don’t live up to the task.
+  Pkl puts you back in control.
+  """
+
+event {
+  name = "Migrating Birds between hemispheres"
+  year = 2024
+}
+
+instructors {
+  "Kate Sparrow"
+  "Jerome Owl"
+}
+
+sessions {
+  new {
+    date = "2/1/2024"
+    time = 30.min
+  }
+  new {
+    date = "2/1/2024"
+    time = 30.min
+  }
+}
+
+assistants {
+  ["kevin"] = "Kevin Parrot"
+  ["betty"] = "Betty Harrier"
+}
+
+agenda {
+  ["beginners"] {
+    name = "Basic Configuration"
+    part = 1
+    duration = 45.min
+  }
+  ["intermediates"] {
+    name = "Filling out a Template"
+    part = 2
+    duration = 45.min
+  }
+  ["experts"] {
+    name = "Writing a Template"
+    part = 3
+    duration = 45.min
+  }
+}
+```
+
+Below is the template we make to create that above configuration (a live workshop class)
+
+
+```pkl
+// Workshop.pkl
+
+module Workshop
+
+import "TutorialPart.pkl"
+
+title: String
+
+interactive: Boolean
+
+seats: Int
+
+occupancy: Float
+
+duration: Duration
+
+`abstract`: String
+
+class Event {
+  name: String
+
+  year: Int
+}
+
+event: Event
+
+instructors: Listing<String>
+
+class Session {
+  time: Duration
+
+  date: String
+}
+
+sessions: Listing<Session>
+
+assistants: Mapping<String, String>
+
+agenda: Mapping<String, TutorialPart>
+```
+
+The import of `TutorialPart.pkl` is importing the code we did in an earlier section (refer to that).
+
+A few notes...
+
+* The reason event is a `class` is because unlike the first few properties event has multiple properties thus you need a class.
+
+* Instructors isn't an object with properties, but a list of unnamed values. Listing is the type to use for that.
+
+* Sessions is a listing of objects.
+
+## Languare Reference Notes
+
+Amending means creating a new object that is a copy of original but with the changes made in the amend.
+
+
+
+### Comments
+
+Single line 
+
+`// this is a comment`
+
+Block comment
+
+```pkl
+/*
+  Multiline
+  comment
+*/
+```
+
+Doc comment (processed by [Pkldoc](https://pkl-lang.org/main/current/pkl-doc/index.html)) for more details see [doc comments](https://pkl-lang.org/main/current/language-reference/index.html#doc-comments)
+
+```pkl
+/// A *bird* superstar.
+/// Unfortunately, extinct.
+dodo: Bird
+```
+
+### Numbers
+
+[comment]: <> (Pick up note taking once you get more experience working with the Pkl language with this ref https://pkl-lang.org/main/current/language-reference/index.html)
