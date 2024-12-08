@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Docker Quick Reference | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Docker Quick Reference" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/docker/quick_ref" />
+<meta property="og:url" content="http://0.0.0.0:4000/docker/quick_ref" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Docker Quick Reference" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Docker Quick Reference","url":"http://0.0.0.0:4000/docker/quick_ref"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Docker Quick Reference</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="container-lifecycle-management">Container lifecycle management</h2>
+
+<h3 id="creating-new-container">Creating new container</h3>
+
+<h4 id="from-docker-registry">From Docker Registry</h4>
+
+<p><code class="language-plaintext highlighter-rouge">docker run -d --name  &lt;name_you_want_to_call_it&gt; &lt;registry_image_name&gt;</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">docker run --rm -it --name redis-client --link redis-server:redis-client redis redis-cli -h redis-server</code></p>
+
+<p>The <code class="language-plaintext highlighter-rouge">--rm</code> flag tells Docker to remove the created container as soon as you terminate it. The <code class="language-plaintext highlighter-rouge">-i</code> <code class="language-plaintext highlighter-rouge">-t</code> flags (combined to <code class="language-plaintext highlighter-rouge">-it</code>) run the containers interactively. The <code class="language-plaintext highlighter-rouge">--network</code> option connects this containers to the virtual network we created earlier. This way both containers will receive hostnames corresponding to their names give by the <code class="language-plaintext highlighter-rouge">--name</code> option. By using the <code class="language-plaintext highlighter-rouge">-h</code> parameter tells Redis CLI to connect to a Redis server identified by its containers name</p>
+
+<h3 id="start-or-stop-a-container">Start or stop a container</h3>
+
+<p><code class="language-plaintext highlighter-rouge">docker start|stop &lt;container_name&gt; or &lt;container_id&gt;</code></p>
+
+<h3 id="list-containers">List containers</h3>
+
+<p>For all containers use <code class="language-plaintext highlighter-rouge">docker ps -all</code> for just running ones you can use <code class="language-plaintext highlighter-rouge">docker ps</code></p>
+
+<h2 id="remove-stopped-containers">Remove stopped containers</h2>
+
+<p><code class="language-plaintext highlighter-rouge">docker rm &lt;container_name&gt;</code></p>
+
+<h2 id="connect-to-a-running-container">Connect to a running container</h2>
+
+<h3 id="using-docker-exec">Using docker exec</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">-i</code> makes the command executing interactive</p>
+
+<p><code class="language-plaintext highlighter-rouge">docker exec -i &lt;container_id&gt; /bin/bash</code></p>
+
+<h3 id="ssh-way">SSH way</h3>
+
+<p>use <code class="language-plaintext highlighter-rouge">docker ps</code> to see the containers you have running the use the command below to get IP address of container</p>
+
+<p><code class="language-plaintext highlighter-rouge">docker inspect -f "" [container-name-or-id]</code></p>
+
+<p>once you have the ip you can log in with <code class="language-plaintext highlighter-rouge">ssh [username]@[ip-address]</code></p>
+
+<h2 id="port-forwarding">Port Forwarding</h2>
+
+<h2 id="breakpoint">BREAKPOINT</h2>
+
+<p>To use port mapping we will stop the current Redis server and spin up a new one with a mapped port.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker stop redis-server
+docker <span class="nb">rm </span>redis-server
+docker run <span class="nt">-d</span> <span class="nt">--name</span> redis-server <span class="nt">-p</span> 6379:6379 redis
+</code></pre></div></div>
+
+<p>If you want to get the details for the redis container you can use the command <code class="language-plaintext highlighter-rouge">docker inspect redis-server</code> which will give you a json of all the data about the container.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker stop redis-server
+python <span class="nt">-m</span> pytest <span class="nt">-v</span> <span class="nb">test</span>/integration/
+</code></pre></div></div>
+
+<p>To run the E2E test make sure that your Redis docker container is running. If its not you can start it with <code class="language-plaintext highlighter-rouge">docker start redis-server</code>.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">Dockerfile</code> needs to have a specific format documented <a href="https://docs.docker.com/reference/dockerfile/">here</a></p>
+
+<p>We are using the <a href="https://hub.docker.com/_/python">official Python image</a> as our base image. In our case the <code class="language-plaintext highlighter-rouge">slim-bullseye</code> name at end of the image name means that we are using the slimmed down variant of <code class="language-plaintext highlighter-rouge">Debian Bullseye</code></p>
+
+<p>Putting it all together we git <a href="https://github.com/xcomfan/real_python_examples/blob/0935c4472276a1e5f9899f7a54c182b429db5b73/page-tracker/Dockerfile">this Dockerfile</a> and you can build it with the command <code class="language-plaintext highlighter-rouge">docker build -t page-tracker .</code>. This command will look for Docker file in the current directory <code class="language-plaintext highlighter-rouge">.</code> and tag the resulting image with the default label <code class="language-plaintext highlighter-rouge">latest</code> so the full image name will be <code class="language-plaintext highlighter-rouge">page-tracker:lates</code>.</p>
+
+<p>The idea behind <a href="https://docs.docker.com/build/building/multi-stage/">multi-stage builds</a> is to partition your Dockerfile into stages, each of which can be based on a completely different image. This is particularly useful when your application’s development and runtime environments are different. For example, you can install the necessary build tools in a temporary image meant just for building and testing your application and then copy the resulting executable into the final image. Multi stage builds can make your images much smaller and more efficient.</p>
+
+<p>To start with the refactor we will make a copy of <code class="language-plaintext highlighter-rouge">Dockerfile</code> called <code class="language-plaintext highlighter-rouge">Dockerfile.dev</code>. Note that when running docker build you specify the file you want to use for the build with the <code class="language-plaintext highlighter-rouge">-f</code> option as in <code class="language-plaintext highlighter-rouge">docker build -f Dockerfile.dev -t page-tracker .</code>  We are keeping <code class="language-plaintext highlighter-rouge">Dockerfile.dev</code> for later and making our changes for the multi stage build in <code class="language-plaintext highlighter-rouge">Dockerfile</code>.</p>
+
+<p>Each stage in a Dockerfile begins with its own <code class="language-plaintext highlighter-rouge">FROM</code> instructions, so we will have two. The first stage will be nearly identical to our current <code class="language-plaintext highlighter-rouge">Dockerfile</code> we copied from to create <code class="language-plaintext highlighter-rouge">Dockerfile.dev</code> except that we give the stage the name <code class="language-plaintext highlighter-rouge">builder</code> which we refer to later.  Because we will be transferring your packaged page tracker application from one image to another, we need to add the extra step of building a distribution package using the <code class="language-plaintext highlighter-rouge">Python wheel</code> format. The <code class="language-plaintext highlighter-rouge">pip wheel</code> command will create a file named something like <code class="language-plaintext highlighter-rouge">page_tracker-1.0.0-py3-none-any.whl</code> in the <code class="language-plaintext highlighter-rouge">dist/</code> subfolder. We also remove the <code class="language-plaintext highlighter-rouge">CMD</code> instruction from this stage, as it’ll become part of the next stage.</p>
+
+<p>The second and final stage, implicitly named <code class="language-plaintext highlighter-rouge">stage-1</code>, looks a little repetitive because its based on the same image. In this second stage we start with the familiar steps of upgrading system package and creating a user and making a virtual environment. Then, we copy our wheel file which was generated in the prior <code class="language-plaintext highlighter-rouge">builder</code> stage and install it with <code class="language-plaintext highlighter-rouge">pip</code> as before. We also bring back the <code class="language-plaintext highlighter-rouge">CMD</code> command to start our application. In this setup the first stage is responsible for installing all the dependencies and running tests as well as generating the wheel file. The next (<code class="language-plaintext highlighter-rouge">stage-1</code>) stage just has to copy the finished wheel. Also not that the <code class="language-plaintext highlighter-rouge">builder</code> stage is temporary, so there will be no trace of it in your Docker mages afterward.</p>
+
+<p>The refactored for multi stage builds Dockerfile should look like <a href="https://github.com/xcomfan/real_python_examples/blob/59676ca2a15cdaa8e66fcd4583340ba7eb0eccc4/page-tracker/Dockerfile">this</a></p>
+
+<p>You can use a managed service docker registry such as the one you get from AWS. You can also host your own with an <a href="https://hub.docker.com/_/registry">open source distribution continer</a></p>
+
+<p>Docker hub offers a free tier of their managed service where you get unlimited public and one free private repository.</p>
+
+<p>An image repository on your Docker Hub account is a collection of Docker image that uses can upload or download. Each repository can contain multiple tagged versions of the same image. In this regard, a Docker Hub is analogous to a GitHub repository but tailored for docker images rather than code.</p>
+
+<p>Once you set up your Docker account use <code class="language-plaintext highlighter-rouge">docker login -u &lt;username&gt;</code> to login from command line. If you are using 2FA you need to set up an access token and provide that as your password.</p>
+
+<p>Docker hub controls what repository your image is pushed to via tagging. You tag the image using your Docker Hub username and repository as a prefix. For example <code class="language-plaintext highlighter-rouge">docker tag page-tracker:719e61c xcomfan/page-tracker:719e61c</code>. This form we are follwing is <code class="language-plaintext highlighter-rouge">registry/username/repository:tag</code>. The registry part can be left out when you are pushing to default docker hub as we are doing in this example.  Otherwise it can be a domain address or an IP address with an optional port number of your private registry instance. If you don’t provide a tag Docker implicitly applies the <code class="language-plaintext highlighter-rouge">latest</code> tag. You can tag the same image with more than one tag for example <code class="language-plaintext highlighter-rouge">docker tag page-tracker:719e61c xcomfan/page-tracker:latest</code></p>
+
+<p>Once you’ve correctly tagged the images, you can send them to the desired registry with <code class="language-plaintext highlighter-rouge">docker push</code> for example…</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker push xcomfan/page-tracker:719e61c
+docker push xcomfan/page-tracker:latest
+</code></pre></div></div>
+
+<p>Note that you are not pushing the same image twice. Docker will recognize they are the same and only upload the meta data needed. If all worked you should see your images on Docker Hub.</p>
+
+<p>To add collaborators you can used paid features or generate read only tokens for those who need to pull down your images.</p>
+
+<p>At this point if you were to hop on another computer you can get the image via the command <code class="language-plaintext highlighter-rouge">docker pull xcomfan/page-tracker</code>. As this command does not specify any tag for the image Docker will pull the one tagged with <code class="language-plaintext highlighter-rouge">latest</code>. You don’t need to manually pull images. Docker will pull them automatically when you try running them for example if you were to run the command <code class="language-plaintext highlighter-rouge">docker run -p 80:5000 --name web-sevice xcomfan/page-tracker</code>.</p>
+
+<p>Adding the <code class="language-plaintext highlighter-rouge">-rm</code> flag will automatically remove the container when it stops if you don’t want to do this by hand.</p>
+
+<p>To see what networks you have defined locally (this is in the context of getting the container we created connected to Redis container) you can use the command <code class="language-plaintext highlighter-rouge">docker network ls</code> and if you need to create the page tracker network as we did before you would use <code class="language-plaintext highlighter-rouge">docker network create page-tracker-network</code>.</p>
+
+<p>You can create a volume for your Redis container with <code class="language-plaintext highlighter-rouge">docker volume create redis-volume</code>.</p>
+
+<p>After stopping and removing the old redis container start the new one with the volume attached with. <code class="language-plaintext highlighter-rouge">docker run -d -v redis-volume:/data --network page-tracker-network --name redis-service redis:7.0.10-bullseye</code></p>
+
+<p>And you can start our flask application container using.</p>
+
+<p><code class="language-plaintext highlighter-rouge">docker run -d -p 80:5000 -e REDIS_URL=redis://redis-service:6379 --network page-tracker-network --name web-service xcomfan/page-tracker</code></p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">-d</code> flag is for running the containers in the background (detached) without a terminal.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">p</code> flag is for port forwarding</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">-e</code> flag is for environment variables</p>
+  </li>
+</ul>
+
+<p>You can now access your application at <code class="language-plaintext highlighter-rouge">http://localhost</code> via browser or <code class="language-plaintext highlighter-rouge">curl</code></p>
+
+<p><a href="https://docs.docker.com/compose/">Docker Compose</a> is a tool that works on top of Docker and simplifies running multi-container Docker applications.</p>
+
+<p>If you are using Docker Desktop; Docker Compose is bundled with it.</p>
+
+<p>We also add at the project root a <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> file. The <a href="https://docs.docker.com/reference/compose-file/">Compose File</a> is where you define services, networks, and volumes.  The complete files for our example is <a href="https://github.com/xcomfan/real_python_examples/blob/d9a84880b09b85681b667072cea8e0a3f871e626/page-tracker/docker-compose.yml">here</a></p>
+
+<p>Few notes on the file</p>
+
+<ul>
+  <li>
+    <p>You are able to scale up the number of each of the containers.</p>
+  </li>
+  <li>
+    <p>Some values in the configuration file are quoted, while others aren’t. This is a precaution against a in older YAML format specification which treats certain characters as special if they appear in unquoted strings.</p>
+  </li>
+</ul>
+
+<p>To run the docker compose file first we need to stop all of our running containers (pertinent to this app).</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker stop <span class="nt">-t</span> 0 web-service redis-service
+docker container <span class="nb">rm </span>web-service redis-service
+docker network <span class="nb">rm </span>page-tracker-network
+docker volume <span class="nb">rm </span>redis-volume
+</code></pre></div></div>
+
+<p>Also delete any local images…</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker images
+REPOSITORY                TAG              IMAGE ID       CREATED      SIZE
+page-tracker              dde1dc9          9cb2e3233522   1 hour ago   204MB
+page-tracker              latest           9cb2e3233522   1 hour ago   204MB
+realpython/page-tracker   dde1dc9          9cb2e3233522   1 hour ago   204MB
+realpython/page-tracker   latest           9cb2e3233522   1 hour ago   204MB
+<span class="o">(</span>...<span class="o">)</span>
+
+<span class="nv">$ </span>docker rmi <span class="nt">-f</span> 9cb2e3233522
+Untagged: page-tracker:dde1dc9
+Untagged: page-tracker:latest
+Untagged: realpython/page-tracker:dde1dc9
+Untagged: realpython/page-tracker:latest
+Deleted: sha256:9cb2e3233522e020c366880867980232d747c4c99a1f60a61b9bece40...
+</code></pre></div></div>
+
+<p>If you really want to start from scratch and don’t mind loosing data you can use <code class="language-plaintext highlighter-rouge">docker system prune --all --volumes</code> <strong><em>WARNING:</em></strong> this will remove everything created Docker.</p>
+
+<p>To bring up your application via the Docker Compose file use the command <code class="language-plaintext highlighter-rouge">docker compose up -d</code></p>
+
+<p>The docker compose plugin provides several useful commands for managing your multi container application. Few are demonstrated below.</p>
+
+<p>```bash
+$ docker compose ps
+NAME                           COMMAND                  SERVICE        …
+page-tracker-redis-service-1   “docker-entrypoint.s…”   redis-service  …
+page-tracker-web-service-1     “flask –app page_tr…”   web-service    …</p>
+
+<p>$ docker compose logs –follow
+(…)
+page-tracker-web-service-1    |  * Running on all addresses (0.0.0.0)
+page-tracker-web-service-1    |  * Running on http://127.0.0.1:5000
+page-tracker-web-service-1    |  * Running on http://172.20.0.3:5000
+page-tracker-web-service-1    | Press CTRL+C to quit</p>
+
+<p>$ docker compose stop
+[+] Running 2/2
+ ⠿ Container page-tracker-web-service-1    Stopped                     10.3s
+ ⠿ Container page-tracker-redis-service-1  Stopped                      0.4s</p>
+
+<p>$ docker compose restart
+[+] Running 2/2
+ ⠿ Container page-tracker-redis-service-1  Started                      0.4s
+ ⠿ Container page-tracker-web-service-1    Started                      0.5s</p>
+
+<p>$ docker compose down –volumes
+[+] Running 4/4
+ ⠿ Container page-tracker-web-service-1    Removed                      6.0s
+ ⠿ Container page-tracker-redis-service-1  Removed                      0.4s
+ ⠿ Volume page-tracker_redis-volume        Removed                      0.0s
+ ⠿ Network page-tracker_backend-network    Removed                      0.1s</p>
+
+<p>We will update our <a href="https://github.com/xcomfan/real_python_examples/blob/c215b73cb6b9db6d1d7e761dfad61570e680f759/page-tracker/docker-compose.yml"><code class="language-plaintext highlighter-rouge">docker-compose.yml</code> file</a> to remove the Redis port forwarding we added and add a new service based on our old <a href="https://github.com/xcomfan/real_python_examples/blob/c215b73cb6b9db6d1d7e761dfad61570e680f759/page-tracker/web/Dockerfile.dev"><code class="language-plaintext highlighter-rouge">Dockerfile.dev</code> file</a>.</p>
+
+<p>A few notes on the <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> changes.</p>
+
+<ul>
+  <li>
+    <p>Because Docker Compose has access to your host machine shell it will try to interpolate any reference or environment variables such ash <code class="language-plaintext highlighter-rouge">$REDIS_URL</code> or <code class="language-plaintext highlighter-rouge">$FLASK_URL</code> which appear in the <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> file. These variables are most likely not defined when you run Docker Compose. To disable premature substitution of environment variables by Docker Compose, you escape the <code class="language-plaintext highlighter-rouge">$</code> with two dollar signs <code class="language-plaintext highlighter-rouge">$$</code>. This produces literal stings <code class="language-plaintext highlighter-rouge">$REDIS_URL</code> and <code class="language-plaintext highlighter-rouge">$FLASK_URL</code> in the command that will be executed in the resulting containers.</p>
+  </li>
+  <li>
+    <p>When you start a multi-container application with Docker compose, only the core services that don’t belong to any profile start. If you also with to start the services that were assigned to one or more profiles, then you must list those profiles using the <code class="language-plaintext highlighter-rouge">--profile</code> option.</p>
+  </li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">docker compose --profile testing up -d</code></p>
+
+<p>You can use the command <code class="language-plaintext highlighter-rouge">docker compose ps -a</code> to see that status. Notice that <code class="language-plaintext highlighter-rouge">page-tracker-test-service</code> existed with a 0 status code. To see the logs of the test you can run <code class="language-plaintext highlighter-rouge">docker compose logs test-service</code></p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -9,16 +9,16 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://localhost:4000/python/general_syntax" />
-<meta property="og:url" content="http://localhost:4000/python/general_syntax" />
+<link rel="canonical" href="http://0.0.0.0:4000/python/general_syntax" />
+<meta property="og:url" content="http://0.0.0.0:4000/python/general_syntax" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Python General Syntax" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Python General Syntax","url":"http://localhost:4000/python/general_syntax"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Python General Syntax","url":"http://0.0.0.0:4000/python/general_syntax"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
@@ -63,6 +63,8 @@
 
 <p>An object is considered true if it is either a nonzero number or a nonempty collection object.  The built in words <code class="language-plaintext highlighter-rouge">True</code> and <code class="language-plaintext highlighter-rouge">False</code> are essentially predefined to have the same meaning as integers 1 and 0 respectively.</p>
 
+<p>Whe testing for none it is more Pythonic to write <code class="language-plaintext highlighter-rouge">if none_value is None:</code> than <code class="language-plaintext highlighter-rouge">if none_value == None</code></p>
+
 <h2 id="built-in-vs-object-methods">Built In Vs. Object Methods</h2>
 
 <p>As a general rule generic operations that apply to multiple types show up as built-in functions or expressions.  For example <code class="language-plaintext highlighter-rouge">len(x)</code>, <code class="language-plaintext highlighter-rouge">x[0]</code>.  Type specific operations are method calls.  For example <code class="language-plaintext highlighter-rouge">aString.upper()</code></p>
@@ -104,6 +106,12 @@
 <span class="p">...</span> 
 <span class="n">hello</span>
 </code></pre></div></div>
+
+<h2 id="in-place-variable-swap">In place variable swap</h2>
+
+<p>The comma makes it a tuple and you are using tuple unpacking to do the variable swap.</p>
+
+<p><code class="language-plaintext highlighter-rouge">a, b = b, a</code></p>
 
 <h2 id="scoping">Scoping</h2>
 

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Kubernetes Pods | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Kubernetes Pods" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/kubernetes/pods" />
+<meta property="og:url" content="http://0.0.0.0:4000/kubernetes/pods" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Kubernetes Pods" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Kubernetes Pods","url":"http://0.0.0.0:4000/kubernetes/pods"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Kubernetes Pods</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="what-is-a-pod-in-kubernetes">What is a Pod in Kubernetes?</h2>
+
+<p>Kubernetes groups multiple containers into a single atomic unit called a <strong>Pod</strong>. A Pod represents a collection of application containers and volumes running in the same execution environment. Pods (not containers) are the smallest deployable artifact in a Kubernetes cluster. All containers in a pod land on the same machine. Each container within a Pod runs in its own cgroup, but they share a number of Linux namespaces. Applications running in the same Pod share the same IP address and port space (network namespace), have the same hostname (Unix Time Sharing (UTS) namespace) and can communicate using native inter-process communication channels over System V IPC or POSIX message queues (IPC namespace). Applications in different pods are isolated from each other. They have different IP addresses, different host names, and more. Containers in different Pods running on the same node may as well be on different servers.</p>
+
+<p>When designing Pods ask yourself if these containers will work the same if they are on different machines. If the answer is no Pod is the correct grouping for the containers. If the answer is yes then multiple Pods is probably the correct answer.</p>
+
+<h2 id="pod-manifests">Pod Manifests</h2>
+
+<p>Pods are described in a Pod manifest. The Pod manifest is just a text file representation of the Kubernetes API object. The Kubernetes API server accepts and processes Pod manifests before storing them in persistent storage (etcd). The scheduler also uses the Kubernetes API to find Pods that haven’t been scheduled to a node. The scheduler then places the Pods onto nodes depending on the resources and other constraints expressed in the Pod manifests. Kubernetes tries to ensure that Pods from the same application are distributed onto different machines for reliability. Once scheduled to a node, Pods don’t move and must be explicitly destroyed and rescheduled or if a node fails. To create multiple pods you want to use ReplicaSets.</p>
+
+<p>Below is an example of a Pod manifest file.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Pod</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">kuard</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">volumes</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">kuard-data"</span>
+      <span class="na">nfs</span><span class="pi">:</span>
+        <span class="na">server</span><span class="pi">:</span> <span class="s">my.nfs.server.local</span>
+        <span class="na">path</span><span class="pi">:</span> <span class="s2">"</span><span class="s">/exports"</span>
+  <span class="na">containers</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">image</span><span class="pi">:</span> <span class="s">gcr.io/kuar-demo/kuard-arm64:blue</span>
+      <span class="na">name</span><span class="pi">:</span> <span class="s">kuard</span>
+      <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">8080</span>
+          <span class="na">name</span><span class="pi">:</span> <span class="s">http</span>
+          <span class="na">protocol</span><span class="pi">:</span> <span class="s">TCP</span>
+      <span class="na">resources</span><span class="pi">:</span>
+        <span class="na">requests</span><span class="pi">:</span>
+          <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">500m"</span>
+          <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">128Mi"</span>
+        <span class="na">limits</span><span class="pi">:</span>
+          <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1000m"</span>
+          <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">256Mi"</span>
+      <span class="na">volumeMounts</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">mountPath</span><span class="pi">:</span> <span class="s2">"</span><span class="s">/data"</span>
+          <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">kuard-data"</span>
+      <span class="na">livenessProbe</span><span class="pi">:</span>
+        <span class="na">httpGet</span><span class="pi">:</span>
+          <span class="na">path</span><span class="pi">:</span> <span class="s">/healthy</span>
+          <span class="na">port</span><span class="pi">:</span> <span class="m">8080</span>
+        <span class="na">initialDelaySeconds</span><span class="pi">:</span> <span class="m">5</span>
+        <span class="na">timeoutSeconds</span><span class="pi">:</span> <span class="m">1</span>
+        <span class="na">periodSeconds</span><span class="pi">:</span> <span class="m">10</span>
+        <span class="na">failureThreshold</span><span class="pi">:</span> <span class="m">3</span>
+      <span class="na">readinessProbe</span><span class="pi">:</span>
+        <span class="na">httpGet</span><span class="pi">:</span>
+          <span class="na">path</span><span class="pi">:</span> <span class="s">/ready</span>
+          <span class="na">port</span><span class="pi">:</span> <span class="m">8080</span>
+        <span class="na">initialDelaySeconds</span><span class="pi">:</span> <span class="m">30</span>
+        <span class="na">timeoutSeconds</span><span class="pi">:</span> <span class="m">1</span>
+</code></pre></div></div>
+
+<h2 id="pod-resource-limits">Pod Resource Limits</h2>
+
+<p>Kubernetes tracks both the <strong>requests</strong> and <strong>upper limits</strong> for resources for each Pod that runs on a machine. Resources requested by a Pod are guaranteed to be present on the node, while a Pod’s limit is the maximum amount of a given resource that a Pod can consume. A Pod’s limit can be higher than its request, in which case the extra resources are supplied on a best effort basis. They are not guaranteed to be present on a node.</p>
+
+<h3 id="resource-management">Resource management</h3>
+
+<p>Kubernetes allows users to specify two different resource metrics. Resource <strong>requests</strong> specify the minimum amount of a resource required to run the application. Resource <strong>limits</strong> specify the maximum amount of a resource that an application can consume.</p>
+
+<h4 id="resource-requests-minimum-required-resources">Resource requests: minimum required resources</h4>
+
+<p>A Pod requests resources required to run its containers. Kubernetes guarantees that these resources are available to the Pod. Most commonly CPU and memory is requested, but Kubernetes supports others such as GPUs.</p>
+
+<p>Resources are requested per container not per Pod. The total resources requested by the Pod is the sum of all resources requested by the containers in the Pod. The reason for this is containers may have different CPU requirements.</p>
+
+<h4 id="request-limit-details">Request limit details</h4>
+
+<p>The scheduler makes sure that the resource requests are available and do not exceed the capacity of the node. The request specifies a minimum, but not the maximum a Pod can use. A Pod can go above its requested limits as long as they are available on the system. CPU requests are handled using <code class="language-plaintext highlighter-rouge">cpu-shares</code> functionality in the Linux kernel.  For memory since the OS cannot just remove memory from a process once its allocated so when system runs out of memory <code class="language-plaintext highlighter-rouge">kubelet</code> terminates containers whose memory usage is greater thant heir requested memory. These container are restarted but with less available memory for the container to use.  Limits can be used to place an upper bound and not let a containers use unlimited resources.</p>
+
+<h2 id="health-checks">Health Checks</h2>
+
+<p>If Kubernetes detects that the main process of your application is not running it will restart it. In most cases a simple process check is insufficient to verify health (process may be running but deadlocked). To address this Kubernetes introduced health checks for application <em>liveness</em>. Since these health checks are application specific you have to define them in your Pod manifest (see example above). In addition to HTTP checks, Kubernetes supports tcpSocket health checks that open a TCP socket; if the connection is successful, the probe succeeds. Kubernetes also allows <code class="language-plaintext highlighter-rouge">exec</code> probes. These execute a script or program in the context of the container. If this script returns a zero exit code, the probe succeeds; otherwise it fails.</p>
+
+<p>Kubernetes also provides a <em>readiness</em> probe. Kubernetes makes a distinction between liveness and readiness. Liveness determines if an application is running properly. Containers that fail liveness are restarted. Readiness describes when a container is ready to serve user requests. Containers that fail readiness checks are removed from load balancers. Readiness probes are configured similarly to liveness probes. Combining readiness and liveness probes helps ensure only healthy containers are running within the cluster.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

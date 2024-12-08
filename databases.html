@@ -3,22 +3,22 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Container lifecycle management | My References</title>
+<title>Databases | My References</title>
 <meta name="generator" content="Jekyll v3.9.2" />
-<meta property="og:title" content="Container lifecycle management" />
+<meta property="og:title" content="Databases" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://localhost:4000/docker/docker_quick_ref.html" />
-<meta property="og:url" content="http://localhost:4000/docker/docker_quick_ref.html" />
+<link rel="canonical" href="http://0.0.0.0:4000/databases" />
+<meta property="og:url" content="http://0.0.0.0:4000/databases" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Container lifecycle management" />
+<meta property="twitter:title" content="Databases" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Container lifecycle management","url":"http://localhost:4000/docker/docker_quick_ref.html"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Databases","url":"http://0.0.0.0:4000/databases"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
@@ -39,39 +39,11 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Container lifecycle management</h1>
+    <h1 class="post-title">Databases</h1>
   </header>
 
   <div class="post-content">
-    <h1 id="container-lifecycle-management">Container lifecycle management</h1>
-
-<h2 id="start-or-stop-a-container">Start or stop a container</h2>
-
-<p><code class="language-plaintext highlighter-rouge">docker start|stop &lt;container_name&gt; or &lt;container_id&gt;</code></p>
-
-<h2 id="list-containers">List containers</h2>
-
-<p>For all containers use <code class="language-plaintext highlighter-rouge">docker ps -all</code> for just running ones you can use <code class="language-plaintext highlighter-rouge">docker ps</code></p>
-
-<h2 id="remove-stopped-containers">Remove stopped containers</h2>
-
-<p><code class="language-plaintext highlighter-rouge">docker rm &lt;container_name&gt;</code></p>
-
-<h1 id="connect-to-a-running-container">Connect to a running container</h1>
-
-<h2 id="using-docker-exec">Using docker exec</h2>
-
-<p>The <code class="language-plaintext highlighter-rouge">-i</code> makes the command executing interactive</p>
-
-<p><code class="language-plaintext highlighter-rouge">docker exec -i &lt;container_id&gt; /bin/bash</code></p>
-
-<h2 id="ssh-way">SSH way</h2>
-
-<p>use <code class="language-plaintext highlighter-rouge">docker ps</code> to see the containers you have running the use the command below to get IP address of container</p>
-
-<p><code class="language-plaintext highlighter-rouge">docker inspect -f "" [container-name-or-id]</code></p>
-
-<p>once you have the ip you can log in with <code class="language-plaintext highlighter-rouge">ssh [username]@[ip-address]</code></p>
+    <p><a href="/databases/postgres.html">Postgres</a></p>
 
   </div>
 

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Kubernetes Annotations | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Kubernetes Annotations" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/kubernetes/annotations" />
+<meta property="og:url" content="http://0.0.0.0:4000/kubernetes/annotations" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Kubernetes Annotations" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Kubernetes Annotations","url":"http://0.0.0.0:4000/kubernetes/annotations"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Kubernetes Annotations</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="annotations">Annotations</h2>
+
+<p>Annotations provide a place to store additional metadata for Kubernetes object with the sole purpose of assisting tools and libraries.  They are a way for other programs driving Kubernetes via an API to store some data with an object. Annotations can be used for the tool itself, or to pass configuration information between external systems. While labels are used to identify and group objects; annotation are used to provide extra information about where an object came from, how to use it, or policy around that object.</p>
+
+<p>When in doubt use an annotation and promote it to a label if there is need to use it as a selector.</p>
+
+<p>Annotations are used to…</p>
+
+<ul>
+  <li>Keep track of a “reason” for the latest update to an object</li>
+  <li>Communicate a specialized scheduling policy to a specialized scheduler</li>
+  <li>Extend data bout the last tool to update the resource and how it was updated (detect changes and do smart merge)</li>
+  <li>Attach build, release, or image information that isn’t appropriate for labels (Git hash, timestamp PR number etc)</li>
+  <li>Enable the Deployment object to keep track of ReplicaSets that it is managing for rollouts</li>
+  <li>Prototype alpha functionality in Kubernetes (instead of creating first class API filed, the parameters for that functionality are encoded in an annotation)</li>
+</ul>
+
+<p>Annotations are used in various places in Kubernetes with the primary use case being rolling deployments. During rolling deployments, annotations are used to track rollout status and provide the necessary information required to roll back a deployment to a previous state.</p>
+
+<h2 id="defining-annotations">Defining annotations</h2>
+
+<p>Annotations keys use the same format as label keys but because they are often used to communicate information between tools the namespace part of the key is more important. Example keys would be <code class="language-plaintext highlighter-rouge">deployment.kubernetes.io/revision</code> or <code class="language-plaintext highlighter-rouge">kubernetes.io/change-cause</code>.</p>
+
+<p>The value component of an annotation is a free-form field and there is no validation that any format is being followed. Its not uncommon to have a JSON document encoded as a string and stored as an annotation.</p>
+
+<p>Annotations are defined in the common <code class="language-plaintext highlighter-rouge">metadata</code> section in every Kubernetes object.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">...</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">annotations</span><span class="pi">:</span>
+    <span class="s">example.com/icon-url</span><span class="pi">:</span> <span class="s2">"</span><span class="s">https://example.com/icon.png"</span>
+<span class="nn">...</span>
+</code></pre></div></div>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

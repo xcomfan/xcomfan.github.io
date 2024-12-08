@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Kubernetes ConfigMaps | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Kubernetes ConfigMaps" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/kubernetes/config_maps" />
+<meta property="og:url" content="http://0.0.0.0:4000/kubernetes/config_maps" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Kubernetes ConfigMaps" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Kubernetes ConfigMaps","url":"http://0.0.0.0:4000/kubernetes/config_maps"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Kubernetes ConfigMaps</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="what-are-configmaps">What are ConfigMaps</h2>
+
+<p>ConfigMaps are used to provide configuration information for workloads. This information can be a short string or a file. One way to think of ConfigMaps is a Kubernetes object that defines a set ov variables that can be used when defining the environment or command line for your containers.</p>
+
+<h2 id="creating-configmaps">Creating ConfigMaps</h2>
+
+<p>To imperatively create a ConfigMap which makes a <code class="language-plaintext highlighter-rouge">my-config.txt</code> file available to a Pod you would use a command similar to …</p>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl create configmap my-config --from-file=my-config.txt --from-literal=extra-param=extra-value --from-literal=another-param=another-value</code></p>
+
+<p>In this example the context of <code class="language-plaintext highlighter-rouge">my-config.txt</code> are below…</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code># This is a sample config file that I might use to configure an application
+parameter1 = value1
+parameter2 = value2
+</code></pre></div></div>
+
+<p>The YAML for the above command would …</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+    <span class="s">data</span><span class="pi">:</span>
+      <span class="na">another-param</span><span class="pi">:</span> <span class="s">another-value</span>
+      <span class="na">extra-param</span><span class="pi">:</span> <span class="s">extra-value</span>
+      <span class="s">my-config.txt</span><span class="pi">:</span> <span class="pi">|</span>
+        <span class="s"># This is a sample config file that I might use to configure an application</span>
+        <span class="s">parameter1 = value1</span>
+        <span class="s">parameter2 = value2</span>
+    <span class="na">kind</span><span class="pi">:</span> <span class="s">ConfigMap</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">creationTimestamp</span><span class="pi">:</span> <span class="s">...</span>
+      <span class="na">name</span><span class="pi">:</span> <span class="s">my-config</span>
+      <span class="na">namespace</span><span class="pi">:</span> <span class="s">default</span>
+      <span class="na">resourceVersion</span><span class="pi">:</span> <span class="s2">"</span><span class="s">13556"</span>
+      <span class="na">selfLink</span><span class="pi">:</span> <span class="s">/api/v1/namespaces/default/configmaps/my-config</span>
+      <span class="na">uid</span><span class="pi">:</span> <span class="s">3641c553-f7de-11e6-98c9-06135271a273</span>
+</code></pre></div></div>
+
+<p>You can get the YAML for the ConfigMap imperatively created with the command <code class="language-plaintext highlighter-rouge">kubectl get configmaps my-config -o yaml</code></p>
+
+<p>When creating ConfigMaps keep in mind the <a href="/kubernetes/naming_constraints">naming constraints</a> for the key names in a <code class="language-plaintext highlighter-rouge">ConfigMap</code>.</p>
+
+<p>As of Kubernetes 1.6 ConfigMaps are unable to store binary data and can only be UTF-8 text. You can in theory encode binary data into a base64 string and put it into the YAML file, but that makes YAML files hard to manage.</p>
+
+<p>Maximum size for a ConfigMap is 1MB.</p>
+
+<h2 id="using-a-configmap">Using a ConfigMap</h2>
+
+<p>There are three main ways to use a ConfigMap:</p>
+
+<ul>
+  <li>
+    <p>Filesystem - You can mount a ConfigMap into a Pod. A file is created for each entry based on the key name. The contents of that file are set to the value.</p>
+  </li>
+  <li>
+    <p>Environment variable - A ConfigMap can be used to dynamically set the value of an environment variable</p>
+  </li>
+  <li>
+    <p>Command line arguments - Kubernetes supports dynamically creating the command line for a container based on ConfigMap values.</p>
+  </li>
+</ul>
+
+<p>The manifest below shows examples of these three use cases.</p>
+
+<p>For the filesystem method, we create a new volume inside the Pod and give it the name <code class="language-plaintext highlighter-rouge">config-volume</code>. We then define this volume to be a ConfigMap volume and point at the ConfigMap to mount. We have to specify where this gets mounted into the <code class="language-plaintext highlighter-rouge">kuard</code> containers with a <code class="language-plaintext highlighter-rouge">volumeMount</code>. In this case we are mounting it a <code class="language-plaintext highlighter-rouge">/config</code>. Environments variables are specified with a special <code class="language-plaintext highlighter-rouge">valueFrom</code> member. This references the ConfigMap and the data key to use within that ConfigMap. Command line arguments build on environment variables. Kubernetes will perform the correct substitution with a special <code class="language-plaintext highlighter-rouge">$(&lt;env-var-name&gt;)</code> syntax.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Pod</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">kuard-config</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">containers</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">test-container</span>
+      <span class="na">image</span><span class="pi">:</span> <span class="s">gcr.io/kuar-demo/kuard-amd64:blue</span>
+      <span class="na">imagePullPolicy</span><span class="pi">:</span> <span class="s">Always</span>
+      <span class="na">command</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="s2">"</span><span class="s">/kuard"</span>
+        <span class="pi">-</span> <span class="s2">"</span><span class="s">$(EXTRA_PARAM)"</span>
+      <span class="na">env</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">ANOTHER_PARAM</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">configMapKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">my-config</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">another-param</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">EXTRA_PARAM</span>
+          <span class="na">valueFrom</span><span class="pi">:</span>
+            <span class="na">configMapKeyRef</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">my-config</span>
+              <span class="na">key</span><span class="pi">:</span> <span class="s">extra-param</span>
+      <span class="na">volumeMounts</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">config-volume</span>
+          <span class="na">mountPath</span><span class="pi">:</span> <span class="s">/config</span>
+  <span class="na">volumes</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">config-volume</span>
+      <span class="na">configMap</span><span class="pi">:</span>
+        <span class="na">name</span><span class="pi">:</span> <span class="s">my-config</span>
+  <span class="na">restartPolicy</span><span class="pi">:</span> <span class="s">Never</span>
+</code></pre></div></div>
+
+<h2 id="managing-configmaps">Managing ConfigMaps</h2>
+
+<p>ConfigMaps are managed through the Kubernetes API. The usual <code class="language-plaintext highlighter-rouge">create</code>, <code class="language-plaintext highlighter-rouge">delete</code>, <code class="language-plaintext highlighter-rouge">get</code> and <code class="language-plaintext highlighter-rouge">describe</code> commands work for manipulating these objects.</p>
+
+<h3 id="listing">Listing</h3>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl get configmaps</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl describe configmap my-config</code></p>
+
+<h3 id="creating">Creating</h3>
+
+<p>The easiest way to create a ConfigMap is via <code class="language-plaintext highlighter-rouge">kubectl create configmap</code>. There are a variety of ways to specify the data items that go into the ConfigMap. These can be combined in a single command.</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">--from-file=&lt;filename&gt;</code> - Load from the file with the secret data key the same as the filename</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">--from-file=&lt;key&gt;=&lt;filename&gt;</code> - Load from the file with the secret data key explicitly specified</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">--from-file=&lt;directory&gt;</code> - Load all files in the specified directory where the filename is an acceptable key name</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">--from-literal=&lt;key&gt;=&lt;value&gt;</code> - Use the specified key/value pair directly</p>
+  </li>
+</ul>
+
+<h3 id="updating">Updating</h3>
+
+<p>You can update a ConfigMap and have it reflected in running programs. There is no need to restart if the application is configured to reread configuration values. This is a rare feature but might be something you can add to your applications.</p>
+
+<p>Below are three ways to update ConfigMaps or secrets.</p>
+
+<h4 id="update-from-file">Update from file</h4>
+
+<p>If you have a manifest for your ConfigMap, you can just edit it directly and push a new version with <code class="language-plaintext highlighter-rouge">kubectl replace -f &lt;filename&gt;</code> You can also use <code class="language-plaintext highlighter-rouge">kubectl apply -f &lt;filename&gt;</code> if you previously created the resource with kubectl apply. Due to the way that data files are encoded into these objects, updating a configuration can be a bit cumbersome as there is no provision in <code class="language-plaintext highlighter-rouge">kubectl</code> to load data from an external file. The data must be stored directly in the YAML manifest. The most common use case is when the ConfigMap is defined as part of a directory or list of resources and everything is created and updated together. Oftentimes these manifests will be checked into source control. Be careful not put push secrets into a public location.</p>
+
+<h4 id="recreate-and-update">Recreate and update</h4>
+
+<p>If you store the inputs into your ConfigMaps as separate files on disk (as opposed to embedded into YAML directly), you can use <code class="language-plaintext highlighter-rouge">kubectl</code> to recreate the manifest and then use it to update the object. This will look something like…</p>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl create configMap generic kuard-tls --from-file=kuard.crt --from-file=kuard.key --dry-run -o yaml | kubectl replace -f -</code></p>
+
+<p>This command line first creates a new ConfigMap with the same name as our existing secret. If we just stopped there, the Kubernetes API server would return an error complaining that we are tying to create a ConfigMap that already exists. Instead, we tell <code class="language-plaintext highlighter-rouge">kubectl</code> not to actually send the data to the server but instead to dump the YAML that it <em>would have</em> sent to the API server to <code class="language-plaintext highlighter-rouge">stdout</code>. We then pipe that to <code class="language-plaintext highlighter-rouge">kubectl</code> replace and use <code class="language-plaintext highlighter-rouge">-f -</code> to tell it to read from <code class="language-plaintext highlighter-rouge">stdin</code>. In this way we can update a ConfigMap from files on disk without having to manually base64 encode the data.</p>
+
+<h4 id="edit-current-version">Edit current version</h4>
+
+<p>You can use <code class="language-plaintext highlighter-rouge">kubectl edit</code> to bring up a version of the ConfigMap in your editor so you can modify it.</p>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl edit configmap my-config</code></p>
+
+<p>One you make the desired changes in your editor and save, the new version of the object will be pushed to the Kubernetes API server.</p>
+
+<h4 id="live-updates">Live updates</h4>
+
+<p>Once a ConfigMap or secret is updated using the API, it will automatically be pushed to all volumes that use that ConfigMap or secret. This update may take a few seconds. Currently there is no built in way to signal an application when a new version of ConfigMap is deployed. It is up to the application or some helper script to look for the config files to change and reload them.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

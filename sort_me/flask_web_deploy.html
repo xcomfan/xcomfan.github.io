@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Deploy Your Python Script on the Web With Flask | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Deploy Your Python Script on the Web With Flask" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/sort_me/flask_web_deploy" />
+<meta property="og:url" content="http://0.0.0.0:4000/sort_me/flask_web_deploy" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Deploy Your Python Script on the Web With Flask" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Deploy Your Python Script on the Web With Flask","url":"http://0.0.0.0:4000/sort_me/flask_web_deploy"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Deploy Your Python Script on the Web With Flask</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="overview">Overview</h2>
+
+<p>This covers adapting an existing applications to the web not building a web application from ground up. This will require you to refactor the code into a web app, and deploy it to the internet.</p>
+
+<h2 id="brushing-up-on-basics">Brushing up on basics</h2>
+
+<h3 id="python-code-distribution-types">Python Code Distribution Types</h3>
+
+<p>Bringing your code to your users is called distribution. Traditionally there are 3 approaches you can use so that others can work with your programs. Python library, standalone program and Python web app.</p>
+
+<h3 id="web-applications">Web Applications</h3>
+
+<p>Web frameworks such as Flask help you get Python running on a website.</p>
+
+<h2 id="running-a-web-application">Running a Web Application</h2>
+
+<h3 id="the-http-request-response-cycle">The HTTP Request-Response Cycle</h3>
+
+<p>Here is a generalized overview of what happens when a user interacts with a web applications</p>
+
+<ul>
+  <li>Sending - User makes a request for a particular web page on your web app.</li>
+  <li>Receiving - The request gets received by the web server that host your website.</li>
+  <li>Matching - your web server now uses a program to match the user’s request to a particular portion of your Python script.</li>
+  <li>Running - The appropriate Python code is called up by that program.</li>
+  <li>Delivering - The program then delivers this response back to your user though the web server.</li>
+  <li>Viewing - Finally, the user can view the web server’s response (in browser or otherwise)</li>
+</ul>
+
+<p>The above process is called the HTTP Request-Response Cycle</p>
+
+<h3 id="hosting-your-site">Hosting Your Site</h3>
+
+<p>To allow Flask to handle requests on the server side, you’ll need to find a place where your Python code can live online. There are many such hosting providers but this course will use Google App Engine. Some other free options are PythonAnywhere, Repl.it and Heroku.</p>
+
+<h2 id="building-a-basic-python-web-app">Building a Basic Python Web App</h2>
+
+<h3 id="setting-up-your-project">Setting up Your Project</h3>
+
+<p>Our sample project is called <code class="language-plaintext highlighter-rouge">hello-app</code> and it has the below file structure.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hello-app/
+|
+|--- main.py
+|--- requirements.txt
+|--- app.yaml
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">main.py</code> contains the Python code wrapped in a minimal implementation of the Flask web framework.
+<code class="language-plaintext highlighter-rouge">requirements.txt</code> lists all of the dependencies your code needs to work properly.
+<code class="language-plaintext highlighter-rouge">app.yaml</code> helps Google App Engine decide which settings to use on its server.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># main.py
+</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">"Congratulations, its a web app!"</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">app</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">"127.0.0.1"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code># requirements.txt
+
+Flask==3.0.3
+</code></pre></div></div>
+
+<p>below is the content of the app.yaml file</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">runtime</span><span class="pi">:</span> <span class="s">python3.10</span>
+</code></pre></div></div>
+
+<h3 id="testing-locally">Testing Locally</h3>
+
+<p>To test locally you will need to set up a virtual environment and install <code class="language-plaintext highlighter-rouge">flask</code>. To set up a virtual environment run the following command from your project folder <code class="language-plaintext highlighter-rouge">python3 -m venv venv</code>. Your then source the virtual environment you created with the command <code class="language-plaintext highlighter-rouge">source venv/bin/activate</code>. To install the packages in your <code class="language-plaintext highlighter-rouge">requirements.txt</code> file (and any of their dependencies) run the command <code class="language-plaintext highlighter-rouge">python3 -m pip install -r requirements.txt</code>  When you are ready to test your app you can start it locally with the command <code class="language-plaintext highlighter-rouge">python main.py</code>. While your Flask app is running locally code changes should auto reload the app.</p>
+
+<h3 id="deploying-to-google-app-engine">Deploying to Google App Engine</h3>
+
+<p>Install the google cloud CLI, then run <code class="language-plaintext highlighter-rouge">gcloud init</code> and get the login sorted. The use <code class="language-plaintext highlighter-rouge">gcloud deploy</code> to deploy the app.</p>
+
+<h2 id="converting-a-script-to-a-web-app">Converting a Script to a Web App</h2>
+
+<p>We start with this basic Python script</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># convert.py
+</span>
+<span class="k">def</span> <span class="nf">fahrenheit_from</span><span class="p">(</span><span class="n">celsius</span><span class="p">):</span>
+    <span class="s">"""Convert Celsius to Fahrenheit degrees."""</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fahrenheit</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">celsius</span><span class="p">)</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">/</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">32</span>
+        <span class="n">fahrenheit</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">fahrenheit</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">fahrenheit</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">"invalid input"</span>
+    
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">celsius</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s">"Celsius: "</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Fahrenheit:"</span><span class="p">,</span> <span class="n">fahrenheit_from</span><span class="p">(</span><span class="n">celsius</span><span class="p">))</span>
+
+</code></pre></div></div>
+
+<p>Below we work the above script into our Flask based web app.  A few things to noe.</p>
+
+<ul>
+  <li>The <code class="language-plaintext highlighter-rouge">&lt;int:celsius&gt;</code> syntax in the <code class="language-plaintext highlighter-rouge">@app.route</code> tells Flask to capture any test following the base URL and pass it on to the function the decorate wraps as the variable celsius. Note that <code class="language-plaintext highlighter-rouge">fahrenheit_from()</code> requires <code class="language-plaintext highlighter-rouge">celsius</code> as an input. Make sure the ULR path component you are capturing has the same name as the parameter you’re passing to your function or Flask will give you an error. Adding <code class="language-plaintext highlighter-rouge">int:</code> before the variable name tells Flask to check whether the input it receives from the URL can be converted to an integer. If it can’t Flask will display a <code class="language-plaintext highlighter-rouge">Not Found</code> error page. Because Flask is doing the type check for you, you can safely remove the try/except checks as only an integer will ever be passed to your code.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># main.py
+</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">"Congratulations, its a web app!"</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/&lt;int:celsius&gt;"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">fahrenheit_from</span><span class="p">(</span><span class="n">celsius</span><span class="p">):</span>
+    <span class="s">"""Convert Celsius to Fahrenheit degrees."""</span>
+    
+    <span class="n">fahrenheit</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">celsius</span><span class="p">)</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">/</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">32</span>
+    <span class="n">fahrenheit</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">fahrenheit</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">fahrenheit</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">app</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">"127.0.0.1"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="improving-the-user-interface">Improving the User Interface</h2>
+
+<p>In this exercise we will just use an HTML form element. We will use the index (<code class="language-plaintext highlighter-rouge">/</code>) path to return our HTML code.</p>
+
+<p>A few notes…</p>
+
+<ul>
+  <li>
+    <p>the HTML our index path is returning is not valid, but modern browsers are designed in a way where they can fill in the blanks.</p>
+  </li>
+  <li>
+    <p>in the <code class="language-plaintext highlighter-rouge">&lt;form</code>&gt; element we set <code class="language-plaintext highlighter-rouge">action</code> to an empty string which makes browser direct the request to the same URL it was called from.</p>
+  </li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># main.py
+</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">"""
+    &lt;form action="" method="get"&gt;
+    &lt;input type="text" name="celsius"&gt;
+    &lt;input type="submit" value="Convert"&gt;
+    &lt;/form&gt;
+    """</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/&lt;int:celsius&gt;"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">fahrenheit_from</span><span class="p">(</span><span class="n">celsius</span><span class="p">):</span>
+    <span class="s">"""Convert Celsius to Fahrenheit degrees."""</span>
+    
+    <span class="n">fahrenheit</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">celsius</span><span class="p">)</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">/</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">32</span>
+    <span class="n">fahrenheit</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">fahrenheit</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">fahrenheit</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">app</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">"127.0.0.1"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="receiving-user-input">Receiving User Input</h2>
+
+<p>We need the functionality to be able to fetch the value being send to <code class="language-plaintext highlighter-rouge">index()</code> from our <code class="language-plaintext highlighter-rouge">&lt;form&gt;</code>. For this we will need to import Flask’s <code class="language-plaintext highlighter-rouge">request</code> object. The <code class="language-plaintext highlighter-rouge">request</code> object contains the submitted value and gives you access to it through a dictionary syntax.</p>
+
+<p>We don’t trust user inputs, so we use Flask’s built in <code class="language-plaintext highlighter-rouge">escape()</code> which converts HTML characters to their text equivalents. Larger applications would use Templates (see full Flask course for that).</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># main.py
+</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">request</span><span class="p">,</span> <span class="n">escape</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+    <span class="n">celsius</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">escape</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">args</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"celsius"</span><span class="p">,</span> <span class="s">""</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="s">"""
+        &lt;form action="" method="get"&gt;
+        &lt;input type="text" name="celsius"&gt;
+        &lt;input type="submit" value="Convert"&gt;
+        &lt;/form&gt;"""</span> 
+        <span class="o">+</span> <span class="n">celsius</span>
+    <span class="p">)</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/&lt;int:celsius&gt;"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">fahrenheit_from</span><span class="p">(</span><span class="n">celsius</span><span class="p">):</span>
+    <span class="s">"""Convert Celsius to Fahrenheit degrees."""</span>
+    
+    <span class="n">fahrenheit</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">celsius</span><span class="p">)</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">/</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">32</span>
+    <span class="n">fahrenheit</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">fahrenheit</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">fahrenheit</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">app</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">"127.0.0.1"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="finale-web-app">Finale web app</h2>
+
+<p>In this version we make some changes. Our prior version used only one URL endpoint, and because of this, you can’t rely on Flask to do type checking via URL as in prior example. With this change we no longer need to use <code class="language-plaintext highlighter-rouge">escape()</code>. We can move input validation to <code class="language-plaintext highlighter-rouge">farenheit_from()</code>. Index will have a conditional statement added to check the value of celsius.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># main.py
+</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">request</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">"/"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+    <span class="n">celsius</span> <span class="o">=</span> <span class="n">request</span><span class="p">.</span><span class="n">args</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"celsius"</span><span class="p">,</span> <span class="s">""</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">celsius</span><span class="p">:</span>
+        <span class="n">fahrenheit</span> <span class="o">=</span> <span class="n">fahrenheit_from</span><span class="p">(</span><span class="n">celsius</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fahrenheit</span> <span class="o">=</span> <span class="s">""</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="s">"""
+        &lt;form action="" method="get"&gt;
+        Celsius Temperature: &lt;input type="text" name="celsius"&gt;
+        &lt;input type="submit" value="Convert"&gt;
+        &lt;/form&gt;"""</span> 
+        <span class="o">+</span> <span class="s">"Fahrenheit: "</span>
+        <span class="o">+</span> <span class="n">fahrenheit</span>
+    <span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">fahrenheit_from</span><span class="p">(</span><span class="n">celsius</span><span class="p">):</span>
+    <span class="s">"""Convert Celsius to Fahrenheit degrees."""</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fahrenheit</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">celsius</span><span class="p">)</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">/</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">32</span>
+        <span class="n">fahrenheit</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">fahrenheit</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">fahrenheit</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">"invalid input"</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">app</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">"127.0.0.1"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

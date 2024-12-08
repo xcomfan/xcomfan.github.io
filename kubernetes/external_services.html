@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Kubernetes: Importing External Services | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Kubernetes: Importing External Services" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/kubernetes/external_services" />
+<meta property="og:url" content="http://0.0.0.0:4000/kubernetes/external_services" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Kubernetes: Importing External Services" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Kubernetes: Importing External Services","url":"http://0.0.0.0:4000/kubernetes/external_services"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Kubernetes: Importing External Services</h1>
+  </header>
+
+  <div class="post-content">
+    <p>In the YAML below you can specify my-database as the database and vary the namespace. That way depending on the namespace you are running in when <code class="language-plaintext highlighter-rouge">my-database</code> is referenced you will get a different instance. This is good for having a test environment. The Kubernetes DNS service will return <code class="language-plaintext highlighter-rouge">my-database.test.svc.cluster.internal</code> in the test namespace and <code class="language-plaintext highlighter-rouge">my-database.prod.svc.cluster.internal</code> in the prod namespace.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">my-database</span>
+  <span class="c1"># note 'prod' namespace here</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">prod</span>
+<span class="nn">...</span>
+</code></pre></div></div>
+
+<p>A key difference between a service running in Kubernetes and one that is outside Kubernetes is that in Kubernetes label selectors can be used to identify the dynamic set of Pods that are the backends for a particular service. With a service running outside of Kubernetes this is not the case.</p>
+
+<p>Lets assume we have a service running on the host <code class="language-plaintext highlighter-rouge">database.company.com</code> To import this external database service into Kubernetes, we start by creating a service without a Pod selector that references the DNS name of the database server.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">external-database</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">type</span><span class="pi">:</span> <span class="s">ExternalName</span>
+  <span class="na">externalName</span><span class="pi">:</span> <span class="s">database.company.com</span>
+</code></pre></div></div>
+
+<p>When a typical Kubernetes service is created, an IP address is also created and the Kubernetes DNS service is populated with an A record that points to that IP address. When you create a service of type <code class="language-plaintext highlighter-rouge">ExternalName</code>, the Kubernetes DNS service is instead populated with a CNAME record that points to the external name you specified (<code class="language-plaintext highlighter-rouge">database.company.com</code> in this example). When an application in the cluster does a DNS lookup for the hostname <code class="language-plaintext highlighter-rouge">external-database.svc.default.cluster</code>, the DNS protocol aliases that name to <code class="language-plaintext highlighter-rouge">database.company.com</code>. In this way all containers in Kubernetes believe that they are talking to a service that is backed with other containers. This technique can also apply to calling cloud services such as cloud provided database which give you a URL for the resource.</p>
+
+<p>If you don’t have a DNS name for the external service but just an IP address. The operation to import the service is a little different. You first crate a service without a label selector, but also without a <code class="language-plaintext highlighter-rouge">ExternalName</code> type we used before. This will make Kubernetes allocate a virtual IP address for this service and populate an A record for it.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">external-ip-database</span>
+</code></pre></div></div>
+
+<p>Since there is no selector for the service Kubernetes cannot populate the endpoints for the service for the load balancer to redirect traffic to. The user is responsible for populating the end-points manually using an <code class="language-plaintext highlighter-rouge">Endpoints</code> resource as in the example below. If you have more than one IP address for redundancy, you can repeat them in the <code class="language-plaintext highlighter-rouge">addresses</code> array. Once the endpoints are populated the load balancer will start redirecting traffic from you Kubernetes service to the IP address endpoints.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">kind</span><span class="pi">:</span> <span class="s">Endpoints</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">external-ip-database</span>
+<span class="na">subsets</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">addresses</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">ip</span><span class="pi">:</span> <span class="s">192.168.0.1</span>
+    <span class="na">ports</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">port</span><span class="pi">:</span> <span class="m">3306</span>
+</code></pre></div></div>
+
+<p><strong><em>Note:</em></strong> External services do not perform any health checking.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

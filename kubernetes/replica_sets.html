@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Kubernetes ReplicaSets | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Kubernetes ReplicaSets" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/kubernetes/replica_sets" />
+<meta property="og:url" content="http://0.0.0.0:4000/kubernetes/replica_sets" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Kubernetes ReplicaSets" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Kubernetes ReplicaSets","url":"http://0.0.0.0:4000/kubernetes/replica_sets"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Kubernetes ReplicaSets</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="what-are-replicasets">What are ReplicaSets</h2>
+
+<p>In real world use cases you rarely run a single Pod. Typically multiple pods are run for redundancy, scale, sharding or other reasons. A replicated set of Pods should be a single entity (to prevent from repetitive work). The <strong>ReplicaSet</strong> object in Kubernetes acts as a cluster wide Pod manager, ensuring that the right types and numbers of Pods are running at all times. ReplicaSets not Pods tend to be the building blocks of applications in Kubernetes. ReplicaSets provide self-healing for our applications at the infrastructure level. Pods managed by ReplicaSets are automatically rescheduled under certain failure conditions such as node failures and network partitions.</p>
+
+<h2 id="adopting-exiting-containers">Adopting exiting containers</h2>
+
+<p>Though ReplicaSets create and manage Pods, they do not own the Pods they create. ReplicaSets use label queries to identify the set of Pods they should be managing. They then use the general Kubernetes APIs to create the Pods they are managing. This decoupling of Pods and ReplicaSets supports several important behaviors. Because ReplicaSets are decoupled from the Pods they manage, you can create a ReplicaSet that will “adopt” an existing Pod and scale out additional copies of those containers. This is a path to go from a single imperatively declared Pod to a replicated set of Pods managed by ReplicaSet.</p>
+
+<h2 id="quarantining-containers">Quarantining Containers</h2>
+
+<p>When a server misbehaves, Pod-level health checks will automatically restart the Pod. If your health checks are incomplete, a Pod can be misbehaving, but still be a part of the replicated set. In this scenario you can kill the Pod, but then developers would only have logs to troubleshoot with. A better option is to leave the Pod running but quarantine it so that it is not sent traffic. You can do this modifying the set of labels on the Pod. This will disassociate it from the ReplicaSet, but leave it running for developers to troubleshoot.</p>
+
+<h2 id="designing-with-replicasets">Designing with ReplicaSets</h2>
+
+<p>ReplicaSets are designed to represent a single, scalable microservice inside your architecture. The key characteristic of ReplicaSets is that every Pod that is created by the ReplicaSet controller is entirely homogenous. Typically, these Pods are then fronted by a Kubernetes service load balancer, which spreads traffic across the Pods that make up the service. Generally speaking ReplicaSets are designed for stateless (or nearly stateless) services. When it is scaled down an arbitrary Pod wil be selected for deletions and this should not impact your application.</p>
+
+<h2 id="replicaset-spec">ReplicaSet spec</h2>
+
+<p>All ReplicaSets must have a unique name (defined using the <code class="language-plaintext highlighter-rouge">metadata.name</code> field), a <code class="language-plaintext highlighter-rouge">spec</code> section that describe the number of Pods (replicas) that should be running in the cluster, and a Pod template that describes the Pod to be created.</p>
+
+<p>Below is an example of a minimal ReplicaSet</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">extensions/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">ReplicaSet</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">kuard</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">1</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">kuard</span>
+        <span class="na">version</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2"</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">kuard</span>
+          <span class="na">image</span><span class="pi">:</span> <span class="s2">"</span><span class="s">gcr.io/kuar-demo/kuard-amd64:green"</span>
+</code></pre></div></div>
+
+<h2 id="inspecting-a-replicaset">Inspecting a ReplicaSet</h2>
+
+<p>You can use the command <code class="language-plaintext highlighter-rouge">kubectl describe rs &lt;ReplicaSet name&gt;</code> to get details about a running ReplicaSet</p>
+
+<h2 id="finding-a-replicaset-from-a-pod">Finding a ReplicaSet from a Pod</h2>
+
+<p>The ReplicaSet controller adds an annotation to every Pod that it creates. The key for the annotation is <code class="language-plaintext highlighter-rouge">kubernetes.io/created-by</code> If you run the command <code class="language-plaintext highlighter-rouge">kubectl get pods &lt;pod-name&gt; -o yaml</code> it will provide the ReplicaSet that is managing the Pod. Note that these annotations are best effort and while added when the Pod is created could be removed by a Kubernetes user at any time.</p>
+
+<h2 id="finding-a-set-of-pods-for-a-replicaset">Finding a set of Pods for a ReplicaSet</h2>
+
+<p>You can determine the Pods managed by a ReplicaSet by using a label query. You can use <code class="language-plaintext highlighter-rouge">kubectl describe</code> to find the set of labels from the ReplicaSet. Then do a label query such as <code class="language-plaintext highlighter-rouge">kubectl get pods -l app=kuard,version=2</code> to find the Pods. This is the same query that ReplicaSet executes to determine the current numbers of Pods.</p>
+
+<h2 id="scaling-replicasets">Scaling ReplicaSets</h2>
+
+<p>Replica sets are scaled up or down by updating the <code class="language-plaintext highlighter-rouge">spec.replicas</code> key on the ReplicaSet object stored in Kubernetes. When a ReplicaSet is scaled up, new Pods are submitted to the Kubernetes API using the Pod template defined on the ReplicaSet.</p>
+
+<h3 id="imperative-scaling-replicasets-with-kubectl">Imperative scaling ReplicaSets with kubectl</h3>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl scale replicasets &lt;ReplicaSet name&gt; --replicas&lt;number&gt;</code> for example <code class="language-plaintext highlighter-rouge">kubectl scale replicasets kuard --replicas=4</code></p>
+
+<p>This works, and can be useful for demos or troubleshooting, but in typical operations declarative approach should be used.</p>
+
+<h3 id="declaratively-scaling-replicasets-with-kubectl-apply">Declaratively scaling ReplicaSets with kubectl apply</h3>
+
+<p>The declarative approach is to make changes in a version controlled file and then applying those changes to our cluster with the command <code class="language-plaintext highlighter-rouge">kubectl apply -f &lt;manifest_file.yaml&gt;</code> for example <code class="language-plaintext highlighter-rouge">kubectl apply -f kuard-rs.yaml</code></p>
+
+<h3 id="autoscaling-a-replicaset">Autoscaling a ReplicaSet</h3>
+
+<p>Kubernetes supports scaling ReplicaSets using <strong>HPA (Horizontal Pod Autoscaling)</strong>. HPA requires the presence of a <code class="language-plaintext highlighter-rouge">heapster</code> Pod on your cluster which keeps track of metrics and provides an API for consuming those metrics that HPA uses to make decisions. Most Kubernetes installations include <code class="language-plaintext highlighter-rouge">heapster</code> by default.</p>
+
+<h4 id="side-note-on-scaling">Side note on scaling</h4>
+
+<p>Kubernetes does not currently support vertical scaling (adding CPU for example) but this is planned. Many solution offer cluster auto scaling where extra nodes are added as needed.</p>
+
+<h4 id="autoscaling-based-on-cpu">Autoscaling based on CPU</h4>
+
+<p>Scaling based on CPU is the most common use case for Pod autoscaling. Its most useful for request-based systems that consume CPU proportionally to the number of requests they are receiving while using a relatively static amount of memory.</p>
+
+<p>Use the command <code class="language-plaintext highlighter-rouge">kubectl autoscale rs kuard --min=2 --max=5 --cpu-percent=80</code></p>
+
+<p>To view, modify or delete this resource you can use the standard kubectl commands and the <code class="language-plaintext highlighter-rouge">horizontalpodautoscalers</code> resource (you can shorten that to <code class="language-plaintext highlighter-rouge">hpa</code>) for example <code class="language-plaintext highlighter-rouge">kubectl get hpa</code>.</p>
+
+<p>Because of the decoupled nature of Kubernetes, there is no direct link between HPA and the ReplicaSet. This leads to some anti patterns. Its a bad idea to combine both autoscaling and imperative or declarative management of the number of replicas. If both you and an autoscaler are attempting to modify the number of replicas, it’s highly likely that you will clash, resulting in unexpected behavior.</p>
+
+<h2 id="deleting-replicasets">Deleting ReplicaSets</h2>
+
+<p>When a ReplicaSet is no longer required, it can be deleted using the <code class="language-plaintext highlighter-rouge">kubectl delete</code> command. For examples <code class="language-plaintext highlighter-rouge">kubectl delete rs kuard</code>. By default this also deletes the Pods that are managed by the ReplicaSet. If you don’t want to delete the Pods use the command similar to <code class="language-plaintext highlighter-rouge">kubectl delete rs kuard --cascade=false</code>.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

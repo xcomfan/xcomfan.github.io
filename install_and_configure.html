@@ -9,16 +9,16 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://localhost:4000/install_and_configure" />
-<meta property="og:url" content="http://localhost:4000/install_and_configure" />
+<link rel="canonical" href="http://0.0.0.0:4000/install_and_configure" />
+<meta property="og:url" content="http://0.0.0.0:4000/install_and_configure" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Installing and configuring Terraform" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Installing and configuring Terraform","url":"http://localhost:4000/install_and_configure"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Installing and configuring Terraform","url":"http://0.0.0.0:4000/install_and_configure"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
@@ -49,6 +49,27 @@
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">export </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=(</span>your access key <span class="nb">id</span><span class="o">)</span>
 <span class="nv">$ </span><span class="nb">export </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=(</span>your secret access key<span class="o">)</span>
+</code></pre></div></div>
+
+<h2 id="configuring-kubectl-to-connect-to-eks-cluster">Configuring Kubectl To Connect To EKS Cluster</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws sts get-caller-identity
+aws eks update-kubeconfig <span class="nt">--region</span> &lt;region_from_terraform_output&gt; <span class="nt">--name</span> &lt;name_from_terraform_output&gt;
+kubectl get svc <span class="c"># To verify</span>
+</code></pre></div></div>
+
+<p>Once connected you may want to create and set namespace.</p>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl create namespace &lt;namespace_name&gt;</code></p>
+
+<p>And to configure kubectl to use the context you need to create the context and make it the default.</p>
+
+<p>With AWS I am doing this by modifying the one they create. So command looks like</p>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl config get-contexts</code> to get the details fo current context than command below with the name to set the default namespace.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl config set-context &lt;context_name&gt; <span class="nt">--namespace</span> &lt;name_of_namespace&gt;
+kubectl config use-context &lt;context_name&gt;
 </code></pre></div></div>
 
   </div>

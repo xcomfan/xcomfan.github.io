@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Flask | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Flask" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/python/web_frameworks/flask" />
+<meta property="og:url" content="http://0.0.0.0:4000/python/web_frameworks/flask" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Flask" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Flask","url":"http://0.0.0.0:4000/python/web_frameworks/flask"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Flask</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="installing">Installing</h2>
+
+<p><code class="language-plaintext highlighter-rouge">python -m pip install Flask</code></p>
+
+<h2 id="initiate-your-flask-project">Initiate Your Flask Project</h2>
+
+<p><a href="https://github.com/xcomfan/real_python_examples/blob/1c0ad14d1892efe1ac89f8a5b5270511c1ed79a8/flask/rp_flask_board/app.py">This code</a> is a hello world Flask project.</p>
+
+<p>When you use a decorator such as <code class="language-plaintext highlighter-rouge">@app.route("/")</code>, the decorated function is referred to as a <strong>view</strong> in flask.</p>
+
+<h2 id="transform-your-project-into-a-package">Transform Your Project Into a Package</h2>
+
+<p>In this example our package folder will be called <code class="language-plaintext highlighter-rouge">board</code>. To convert the above hello world app to a package create a <code class="language-plaintext highlighter-rouge">board</code> directory (inside your project folder <code class="language-plaintext highlighter-rouge">rp_flask_board</code>) in this example and move the <code class="language-plaintext highlighter-rouge">app.py</code> file to <code class="language-plaintext highlighter-rouge">.../board/__init__.py</code>.</p>
+
+<p>You should now have a file structure that looks like.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rp_flask_board/
+│
+└── board/
+    └── __init__.py
+</code></pre></div></div>
+
+<p>With the new package structure to run your application execute the below command from the project folder (<code class="language-plaintext highlighter-rouge">rp_flask_board</code>)</p>
+
+<p><code class="language-plaintext highlighter-rouge">python -m flask --app board run --port 8000 --host 0.0.0.0 --debug</code></p>
+
+<h2 id="work-with-an-application-factory">Work With an Application Factory</h2>
+
+<p>An <strong>application factory</strong> in Flask is a design pattern that is beneficial for scaling Flask projects. Using the application factory pattern lets you configure your Flask project flexibly as evolves making it easier to develop, test and maintain.</p>
+
+<p>Instead of having your application’s code at the root level of your <code class="language-plaintext highlighter-rouge">__init__.py</code> file, you work with a function that returns your application. To do so replace the content of <code class="language-plaintext highlighter-rouge">__init__.py</code> and make use <a href="https://github.com/xcomfan/real_python_examples/blob/f779d4a6570c3f2b9587905b425d6c8f4951c8e5/flask/rp_flask_board/board/__init__.py">this content</a> instead.</p>
+
+<p>This change will let you separate parts of you application such as routes, configurations and initialization into separate files.</p>
+
+<h2 id="leverage-blueprints">Leverage Blueprints</h2>
+
+<p>As you Flask project grows, you have lots of viw functions and other related bits of code that work together. Instead of adding all these directly to a basic app.py file, you can create <strong>blueprints</strong> that you register in your application factory. <strong>Blueprints</strong> are modules that contain related views that you can conveniently import in <code class="language-plaintext highlighter-rouge">__init__.py</code>.</p>
+
+<p>As an example we will have a blueprint that stores the main pages of your project.</p>
+
+<p>We create <a href="https://github.com/xcomfan/real_python_examples/blob/e2ab96e0471c553f1340834dcba0882860c6e36a/flask/rp_flask_board/board/pages.py">pages.py</a> under the board folder.</p>
+
+<p>In this code we create an instance of Blueprint named <code class="language-plaintext highlighter-rouge">bp</code> The first argument <code class="language-plaintext highlighter-rouge">pages</code> is the name of the blueprint. You will use this name to identify the blueprint in your Flask project. Second argument is the blueprint name which will be used to import pages into <code class="language-plaintext highlighter-rouge">__init__.py</code>.</p>
+
+<p>Before you can visit the pages in the Blueprint you need to connect the <code class="language-plaintext highlighter-rouge">pages</code> blueprint with your Flask project. Make the following changes to <a href="https://github.com/xcomfan/real_python_examples/blob/e2ab96e0471c553f1340834dcba0882860c6e36a/flask/rp_flask_board/board/__init__.py">board/<strong>init</strong>.py</a></p>
+
+<h2 id="introduce-templates">Introduce Templates</h2>
+
+<p>Flask uses Jinja template engine and Jinja is installed as a dependency of Flask. Jinja supports template inheritance allowing you to create a base template that you extend in child templates.</p>
+
+<p>To create a base template create the the file <a href="https://github.com/xcomfan/real_python_examples/blob/057061931bd426c8d51d6c2ad86e42a60a33b32a/flask/rp_flask_board/board/templates/base.html"><code class="language-plaintext highlighter-rouge">board/templates/base.html</code></a></p>
+
+<p>The base template in Jina is commonly named named <code class="language-plaintext highlighter-rouge">base.html</code>, and it contains the main HTML structure of your web pages. The <code class="language-plaintext highlighter-rouge">title</code> block gives you the opportunity to extend the title with a child template.</p>
+
+<p>The code <code class="language-plaintext highlighter-rouge">block header</code> declares a <code class="language-plaintext highlighter-rouge">header</code> block. If a child template doesn’t contain a header block then the <code class="language-plaintext highlighter-rouge">&lt;header&gt;</code> will stay empty.</p>
+
+<p>The line <code class="language-plaintext highlighter-rouge">block content</code> Will either display “No messages” or the block content if there is any.</p>
+
+<h3 id="adding-child-templates">Adding Child Templates</h3>
+
+<p>We create the child template for our home page which extends the base in the file <a href="https://github.com/xcomfan/real_python_examples/blob/9f135520af488a4a6ccd2721c5f5e536f493bca4/flask/rp_flask_board/board/templates/pages/home.html"><code class="language-plaintext highlighter-rouge">board/templates/pages/home.html</code></a></p>
+
+<p>The <code class="language-plaintext highlighter-rouge">extends</code> tag at the top of the file connects the child template with the parent template.</p>
+
+<p>Child templates also contain <code class="language-plaintext highlighter-rouge">block</code> tags. By providing the block’s name as an argument, you’re connecting the blocks from the child template with the blocks from the parent template.</p>
+
+<p>When you use <code class="language-plaintext highlighter-rouge">url_for()</code>, Flask creates the full URL to the given view for you. This means that if you change the route in your Python code, then the URL in your templates updates automatically.</p>
+
+<p>Next we create the file <a href="https://github.com/xcomfan/real_python_examples/blob/9f135520af488a4a6ccd2721c5f5e536f493bca4/flask/rp_flask_board/board/templates/pages/about.html"><code class="language-plaintext highlighter-rouge">board/templates/pages/about.html</code></a></p>
+
+<p>Just like in <code class="language-plaintext highlighter-rouge">home.html</code> You add the page’s title inside the header block and wrap it within <code class="language-plaintext highlighter-rouge">title</code>. Jinja will understand this structure and render the page’s title in the <code class="language-plaintext highlighter-rouge">header</code> and <code class="language-plaintext highlighter-rouge">title</code> blocks.</p>
+
+<p>With both the child templates in place, we need to adjust the views to return the templates instead of the plain strings. We update <a href="https://github.com/xcomfan/real_python_examples/blob/9f135520af488a4a6ccd2721c5f5e536f493bca4/flask/rp_flask_board/board/pages.py">pages.py</a> and adjust the <code class="language-plaintext highlighter-rouge">home()</code> and <code class="language-plaintext highlighter-rouge">about()</code> views.</p>
+
+<p>By default Flask expects your templates to be in a <code class="language-plaintext highlighter-rouge">templates/</code> directory, thus you don’t need to include <code class="language-plaintext highlighter-rouge">templates/</code> in the path of the templates.</p>
+
+<h2 id="improving-the-user-experience">Improving The User Experience</h2>
+
+<h3 id="include-a-navigation-menu">Include a Navigation Menu</h3>
+
+<p>We want to have the navigation menu on every page so we add it to <code class="language-plaintext highlighter-rouge">base.html</code>. Instead of adding the navigation menu code directly to <code class="language-plaintext highlighter-rouge">base.html</code> we can leverage the <code class="language-plaintext highlighter-rouge">include</code> tag which loads the whole templates referenced by the tag into the position of the <code class="language-plaintext highlighter-rouge">include</code> tag. This lets you reuse the navigation menu code wherever it is needed.</p>
+
+<p><strong>Included templates</strong> are partials that contain a fraction of the full HTML code. To indicate that a template is meant to be included, you can prefix the name with an underscore <code class="language-plaintext highlighter-rouge">_</code>. We create the file <a href="https://github.com/xcomfan/real_python_examples/blob/fd52bfde5ce645bec421837aa72fca65cd38421d/flask/rp_flask_board/board/templates/_navigation.html"><code class="language-plaintext highlighter-rouge">templates/_navigation.html</code></a> for our navigation menu.</p>
+
+<p>Note that <code class="language-plaintext highlighter-rouge">_navigation.html</code> does not contain an <code class="language-plaintext highlighter-rouge">extends</code> or <code class="language-plaintext highlighter-rouge">block</code> tag. We just focus on what needs to be in our navigation menu.</p>
+
+<p>We then update our <a href="https://github.com/xcomfan/real_python_examples/blob/6da71e02c93206cb0d6833cc2e88f75c58520708/flask/rp_flask_board/board/templates/base.html"><code class="language-plaintext highlighter-rouge">templates/base.html</code></a> template to include the navigation.</p>
+
+<p>Once you start your application you will see that both the home and about page now show the navigation menu. That’s the power of template inheritance.</p>
+
+<h3 id="making-your-project-look-nice">Making Your Project Look Nice</h3>
+
+<p>Here we are going ot use CSS to style our content.</p>
+
+<p>In Flask projects, you commonly save CSS files in <code class="language-plaintext highlighter-rouge">static/</code> directory. We create the file <a href="https://github.com/xcomfan/real_python_examples/blob/fd52bfde5ce645bec421837aa72fca65cd38421d/flask/rp_flask_board/board/static/styles.css">`/board/static/styles.css</a></p>
+
+<p>With the style sheet file created we need to link to it in <a href="https://github.com/xcomfan/real_python_examples/blob/fd52bfde5ce645bec421837aa72fca65cd38421d/flask/rp_flask_board/board/templates/base.html"><code class="language-plaintext highlighter-rouge">templates/base.html</code></a></p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

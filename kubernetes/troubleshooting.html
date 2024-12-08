@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Troubleshooting | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Troubleshooting" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/kubernetes/troubleshooting" />
+<meta property="og:url" content="http://0.0.0.0:4000/kubernetes/troubleshooting" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Troubleshooting" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Troubleshooting","url":"http://0.0.0.0:4000/kubernetes/troubleshooting"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Troubleshooting</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="debugging-commands">Debugging Commands</h2>
+
+<p>To see the logs for a running container use <code class="language-plaintext highlighter-rouge">kubectl logs &lt;pod-name&gt;</code>. If you have multiple containers in your Pod you can specify the container with the <code class="language-plaintext highlighter-rouge">-c</code> flag. You can also use the <code class="language-plaintext highlighter-rouge">-f</code> flag to stream the logs.</p>
+
+<p>To execute commands in a running container use the command <code class="language-plaintext highlighter-rouge">kubectl exec -it &lt;pod-name&gt; -- bash</code>. This will provide you with an interactive shell inside the running container so that you can perform more debugging. If you don’t have bash or another terminal you can always attach to the running process using <code class="language-plaintext highlighter-rouge">kubectl attach -it &lt;pod-name&gt;</code>. This will attach to the running process and allow you to send input to the running process (assuming process is set up to read from stdin)</p>
+
+<p>You can copy files to and from a container using the cp command: <code class="language-plaintext highlighter-rouge">kubectl cp &lt;pod-name&gt;:&lt;/path/to/remote/file&gt; &lt;/path/to/local/file&gt;</code>. Generally speaking copying files to a pod is an anti patterns, but it may be useful when putting out a fire.</p>
+
+<p>If you want to access your Pod via the network, you can use the <code class="language-plaintext highlighter-rouge">port-forward</code> commands to forward network traffic from the local machine to the Pod. This enables you to securely tunnel network traffic through to containers that might not be exposed anywhere on the public network. For example the following command opens up a connection that forwards traffic from the local machine on port 8080 to the remote container on port 80.</p>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl port-forward &lt;pod-name&gt; 8080:80</code></p>
+
+<p>You can also use the <code class="language-plaintext highlighter-rouge">port-forward</code> command with services by specifying <code class="language-plaintext highlighter-rouge">services/&lt;service-name&gt;</code> instead of <code class="language-plaintext highlighter-rouge">&lt;pod-name&gt;</code>, but note that the requests for a service will be forwarded to a single Pod, not go though the service load balancer.</p>
+
+<p>If you are interested in how your cluster is using resources you can use <code class="language-plaintext highlighter-rouge">kubectl top nodes</code> or <code class="language-plaintext highlighter-rouge">kubectl top pods</code> to see the pods running and their resource utilization.</p>
+
+<h2 id="tools-and-resources">Tools and resources</h2>
+
+<ul>
+  <li>
+    <p>The <a href="https://kind.sigs.k8s.io">kind</a> project lets you run Kubernetes using containers as nodes so you can play around in your local environment.</p>
+  </li>
+  <li>
+    <p>There are plugins for VSCode, IntelliJ, Eclipse etc for working with your cluster.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">kubectl</code> supports integration with your shell to enable tab completion for both commands and resources. You may need to install the <code class="language-plaintext highlighter-rouge">bash-completion</code> package to make this work.</p>
+  </li>
+  <li>
+    <p>For log aggregators look into <code class="language-plaintext highlighter-rouge">fluentd</code> and <code class="language-plaintext highlighter-rouge">elasticsearch</code>.</p>
+  </li>
+</ul>
+
+<h2 id="labels-and-annotations">Labels and Annotations</h2>
+
+<p><em>Labels</em> are key value pairs that can be attached to Kubernetes objects such as Pods and ReplicaSets. They are useful for attaching identifying information to Kubernetes objects. Labels provide the foundation for grouping objects. <em>Annotations</em>, on the other hand, provide a storage mechanism that resembles labels. Annotations are key value pairs designed to hold non-identifying information that can be leveraged by tools and libraries.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Functional Programming in Python | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Functional Programming in Python" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/sort_me/functional_programming" />
+<meta property="og:url" content="http://0.0.0.0:4000/sort_me/functional_programming" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Functional Programming in Python" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Functional Programming in Python","url":"http://0.0.0.0:4000/sort_me/functional_programming"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Functional Programming in Python</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="functional-programming-in-python-when-and-how-to-use-it">Functional Programming in Python: When and How to Use It</h2>
+
+<h3 id="what-is-functional-programming">What is Functional Programming</h3>
+
+<p>A <strong>pure function</strong> is a function whose output value follows solely from its input values without any observable side effects. In <strong>functional programming</strong>, a program consists primarily of the evaluation of pure functions. Computation proceeds by nested or composed function calls without changes to state or mutable data.</p>
+
+<p>Functional paradigm has some advantages over other programming languages. Function code is:</p>
+
+<ul>
+  <li>
+    <p><strong>High level:</strong> You describe the result you want rather than explicitly specifying the steps required to get there.</p>
+  </li>
+  <li>
+    <p><strong>Transparent:</strong> The behavior of a pure function can be described by its inputs and outputs, without intermediary values. This eliminates side affects and makes debugging easier.</p>
+  </li>
+  <li>
+    <p><strong>Parallelizable:</strong> Routines that don’t cause side effect can more easily run in parallel with one another.</p>
+  </li>
+</ul>
+
+<p>In functional programming you mainly work on immutable data structures. This allows for easier parallel processing without needed to worry about locking the data structure.</p>
+
+<h3 id="how-well-does-python-support-functional-programming">How Well Does Python Support Functional Programming?</h3>
+
+<p>In Python functions are <strong>first class citizens</strong>. This means that functions have the same characteristics as values like strings and numbers. Anything you would expect to be able to do with a string or number, you can also do with a function.</p>
+
+<p>Specifically for functional programming you want to be able to pass a function as an argument and have a function return a function. Python supports both.</p>
+
+<p>When you pass a function to another function, the passed in function is sometimes referred to as a <strong>callback</strong> because a <em>call back</em> to the inner function can modify the outer functions behavior. An example of this is the Python function <code class="language-plaintext highlighter-rouge">sorted()</code>. If you pass a key you are passing in a callback function that can be used as sorting key.  Below when we pass the <code class="language-plaintext highlighter-rouge">len</code> function we are sorting by string length.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">animals</span> <span class="o">=</span> <span class="p">[</span><span class="s">"ferret"</span><span class="p">,</span> <span class="s">"vole"</span><span class="p">,</span> <span class="s">"dog"</span><span class="p">,</span> <span class="s">"gecko"</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">animals</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>
+<span class="p">[</span><span class="s">'dog'</span><span class="p">,</span> <span class="s">'vole'</span><span class="p">,</span> <span class="s">'gecko'</span><span class="p">,</span> <span class="s">'ferret'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="defining-an-anonymous-function-with-lambda">Defining an Anonymous Function With lambda</h3>
+
+<p>The syntax of a lambda expression is:</p>
+
+<p><code class="language-plaintext highlighter-rouge">lambda &lt;parameter_list&gt; : &lt;expression&gt;</code></p>
+
+<p>The value of a lambda expression is a callable function, just like a function defined with the <code class="language-plaintext highlighter-rouge">def</code> keyword. Quick example below. You can only define fairly rudimentary functions with lambda. The return value from a lambda expression can only be one single expression. A lambda expression ca’t contain statements like assignment or return, nor can it contain control structures such as <code class="language-plaintext highlighter-rouge">for</code>, <code class="language-plaintext highlighter-rouge">while</code> <code class="language-plaintext highlighter-rouge">if</code> <code class="language-plaintext highlighter-rouge">else</code> or <code class="language-plaintext highlighter-rouge">def</code>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="o">&lt;</span><span class="n">function</span> <span class="o">&lt;</span><span class="k">lambda</span><span class="o">&gt;</span> <span class="n">at</span> <span class="mh">0xffffadf9d6c0</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">callable</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="bp">True</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">reverse</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">reverse</span><span class="p">(</span><span class="s">"This is a string"</span><span class="p">)</span>
+<span class="s">'gnirts a si sihT'</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])(</span><span class="s">"This is a string"</span><span class="p">)</span>
+<span class="s">'gnirts a si sihT'</span>
+</code></pre></div></div>
+
+<p>The parameter to a lambda function are optional as in example below.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">forty_two_producer</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="mi">42</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">forty_two_producer</span><span class="p">()</span>
+<span class="mi">42</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p>While lambda expressions can’t contain any conditional statements they can contain conditional expressions.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">"even"</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s">"odd"</span><span class="p">)(</span><span class="mi">2</span><span class="p">)</span>
+<span class="s">'even'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">"even"</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s">"odd"</span><span class="p">)(</span><span class="mi">3</span><span class="p">)</span>
+<span class="s">'odd'</span>
+</code></pre></div></div>
+
+<p>You can return a tuple from a lambda expression you just need to wrap it in parenthesis to denote it as a tuple. Similarly you can return a list or a dictionary</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">3</span><span class="p">))(</span><span class="mi">3</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">27</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">3</span><span class="p">])(</span><span class="mi">3</span><span class="p">)</span>
+<span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">27</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">3</span><span class="p">})(</span><span class="mi">3</span><span class="p">)</span>
+<span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">27</span><span class="p">}</span>
+</code></pre></div></div>
+
+<p>The true advantage of using lambda expressions shows when you use them for short and straightforward logic.</p>
+
+<h3 id="applying-a-function-to-an-iterable-with-map">Applying a Function to an Iterable With map()</h3>
+
+<p><code class="language-plaintext highlighter-rouge">map()</code> is a Python built in function that allows you to apply a function to each element of an iterable. The <code class="language-plaintext highlighter-rouge">map()</code> function will <strong>return an iterator</strong> that yields the results. This can allow for some very concise code because map() statement can often take the place of an explicit loop.</p>
+
+<h4 id="calling-map-with-a-single-iterable">Calling map() With a Single Iterable</h4>
+
+<p>The syntax for calling <code class="language-plaintext highlighter-rouge">map()</code> with a single iterable is:</p>
+
+<p><code class="language-plaintext highlighter-rouge">map(&lt;f&gt;, &lt;iterable&gt;)</code></p>
+
+<p>Example below</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">reverse</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="p">...</span>   <span class="k">return</span> <span class="n">s</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">animals</span> <span class="o">=</span> <span class="p">[</span><span class="s">"cat"</span><span class="p">,</span> <span class="s">"dog"</span><span class="p">,</span> <span class="s">"hedgehot"</span><span class="p">,</span> <span class="s">"gecko"</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">map</span><span class="p">(</span><span class="n">reverse</span><span class="p">,</span> <span class="n">animals</span><span class="p">)</span> <span class="c1"># remember map returns an iterator
+</span><span class="o">&lt;</span><span class="nb">map</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0xffffacb4f010</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">iterator</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">reverse</span><span class="p">,</span> <span class="n">animals</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">animal</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
+<span class="p">...</span>   <span class="k">print</span><span class="p">(</span><span class="n">animal</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="n">tac</span>
+<span class="n">god</span>
+<span class="n">tohegdeh</span>
+<span class="n">okceg</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">iterator</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">reverse</span><span class="p">,</span> <span class="n">animals</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">iterator</span><span class="p">)</span>
+<span class="p">[</span><span class="s">'tac'</span><span class="p">,</span> <span class="s">'god'</span><span class="p">,</span> <span class="s">'tohegdeh'</span><span class="p">,</span> <span class="s">'okceg'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h4 id="calling-map-with-multiple-iterables">Calling map() With Multiple Iterables</h4>
+
+<p>They syntax for multiple iterables is:</p>
+
+<p><code class="language-plaintext highlighter-rouge">map(&lt;f&gt;, &lt;iterable_1&gt;, &lt;iterable_2&gt;, ..., &lt;iterable_n&gt;)</code></p>
+
+<p>function <code class="language-plaintext highlighter-rouge">&lt;f&gt;</code> will be applied to the elements in each <code class="language-plaintext highlighter-rouge">iterable_i</code> in parallel and returns an iterator that yields the results. The number of <code class="language-plaintext highlighter-rouge">iterable_i</code> arguments specified to <code class="language-plaintext highlighter-rouge">map()</code> must match the number of arguments that <code class="language-plaintext highlighter-rouge">&lt;f&gt;</code> expects. <code class="language-plaintext highlighter-rouge">&lt;f&gt;</code> acts on the first item of each <code class="language-plaintext highlighter-rouge">&lt;iterable_i&gt;</code> and that result becomes the first item that the return iterator yields, then it acts on the second and so on.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">add_three</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+<span class="p">...</span>   <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">add_three</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">]))</span>
+<span class="p">[</span><span class="mi">111</span><span class="p">,</span> <span class="mi">222</span><span class="p">,</span> <span class="mi">333</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)))</span>
+<span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="selecting-elements-from-an-iterable-with-filter">Selecting Elements From an Iterable With filter()</h3>
+
+<p><code class="language-plaintext highlighter-rouge">filter()</code> allows you to select or <em>filter</em> items from an iterable based on evaluation of the given function. The syntax is:</p>
+
+<p><code class="language-plaintext highlighter-rouge">filter(&lt;f&gt;, &lt;iterable&gt;)</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">filter()</code> applies function <code class="language-plaintext highlighter-rouge">&lt;f&gt;</code> is applied to each element of <code class="language-plaintext highlighter-rouge">&lt;iterable&gt;</code> and returns an iterator that yields all items for which <code class="language-plaintext highlighter-rouge">&lt;f&gt;</code> is truthy.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">greater_than_100</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="p">...</span>   <span class="k">return</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">100</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">greater_than_100</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">111</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">222</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">333</span><span class="p">]))</span>
+<span class="p">[</span><span class="mi">111</span><span class="p">,</span> <span class="mi">222</span><span class="p">,</span> <span class="mi">333</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="reducing-an-iterable-to-a-single-value-with-reduce">Reducing an Iterable to a Single Value With reduce()</h3>
+
+<p><code class="language-plaintext highlighter-rouge">reduce()</code> applies a function to the items in an iterable two at a time, progressively combining them to produce a single result. <code class="language-plaintext highlighter-rouge">reduce()</code> is not longer a built-in function but is available via import from the <code class="language-plaintext highlighter-rouge">functools</code> standard library.</p>
+
+<h4 id="calling-reduce-with-two-arguments">Calling reduce() With Two Arguments</h4>
+
+<p>The most straight forward <code class="language-plaintext highlighter-rouge">reduce()</code> call takes one function and one iterable.</p>
+
+<p><code class="language-plaintext highlighter-rouge">reduce(&lt;f&gt;, &lt;iterable&gt;)</code></p>
+
+<p>In a call to <code class="language-plaintext highlighter-rouge">reduce</code> the function <code class="language-plaintext highlighter-rouge">&lt;f&gt;</code> must be a function that takes exactly two arguments. <code class="language-plaintext highlighter-rouge">reduce()</code> will then progressively combine the elements in the <code class="language-plaintext highlighter-rouge">&lt;iterable&gt;</code> using <code class="language-plaintext highlighter-rouge">&lt;f&gt;</code>. <code class="language-plaintext highlighter-rouge">reduce()</code> invokes <code class="language-plaintext highlighter-rouge">&lt;f&gt;</code> on the fist two elements of <code class="language-plaintext highlighter-rouge">&lt;iterable&gt;</code>. That result is then combined with the third element, then that result with the fourth and so on until the list is exhausted.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+<span class="p">...</span>   <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="nb">reduce</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+<span class="mi">15</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">[</span><span class="s">"cat"</span><span class="p">,</span> <span class="s">"dog"</span><span class="p">,</span> <span class="s">"hedgehog"</span><span class="p">,</span> <span class="s">"gecko"</span><span class="p">])</span>
+<span class="s">'catdoghedgehoggecko'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># implement factorial using reduce
+</span><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">multiply</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="p">...</span>   <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">factorial_with_reduce</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="p">...</span>   <span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">multiply</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">factorial_with_reduce</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="c1"># 1 * 2 * 3 * 4 * 5 * 6
+</span><span class="mi">720</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<h4 id="calling-reduce-with-an-initial-value">Calling reduce() with an Initial Value</h4>
+
+<p><code class="language-plaintext highlighter-rouge">reduce(&lt;f&gt;, &lt;iterable&gt;, &lt;initializer&gt;)</code></p>
+
+<p>When <code class="language-plaintext highlighter-rouge">&lt;initializer&gt;</code> is present it specifies an initial value for the combination. In the first call to <code class="language-plaintext highlighter-rouge">&lt;f&gt;</code>, the arguments are <code class="language-plaintext highlighter-rouge">&lt;initializer&gt;</code> and the first element of <code class="language-plaintext highlighter-rouge">&lt;iterable&gt;</code>. That result is then combined with the second element of <code class="language-plaintext highlighter-rouge">&lt;iterable&gt;</code> and so on.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+<span class="p">...</span>   <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="nb">reduce</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="mi">100</span><span class="p">)</span> <span class="c1"># 100 + 1 + 2 + 3 + 4 + 5
+</span><span class="mi">115</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="mi">100</span><span class="p">)</span>
+<span class="mi">115</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<h2 id="functional-programming-in-python">Functional Programming in Python</h2>
+
+<h3 id="immutable-data-structures-namedtuple">Immutable Data Structures: namedtuple</h3>
+
+<p>Using a dictionary for functional programming can work, but because it’s mutable and you have to repeatedly use keys that you may miss type its easy to introduce bugs. A <code class="language-plaintext highlighter-rouge">namedtuple</code> from <code class="language-plaintext highlighter-rouge">collections</code> library is a better fit for functional programming.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">collections</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Scientist</span> <span class="o">=</span> <span class="n">collections</span><span class="p">.</span><span class="n">namedtuple</span><span class="p">(</span><span class="s">'Scientist'</span><span class="p">,</span> <span class="p">[</span>
+<span class="p">...</span>   <span class="s">'name'</span><span class="p">,</span>
+<span class="p">...</span>   <span class="s">'field'</span><span class="p">,</span>
+<span class="p">...</span>   <span class="s">'born'</span><span class="p">,</span>
+<span class="p">...</span>   <span class="s">'nobel'</span><span class="p">,</span>
+<span class="p">...</span> <span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Scientist</span>
+<span class="o">&lt;</span><span class="k">class</span> <span class="err">'</span><span class="nc">__main__</span><span class="p">.</span><span class="n">Scientist</span><span class="s">'&gt;
+&gt;&gt;&gt; Scientist(name='</span><span class="n">Ada</span> <span class="n">Lovelace</span><span class="s">', field='</span><span class="n">math</span><span class="s">', born=1815, nobel=False)
+Scientist(name='</span><span class="n">Ada</span> <span class="n">Lovelace</span><span class="s">', field='</span><span class="n">math</span><span class="s">', born=1815, nobel=False)
+&gt;&gt;&gt; ada = Scientist(name='</span><span class="n">Ada</span> <span class="n">Lovelace</span><span class="s">', field='</span><span class="n">math</span><span class="s">', born=1815, nobel=False)
+&gt;&gt;&gt; ada.name
+'</span><span class="n">Ada</span> <span class="n">Lovelace</span><span class="s">'
+&gt;&gt;&gt; ada.field
+'</span><span class="n">math</span><span class="s">'
+&gt;&gt;&gt; ada.name = "Ed Lovelace" # namedtuples are immutable
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+AttributeError: can'</span><span class="n">t</span> <span class="nb">set</span> <span class="n">attribute</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<h3 id="danger-zone-mixing-mutable-and-immutable-data-structures">Danger Zone: Mixing Mutable and Immutable Data Structures</h3>
+
+<p>Using a list and other mutable containers is also a bad choice for functional programming for the same reasons as above. You can modify the data and introduce bugs. A tuple is a better choice over a list.</p>
+
+<h3 id="why-use-filter-function">Why use filter function?</h3>
+
+<p>Thing of the code you write with filter functions as a set of building blocks that you can piece together any way you want and reuse them. For example if you write a filter using filter function of scientists with Nobel prizes you can always re-use that filter and you can chain calls to other filters to combine them.</p>
+
+<h3 id="grouping-data-with-itertoolsgroupby">Grouping Data With itertools.groupby()</h3>
+
+<p>The example in course sucked, but check out <code class="language-plaintext highlighter-rouge">itertools.groupby()</code> via import <code class="language-plaintext highlighter-rouge">itertools</code> when you have time.</p>
+
+<h3 id="functional-programming-with-parallel-processing">Functional Programming with Parallel Processing</h3>
+
+<p>Basic idea is that because functional programming avoids a common data structure that needs to be updated you can take advantage of running in parallel. (Basic example below)</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+
+<span class="n">Scientist</span> <span class="o">=</span> <span class="n">collections</span><span class="p">.</span><span class="n">namedtuple</span><span class="p">(</span><span class="s">'Scientist'</span><span class="p">,</span> <span class="p">[</span>
+    <span class="s">'name'</span><span class="p">,</span>
+    <span class="s">'field'</span><span class="p">,</span>
+    <span class="s">'born'</span><span class="p">,</span>
+    <span class="s">'nobel'</span>
+<span class="p">])</span>
+
+<span class="n">scientists</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">Scientist</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Ada Lovelace'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s">'math'</span><span class="p">,</span> <span class="n">born</span><span class="o">=</span><span class="mi">1815</span><span class="p">,</span> <span class="n">nobel</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+    <span class="n">Scientist</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Emmy Noeher'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s">'math'</span><span class="p">,</span> <span class="n">born</span><span class="o">=</span><span class="mi">18812</span><span class="p">,</span> <span class="n">nobel</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+    <span class="n">Scientist</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Marie Curie'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s">'physics'</span><span class="p">,</span> <span class="n">born</span><span class="o">=</span><span class="mi">1882</span><span class="p">,</span> <span class="n">nobel</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span>
+    <span class="n">Scientist</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Tu Youyou'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s">'chemistry'</span><span class="p">,</span> <span class="n">born</span><span class="o">=</span><span class="mi">1930</span><span class="p">,</span> <span class="n">nobel</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span>
+    <span class="n">Scientist</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Ada Yonath'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s">'astronomy'</span><span class="p">,</span> <span class="n">born</span><span class="o">=</span><span class="mi">1928</span><span class="p">,</span> <span class="n">nobel</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+    <span class="n">Scientist</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Vera Rubin'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s">'astronomy'</span><span class="p">,</span> <span class="n">born</span><span class="o">=</span><span class="mi">1939</span><span class="p">,</span> <span class="n">nobel</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+    <span class="n">Scientist</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Sally Ride'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s">'physics'</span><span class="p">,</span> <span class="n">born</span><span class="o">=</span><span class="mi">1951</span><span class="p">,</span> <span class="n">nobel</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">pprint</span><span class="p">(</span><span class="n">scientists</span><span class="p">)</span>
+<span class="k">print</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'Process </span><span class="si">{</span><span class="n">os</span><span class="p">.</span><span class="n">getpid</span><span class="p">()</span><span class="si">}</span><span class="s"> working on record </span><span class="si">{</span><span class="n">x</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+    <span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="n">x</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="s">'age'</span><span class="p">:</span> <span class="mi">2024</span> <span class="o">-</span> <span class="n">x</span><span class="p">.</span><span class="n">born</span><span class="p">}</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'Process </span><span class="si">{</span><span class="n">os</span><span class="p">.</span><span class="n">getpid</span><span class="p">()</span><span class="si">}</span><span class="s"> done processing record </span><span class="si">{</span><span class="n">x</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="n">pool</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="p">.</span><span class="n">Pool</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">pool</span><span class="p">.</span><span class="nb">map</span><span class="p">(</span><span class="n">transform</span><span class="p">,</span> <span class="n">scientists</span><span class="p">)</span>
+
+<span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'</span><span class="se">\n</span><span class="s">Time to complete: </span><span class="si">{</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">:.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+
+<span class="n">pprint</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="functional-programming-with-concurrentfutures">Functional Programming with concurrent.futures</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">concurrent.futures</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+
+<span class="n">Scientist</span> <span class="o">=</span> <span class="n">collections</span><span class="p">.</span><span class="n">namedtuple</span><span class="p">(</span><span class="s">'Scientist'</span><span class="p">,</span> <span class="p">[</span>
+    <span class="s">'name'</span><span class="p">,</span>
+    <span class="s">'field'</span><span class="p">,</span>
+    <span class="s">'born'</span><span class="p">,</span>
+    <span class="s">'nobel'</span>
+<span class="p">])</span>
+
+<span class="n">scientists</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">Scientist</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Ada Lovelace'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s">'math'</span><span class="p">,</span> <span class="n">born</span><span class="o">=</span><span class="mi">1815</span><span class="p">,</span> <span class="n">nobel</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+    <span class="n">Scientist</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Emmy Noeher'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s">'math'</span><span class="p">,</span> <span class="n">born</span><span class="o">=</span><span class="mi">18812</span><span class="p">,</span> <span class="n">nobel</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+    <span class="n">Scientist</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Marie Curie'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s">'physics'</span><span class="p">,</span> <span class="n">born</span><span class="o">=</span><span class="mi">1882</span><span class="p">,</span> <span class="n">nobel</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span>
+    <span class="n">Scientist</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Tu Youyou'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s">'chemistry'</span><span class="p">,</span> <span class="n">born</span><span class="o">=</span><span class="mi">1930</span><span class="p">,</span> <span class="n">nobel</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span>
+    <span class="n">Scientist</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Ada Yonath'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s">'astronomy'</span><span class="p">,</span> <span class="n">born</span><span class="o">=</span><span class="mi">1928</span><span class="p">,</span> <span class="n">nobel</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+    <span class="n">Scientist</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Vera Rubin'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s">'astronomy'</span><span class="p">,</span> <span class="n">born</span><span class="o">=</span><span class="mi">1939</span><span class="p">,</span> <span class="n">nobel</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+    <span class="n">Scientist</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Sally Ride'</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s">'physics'</span><span class="p">,</span> <span class="n">born</span><span class="o">=</span><span class="mi">1951</span><span class="p">,</span> <span class="n">nobel</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">pprint</span><span class="p">(</span><span class="n">scientists</span><span class="p">)</span>
+<span class="k">print</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'Process </span><span class="si">{</span><span class="n">os</span><span class="p">.</span><span class="n">getpid</span><span class="p">()</span><span class="si">}</span><span class="s"> working on record </span><span class="si">{</span><span class="n">x</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+    <span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="n">x</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="s">'age'</span><span class="p">:</span> <span class="mi">2024</span> <span class="o">-</span> <span class="n">x</span><span class="p">.</span><span class="n">born</span><span class="p">}</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'Process </span><span class="si">{</span><span class="n">os</span><span class="p">.</span><span class="n">getpid</span><span class="p">()</span><span class="si">}</span><span class="s"> done processing record </span><span class="si">{</span><span class="n">x</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="k">with</span> <span class="n">concurrent</span><span class="p">.</span><span class="n">futures</span><span class="p">.</span><span class="n">ProcessPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">executor</span><span class="p">.</span><span class="nb">map</span><span class="p">(</span><span class="n">transform</span><span class="p">,</span> <span class="n">scientists</span><span class="p">)</span>
+
+<span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'</span><span class="se">\n</span><span class="s">Time to complete: </span><span class="si">{</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">:.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+
+<span class="n">pprint</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="how-to-use-python-lambda-functions">How to Use Python Lambda Functions</h2>
+
+<p>Lambda function are …</p>
+
+<ul>
+  <li>Intended for single use</li>
+  <li>Defined in a single line</li>
+  <li>Can be named or anonymous</li>
+  <li>Return at least one value</li>
+</ul>
+
+<h3 id="how-to-test-lambda-functions">How to Test Lambda Functions</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="n">squared</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span>
+
+<span class="k">class</span> <span class="nc">LambdaTest</span><span class="p">(</span><span class="n">unittest</span><span class="p">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">test_squared</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">squared</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_zero</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">squared</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_negative</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">squared</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="p">.</span><span class="n">main</span><span class="p">(</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="python-inner-functions">Python Inner Functions</h2>
+
+<h3 id="overview">Overview</h3>
+
+<p>Inner functions are the functions that are defined inside another function.</p>
+
+<p>They are useful for</p>
+
+<ul>
+  <li>Encapsulation of code</li>
+  <li>Closures</li>
+  <li>Decorators</li>
+</ul>
+
+<h3 id="basics-of-inner-functions">Basics of Inner Functions</h3>
+
+<p>Below is an example of how you can use inner function to not have two define two functions for recursive factorial.</p>
+
+<p>Example not using inner functions.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">_recursive_factorial</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">num</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    
+    <span class="k">return</span> <span class="n">num</span> <span class="o">*</span> <span class="n">_recursive_factorial</span><span class="p">(</span><span class="n">num</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">factorial</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="nb">TypeError</span><span class="p">(</span><span class="s">"Bad parameter, 'num' must be an integer"</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">num</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"Bad parameter, 'num' must be &gt;=0"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">_recursive_factorial</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Example using inner function.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">factorial</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">_recursive_factorial</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">num</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+    
+        <span class="k">return</span> <span class="n">num</span> <span class="o">*</span> <span class="n">_recursive_factorial</span><span class="p">(</span><span class="n">num</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="nb">TypeError</span><span class="p">(</span><span class="s">"Bad parameter, 'num' must be an integer"</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">num</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"Bad parameter, 'num' must be &gt;=0"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">_recursive_factorial</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The inner function version is a bit cleaner and prevents inner factorial from being called from outside the function. This is a matter of preference, no right or wrong with each approach.</p>
+
+<h3 id="function">Function</h3>
+
+<p>If an outer function returns a reference to an inner function which has access to variables inside the outer function those variables are the <strong>captured variables</strong> that can be used to manage state.</p>
+
+<p>Below is an example of using closure. This is how functional programming languages would simulate object oriented.  This demonstrates closures, but you are likely better off using object oriented for this scenario.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">time</span>
+
+<span class="k">def</span> <span class="nf">factorial</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">_recursive_factorial</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">num</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+    
+        <span class="k">return</span> <span class="n">num</span> <span class="o">*</span> <span class="n">_recursive_factorial</span><span class="p">(</span><span class="n">num</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="nb">TypeError</span><span class="p">(</span><span class="s">"Bad parameter, 'num' must be an integer"</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">num</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"Bad parameter, 'num' must be &gt;=0"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">_recursive_factorial</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">mean</span><span class="p">():</span>
+    <span class="n">sample</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">current</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">inner_mean</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+        <span class="k">nonlocal</span> <span class="n">current</span>
+
+        <span class="n">sample</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">current</span>
+    
+    <span class="k">def</span> <span class="nf">value</span><span class="p">():</span>
+        <span class="k">nonlocal</span> <span class="n">current</span>
+        <span class="k">return</span> <span class="n">current</span>
+
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">():</span>
+        <span class="k">nonlocal</span> <span class="n">sample</span><span class="p">,</span> <span class="n">current</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">inner_mean</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="n">inner_mean</span><span class="p">.</span><span class="n">reset</span> <span class="o">=</span> <span class="n">reset</span>
+
+    <span class="k">return</span> <span class="n">inner_mean</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">temps</span> <span class="o">=</span> <span class="n">mean</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">temps</span><span class="p">.</span><span class="n">value</span><span class="p">())</span>
+    <span class="n">temps</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">temps</span><span class="p">.</span><span class="n">value</span><span class="p">())</span>
+    <span class="n">temps</span><span class="p">(</span><span class="mi">28</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">temps</span><span class="p">.</span><span class="n">value</span><span class="p">())</span>
+    <span class="n">temps</span><span class="p">.</span><span class="n">reset</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">temps</span><span class="p">.</span><span class="n">value</span><span class="p">())</span>
+</code></pre></div></div>
+
+<p>Note the use of <code class="language-plaintext highlighter-rouge">nonlocal</code> which lets you specify that you want the value from the enclosing scope instead of a new variable. You don’t need to use <code class="language-plaintext highlighter-rouge">nonlocal</code> with <code class="language-plaintext highlighter-rouge">sample</code> because sample is referenced and current is assigned.</p>
+
+<h3 id="decorators">Decorators</h3>
+
+<p>Below is a basic example of a decorator that times how long a decorated function takes to ru.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">fn_timer</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">time_wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span>
+        <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">func</span><span class="p">.</span><span class="n">__name__</span><span class="si">}</span><span class="s"> took </span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s">ms"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">time_wrapper</span>
+
+<span class="o">@</span><span class="n">fn_timer</span>
+<span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">count</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="n">count</span><span class="p">.</span><span class="n">__name__</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">count</span><span class="p">.</span><span class="n">__doc__</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Executing of the above yields …</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>count took 0.0002966610190924257ms
+time_wrapper
+None
+</code></pre></div></div>
+
+<p>Note that the function name and doc string are obscured. This can be fixed with <code class="language-plaintext highlighter-rouge">functools</code> by decorating your decorator with <code class="language-plaintext highlighter-rouge">wrap</code> as in example below.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+
+<span class="k">def</span> <span class="nf">fn_timer</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="o">@</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">time_wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span>
+        <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">func</span><span class="p">.</span><span class="n">__name__</span><span class="si">}</span><span class="s"> took </span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s">ms"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">time_wrapper</span>
+
+<span class="o">@</span><span class="n">fn_timer</span>
+<span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+    <span class="s">"This is the docstring"</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">count</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="n">count</span><span class="p">.</span><span class="n">__name__</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">count</span><span class="p">.</span><span class="n">__doc__</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The above code yields</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>count took 0.0002064660075120628ms
+count
+This will be in docstring
+</code></pre></div></div>
+
+<h4 id="decorators-with-arguments">Decorators With Arguments</h4>
+
+<p>Decorators are just functions so they can take arguments.</p>
+
+<p>Below is a basic example of a decorator that takes an argument.  Note that the argument is mandatory we will have example of optional arguments further.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+
+<span class="k">def</span> <span class="nf">who_says</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="o">@</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">name</span><span class="p">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">'simon'</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="nb">AttributeError</span><span class="p">(</span><span class="s">"Simon didn't say"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">wrapper</span>
+    <span class="k">return</span> <span class="n">decorator</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+
+    <span class="o">@</span><span class="n">who_says</span><span class="p">(</span><span class="s">"Simon"</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+    
+    <span class="o">@</span><span class="n">who_says</span><span class="p">(</span><span class="s">"Bob"</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">minus</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">minus</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>The above code yields</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3
+Traceback (most recent call last):
+  File "/home/ubuntu/python_practice/real_python/real_python_examples/functional_programming/inner_functions.py", line 84, in &lt;module&gt;
+    print(minus(2,1))
+  File "/home/ubuntu/python_practice/real_python/real_python_examples/functional_programming/inner_functions.py", line 69, in wrapper
+    raise AttributeError("Simon didn't say")
+AttributeError: Simon didn't say
+</code></pre></div></div>
+
+<p>Below is how you would do a decorator with optional arguments.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">gift</span><span class="p">(</span><span class="n">method_or_options</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">method_or_options</span><span class="p">):</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="n">method_or_options</span>
+
+        <span class="o">@</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">method_or_options</span><span class="p">):</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">"Gift had no options"</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">"Gift had"</span><span class="p">,</span> <span class="n">fields</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">wrapper</span>
+
+    <span class="c1"># if no parameters instantiate the decorator and return it
+</span>    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">method_or_options</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">decorator</span><span class="p">(</span><span class="n">method_or_options</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">decorator</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+
+    <span class="o">@</span><span class="n">gift</span>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="o">@</span><span class="n">gift</span><span class="p">(</span><span class="s">"foo_bar"</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">minus</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="n">minus</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>The above code yields</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Gift had no options
+3
+Gift had foo_bar
+1
+</code></pre></div></div>
+
+<h2 id="pythons-map-function-transforming-iterables">Python’s map() Function: Transforming Iterables</h2>
+
+<h2 id="pythons-reduce-from-functional-to-pythonic-style">Python’s reduce(): From Functional to Pythonic Style</h2>
+
+<h2 id="recursion-in-python">Recursion in Python</h2>
+
+<p>Python has a recursion limit. If you get stuck in an infinite call loop in a recursing function you will get an error similar to “RecursionError: maximum recursion depth exceeded while calling a Python object”</p>
+
+<p>The default value for the recursion limit is 1000 but you can check and set it via…</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">getrecursionlimit</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">getrecursionlimit</span><span class="p">()</span>
+<span class="mi">1000</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">setrecursionlimit</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">setrecursionlimit</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="thinking-recursively-in-python">Thinking Recursively in Python</h2>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

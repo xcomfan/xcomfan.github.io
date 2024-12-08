@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Python: Demo Flask App For CI Tutorial | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Python: Demo Flask App For CI Tutorial" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/sort_me/flask_ci_demo" />
+<meta property="og:url" content="http://0.0.0.0:4000/sort_me/flask_ci_demo" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Python: Demo Flask App For CI Tutorial" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Python: Demo Flask App For CI Tutorial","url":"http://0.0.0.0:4000/sort_me/flask_ci_demo"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Python: Demo Flask App For CI Tutorial</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="sample-project-code">Sample Project Code</h2>
+
+<p>Code for the page tracker sample app can be found <a href="https://github.com/xcomfan/real_python_examples/tree/main/page-tracker">here</a>.</p>
+
+<h2 id="architecture-overview">Architecture Overview</h2>
+
+<p>We are using <code class="language-plaintext highlighter-rouge">pyproject.toml</code> to specify dependencies, and <a href="https://setuptools.pypa.io/en/latest/">setuptools</a> as the <a href="https://peps.python.org/pep-0517/">build backend</a>.</p>
+
+<p>The applications itself will be a Flask based app that uses Redis as a database to count the number of visits to the site. Redis and the Flask app will run in different containers.</p>
+
+<h2 id="generating-constraints-file-for-project-dependencies">Generating Constraints File for Project Dependencies</h2>
+
+<p>Once the <a href="https://github.com/xcomfan/real_python_examples/blob/main/page-tracker/pyproject.toml"><code class="language-plaintext highlighter-rouge">pyproject.toml</code></a> file is created we can generate the <code class="language-plaintext highlighter-rouge">constraints.txt</code> file with the following commands.</p>
+
+<p><code class="language-plaintext highlighter-rouge">python -m pip install --editable .</code> - This only ran once I upgraded pip to latest version in my virtual environment.</p>
+
+<p><code class="language-plaintext highlighter-rouge">python -m pip freeze --exclude-editable &gt; constraints.txt</code></p>
+
+<p>The reasoning of these commands is that to generate to generate the constraints file you must first install your page-tracker project into the active virtual environment which will bring the required external libraries from PyPI. Even though we have no code yet, Python will recognize and install your package placeholder (we scaffolded the project with the below structure). We install the project in <a href="https://setuptools.pypa.io/en/latest/userguide/development_mode.html">editable mode</a> for development. This allows us to make changes to source code and have them reflected in the virtual environment immediately without a re-install. In the second command we execute we are excluding the editable package from the constraints file.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>page-tracker/
+│
+├── src/
+│   └── page_tracker/
+│       ├── __init__.py
+│       └── app.py
+│
+├── venv/
+│
+├── constraints.txt
+└── pyproject.toml
+</code></pre></div></div>
+
+<p>With the constraints file that was generated anyone with the project can run <code class="language-plaintext highlighter-rouge">python -m pip install -c constraints.txt</code> and reproduce the same environment as you have. The <code class="language-plaintext highlighter-rouge">-c</code> option specifies that the pinned dependencies should be installed instead of the latest ones.</p>
+
+<h2 id="run-a-redis-server-through-docker">Run a Redis Server Through Docker</h2>
+
+<p>We will be using the <a href="https://hub.docker.com/_/redis">official Redis image</a></p>
+
+<p>To start the image use the command <code class="language-plaintext highlighter-rouge">page-tracker % docker run -d --name redis-server redis</code> (obviously with docker set up on your system)</p>
+
+<h3 id="test-the-connection-to-redis">Test the Connection to Redis</h3>
+
+<p>To test the connection to Redis we will start the same container as for Redis server, but use the <code class="language-plaintext highlighter-rouge">redis-cli</code> entry point instead of the default one.</p>
+
+<p>When setting up multiple containers that need to work together, you should use <a href="https://docs.docker.com/network/">Docker Networks</a></p>
+
+<p>First, create a new user defined <a href="https://docs.docker.com/network/bridge/">bridge network</a> named after your project.</p>
+
+<p><code class="language-plaintext highlighter-rouge">docker network create page-tracker-network</code></p>
+
+<p>By defining a virtual network such as this, you can hook up as many Docker containers as you like and let them discover each other though descriptive names.</p>
+
+<p>To list the networks in Docker use the command <code class="language-plaintext highlighter-rouge">docker network ls</code></p>
+
+<p>Next we connect our <code class="language-plaintext highlighter-rouge">redis-server</code> containers to the network we created with the command <code class="language-plaintext highlighter-rouge">docker network connect page-tracker-network redis-server</code></p>
+
+<p>Now we can run the second redis container in CLI mode with the command…</p>
+
+<p><code class="language-plaintext highlighter-rouge">docker run --rm -it --name redis-client --link redis-server:redis-client redis redis-cli -h redis-server</code>.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">--rm</code> flag tells Docker to remove the created container as soon as you terminate it. The <code class="language-plaintext highlighter-rouge">-i</code> <code class="language-plaintext highlighter-rouge">-t</code> flags (combined to <code class="language-plaintext highlighter-rouge">-it</code>) run the containers interactively. The <code class="language-plaintext highlighter-rouge">--network</code> option connects this containers to the virtual network we created earlier. This way both containers will receive hostnames corresponding to their names give by the <code class="language-plaintext highlighter-rouge">--name</code> option. By using the <code class="language-plaintext highlighter-rouge">-h</code> parameter tells Redis CLI to connect to a Redis server identified by its containers name.</p>
+
+<p>Below is a session where we test the connection from Redis CLI.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>redis-server:6379&gt; SET pi 3.14
+OK
+redis-server:6379&gt; GET pi
+"3.14"
+redis-server:6379&gt; DEL pi
+(integer) 1
+redis-server:6379&gt; KEYS *
+(empty array)
+</code></pre></div></div>
+
+<p>We can use port mapping to make Redis available outside the virtual network so that we can more easily develop/test our code.</p>
+
+<p>To use port mapping we will stop the current Redis server and spin up a new one with a mapped port.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker stop redis-server
+docker <span class="nb">rm </span>redis-server
+docker run <span class="nt">-d</span> <span class="nt">--name</span> redis-server <span class="nt">-p</span> 6379:6379 redis
+</code></pre></div></div>
+
+<p>If you want to get the details for the redis container you can use the command <code class="language-plaintext highlighter-rouge">docker inspect redis-server</code> which will give you a json of all the data about the container.</p>
+
+<h2 id="connecting-to-redis-from-python">Connecting to Redis From Python</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">redis</span> <span class="kn">import</span> <span class="n">Redis</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">redis</span> <span class="o">=</span> <span class="n">Redis</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">redis</span><span class="p">.</span><span class="n">incr</span><span class="p">(</span><span class="s">"page_views"</span><span class="p">)</span>
+<span class="mi">3</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">redis</span><span class="p">.</span><span class="n">incr</span><span class="p">(</span><span class="s">"page_views"</span><span class="p">)</span>
+<span class="mi">4</span>
+</code></pre></div></div>
+
+<p>Example above will connect to default Redis por on localhost. If you want to be explicit you can use <code class="language-plaintext highlighter-rouge">redis = Redis(host="127.0.0.1", port=6379)</code>. You can also use <code class="language-plaintext highlighter-rouge">redis = Redis.from_url("redis://localhost:6379/")</code>.</p>
+
+<h2 id="implement-and-run-the-flask-application-locally">Implement and Run the Flask Application Locally</h2>
+
+<p>Code for the flask application can be found <a href="https://github.com/xcomfan/real_python_examples/blob/main/page-tracker/src/page_tracker/app.py">here</a></p>
+
+<p>To run the code locally; with the environment sources use the command <code class="language-plaintext highlighter-rouge">flask --app page_tracker.app run</code>.</p>
+
+<p>If you want to be able to test from another computer on the same network you need to bind the app to 0.0.0.0. You can also enable debut and set the port.  Example command for that is <code class="language-plaintext highlighter-rouge">flask --app page_tracker.app run --host=0.0.0.0 -port=8080 --debug</code>.</p>
+
+<p>Once the app is running you can use your browser or curl to navigate to <code class="language-plaintext highlighter-rouge">http://127.0.0.1:5000</code> and see the page tracking in action.</p>
+
+<h3 id="test-and-secure-your-web-application">Test and Secure Your Web Application</h3>
+
+<h4 id="cover-the-source-code-with-unit-tests">Cover the Source Code With Unit Tests</h4>
+
+<p>Pytest is more popular than unittest which is bundled in the standard library so we will be using that.</p>
+
+<p>We add it to the <a href="https://github.com/xcomfan/real_python_examples/blob/main/page-tracker/pyproject.toml">toml file</a></p>
+
+<p>The change we are making we are grouping <a href="https://setuptools.pypa.io/en/latest/userguide/dependency_management.html#optional-dependencies">optional dependencies</a> under a common name (<code class="language-plaintext highlighter-rouge">dev</code> in this case). Below is the relevant snippet of the toml file</p>
+
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">...</span>
+<span class="nn">[project.optional-dependencies]</span>
+<span class="py">dev</span> <span class="p">=</span> <span class="p">[</span>
+    <span class="s">"pytest"</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="err">...</span>
+</code></pre></div></div>
+
+<p>Once we update teh toml file, we need to reinstall our Python package with the optional dependencies using the command <code class="language-plaintext highlighter-rouge">python -m pip install --editable ".[dev]"</code>. You can use the square brackets to list the optional dependencies you want to install. The reason they are in quotes is a best practice to prevent the shell from potentially doing file expansion.</p>
+
+<p>Since we are following the <code class="language-plaintext highlighter-rouge">src</code> layout in the project, we don’t have to keep the test modules in the same folder or even the same package as the code we are testing.  Our project tree should look like.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>page-tracker/
+│
+├── src/
+│   └── page_tracker/
+│       ├── __init__.py
+│       └── app.py
+│
+├── test/
+│   └── unit/
+│       └── test_app.py
+│
+├── venv/
+│
+├── constraints.txt
+└── pyproject.toml
+</code></pre></div></div>
+
+<p>Here we take a bit of a detour into testing, but TLDR is we need to refactor our app.py code to use dependency injection so that we can mock the Redis server.  The changes are in the <a href="https://github.com/xcomfan/real_python_examples/blob/41aa779c519273108d0530e9fa0d5234de3dfd2b/page-tracker/src/page_tracker/app.py">accompanying repository</a>.</p>
+
+<p>To execute your <a href="https://github.com/xcomfan/real_python_examples/blob/7f5fd2a97326b1f9dbd2566fd0cf100b9b7b0c15/test/unit/test_app.py">unit tests</a> use the command <code class="language-plaintext highlighter-rouge">python -m pytest -v test/unit/</code></p>
+
+<h4 id="check-component-interactions-through-integration-tests">Check Component Interactions Through Integration Tests</h4>
+
+<p>Goal of integration tests is to check how your components interact with each other as part of a larger system. For this page tracker example the integration tests will check if we can communicate with the Redis server.</p>
+
+<p>We will be adding the <code class="language-plaintext highlighter-rouge">pytest-timeout</code> plugin to simulate a failed connection. By updating the toml file as seen <a href="https://github.com/xcomfan/real_python_examples/blob/d636a98d4408f0b42bcc4307d7dddc041f7d30e9/page-tracker/pyproject.toml">here</a></p>
+
+<p>Once we make the update we need to re-install our package with the optional dependencies via `python -m pip install –editable “.[dev]”</p>
+
+<p>Now we will add <code class="language-plaintext highlighter-rouge">conftest.py</code> to keep common fixtures, and the subfolder for unit tests. This will make the project structure look like…</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>page-tracker/
+│
+├── src/
+│   └── page_tracker/
+│       ├── __init__.py
+│       └── app.py
+│
+├── test/
+│   ├── integration/
+│   │   └── test_app_redis.py
+│   │
+│   ├── unit/
+│   │   └── test_app.py
+│   │
+│   └── conftest.py
+│
+├── venv/
+│
+├── constraints.txt
+└── pyproject.toml
+</code></pre></div></div>
+
+<p>While our web application has just one component, we can think of Redis as another component. Therefore, an integration test might look similar to our unit test, except that the Redis client won’t be mocked.</p>
+
+<p>Integration test code can be found <a href="https://github.com/xcomfan/real_python_examples/blob/7103a3ab6276cebd273967213ce9220549bd5c75/page-tracker/test/integration/test_app_redis.py">here</a></p>
+
+<p>The test function takes two fixtures as parameters:</p>
+
+<ol>
+  <li>A Redis client connected to a local data store</li>
+  <li>Flask’s test client hooked up to our web application</li>
+</ol>
+
+<p>To make the second one available to the integration test we will move the <code class="language-plaintext highlighter-rouge">http_client()</code> fixture from <code class="language-plaintext highlighter-rouge">test_app</code> module to <a href="https://github.com/xcomfan/real_python_examples/blob/7103a3ab6276cebd273967213ce9220549bd5c75/page-tracker/test/conftest.py"><code class="language-plaintext highlighter-rouge">conftest.py</code></a></p>
+
+<p>Because <code class="language-plaintext highlighter-rouge">conftest.py</code> is located one level up in the folder hierarchy, <code class="language-plaintext highlighter-rouge">pytest</code> will pick up all the fixture defined in it and make them visible throughout your nested folders.</p>
+
+<p>For the Redis Client fixture we give it a scope of <code class="language-plaintext highlighter-rouge">module</code> to reuse the same Redis client fixture for all functions within a test module.</p>
+
+<p>You can now run your integration test with the command <code class="language-plaintext highlighter-rouge">python -m pytest -v test/integration/</code></p>
+
+<p>To simulate the Redis server being unavailable we can stop the redis container and run our test.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker stop redis-server
+python <span class="nt">-m</span> pytest <span class="nt">-v</span> <span class="nb">test</span>/integration/
+</code></pre></div></div>
+
+<p>This exposes an issue where our code does not gracefully handle Redis connection errors. We will add an additional unit test <a href="https://github.com/xcomfan/real_python_examples/blob/94b785d12a5d68a7a0be8a7f89bce886777141ab/page-tracker/test/unit/test_app.py"><code class="language-plaintext highlighter-rouge">test_should_handle_redis_connection_error</code></a> and <a href="https://github.com/xcomfan/real_python_examples/blob/94b785d12a5d68a7a0be8a7f89bce886777141ab/page-tracker/src/page_tracker/app.py">fix the issue</a>.</p>
+
+<p>In the test code we set the mocked <code class="language-plaintext highlighter-rouge">.incr()</code> method <a href="https://docs.python.org/3/library/unittest.mock.html#unittest.mock.Mock.side_effect">side effect</a> so that method will raise the <code class="language-plaintext highlighter-rouge">redis.ConnectionError</code> exception which is what we saw when the integration test failed.</p>
+
+<h4 id="test-a-real-world-scenario-end-to-end-e2e">Test a Real World Scenario End to End (E2E)</h4>
+
+<p>Since we are trying to test the full stack in an E2E test we will need a deployment environment that mimics the production environment as closely as possible. You would use your E2E testing as part of a continuous integration pipeline.</p>
+
+<p>Adding the E2E tests our project structure now looks like…</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>page-tracker/
+│
+├── src/
+│   └── page_tracker/
+│       ├── __init__.py
+│       └── app.py
+│
+├── test/
+│   ├── e2e/
+│   │   └── test_app_redis_http.py
+│   │
+│   ├── integration/
+│   │   └── test_app_redis.py
+│   │
+│   ├── unit/
+│   │   └── test_app.py
+│   │
+│   └── conftest.py
+│
+├── venv/
+│
+├── constraints.txt
+└── pyproject.toml
+</code></pre></div></div>
+
+<p>The main difference between this E2E test and the integration test we did earlier is that we will be sending an actual HTTP request though the network to a live web server. Instead of relying on Flask’s test client we will use the <code class="language-plaintext highlighter-rouge">requests</code> library which we need to add to our <a href="https://github.com/xcomfan/real_python_examples/blob/d11c7be4114cba61b549114336302bb1413e47f0/page-tracker/pyproject.toml"><code class="language-plaintext highlighter-rouge">pyproject.toml</code></a> file as another optional dependency.</p>
+
+<p>As before after adding the <code class="language-plaintext highlighter-rouge">requests</code> dev dependency re-install your project package with the command <code class="language-plaintext highlighter-rouge">python -m pip install --editable ".[dev]"</code> and create the <a href="https://github.com/xcomfan/real_python_examples/blob/d11c7be4114cba61b549114336302bb1413e47f0/page-tracker/test/e2e/test_app_redis_http.py"><code class="language-plaintext highlighter-rouge">.../test/e2e/test_app_redis_http.py</code></a> test file.</p>
+
+<p>The test function here receives the <code class="language-plaintext highlighter-rouge">flask_url</code> as an argument which <code class="language-plaintext highlighter-rouge">pytest</code> injects as a fixture.</p>
+
+<p>The other change we need to make is to our app because currently it expects the Redis server to always be running on localhost. The changed version can be seen <a href="https://github.com/xcomfan/real_python_examples/blob/d11c7be4114cba61b549114336302bb1413e47f0/page-tracker/src/page_tracker/app.py">here</a>.</p>
+
+<p>To extend pytest with custom command line arguments for specifying the Redis URL you need to update <a href="https://github.com/xcomfan/real_python_examples/blob/d11c7be4114cba61b549114336302bb1413e47f0/page-tracker/test/conftest.py"><code class="language-plaintext highlighter-rouge">conftestpy</code></a>.</p>
+
+<p>To run the E2E test make sure that your Redis docker container is running. If its not you can start it with <code class="language-plaintext highlighter-rouge">docker start redis-server</code>.</p>
+
+<p>You also need to have the Flask application running which you can start with the command <code class="language-plaintext highlighter-rouge">flask --app page_tracker.app run</code></p>
+
+<p>To run the integration test you use the command <code class="language-plaintext highlighter-rouge">python -m pytest -v test/e2e --flask-url http://127.0.0.1:5000 --redis-url redis://127.0.0.1:6379</code>.</p>
+
+<h3 id="perform-static-code-analysis-and-security-scanning">Perform Static Code Analysis and Security Scanning</h3>
+
+<p>We will add the following tools to our <a href="https://github.com/xcomfan/real_python_examples/blob/67dddd8c86d98482896c0b8720687a6165c4ce33/page-tracker/pyproject.toml"><code class="language-plaintext highlighter-rouge">pyproject.toml</code></a> file.</p>
+
+<ul>
+  <li><a href="https://bandit.readthedocs.io/en/latest/">bandit</a> - vulnerability scanning</li>
+  <li><a href="https://black.readthedocs.io/en/stable/">black</a> - find formatting inconsistencies</li>
+  <li><a href="https://flake8.pycqa.org/en/latest/">flake8</a> - checks for <a href="https://realpython.com/python-pep8/">PEP8 compliance</a></li>
+  <li>isort - organize import statements according to <a href="https://peps.python.org/pep-0008/#imports">official recommendation</a></li>
+  <li>pylint</li>
+</ul>
+
+<p>Without the <code class="language-plaintext highlighter-rouge">--check</code> flag both <code class="language-plaintext highlighter-rouge">black</code> and <code class="language-plaintext highlighter-rouge">isort</code> will auto fix the file for you.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python <span class="nt">-m</span> black src/
+python <span class="nt">-m</span> isort src/
+python <span class="nt">-m</span> flake8 src/
+<span class="c"># once you believe everything is clean try pyline</span>
+python <span class="nt">-m</span> pylint src/
+python <span class="nt">-m</span> bandit <span class="nt">-r</span> src/ <span class="c"># bandit needs -r if scanning directory</span>
+</code></pre></div></div>
+
+<p>As usual after updating our dependencies we need to re install our package and update the <a href="https://github.com/xcomfan/real_python_examples/blob/67dddd8c86d98482896c0b8720687a6165c4ce33/page-tracker/constraints.txt"><code class="language-plaintext highlighter-rouge">constraints.txt</code></a> file.  We can do that with the following commands.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python <span class="nt">-m</span> pip <span class="nb">install</span> <span class="nt">--editable</span> <span class="s2">".[dev]"</span>
+python <span class="nt">-m</span> pip freeze <span class="nt">--exclude-editable</span> <span class="o">&gt;</span> constraints.txt
+</code></pre></div></div>
+
+<p>side note difference between <code class="language-plaintext highlighter-rouge">0.0.0.0</code> and <code class="language-plaintext highlighter-rouge">127.0.0.1</code> is <code class="language-plaintext highlighter-rouge">0.0.0.0</code> will bing to public while <code class="language-plaintext highlighter-rouge">127.0.0.1</code> is bound to localhost and not exposed outside the system.</p>
+
+<h2 id="dockerize-your-flask-web-application">Dockerize Your Flask Web Application</h2>
+
+<h3 id="creating-the-dockerfile">Creating the Dockerfile</h3>
+
+<p>we will add the <code class="language-plaintext highlighter-rouge">Dockerfile</code> in the project root folder at th same level as <code class="language-plaintext highlighter-rouge">src/</code>. You can technically name this file anything you want but sticking to convention will save you having to manually specify the file each time.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>page-tracker/
+│
+├── src/
+│   └── page_tracker/
+│       ├── __init__.py
+│       └── app.py
+│
+├── test/
+│
+├── venv/
+│
+├── constraints.txt
+├── Dockerfile
+└── pyproject.toml
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">Dockerfile</code> needs to have a specific format documented <a href="https://docs.docker.com/reference/dockerfile/">here</a></p>
+
+<p>We are using the <a href="https://hub.docker.com/_/python">official Python image</a> as our base image. In our case the <code class="language-plaintext highlighter-rouge">slim-bullseye</code> name at end of the image name means that we are using the slimmed down variant of <code class="language-plaintext highlighter-rouge">Debian Bullseye</code></p>
+
+<p>The <code class="language-plaintext highlighter-rouge">USER</code> and <code class="language-plaintext highlighter-rouge">WORKDIR</code> directives makes it so that code runs as the <code class="language-plaintext highlighter-rouge">realpython</code> user and the current working directory is set to that users home directory.</p>
+
+<p>Because Linux systems need a global Python installation we still need to set up a virtual environment in our container to avoid version conflicts. We do that with the following lines.</p>
+
+<p>Here we set an environment variable <code class="language-plaintext highlighter-rouge">VIRTUALENV</code> and install our virtual environment there. Instead of activating the virtual environment we update the <code class="language-plaintext highlighter-rouge">PATH</code> variable. The reason for this is activating the environment in the typical way would be only temporary and wouldn’t affect Docker containers derived from your image. Furthermore if you activated the environment via the docker <code class="language-plaintext highlighter-rouge">RUN</code> command it would only last until the next instruction in your Dockerfile because each starts a new session.</p>
+
+<p>When installing the dependencies and your project package in a Dockerfile you want to split those two steps to take advantage of layer caching as the dependencies will change less frequently than your package.</p>
+
+<p>Its a good practice to install just the <code class="language-plaintext highlighter-rouge">project.toml</code> and <code class="language-plaintext highlighter-rouge">constraints.txt</code> files into your containers instead of your project directory. This helps you keep a slimmer image and makes it easier to take advantage of container layering.</p>
+
+<p>Before you install your dependencies into the containers you want to make sure tup update pip. Its possible that some packages will not install if your version of pip is outdated. You can combine the pip upgrade along with installing your dependencies into a single <code class="language-plaintext highlighter-rouge">RUN</code> command.</p>
+
+<p>We upgrade <code class="language-plaintext highlighter-rouge">pip</code> and <code class="language-plaintext highlighter-rouge">setuptools</code> to their most recent versions. Then we install the third party libraries that our project requires, including the optional dependencies for development. We constrain them to make sure the versions are consistent. We also disable <code class="language-plaintext highlighter-rouge">pip</code> caching with the <code class="language-plaintext highlighter-rouge">--no-cache-dir</code> as we won’t need them outside our virtual environment in the container so there is no need to cache them. This makes your docker image smaller.</p>
+
+<p>Because we install dependencies without installing our <code class="language-plaintext highlighter-rouge">page-tracker</code> package in the Docker image they will stay in a cached layer and thus any changes to our source code won’t require re-installing those dependencies.</p>
+
+<p>We will run our tests and linters and static analysis as part fot he build process.</p>
+
+<p>We copy the <code class="language-plaintext highlighter-rouge">src/</code> and <code class="language-plaintext highlighter-rouge">test/</code> folders from our host machine then we install the <code class="language-plaintext highlighter-rouge">page-tracker</code> package into the virtual environment. By baking the automated testing tools into the build process, you ensure that if any one of them returns a non-zero exit status code, then building your Docker image will fail. That is what you want when implementing a continuous integration pipeline. Note that we are disabling low-sensitivity <code class="language-plaintext highlighter-rouge">pylint</code> issues <code class="language-plaintext highlighter-rouge">C0114</code>, <code class="language-plaintext highlighter-rouge">C0116</code> and <code class="language-plaintext highlighter-rouge">R1705</code> which are of little importance now.</p>
+
+<p>At this point we just run the unit tests because we don’t have the Redis containers available to run the integration and end to end tests.</p>
+
+<p>The last step is to tell the containers what command to run. At this point we will have the containers start using the Flask built in development server. Note that we are binding the host to the <code class="language-plaintext highlighter-rouge">0.0.0.0</code> address in order to make our application accessible from outside the Docker container.</p>
+
+<p>Putting it all together we git <a href="https://github.com/xcomfan/real_python_examples/blob/0935c4472276a1e5f9899f7a54c182b429db5b73/page-tracker/Dockerfile">this Dockerfile</a> and you can build it with the command <code class="language-plaintext highlighter-rouge">docker build -t page-tracker .</code>. This command will look for Docker file in the current directory <code class="language-plaintext highlighter-rouge">.</code> and tag the resulting image with the default label <code class="language-plaintext highlighter-rouge">latest</code> so the full image name will be <code class="language-plaintext highlighter-rouge">page-tracker:lates</code>.</p>
+
+<h3 id="reorganize-your-dockerfile-for-multi-stage-builds">Reorganize Your Dockerfile for Multi-Stage Builds</h3>
+
+<p>The idea behind <a href="https://docs.docker.com/build/building/multi-stage/">multi-stage builds</a> is to partition your Dockerfile into stages, each of which can be based on a completely different image. This is particularly useful when your application’s development and runtime environments are different. For example, you can install the necessary build tools in a temporary image meant just for building and testing your application and then copy the resulting executable into the final image. Multi stage builds can make your images much smaller and more efficient.</p>
+
+<p>To start with the refactor we will make a copy of <code class="language-plaintext highlighter-rouge">Dockerfile</code> called <code class="language-plaintext highlighter-rouge">Dockerfile.dev</code>. Note that when running docker build you specify the file you want to use for the build with the <code class="language-plaintext highlighter-rouge">-f</code> option as in <code class="language-plaintext highlighter-rouge">docker build -f Dockerfile.dev -t page-tracker .</code>  We are keeping <code class="language-plaintext highlighter-rouge">Dockerfile.dev</code> for later and making our changes for the multi stage build in <code class="language-plaintext highlighter-rouge">Dockerfile</code>.</p>
+
+<p>Each stage in a Dockerfile begins with its own <code class="language-plaintext highlighter-rouge">FROM</code> instructions, so we will have two. The first stage will be nearly identical to our current <code class="language-plaintext highlighter-rouge">Dockerfile</code> we copied from to create <code class="language-plaintext highlighter-rouge">Dockerfile.dev</code> except that we give the stage the name <code class="language-plaintext highlighter-rouge">builder</code> which we refer to later.  Because we will be transferring your packaged page tracker application from one image to another, we need to add the extra step of building a distribution package using the <code class="language-plaintext highlighter-rouge">Python wheel</code> format. The <code class="language-plaintext highlighter-rouge">pip wheel</code> command will create a file named something like <code class="language-plaintext highlighter-rouge">page_tracker-1.0.0-py3-none-any.whl</code> in the <code class="language-plaintext highlighter-rouge">dist/</code> subfolder. We also remove the <code class="language-plaintext highlighter-rouge">CMD</code> instruction from this stage, as it’ll become part of the next stage.</p>
+
+<p>The second and final stage, implicitly named <code class="language-plaintext highlighter-rouge">stage-1</code>, looks a little repetitive because its based on the same image. In this second stage we start with the familiar steps of upgrading system package and creating a user and making a virtual environment. Then, we copy our wheel file which was generated in the prior <code class="language-plaintext highlighter-rouge">builder</code> stage and install it with <code class="language-plaintext highlighter-rouge">pip</code> as before. We also bring back the <code class="language-plaintext highlighter-rouge">CMD</code> command to start our application. In this setup the first stage is responsible for installing all the dependencies and running tests as well as generating the wheel file. The next (<code class="language-plaintext highlighter-rouge">stage-1</code>) stage just has to copy the finished wheel. Also not that the <code class="language-plaintext highlighter-rouge">builder</code> stage is temporary, so there will be no trace of it in your Docker mages afterward.</p>
+
+<p>The refactored for multi stage builds Dockerfile should look like <a href="https://github.com/xcomfan/real_python_examples/blob/59676ca2a15cdaa8e66fcd4583340ba7eb0eccc4/page-tracker/Dockerfile">this</a></p>
+
+<h3 id="build-and-version-your-docker-image">Build and Version Your Docker Image</h3>
+
+<p>It is a good idea to have a versioning scheme and to tag your builds so that you are able to rollback if needed.</p>
+
+<p>Some strategies for versioning are</p>
+
+<ul>
+  <li>
+    <p><a href="https://semver.org">Semantic versioning</a> - 3 numbers delimited with a dot to indicate the major, minor and patch versions.</p>
+  </li>
+  <li>
+    <p>Git commit hash - uses the SHA-1 hash of Git commit tied to the source code in your image.</p>
+  </li>
+  <li>
+    <p>Timestamp - uses temporal information, such as Unit time to indicate when the image was built.</p>
+  </li>
+</ul>
+
+<p>You can also combine these strategies.</p>
+
+<p>In this tutorial we will use the Git commit hash approach.</p>
+
+<p>As a side note, you can get a good start point for a Python project <code class="language-plaintext highlighter-rouge">.gitignore</code> file via <code class="language-plaintext highlighter-rouge">curl -sL https://www.gitignore.io/api/python,pycharm+all &gt; .gitignore</code></p>
+
+<p>You can get the hash of the current commit via <code class="language-plaintext highlighter-rouge">git rev-parse HEAD</code> or if you want the short version <code class="language-plaintext highlighter-rouge">git rev-parse --short HEAD</code></p>
+
+<p>We can use the commit hash to tag our docker image using the command. <code class="language-plaintext highlighter-rouge">docker build -t page-tracker:$(git rev-parse --short HEAD) .</code></p>
+
+<h3 id="push-the-image-to-a-docker-registry">Push the Image to a Docker Registry</h3>
+
+<p>You can use a managed service docker registry such as the one you get from AWS. You can also host your own with an <a href="https://hub.docker.com/_/registry">open source distribution continer</a></p>
+
+<p>Docker hub offers a free tier of their managed service where you get unlimited public and one free private repository.</p>
+
+<p>An image repository on your Docker Hub account is a collection of Docker image that uses can upload or download. Each repository can contain multiple tagged versions of the same image. In this regard, a Docker Hub is analogous to a GitHub repository but tailored for docker images rather than code.</p>
+
+<p>Once you set up your Docker account use <code class="language-plaintext highlighter-rouge">docker login -u &lt;username&gt;</code> to login from command line. If you are using 2FA you need to set up an access token and provide that as your password.</p>
+
+<p>Docker hub controls what repository your image is pushed to via tagging. You tag the image using your Docker Hub username and repository as a prefix. For example <code class="language-plaintext highlighter-rouge">docker tag page-tracker:719e61c xcomfan/page-tracker:719e61c</code>. This form we are follwing is <code class="language-plaintext highlighter-rouge">registry/username/repository:tag</code>. The registry part can be left out when you are pushing to default docker hub as we are doing in this example.  Otherwise it can be a domain address or an IP address with an optional port number of your private registry instance. If you don’t provide a tag Docker implicitly applies the <code class="language-plaintext highlighter-rouge">latest</code> tag. You can tag the same image with more than one tag for example <code class="language-plaintext highlighter-rouge">docker tag page-tracker:719e61c xcomfan/page-tracker:latest</code></p>
+
+<p>Once you’ve correctly tagged the images, you can send them to the desired registry with <code class="language-plaintext highlighter-rouge">docker push</code> for example…</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker push xcomfan/page-tracker:719e61c
+docker push xcomfan/page-tracker:latest
+</code></pre></div></div>
+
+<p>Note that you are not pushing the same image twice. Docker will recognize they are the same and only upload the meta data needed. If all worked you should see your images on Docker Hub.</p>
+
+<p>To add collaborators you can used paid features or generate read only tokens for those who need to pull down your images.</p>
+
+<p>At this point if you were to hop on another computer you can get the image via the command <code class="language-plaintext highlighter-rouge">docker pull xcomfan/page-tracker</code>. As this command does not specify any tag for the image Docker will pull the one tagged with <code class="language-plaintext highlighter-rouge">latest</code>. You don’t need to manually pull images. Docker will pull them automatically when you try running them for example if you were to run the command <code class="language-plaintext highlighter-rouge">docker run -p 80:5000 --name web-sevice xcomfan/page-tracker</code>.</p>
+
+<p>Adding the <code class="language-plaintext highlighter-rouge">-rm</code> flag will automatically remove the container when it stops if you don’t want to do this by hand.</p>
+
+<p>To see what networks you have defined locally (this is in the context of getting the container we created connected to Redis container) you can use the command <code class="language-plaintext highlighter-rouge">docker network ls</code> and if you need to create the page tracker network as we did before you would use <code class="language-plaintext highlighter-rouge">docker network create page-tracker-network</code>.</p>
+
+<p>You can create a volume for your Redis container with <code class="language-plaintext highlighter-rouge">docker volume create redis-volume</code>.</p>
+
+<p>After stopping and removing the old redis container start the new one with the volume attached with. <code class="language-plaintext highlighter-rouge">docker run -d -v redis-volume:/data --network page-tracker-network --name redis-service redis:7.0.10-bullseye</code></p>
+
+<p>And you can start our flask application container using.</p>
+
+<p><code class="language-plaintext highlighter-rouge">docker run -d -p 80:5000 -e REDIS_URL=redis://redis-service:6379 --network page-tracker-network --name web-service xcomfan/page-tracker</code></p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">-d</code> flag is for running the containers in the background (detached) without a terminal.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">p</code> flag is for port forwarding</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">-e</code> flag is for environment variables</p>
+  </li>
+</ul>
+
+<p>You can now access your application at <code class="language-plaintext highlighter-rouge">http://localhost</code> via browser or <code class="language-plaintext highlighter-rouge">curl</code></p>
+
+<h2 id="orchestrate-containers-using-docker-compose">Orchestrate Containers Using Docker Compose</h2>
+
+<p><a href="https://docs.docker.com/compose/">Docker Compose</a> is a tool that works on top of Docker and simplifies running multi-container Docker applications.</p>
+
+<p>If you are using Docker Desktop; Docker Compose is bundled with it.</p>
+
+<h3 id="define-a-multi-container-docker-application">Define a Multi Container Docker Application</h3>
+
+<p>Because we are defining a multi container Docker applications that could potentially grow to include many more services, its worthwhile to re-arrange the folder structure of our project. We will create a new subfolder called <code class="language-plaintext highlighter-rouge">web</code> in the root of the project where all the files related to our Flask web service will live. The virtual environment directory belongs to this new subfolder because other services might be implemented in a different language such as Jva or C++.</p>
+
+<p>You can’t just move the virtual environment folder as that would break the script in the virtual environment. You need to deactivate the environment remove the directory and create a new one.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>deactivate
+<span class="nb">cd </span>page-tracker/
+<span class="nb">rm</span> <span class="nt">-rf</span> venv/
+python3 <span class="nt">-m</span> venv web/venv/ <span class="nt">--prompt</span> page-tracker
+<span class="nb">source </span>web/venv/bin/activate
+ python <span class="nt">-m</span> pip <span class="nb">install</span> <span class="nt">--upgrade</span> pip
+</code></pre></div></div>
+
+<p>We also add at the project root a <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> file. The <a href="https://docs.docker.com/reference/compose-file/">Compose File</a> is where you define services, networks, and volumes.  The complete files for our example is <a href="https://github.com/xcomfan/real_python_examples/blob/d9a84880b09b85681b667072cea8e0a3f871e626/page-tracker/docker-compose.yml">here</a></p>
+
+<p>Few notes on the file</p>
+
+<ul>
+  <li>
+    <p>You are able to scale up the number of each of the containers.</p>
+  </li>
+  <li>
+    <p>Some values in the configuration file are quoted, while others aren’t. This is a precaution against a in older YAML format specification which treats certain characters as special if they appear in unquoted strings.</p>
+  </li>
+</ul>
+
+<p>To run the docker compose file first we need to stop all of our running containers (pertinent to this app).</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker stop <span class="nt">-t</span> 0 web-service redis-service
+docker container <span class="nb">rm </span>web-service redis-service
+docker network <span class="nb">rm </span>page-tracker-network
+docker volume <span class="nb">rm </span>redis-volume
+</code></pre></div></div>
+
+<p>Also delete any local images…</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker images
+REPOSITORY                TAG              IMAGE ID       CREATED      SIZE
+page-tracker              dde1dc9          9cb2e3233522   1 hour ago   204MB
+page-tracker              latest           9cb2e3233522   1 hour ago   204MB
+realpython/page-tracker   dde1dc9          9cb2e3233522   1 hour ago   204MB
+realpython/page-tracker   latest           9cb2e3233522   1 hour ago   204MB
+<span class="o">(</span>...<span class="o">)</span>
+
+<span class="nv">$ </span>docker rmi <span class="nt">-f</span> 9cb2e3233522
+Untagged: page-tracker:dde1dc9
+Untagged: page-tracker:latest
+Untagged: realpython/page-tracker:dde1dc9
+Untagged: realpython/page-tracker:latest
+Deleted: sha256:9cb2e3233522e020c366880867980232d747c4c99a1f60a61b9bece40...
+</code></pre></div></div>
+
+<p>If you really want to start from scratch and don’t mind loosing data you can use <code class="language-plaintext highlighter-rouge">docker system prune --all --volumes</code> <strong><em>WARNING:</em></strong> this will remove everything created Docker.</p>
+
+<p>To bring up your application via the Docker Compose file use the command <code class="language-plaintext highlighter-rouge">docker compose up -d</code></p>
+
+<p>The docker compose plugin provides several useful commands for managing your multi container application. Few are demonstrated below.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker compose ps
+NAME                           COMMAND                  SERVICE        ...
+page-tracker-redis-service-1   <span class="s2">"docker-entrypoint.s…"</span>   redis-service  ...
+page-tracker-web-service-1     <span class="s2">"flask --app page_tr…"</span>   web-service    ...
+
+<span class="nv">$ </span>docker compose logs <span class="nt">--follow</span>
+<span class="o">(</span>...<span class="o">)</span>
+page-tracker-web-service-1    |  <span class="k">*</span> Running on all addresses <span class="o">(</span>0.0.0.0<span class="o">)</span>
+page-tracker-web-service-1    |  <span class="k">*</span> Running on http://127.0.0.1:5000
+page-tracker-web-service-1    |  <span class="k">*</span> Running on http://172.20.0.3:5000
+page-tracker-web-service-1    | Press CTRL+C to quit
+
+<span class="nv">$ </span>docker compose stop
+<span class="o">[</span>+] Running 2/2
+ ⠿ Container page-tracker-web-service-1    Stopped                     10.3s
+ ⠿ Container page-tracker-redis-service-1  Stopped                      0.4s
+
+<span class="nv">$ </span>docker compose restart
+<span class="o">[</span>+] Running 2/2
+ ⠿ Container page-tracker-redis-service-1  Started                      0.4s
+ ⠿ Container page-tracker-web-service-1    Started                      0.5s
+
+<span class="nv">$ </span>docker compose down <span class="nt">--volumes</span>
+<span class="o">[</span>+] Running 4/4
+ ⠿ Container page-tracker-web-service-1    Removed                      6.0s
+ ⠿ Container page-tracker-redis-service-1  Removed                      0.4s
+ ⠿ Volume page-tracker_redis-volume        Removed                      0.0s
+ ⠿ Network page-tracker_backend-network    Removed                      0.1s
+</code></pre></div></div>
+
+<h3 id="replace-flasks-development-web-server-with-gunicorn">Replace Flask’s Development Web Server With Gunicorn</h3>
+
+<p>As we did before with the Redis container to drop into the CLI; we will use Docker’s ability to provide an alternative run command to a container to run Flask through a production grade web server.</p>
+
+<p>We are going to be using <a href="https://gunicorn.org/">Gunicorn</a> which is a pure-Python implementation of the Web Server Gateway Interface(WSGI) protocol. To start using it we must first add the <code class="language-plaintext highlighter-rouge">gunicorn</code> package as another dependency in our project by updating the <a href="https://github.com/xcomfan/real_python_examples/blob/1f1a1a0a0f1943d8fb3fbaebeb24b9a7ad9933b9/page-tracker/web/pyproject.toml"><code class="language-plaintext highlighter-rouge">web/pyproject.toml</code> file</a>. We add <code class="language-plaintext highlighter-rouge">gunicorn</code> as a regular dependency.</p>
+
+<p>As usual we need to re-install the <code class="language-plaintext highlighter-rouge">page-tracker</code> package locally to get the update.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python <span class="nt">-m</span> pip <span class="nb">install</span> <span class="nt">--editable</span> <span class="s2">"web/[dev]"</span>
+ python <span class="nt">-m</span> pip freeze <span class="nt">--exclude-editable</span> <span class="o">&gt;</span> web/constraints.txt
+</code></pre></div></div>
+
+<p>Now that we have installed <code class="language-plaintext highlighter-rouge">gunicorn</code> we can start using it. We will add a new <code class="language-plaintext highlighter-rouge">command</code> attribute under the <code class="language-plaintext highlighter-rouge">web-service</code> key in our <a href="https://github.com/xcomfan/real_python_examples/blob/c3146b30314c9cb882d6eb16c6be8afb87138aa5/page-tracker/docker-compose.yml"><code class="language-plaintext highlighter-rouge">docker-compose.yml</code> file</a>. This command will take precedence over your Dockerfile’s default command, which relies on Flask’s development server. To show the difference we are running the server on port 8000 instead of 5000, so we also need to change the port mapping.</p>
+
+<p>After making the Docker compose changes you need to rebuild. You can do this with either <code class="language-plaintext highlighter-rouge">docker compose build</code> or combine the operations with <code class="language-plaintext highlighter-rouge">docker compose up --build -d</code>.</p>
+
+<h2 id="run-end-to-end-tests-against-the-services">Run End to End Tests Against the Services</h2>
+
+<h3 id="running-locally-on-your-system">Running locally on your system.</h3>
+
+<p>In the first attempt we will execute our end to end test locally from our machine. For this to work all the services. This is actually not ideal because you don’t want to expose certain services to the public. We make the change in <a href="https://github.com/xcomfan/real_python_examples/blob/79b27a359178fab2c9162fdd162530b1cfd15e2d/page-tracker/docker-compose.yml"><code class="language-plaintext highlighter-rouge">docker-compose.yml</code></a> to expose the Redis port <code class="language-plaintext highlighter-rouge">6379</code>.</p>
+
+<p>If there is an existing Docker container for <code class="language-plaintext highlighter-rouge">redis-service</code>, then we will need to remove that container first, even if its currently stopped, to reflect the new port forwarding rules. Fortunately Docker Compose will automatically detect the changes in <code class="language-plaintext highlighter-rouge">docker-comose.yml</code> file and re-create your containers as needed.</p>
+
+<p>Run the following commands</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>docker compose up <span class="nt">-d</span>
+<span class="o">[</span>+] Running 2/2
+ ⠿ Container page-tracker-redis-service-1  Started                      1.0s
+ ⠿ Container page-tracker-web-service-1    Started                      1.2s
+
+<span class="nv">$ </span>docker compose ps
+NAME                           ...   PORTS
+page-tracker-redis-service-1   ...   0.0.0.0:6379-&gt;6379/tcp
+page-tracker-web-service-1     ...   0.0.0.0:80-&gt;8000/tcp
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">docker compose ps</code> command shows us the port forwarding.</p>
+
+<p>You an now run your test with the command <code class="language-plaintext highlighter-rouge">python -m  pytest web/test/e2e --flask-url http://localhost --redis-url redis://localhost:6379</code></p>
+
+<p>If you want to simulate a failure you can temporarily puse and resume your containers with the commands below</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker compose pause
+docker compose unpause
+</code></pre></div></div>
+
+<h3 id="running-from-another-container">Running from another container</h3>
+
+<p>A better option than running locally on your system and exposing Redis ports publicly is to run the tests from another container on the same network.</p>
+
+<p>You can create this container manually, but a better option is to use Docker Compose <a href="https://docs.docker.com/compose/profiles/">profiles</a> which can be activated on demand.</p>
+
+<p>We will update our <a href="https://github.com/xcomfan/real_python_examples/blob/c215b73cb6b9db6d1d7e761dfad61570e680f759/page-tracker/docker-compose.yml"><code class="language-plaintext highlighter-rouge">docker-compose.yml</code> file</a> to remove the Redis port forwarding we added and add a new service based on our old <a href="https://github.com/xcomfan/real_python_examples/blob/c215b73cb6b9db6d1d7e761dfad61570e680f759/page-tracker/web/Dockerfile.dev"><code class="language-plaintext highlighter-rouge">Dockerfile.dev</code> file</a>.</p>
+
+<p>A few notes on the <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> changes.</p>
+
+<ul>
+  <li>
+    <p>Because Docker Compose has access to your host machine shell it will try to interpolate any reference or environment variables such ash <code class="language-plaintext highlighter-rouge">$REDIS_URL</code> or <code class="language-plaintext highlighter-rouge">$FLASK_URL</code> which appear in the <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> file. These variables are most likely not defined when you run Docker Compose. To disable premature substitution of environment variables by Docker Compose, you escape the <code class="language-plaintext highlighter-rouge">$</code> with two dollar signs <code class="language-plaintext highlighter-rouge">$$</code>. This produces literal stings <code class="language-plaintext highlighter-rouge">$REDIS_URL</code> and <code class="language-plaintext highlighter-rouge">$FLASK_URL</code> in the command that will be executed in the resulting containers.</p>
+  </li>
+  <li>
+    <p>When you start a multi-container application with Docker compose, only the core services that don’t belong to any profile start. If you also with to start the services that were assigned to one or more profiles, then you must list those profiles using the <code class="language-plaintext highlighter-rouge">--profile</code> option.</p>
+  </li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">docker compose --profile testing up -d</code></p>
+
+<p>You can use the command <code class="language-plaintext highlighter-rouge">docker compose ps -a</code> to see that status. Notice that <code class="language-plaintext highlighter-rouge">page-tracker-test-service</code> existed with a 0 status code. To see the logs of the test you can run <code class="language-plaintext highlighter-rouge">docker compose logs test-service</code></p>
+
+<h2 id="define-a-docker-based-continuous-integration-pipeline">Define a Docker-Based Continuous Integration Pipeline</h2>
+
+<p>To introduce continuous integration in your project you need the following</p>
+
+<ul>
+  <li>Version control system</li>
+  <li>Branching strategy</li>
+  <li>Build automation</li>
+  <li>Test automation</li>
+  <li>Continuous integration server</li>
+  <li>Frequent integrations</li>
+</ul>
+
+<p>Some of the source control branching modesl are</p>
+
+<ul>
+  <li><a href="https://trunkbaseddevelopment.com/">Trunk-Based Development</a></li>
+  <li><a href="https://docs.github.com/en/get-started/quickstart/github-flow">GitHub Flow</a></li>
+  <li><a href="https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow">Forking Workflow</a></li>
+  <li><a href="https://martinfowler.com/articles/branching-patterns.html#release-branch">Release Branching</a></li>
+  <li><a href="https://nvie.com/posts/a-successful-git-branching-model/">Git Flow</a></li>
+</ul>
+
+<p>For our application these are the steps we will be following</p>
+
+<ol>
+  <li>Fetch the latest version of the mainline to your computer.</li>
+  <li>Create a feature branch from the mainline.</li>
+  <li>Open a pull request to get early feedback from others.</li>
+  <li>Keep working on your feature branch.</li>
+  <li>Fetch the mainline often, merging it into your feature branch and resolving any potential conflicts locally.</li>
+  <li>Build, lint, and test the code on your local branch.</li>
+  <li>Push your changes whenever the local build and tests succeed.</li>
+  <li>With each push, check the automated tests that run on the CI server against your feature branch.</li>
+  <li>Reproduce and fix any identified problems locally before pushing the code again.</li>
+  <li>Once you’re done, and all tests pass, request that one or more coworkers review your changes.</li>
+  <li>Apply their feedback until the reviewers approve your updates and all tests pass on the CI server after pushing your latest changes.</li>
+  <li>Close the pull request by merging the feature branch to the mainline.</li>
+  <li>Check the automated tests running on the CI server against the mainline with the changes from your feature branch integrated.</li>
+  <li>Investigate and fix any issues that may be found, for example, due to new updates introduced to the mainline by others between your last push and merging.</li>
+</ol>
+
+<h3 id="github-actions-terminology">GitHub Actions Terminology</h3>
+
+<p>Each <strong>workflow</strong> consists of a number of <strong>steps</strong> executed by a <strong>runner</strong>. There are two types of runners:</p>
+
+<ul>
+  <li><strong>GitHub-Hosted Runners:</strong> Ubuntu Linux, Windows, macOS</li>
+  <li><strong>Self-Hosted Runners:</strong> Servers that you own and maintain</li>
+</ul>
+
+<p>In this tutorial we will use the Ubuntu Linux GitHub hosted runner.</p>
+
+<p>Unless you specify otherwise jobs within one workflow will run on separate runners in parallel, which can be useful for speeding up builds. At the same time, you can make one job depend on other jobs. You can also enable dependency caching to speed things up.</p>
+
+<p>Each step of a job is implemented by an <strong>action</strong> that can be either:</p>
+
+<ol>
+  <li>A custom shell command or a script</li>
+  <li>A GitHub Action defined in another GitHub repository</li>
+</ol>
+
+<p>There are many predefined GitHub Actions, which you can brows and find on <a href="https://github.com/marketplace?type=actions">GitHub Marketplace</a> provided and maintained by the community.</p>
+
+<p>GitHub uses YAML format for configuring workflows and it looks for a special <code class="language-plaintext highlighter-rouge">.github/workflows/</code> folder in your repository’s root directory, where you can define your workflows. Additional you can store in this directory configuration files or scripts that execute on a runner.</p>
+
+<h3 id="add-github-workflow-configuration">Add GitHub Workflow Configuration</h3>
+
+<p>To our project we will append the following structure.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>page-tracker/
+│
+├── web/
+│
+├── .git/
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+│
+├── .gitignore
+└── docker-compose.yml
+</code></pre></div></div>
+
+<p>GitHub has a <a href="https://docs.github.com/en/repositories/working-with-files/managing-files/editing-files">GitHub web-based editor</a> that provides schema validations and suggestions for the available GitHub Actions and Attributes.</p>
+
+<p>The content of the ci.yml file can be found <a href="https://github.com/xcomfan/real_python_examples/blob/9437b5a3a2977e348b9165c756c894dc68197640/.github/workflows/ci.yml">here</a></p>
+
+<p>Some notes on what we are doing in the file…</p>
+
+<ul>
+  <li>
+    <p>First step we are doing is checking out the commit that triggered the workflow using the <a href="https://github.com/actions/checkout">actions/checkout</a> GitHub action. Because GitHub Actions are really GitHub repositories in disguise, you can provide a Git tag or a commit hash after the <code class="language-plaintext highlighter-rouge">@</code> sign to choose a specific version of the action.</p>
+  </li>
+  <li>
+    <p>Next step is to build Docker images for your web and test services before executing the end to end tests though Docker Compose. Instead of using an existing action we will run a shell command on the runner. We are using YAMLs multiline literal folding <code class="language-plaintext highlighter-rouge">&gt;</code> to break a long command into multiple lines for readability.  We request that Docker Compose rebuild our images with the <code class="language-plaintext highlighter-rouge">--build</code> flag and stop all containers when the <code class="language-plaintext highlighter-rouge">test-service</code> terminates. If you don’t do this your job can run indefinitely.</p>
+  </li>
+  <li>
+    <p>These two steps will always run in response to the events listed at the top of the file, whic is either opening a pull request or merging a feature branch into the mainline. Additionally you want to push your new Docker image to Docker Hub when all the tests pass after successfully merging a branch into the mainline. Thus we run the next steps only when a push event triggers your workflow.</p>
+  </li>
+  <li>
+    <p>We pass the credentials for logging into docker hub via a <a href="https://docs.github.com/en/actions/learn-github-actions/contexts#secrets-context">secret context</a>. You can define your secrets in your repository settings. While DockerHub secrets are encrypted if you try hard enough (shell command in one of your actions) you can see them.</p>
+  </li>
+  <li>
+    <p>Once authenticated to Docker Hub, we tag and push our new Docker image using <code class="language-plaintext highlighter-rouge">docker/build-push-action</code> GitHub Actions from the marketplace. This action also runs conditionally when you merge a feature branch into the mainline.</p>
+  </li>
+  <li>
+    <p><a href="https://github.com/features/packages">GitHub Packages</a> is another service integrated into GitHub that can act as a replacement for Docker Hub. Something worth exploring at some point.</p>
+  </li>
+</ul>
+
+<h3 id="enable-branch-protection-rules">Enable Branch Protection Rules</h3>
+
+<p>In GitHub you can go to your repo setting and tune your branch protection rules. You can end your end to end test as a status check.</p>
+
+<h2 id="where-to-go-from-here">Where to Go from Here</h2>
+
+<p>Some other features that you can practice setting up are…</p>
+
+<ul>
+  <li>Automate deployment to the cloud for continuous delivery</li>
+  <li>Configure persistent logging and monitoring of your services.</li>
+  <li>Implement blue-green deployments</li>
+  <li>Add feature toggles to experiment with canary releases and A/B testing</li>
+</ul>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

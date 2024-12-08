@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pkl Reference | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Pkl Reference" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/pkl/" />
+<meta property="og:url" content="http://0.0.0.0:4000/pkl/" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pkl Reference" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Pkl Reference","url":"http://0.0.0.0:4000/pkl/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Pkl Reference</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="output-pkl-code-to-yaml-or-json-or-java-property-list">Output Pkl Code to YAML or JSON or Java Property List</h2>
+
+<p>Basic input file.</p>
+
+<pre><code class="language-pkl">// intro.pkl
+name = "Pkl: Configure your Systems in New Way"
+attendants = 100
+isInteractive = true
+amountLearned = 13.37
+</code></pre>
+
+<p>Can convert to yaml or json output</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ubuntu@ubuntu:~/pkl_practice$ pkl eval -f yaml ./intro.pkl
+name: 'Pkl: Configure your Systems in New Way'
+attendants: 100
+isInteractive: true
+amountLearned: 13.37
+ubuntu@ubuntu:~/pkl_practice$ pkl eval -f json ./intro.pkl
+{
+  "name": "Pkl: Configure your Systems in New Way",
+  "attendants": 100,
+  "isInteractive": true,
+  "amountLearned": 13.37
+}
+ubuntu@ubuntu:~/pkl_practice$ pkl eval -f plist ./intro.pkl
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+  &lt;key&gt;name&lt;/key&gt;
+  &lt;string&gt;Pkl: Configure your Systems in New Way&lt;/string&gt;
+  &lt;key&gt;attendants&lt;/key&gt;
+  &lt;integer&gt;100&lt;/integer&gt;
+  &lt;key&gt;isInteractive&lt;/key&gt;
+  &lt;true/&gt;
+  &lt;key&gt;amountLearned&lt;/key&gt;
+  &lt;real&gt;13.37&lt;/real&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+</code></pre></div></div>
+
+<h2 id="pkl-structure-classes-objects-and-modules">Pkl Structure: Classes, Objects and Modules</h2>
+
+<p>Typically a configuration needs some kind of hierarchical structure. Pkl provices <em>immutable</em> objects for this. Objects have three kinds of members: properties, elements and entries.</p>
+
+<h3 id="properties">Properties</h3>
+
+<pre><code class="language-pkl">// simpleObjectWithProperties.pkl
+bird {
+  name = "Common wood pigeon"
+  diet = "Seeds"
+  taxonomy {
+    species = "Columba palumbus"
+  }
+}
+</code></pre>
+
+<p><code class="language-plaintext highlighter-rouge">bird{...</code> defines bird to be an <strong>object</strong></p>
+
+<p>For <strong>primatives</strong> Pkl uses the <code class="language-plaintext highlighter-rouge">=</code> syntax</p>
+
+<p><code class="language-plaintext highlighter-rouge">taxonomy {...</code> shows that objects can be nested</p>
+
+<h3 id="elements">Elements</h3>
+
+<p>You don’t alwasy have names for every individual structure in your configuration. Sometimes you need “a bunch of things” without knowing how many. Pkl provides <strong>elements</strong> for this purpose. Elements are object members just like <strong>properties</strong> but can be indexed by a number. You can think of an object that only contains <strong>elements</strong> as an array. Similar to arrays you can use square brackets to access an element, for example <code class="language-plaintext highlighter-rouge">myObject[42]</code>.</p>
+
+<pre><code class="language-pkl">exampleObjectWithJustIntElements {
+  100
+  42
+}
+
+exampleObjectWithMixedElements {
+  "Bird Breeder Conference"
+  (2000 + 23)
+  exampleObjectWithJustIntElements
+}
+</code></pre>
+
+<p>The above Pkl code yeilds the below JAON and YAML when run though <code class="language-plaintext highlighter-rouge">pkl eval -f yaml|json</code>.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">100</code> in <code class="language-plaintext highlighter-rouge">exampleObjectWithJustIntElements</code> demonstrates how when you just write a value without an name you make it an element. Elements don’t have to be primatives, they can be anything as demonstrated in <code class="language-plaintext highlighter-rouge">(200 + 23)</code> and using <code class="language-plaintext highlighter-rouge">exampleObjectWithJustIntElements</code> inside <code class="language-plaintext highlighter-rouge">exampleObjectWithMixedElements</code>.</p>
+
+<p>YAYML output</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">exampleObjectWithJustIntElements</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="m">100</span>
+<span class="pi">-</span> <span class="m">42</span>
+<span class="na">exampleObjectWithMixedElements</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="s">Bird Breeder Conference</span>
+<span class="pi">-</span> <span class="m">2023</span>
+<span class="pi">-</span> <span class="pi">-</span> <span class="m">100</span>
+  <span class="pi">-</span> <span class="m">42</span>
+</code></pre></div></div>
+
+<p>JSON output</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"exampleObjectWithJustIntElements"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="mi">100</span><span class="p">,</span><span class="w">
+    </span><span class="mi">42</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"exampleObjectWithMixedElements"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"Bird Breeder Conference"</span><span class="p">,</span><span class="w">
+    </span><span class="mi">2023</span><span class="p">,</span><span class="w">
+    </span><span class="p">[</span><span class="w">
+      </span><span class="mi">100</span><span class="p">,</span><span class="w">
+      </span><span class="mi">42</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="entries">Entries</h3>
+
+<p>Like a <strong>property</strong> and <strong>entry</strong> is named (technically keyed) but unlike a property the name does not need to be knowns at declaration time. To differentiate <strong>entries</strong> from <strong>properties</strong> the “name” for an entry is enclosed in square brackets <code class="language-plaintext highlighter-rouge">[]</code>. Thae name does not need to be a string; any value can index an entry.</p>
+
+<pre><code class="language-pkl">// simpleObjectsWithEntries.pkl
+
+pigeonShelter {
+  ["bird"] {
+    name = "Common wood pigeon"
+    diet = "Seeds"
+    taxonomy {
+      species = "Columba palumbus"
+    }
+  }
+  ["address"] = "355 Bird St."
+}
+
+birdCount {
+  [pigeonShelter] = 42
+}
+</code></pre>
+
+<p>The difference with <strong>properties</strong> is the notation of the <code class="language-plaintext highlighter-rouge">key: [&lt;expression&gt;]</code>. As with <strong>properties</strong>, entries can be primitive values or objects. Any object can be used as a key for an entrty as we see when we use <code class="language-plaintext highlighter-rouge">pigeonShelter</code> as a key in <code class="language-plaintext highlighter-rouge">birdCount</code>.</p>
+
+<h3 id="mixed-members">Mixed Members</h3>
+
+<p>You can mix <strong>properties</strong>, <strong>elements</strong> and <strong>entries</strong> in a single object. You don’t have to order them by kind, and you don’t need special syntax. This can be seen in how the properties <code class="language-plaintext highlighter-rouge">name</code>, <code class="language-plaintext highlighter-rouge">lifespan</code> and <code class="language-plaintext highlighter-rouge">extinct</code> are intermixed with <code class="language-plaintext highlighter-rouge">"wing"</code>, <code class="language-plaintext highlighter-rouge">"claw"</code> and <code class="language-plaintext highlighter-rouge">42</code> along with entries <code class="language-plaintext highlighter-rouge">"wing"</code> and <code class="language-plaintext highlighter-rouge">false</code>.</p>
+
+<pre><code class="language-pkl">mixedObject {
+  name = "Pigeon"
+  lifespan = 8
+  "wing"
+  "claw"
+  ["wing"] = "Not related to the _element_ \"wing\""
+  42
+  extinct = false
+  [false] {
+    description = "Construed object example"
+  }
+}
+</code></pre>
+
+<h4 id="collections">Collections</h4>
+
+<p>This free for all object member mixing can be confusing and target formats are not as flexible. For this reason Pkl add two sepcial types of object <strong>listings</strong> which exclusively contain elements, and <strong>mappings</strong> which contain exlusively entries.  Both <strong>listings</strong> and <strong>mappings</strong> are “just objects” so they don’t require special syntax other than that of objects.</p>
+
+<pre><code class="language-pkl">// collections.pkl
+
+birds {
+  "Pigeon"
+  "Parrot"
+  "Barn owl"
+  "Falcon"
+}
+
+habitats {
+  ["Pigeon"] = "Streets"
+  ["Parrot"] = "Parks"
+  ["Barn owl"] = "Forests"
+  ["Falcon"] = "Mountains"
+}
+</code></pre>
+
+<p>Below we have an example of a <strong>listing</strong> in <code class="language-plaintext highlighter-rouge">birds</code> and an examle of a <strong>maping</strong> in <code class="language-plaintext highlighter-rouge">habitats</code>. This can be rendered as a JSON of YAML and you get the JSON below. Notice thatthe listing gets rendered as a JSON array.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"birds"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"Pigeon"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"Parrot"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"Barn owl"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"Falcon"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"habitats"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"Pigeon"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Streets"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Parrot"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Parks"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Barn owl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Forests"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Falcon"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mountains"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>You can access the members of a listing by zero indexing into them as in the below exaple.</p>
+
+<pre><code class="language-pkl">birds {
+  "Pigeon"
+  "Parrot"
+  "Barn owl"
+  "Falcon"
+}
+relatedToSnowOwl = "Barn owl"
+</code></pre>
+
+<p>which would yield the JSON below.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">birds</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="s2">"Pigeon"</span><span class="w">
+  </span><span class="s2">"Parrot"</span><span class="w">
+  </span><span class="s2">"Barn owl"</span><span class="w">
+  </span><span class="s2">"Falcon"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="err">relatedToSnowOwl</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Barn owl"</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="composing-configurations">Composing Configurations</h2>
+
+<p>The central mechanism in Pkl for expressing one part of a configuration int terms of another is <strong>amending</strong>.</p>
+
+<pre><code class="language-pkl">// amendingObjects.pkl
+
+bird {
+  name = "Pigeon"
+  diet = "Seeds"
+  taxonomy {
+    kingdom = "Animalia"
+    clade = "Dinosauria"
+    order = "Columbiformes"
+  }
+}
+
+parrot = (bird) {
+  name = "Parrot"
+  diet = "Berries"
+  taxonomy {
+    order = "Psittaciformes"
+  }
+}
+</code></pre>
+
+<p>In the above example Parrot and Pigeon have nearly identical properties; they only differ in their name and taxonomy. Thus you can use the <code class="language-plaintext highlighter-rouge">parrot = (birt)...</code> syntax to say “Parrot is just like <code class="language-plaintext highlighter-rouge">bird</code> except…” The above Pkl produced the below JSON.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">bird</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="err">name</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Pigeon"</span><span class="w">
+  </span><span class="err">diet</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Seeds"</span><span class="w">
+  </span><span class="err">taxonomy</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="err">kingdom</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Animalia"</span><span class="w">
+    </span><span class="err">clade</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Dinosauria"</span><span class="w">
+    </span><span class="err">order</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Columbiformes"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="err">parrot</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="err">name</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Parrot"</span><span class="w">
+  </span><span class="err">diet</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Berries"</span><span class="w">
+  </span><span class="err">taxonomy</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="err">kingdom</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Animalia"</span><span class="w">
+    </span><span class="err">clade</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Dinosauria"</span><span class="w">
+    </span><span class="err">order</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Psittaciformes"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong><em>Note:</em></strong> So far we just worked with <strong>Dynamic</strong> objects. Pkl also offers <strong>Typed</strong> objects. Amending allows you to override, amend, and add new properties to a dynamic object. Typed objects will only let you amend or override existing properties, not add entirely new ones.</p>
+
+<p>You can alos amend nested objects. This allow you to only describe the difference wit the outermost object for arbitrariy deeply nested structures.</p>
+
+<pre><code class="language-pkl">// nestedAmends.pkl
+
+stockPigeon {
+  name = "Stock pigeon"
+  diet = "Seeds"
+  taxonomy {
+    kingdom = "Animalia"
+    clade = "Columbimorphae"
+    order = "Columbiformes"
+    species = "Columba oenas"
+  }
+}
+
+woodPigeon = (stockPigeon) {
+  name = "Common wood pigeon"
+  taxonomy {
+    species = "Columba palumbus"
+  }
+}
+
+dodo = (woodPigeon) {
+  name = "Dodo"
+  extinct = true
+  taxonomy {
+    species = "Raphus cucullatus"
+  }
+}
+</code></pre>
+
+<p>In <code class="language-plaintext highlighter-rouge">woodPigeon</code> we amend species as it occurs in <code class="language-plaintext highlighter-rouge">stockPigeon</code>. As we see later in <code class="language-plaintext highlighter-rouge">dodo</code> amended objects can themswlves be amended. <code class="language-plaintext highlighter-rouge">extinct</code> in <code class="language-plaintext highlighter-rouge">dodo</code> shows us that new fields can be added to new objects when amending.</p>
+
+<p>The above Pkl codew generates the below JSON.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">stockPigeon</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="err">name</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Stock pigeon"</span><span class="w">
+  </span><span class="err">diet</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Seeds"</span><span class="w">
+  </span><span class="err">taxonomy</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="err">kingdom</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Animalia"</span><span class="w">
+    </span><span class="err">clade</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Columbimorphae"</span><span class="w">
+    </span><span class="err">order</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Columbiformes"</span><span class="w">
+    </span><span class="err">species</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Columba oenas"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="err">woodPigeon</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="err">name</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Common wood pigeon"</span><span class="w">
+  </span><span class="err">diet</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Seeds"</span><span class="w">
+  </span><span class="err">taxonomy</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="err">kingdom</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Animalia"</span><span class="w">
+    </span><span class="err">clade</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Columbimorphae"</span><span class="w">
+    </span><span class="err">order</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Columbiformes"</span><span class="w">
+    </span><span class="err">species</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Columba palumbus"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="err">dodo</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="err">name</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Dodo"</span><span class="w">
+  </span><span class="err">diet</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Seeds"</span><span class="w">
+  </span><span class="err">taxonomy</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="err">kingdom</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Animalia"</span><span class="w">
+    </span><span class="err">clade</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Columbimorphae"</span><span class="w">
+    </span><span class="err">order</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Columbiformes"</span><span class="w">
+    </span><span class="err">species</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="s2">"Raphus cucullatus"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+  </span><span class="err">extinct</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>So far we have only amended <strong>properties</strong> which are simple since you refer to them by name.</p>
+
+<pre><code class="language-pkl">favoriteFoods {
+  "red berries"
+  "blue berries"
+  ["Barn owl"] {
+    "mice"
+  }
+}
+
+adultBirdFoods = (favoriteFoods) {
+  [1] = "pebbles" 
+  "worms" // Without explicit indices, Pkl can't know which element to overwrite, so, instead, it adds an element to the object you're amending.
+  ["Falcon"] {
+    "insects"
+    "amphibians"
+  }
+  ["Barn owl"] {
+    "fish"
+  }
+}
+</code></pre>
+
+<p>As we see in <code class="language-plaintext highlighter-rouge">[1] = "pebbles"</code> explicitly amending by index replaces the elements at that index. Without an explicity index Pkl can’t know which elment to overwrite so instead ita adds the element to the object being amended as we see with <code class="language-plaintext highlighter-rouge">worms</code>.  When you write “new” entries with a key that is not in object being amended such as <code class="language-plaintext highlighter-rouge">["Falcon"]</code> Pkl also adds them. When you write an entry using a key that exists, this notation amends its value as we see with <code class="language-plaintext highlighter-rouge">["Bgarn own"] { "fish" }</code>.</p>
+
+<h2 id="modules">Modules</h2>
+
+<p>A <code class="language-plaintext highlighter-rouge">.pkl</code> file describes a <strong>module</strong>. Modules are objects that can be referred to from other modules. Thus you can do something like.</p>
+
+<pre><code class="language-pkl">// pigeon.pkl
+
+name = "Common wood pigeon"
+diet = "Seeds"
+taxonomy {
+  kingdom = "Animalia"
+  clade = "Dinosauria"
+  species = "Columba palumbus"
+}
+</code></pre>
+
+<p>and in a different file (module)</p>
+
+<pre><code class="language-pkl">// parrot.pkl
+
+import "pigeon.pkl"
+
+parrot = (pigeon) {
+  name = "Great green macaw"
+  diet = "Berries"
+  taxonomy {
+    species = "Ara ambiguus"
+  }
+}
+</code></pre>
+
+<p>evaluating each you get the following.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>pkl <span class="nb">eval</span> /Users/me/tutorial/pigeon.pkl
+name <span class="o">=</span> <span class="s2">"Common wood pigeon"</span>
+diet <span class="o">=</span> <span class="s2">"Seeds"</span>
+taxonomy <span class="o">{</span>
+  kingdom <span class="o">=</span> <span class="s2">"Animalia"</span>
+  clade <span class="o">=</span> <span class="s2">"Dinosauria"</span>
+  species <span class="o">=</span> <span class="s2">"Columba palumbus"</span>
+<span class="o">}</span>
+
+<span class="nv">$ </span>pkl <span class="nb">eval</span> /Users/me/tutorial/parrot.pkl
+parrot <span class="o">{</span>
+  name <span class="o">=</span> <span class="s2">"Great green macaw"</span>
+  diet <span class="o">=</span> <span class="s2">"Berries"</span>
+  taxonomy <span class="o">{</span>
+    kingdom <span class="o">=</span> <span class="s2">"Animalia"</span>
+    clade <span class="o">=</span> <span class="s2">"Dinosauria"</span>
+    species <span class="o">=</span> <span class="s2">"Ara ambiguus"</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Notice that <code class="language-plaintext highlighter-rouge">pigeon</code> is “spread” in the top level, while <code class="language-plaintext highlighter-rouge">parrot</code> is a nested and named object. This is because writing <code class="language-plaintext highlighter-rouge">parrot {...}</code> defines an object property in the “current” modules.</p>
+
+<p>In order to say that “this module is an object, amended from <code class="language-plaintext highlighter-rouge">pigeon</code> module” you use the <code class="language-plaintext highlighter-rouge">amends</code> keyword.</p>
+
+<pre><code class="language-pkl">amends "pigeon.pkl" // "This" moulde is the same as "pigeon.pkl", except for what is in the remainder of the file.
+
+name = "Great green macaw"
+</code></pre>
+
+<p>Think of “amending a module” as “filling out a form”</p>
+
+<h2 id="amending-templates">Amending Templates</h2>
+
+<p>A Pkl file can be a <strong>template</strong> or a “normal” <strong>module</strong>. This terminology describes the intended use of the module. You can’t tell from looking at the Pkl code, if somethign is a normal <strong>modules</strong> or a <strong>template</strong>.</p>
+
+<pre><code class="language-pkl">// AcmeCICD.pkl
+
+module AcmeCICD
+
+class Pipeline {
+  name: String(nameRequiresBranchName)?
+
+  hidden nameRequiresBranchName = (_) -&gt;
+      if (branchName == null)
+        throw("Pipelines that set a 'name' must also set a 'branchName'.")
+      else true
+
+  branchName: String?
+}
+
+timeout: Int(this &gt;= 3)
+
+pipelines: Listing&lt;Pipeline&gt;
+
+output {
+  renderer = new YamlRenderer {}
+}
+</code></pre>
+
+<p>Thus to use the above pipeline your “filling out of the form” would look like…</p>
+
+<pre><code class="language-pkl">// cicd.pkl
+
+amends "AcmeCICD.pkl"
+
+timeout = 3
+pipelines {
+  new {
+    name = "prb"
+    branchName = "main"
+  }
+}
+</code></pre>
+
+<p>Because there is no pipeline object to amend; the <code class="language-plaintext highlighter-rouge">new</code> keyword gives you an object to amend. Writing <code class="language-plaintext highlighter-rouge">myNewPipeline { ... }</code> defines a property, but listings may only include elements. This is where you use the keyword <code class="language-plaintext highlighter-rouge">new</code>; which gives you an object to amend. Pkl derives from context which <code class="language-plaintext highlighter-rouge">new</code> is used and what the object to amend should look like. This is called default value for the context.</p>
+
+<h2 id="writing-a-template">Writing a Template</h2>
+
+<p>As we see in the example above (AcmeCICD) Pkl provides validation of our configuration. This section covers Pkl techniques that are useful for writing Templates.</p>
+
+<h3 id="basic-types">Basic Types</h3>
+
+<p>In the  below example we annotate the code with type signatures. This is a good example of Pkl making it easy to unit errors.</p>
+
+<pre><code class="language-pkl">name: String = "Writing a Template"
+
+part: Int = 3
+
+hasExercises: Boolean = true
+
+amountLearned: Float = 13.37
+
+duration: Duration = 30.min
+
+bandwidthRequirementPerSecond: DataSize = 52.4288.mb
+</code></pre>
+
+<h3 id="types-objects-properties-and-amending">Types objects, properties and amending</h3>
+
+<p>Having a notation for basic types, we can now write typed objects.</p>
+
+<pre><code class="language-pkl">class Language {
+  name: String
+}
+
+bestForConfig: Language = new {
+  name = "Pkl"
+}
+</code></pre>
+
+<p>Here we define a class <code class="language-plaintext highlighter-rouge">Language</code> and make a property definition, using the <code class="language-plaintext highlighter-rouge">Language</code> class. In other words you can be certain that every instance of <code class="language-plaintext highlighter-rouge">Language</code> has a property <code class="language-plaintext highlighter-rouge">name</code> of type String.</p>
+
+<p><strong><em>Note:</em></strong> Though not envorced its customary to name properties starting with a lower-case letter. Class names start with upper-case letters.</p>
+
+<p>When your configuration describes different parts like this, you can define one instance and amend it for every other instance.</p>
+
+<pre><code class="language-pkl">class TutorialPart {
+  name: String
+
+  part: Int
+
+  hasExercises: Boolean
+
+  amountLearned: Float
+
+  duration: Duration
+
+  bandwidthRequirementPerSecond: DataSize
+}
+
+pklTutorialPart1: TutorialPart = new {
+  name = "Basic Configuration"
+  part = 1
+  hasExercises = true
+  amountLearned = 13.37
+  duration = 30.min
+  bandwidthRequirementPerSecond = 50.mib.toUnit("mb")
+}
+
+pklTutorialPart2: TutorialPart = (pklTutorialPart1) {
+  name = "Filling out a Template"
+  part = 2
+}
+
+pklTutorialPart3: TutorialPart = (pklTutorialPart1) {
+  name = "Writing a Template"
+  part = 3
+}
+</code></pre>
+
+<p>When evaluated to the Pkl default pcf you get</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ pkl eval pklTutorialParts.pkl
+pklTutorialPart1 {
+  name = "Basic Configuration"
+  part = 1
+  hasExercises = true
+  amountLearned = 13.37
+  duration = 30.min
+  bandwidthRequirementPerSecond = 52.4288.mb
+}
+pklTutorialPart2 {
+  name = "Filling out a Template"
+  part = 2
+  hasExercises = true
+  amountLearned = 13.37
+  duration = 30.min
+  bandwidthRequirementPerSecond = 52.4288.mb
+}
+pklTutorialPart3 {
+  name = "Writing a Template"
+  part = 3
+  hasExercises = true
+  amountLearned = 13.37
+  duration = 30.min
+  bandwidthRequirementPerSecond = 52.4288.mb
+}
+</code></pre></div></div>
+
+<p>A few notes that the guide was not great at explaining via examples. Pkl does not render a class defintion and every module is a class by default and every <code class="language-plaintext highlighter-rouge">.pkl</code> file is a module. Thus if you do something like the below. You can have a mix of values that have to be set when you amend the module (<code class="language-plaintext highlighter-rouge">name</code> and <code class="language-plaintext highlighter-rouge">part</code>)</p>
+
+<pre><code class="language-pkl">// TutorialPart.pkl
+name: String
+
+part: Int
+
+hasExercises: Boolean = true
+
+amountLearned: Float = 13.37
+
+duration: Duration = 30.min
+
+bandwidthRequirementPerSecond: DataSize = 52.4288.mb
+``
+
+To amend the above you would do ...
+
+```pkl
+amends "TutorialPart.pkl"
+
+name = "Writing a Template"
+
+part = 3
+</code></pre>
+
+<p>And it woud evaluate to …</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ pkl eval pklTutorialPart3.pkl
+name = "Writing a Template"
+part = 3
+hasExercises = true
+amountLearned = 13.37
+duration = 30.min
+bandwidthRequirementPerSecond = 52.4288.mb
+</code></pre></div></div>
+
+<p>Its important to note that amending something never changes its type.</p>
+
+<h3 id="a-new-template">A New Template</h3>
+
+<p>The content below is a full configuration that we are starting with. We will make a template based on this configuration.</p>
+
+<pre><code class="language-pkl">title = "Pkl: Configure your Systems in New Ways"
+interactive = true
+seats = 100
+occupancy = 0.85
+duration = 1.5.h
+`abstract` = """
+  With more systems to configure, the software industry is drowning in repetitive and brittle configuration files.
+  YAML and other configuration formats have been turned into programming languages against their will.
+  Unsurprisingly, they don’t live up to the task.
+  Pkl puts you back in control.
+  """
+
+event {
+  name = "Migrating Birds between hemispheres"
+  year = 2024
+}
+
+instructors {
+  "Kate Sparrow"
+  "Jerome Owl"
+}
+
+sessions {
+  new {
+    date = "2/1/2024"
+    time = 30.min
+  }
+  new {
+    date = "2/1/2024"
+    time = 30.min
+  }
+}
+
+assistants {
+  ["kevin"] = "Kevin Parrot"
+  ["betty"] = "Betty Harrier"
+}
+
+agenda {
+  ["beginners"] {
+    name = "Basic Configuration"
+    part = 1
+    duration = 45.min
+  }
+  ["intermediates"] {
+    name = "Filling out a Template"
+    part = 2
+    duration = 45.min
+  }
+  ["experts"] {
+    name = "Writing a Template"
+    part = 3
+    duration = 45.min
+  }
+}
+</code></pre>
+
+<p>Below is the template we make to create that above configuration (a live workshop class)</p>
+
+<pre><code class="language-pkl">// Workshop.pkl
+
+module Workshop
+
+import "TutorialPart.pkl"
+
+title: String
+
+interactive: Boolean
+
+seats: Int
+
+occupancy: Float
+
+duration: Duration
+
+`abstract`: String
+
+class Event {
+  name: String
+
+  year: Int
+}
+
+event: Event
+
+instructors: Listing&lt;String&gt;
+
+class Session {
+  time: Duration
+
+  date: String
+}
+
+sessions: Listing&lt;Session&gt;
+
+assistants: Mapping&lt;String, String&gt;
+
+agenda: Mapping&lt;String, TutorialPart&gt;
+</code></pre>
+
+<p>The import of <code class="language-plaintext highlighter-rouge">TutorialPart.pkl</code> is importing the code we did in an earlier section (refer to that).</p>
+
+<p>A few notes…</p>
+
+<ul>
+  <li>
+    <p>The reason event is a <code class="language-plaintext highlighter-rouge">class</code> is because unlike the first few properties event has multiple properties thus you need a class.</p>
+  </li>
+  <li>
+    <p>Instructors isn’t an object with properties, but a list of unnamed values. Listing is the type to use for that.</p>
+  </li>
+  <li>
+    <p>Sessions is a listing of objects.</p>
+  </li>
+</ul>
+
+<h2 id="languare-reference-notes">Languare Reference Notes</h2>
+
+<p>Amending means creating a new object that is a copy of original but with the changes made in the amend.</p>
+
+<h3 id="comments">Comments</h3>
+
+<p>Single line</p>
+
+<p><code class="language-plaintext highlighter-rouge">// this is a comment</code></p>
+
+<p>Block comment</p>
+
+<pre><code class="language-pkl">/*
+  Multiline
+  comment
+*/
+</code></pre>
+
+<p>Doc comment (processed by <a href="https://pkl-lang.org/main/current/pkl-doc/index.html">Pkldoc</a>) for more details see <a href="https://pkl-lang.org/main/current/language-reference/index.html#doc-comments">doc comments</a></p>
+
+<pre><code class="language-pkl">/// A *bird* superstar.
+/// Unfortunately, extinct.
+dodo: Bird
+</code></pre>
+
+<h3 id="numbers">Numbers</h3>
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

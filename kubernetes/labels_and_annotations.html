@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Kubernetes Labels and Annotations | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Kubernetes Labels and Annotations" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/kubernetes/labels_and_annotations" />
+<meta property="og:url" content="http://0.0.0.0:4000/kubernetes/labels_and_annotations" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Kubernetes Labels and Annotations" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Kubernetes Labels and Annotations","url":"http://0.0.0.0:4000/kubernetes/labels_and_annotations"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Kubernetes Labels and Annotations</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="what-is-kubectl">What is Kubectl?</h2>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl</code> is the official Kubernetes client. Its a command line tool for interacting with Kubernetes API. It can be used to manage most Kubernetes objects as well as explore and verity the overall health of the cluster.</p>
+
+<h2 id="working-with-namespaces-and-managing-contexts">Working With Namespaces and Managing Contexts</h2>
+
+<p>By default, kubectl tool interacts with the <code class="language-plaintext highlighter-rouge">default</code> namespace. If you want to use a different namespace, you can pass the <code class="language-plaintext highlighter-rouge">--namespace</code> flag for example <code class="language-plaintext highlighter-rouge">kubectl --namespace=mystuff</code></p>
+
+<p>If you want to change the default namespace more permanently you can use a <strong>context</strong>. This gets recorded in a kubectl file usually located at <code class="language-plaintext highlighter-rouge">$HOME/.kube/config</code>.</p>
+
+<p>To create a context with a different default you would run the command <code class="language-plaintext highlighter-rouge">kubectl config set-context my-context --namespace=mystuff</code>.</p>
+
+<p>This will create a new context but does not actually start using it. To use this context you run the command <code class="language-plaintext highlighter-rouge">kubectl config use-context my-context</code>.</p>
+
+<p>Contexts can be used to manage different clusters or different users for authenticating to those clusters using the <code class="language-plaintext highlighter-rouge">--users</code> or <code class="language-plaintext highlighter-rouge">--clusters</code> flags with the <code class="language-plaintext highlighter-rouge">set-context</code> command.</p>
+
+<h2 id="kubectl-display-formats">kubectl display formats</h2>
+
+<p>You can use the <code class="language-plaintext highlighter-rouge">-o wide</code> modifier to get more details (in less human readable format that Kubernetes tries to limit to a single line) when using <code class="language-plaintext highlighter-rouge">get</code> to display resources. You can also use <code class="language-plaintext highlighter-rouge">-o json</code> to get a JSON output which will have full details. Another common task is extracting specific field from the object.  <code class="language-plaintext highlighter-rouge">kubectl</code> uses the JSONPATH query language to select fields int eh returned object. For example</p>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl get pods my-pod -o jsonpath --template={.status.podIP}</code></p>
+
+<h2 id="kubectl-describe">kubectl describe</h2>
+
+<p>If you are interested in details for an object use the command <code class="language-plaintext highlighter-rouge">kubectl describe &lt;resource-name&gt; &lt;obj-name&gt;</code>. This will provide a rich multi line human readable description of the object as well as related objects and events.</p>
+
+<h2 id="checking-cluster-status">Checking cluster status</h2>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl version</code> will display the version of the kubectl tool as well as the version of the server.</p>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl get componentstatuses</code> will give you a quick diagnostic for the cluster.</p>
+
+<h2 id="listing-kubernetes-worker-nodes">Listing Kubernetes worker nodes</h2>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl get nodes</code> lists nodes</p>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl describe nodes node-1</code> Give you details about a node hardware, resource utilizations and pods its running.</p>
+
+<h2 id="creating-updating-and-destroying-kubernetes-objects">Creating, updating, and destroying Kubernetes objects</h2>
+
+<p>Objects in Kubernetes are represented as JSON or YAML files. You can use these YAML or JSON files to create, update or delete object on the Kubernetes server.</p>
+
+<p>If for example you have a simple object stored in <code class="language-plaintext highlighter-rouge">obj.yaml</code>; you can use <code class="language-plaintext highlighter-rouge">kubectl</code> to create this object by running the command <code class="language-plaintext highlighter-rouge">kubectl apply -f obj.yaml</code>. All the details for the object being created will be obtained from the file. if you make changes to the file, you can use the same command to apply those changes. The <code class="language-plaintext highlighter-rouge">apply</code> tool will only modify objects that are different from the current objects in the cluster. If an object already exists it will simply exit successfully without making any changes.</p>
+
+<p>If you want to see what the <code class="language-plaintext highlighter-rouge">apply</code> command will do without making the changes you can use the <code class="language-plaintext highlighter-rouge">--dry-run</code> flag to print the objects to the terminal without sending them to the server.</p>
+
+<p>If you want to make iterative changes instead of editing a local file you can use the command <code class="language-plaintext highlighter-rouge">kubectl edit &lt;resource-name&gt; &lt;obj-name&gt;</code> which will download the latest object state and launch an editor for you. After you save the file, it will be automatically uploaded back to the Kubernetes cluster.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">apply</code> command also records the history of previous configurations in an annotation. You can manipulate these records with the <code class="language-plaintext highlighter-rouge">eit-last-applied</code>, <code class="language-plaintext highlighter-rouge">set-last-applied</code> and <code class="language-plaintext highlighter-rouge">view-last-applied</code> commands. For example <code class="language-plaintext highlighter-rouge">kubectl apply -f myobj.yaml view-last-applied</code> will show you the last state that was applied to the object. The <code class="language-plaintext highlighter-rouge">-f</code> option is to specify the file name.</p>
+
+<p>When you want to delete an object use the command <code class="language-plaintext highlighter-rouge">kubectl delete -f obj.yaml</code>. <strong><em>Note:</em></strong> <code class="language-plaintext highlighter-rouge">kubectl</code> will not prompt for a confirmation before deleting an object. There is however a terminating grace period of 30 seconds by default (At least for Pods need to confirm if for other objects).</p>
+
+<p>When a Pod is transitioned to Terminating state it stops taking request. The grace period allows the Pod to finish any active requests that it may be in the middle of processing before it is terminated. When a Pod is deleted any data in the container is deleted as well.If you need to persist data than you need to use <code class="language-plaintext highlighter-rouge">PersistentVolumes</code></p>
+
+<p>To create a deployment in a non declarative way you can use the command <code class="language-plaintext highlighter-rouge">kubectl create deployment &lt;deployment_name&gt; --image=&lt;image&gt; --replicas=&lt;replica_count&gt;</code> with real values that looks like <code class="language-plaintext highlighter-rouge">kubectl create deployment alpaca-prod --image=gcr.io/kuar-demo/kuard-arm64:blue --replicas=3 --port=8080</code></p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

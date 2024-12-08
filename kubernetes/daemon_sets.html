@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Kubernetes DaemonSets | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Kubernetes DaemonSets" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/kubernetes/daemon_sets" />
+<meta property="og:url" content="http://0.0.0.0:4000/kubernetes/daemon_sets" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Kubernetes DaemonSets" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Kubernetes DaemonSets","url":"http://0.0.0.0:4000/kubernetes/daemon_sets"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Kubernetes DaemonSets</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="what-are-daemonsets">What are DaemonSets</h2>
+
+<p>DaemonSets are a construct that is used to make sure that a Pod is running across a set of nodes in a Kubernetes cluster. DaemonSets are used to deploy daemons such as log collectors and monitoring agents, which typically need to run on every node. You can use labels to run DaemonSet Pods on specific nodes; for example you may want to run special intrusion detection software on nodes that are exposed to the edge network. You can also use DaemonSets to install software on nodes in a cloud-based cluster. If you haver a need to have specific software on every node of your cluster DaemonSets is the way to accomplish this. You can even mount the host filesystem and run scripts that install RPM/DEB packages onto the host operating system. DaemonSets are particularly useful on auto scaled Kubernetes clusters.</p>
+
+<h2 id="daemonset-scheduler">DaemonSet Scheduler</h2>
+
+<p>By default, a DaemonSet will create a copy of a Pod on every node unless a node selector is used, which will limit eligible nodes to those with a matching set of labels. DaemonSets determine which node a Pod will run on at Pod creation time by specifying the <code class="language-plaintext highlighter-rouge">nodeName</code> field in the Pod spec. As a result, Pods created by daemonSets are ignored by the Kubernetes scheduler and are driven by the DaemonSet controller. If a new node is added to the cluster, the DaemonSet controller will notice that it is missing a Pod and will add the Pod to the new node.</p>
+
+<h2 id="creating-daemonsets">Creating DaemonSets</h2>
+
+<p>Below is an example of creating a <code class="language-plaintext highlighter-rouge">fluentd</code> logging agent on every node in the cluster.</p>
+
+<p>DaemonSets require a unique name across all DaemonSets in a given Kubernetes namespace. Each DaemonSet must include a Pod template spec, which will be used to create Pods as needed.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">extensions/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">DaemonSet</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">fluentd</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">fluentd</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">fluentd</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">fluentd</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">fluent/fluentd:v0.14.10</span>
+        <span class="na">resources</span><span class="pi">:</span>
+          <span class="na">limits</span><span class="pi">:</span>
+            <span class="na">memory</span><span class="pi">:</span> <span class="s">200Mi</span>
+          <span class="na">requests</span><span class="pi">:</span>
+            <span class="na">cpu</span><span class="pi">:</span> <span class="s">100m</span>
+            <span class="na">memory</span><span class="pi">:</span> <span class="s">200Mi</span>
+        <span class="na">volumeMounts</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">varlog</span>
+          <span class="na">mountPath</span><span class="pi">:</span> <span class="s">/var/log</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">varlibdockercontainers</span>
+          <span class="na">mountPath</span><span class="pi">:</span> <span class="s">/var/lib/docker/containers</span>
+          <span class="na">readOnly</span><span class="pi">:</span> <span class="no">true</span>
+      <span class="na">terminationGracePeriodSeconds</span><span class="pi">:</span> <span class="m">30</span>
+      <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">varlog</span>
+        <span class="na">hostPath</span><span class="pi">:</span>
+          <span class="na">path</span><span class="pi">:</span> <span class="s">/var/log</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">varlibdockercontainers</span>
+        <span class="na">hostPath</span><span class="pi">:</span>
+          <span class="na">path</span><span class="pi">:</span> <span class="s">/var/lib/docker/containers</span>
+</code></pre></div></div>
+
+<h2 id="limiting-daemonsets-to-specific-nodes">Limiting DaemonSets to specific nodes</h2>
+
+<p>The first step in limiting DaemonSets to specific nodes is to add the desired set of labels to a subset of nodes. This can be achieved using the <code class="language-plaintext highlighter-rouge">kubectl label</code> command. For example the command below adds the <code class="language-plaintext highlighter-rouge">ssd=true</code> label to a single node:</p>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl label nodes k0-default-pool-35609c18-z7tb ssd=true</code></p>
+
+<p>Using a label selector, we can filter nodes based on labels. The command below lists nodes which have the <code class="language-plaintext highlighter-rouge">ssd</code> label set to <code class="language-plaintext highlighter-rouge">true</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl get nodes --selector ssd=true</code></p>
+
+<h3 id="node-selectors">Node selectors</h3>
+
+<p>Node selectors can be used to limit what nodes a Pod can run on in a given Kubernetes cluster. Node selectors are defined as part of the Pod spec when creating a DaemonSet. The DaemonSet configuration in the example below limits NGINX to running only on nodes with the <code class="language-plaintext highlighter-rouge">ssd=true</code> label set.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">extensions/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s2">"</span><span class="s">DaemonSet"</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">nginx</span>
+    <span class="na">ssd</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">nginx-fast-storage</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">nginx</span>
+        <span class="na">ssd</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">nodeSelector</span><span class="pi">:</span>
+        <span class="na">ssd</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
+      <span class="na">containers</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">nginx</span>
+          <span class="na">image</span><span class="pi">:</span> <span class="s">nginx:1.10.0</span>
+</code></pre></div></div>
+
+<p><strong><em>Note:</em></strong> Removing labels from a node that are required by a DaemonSet’s node selector will cause the Pod being managed by that DaemonSet to be removed from the node.</p>
+
+<h2 id="updating-a-daemonset">Updating a DaemonSet</h2>
+
+<p>Prior to Kubernetes 1.6 the only way to update Pods managed by a DaemonSet was to update the DaemonSet and then manually delete each Pod that was managed by the DaemonSet so that it would be recreated with the new configuration. With version 1.6, DaemonSets gained an equivalent to the Deployment object that manages a DaemonSet rollout.</p>
+
+<h3 id="rolling-update-of-a-damonset">Rolling update of a DamonSet</h3>
+
+<p>Daemon sets can be rolled out using the same <code class="language-plaintext highlighter-rouge">RollingUpdate</code> strategy that deployments use. You can configure the update strategy using the <code class="language-plaintext highlighter-rouge">spec.updateStategy.type</code> field, which should have the value <code class="language-plaintext highlighter-rouge">RollingUpdate</code>. When a DaemonSet has an update strategy of <code class="language-plaintext highlighter-rouge">RollingUpdate</code>, any change to the <code class="language-plaintext highlighter-rouge">spec.template</code> field (or subfields) in the DaemonSet will initiate a rolling update.</p>
+
+<p>There are two parameters that control the rolling update of a DaemonSet.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">spec.minReadySeconds</code> - determines how long a Pod must be “ready” before the rolling update proceeds to upgrade subsequent Pods. Its good practice to set this to a reasonable long value of 30 to 60 seconds to make sure the Pod comes up healthy.</li>
+  <li><code class="language-plaintext highlighter-rouge">spec.updateStrategy.rollingUpdate.maxUnavailable</code> - indicates how many Pods may be simultaneously updated by the rolling update. Setting this to 1 is a safe approach as only one node of the cluster at a time will be impacted.</li>
+</ul>
+
+<p>Once a rolling update has started you can use the <code class="language-plaintext highlighter-rouge">kubectl rollout</code> command to see the current status of a DaemonSet rollout. For example <code class="language-plaintext highlighter-rouge">kubectl rollout status daemonSets my-daemon-set</code>.</p>
+
+<h2 id="deleting-a-daemon-set">Deleting a Daemon Set</h2>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl delete -f fluentd.yaml</code></p>
+
+<p><strong><em>Note:</em></strong> Deleting a DaemonSet will also delete all the Pods being managed by that DaemonSet. You can use the <code class="language-plaintext highlighter-rouge">--cascade=false</code> option to prevent that from happening.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

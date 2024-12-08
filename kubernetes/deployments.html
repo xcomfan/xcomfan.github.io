@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Kubernetes Deployments | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Kubernetes Deployments" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/kubernetes/deployments" />
+<meta property="og:url" content="http://0.0.0.0:4000/kubernetes/deployments" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Kubernetes Deployments" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Kubernetes Deployments","url":"http://0.0.0.0:4000/kubernetes/deployments"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Kubernetes Deployments</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="what-are-deployments">What are Deployments</h2>
+
+<p>The Deployment object exists to manage the release of new versions. Deployments enable you to easily move from one version of your code to the next.</p>
+
+<h2 id="deployment-spec">Deployment Spec</h2>
+
+<p>Like with all Kubernetes objects, a deployment can be represented as a declarative YAML object that provides the details about what you want to run. Below is a manifest for a single instance of the <code class="language-plaintext highlighter-rouge">kuard</code> application.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">extensions/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">kuard</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">run</span><span class="pi">:</span> <span class="s">kuard</span>
+    <span class="na">replicas</span><span class="pi">:</span> <span class="m">1</span>
+    <span class="na">template</span><span class="pi">:</span>
+      <span class="na">metadata</span><span class="pi">:</span>
+        <span class="na">labels</span><span class="pi">:</span>
+          <span class="na">run</span><span class="pi">:</span> <span class="s">kuard</span>
+      <span class="na">spec</span><span class="pi">:</span>
+        <span class="na">containers</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">kuard</span>
+          <span class="na">image</span><span class="pi">:</span> <span class="s">gcr.io/kuar-demo/kuard-amd64:blue</span>
+</code></pre></div></div>
+
+<p>To run the deployment specified by the above script you would run the command <code class="language-plaintext highlighter-rouge">kubectl create -f kuard-deployment.yaml</code></p>
+
+<h2 id="deployment-internals">Deployment internals</h2>
+
+<p>Similar to how ReplicaSets manage Pods; deployments manage ReplicaSets. As with all relationships in Kubernetes the deployment to ReplicaSets relationship is defined by labels and a label selector. You can see the label selector by looking at the Deployment object with the below command.</p>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl get deployments kuard -o jsonpath --template {.spec.selector.matchLabels}</code></p>
+
+<p>You can imperatively scale a deployment using the command <code class="language-plaintext highlighter-rouge">kubectl scale deployments kuard --replicas=2</code>.  <strong><em>Note:</em></strong> If you want to take any actions on the ReplicaSets managed by a deployment you need to delete the deployment. Otherwise the self healing nature of Kubernetes will keep taking actions to align the ReplicaSets with the stored specification for the deployment.</p>
+
+<h2 id="creating-deployments">Creating deployments</h2>
+
+<p>As a starting point you can generate the YAML manifest for an imperatively declared deployment to create a declarative one.</p>
+
+<p>To get the deployment as a YAML file use the following command…</p>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl get deployments kuard --export -o yaml &gt; kuard-deployment.yaml</code> followed by <code class="language-plaintext highlighter-rouge">kubectl replace -f kuard-deployment.yaml --save-config</code></p>
+
+<p>The reason you need to run the second command (with –save-config) is that it adds an annotation so that when applying changes in the future, kubectl will know what the last applied configuration was for smarter merging of conflicts. If you always use <code class="language-plaintext highlighter-rouge">kubectl apply</code>, this step is only required after the fist time you create a deployment using <code class="language-plaintext highlighter-rouge">kubectl create -f</code>.</p>
+
+<p>The deployment spec has a very similar structure to the ReplicaSet sepc. There is a Pod template which contains a number of containers that are created for each replica managed by the deployment. In addition to the Pod specification, there is also a <code class="language-plaintext highlighter-rouge">strategy</code> object.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">...</span>
+<span class="na">strategy</span><span class="pi">:</span>
+  <span class="na">rollingUpdate</span><span class="pi">:</span>
+    <span class="na">maxSurge</span><span class="pi">:</span> <span class="m">1</span>
+    <span class="na">maxUnavailable</span><span class="pi">:</span> <span class="m">1</span>
+  <span class="na">type</span><span class="pi">:</span> <span class="s">RollingUpdate</span>
+<span class="nn">...</span>
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">strategy</code> object dictates the different ways in which a rollout of the new software can proceed. There are two strategies supported: <code class="language-plaintext highlighter-rouge">Recreate</code> and <code class="language-plaintext highlighter-rouge">RollingUpdate</code></p>
+
+<h2 id="managing-deployments">Managing deployments</h2>
+
+<p>To get information about a deployment use the command similar to <code class="language-plaintext highlighter-rouge">kubectl describe deployments kuard</code></p>
+
+<p>From the output of the above command, two of the most important pieces of information are <code class="language-plaintext highlighter-rouge">OldReplicaSets</code> and <code class="language-plaintext highlighter-rouge">NewReplicaSets</code>. These fields point to the ReplicaSet object this deployment is currently managing. if a deployment is in the middle of a rollout, both fields will be set to a value. If a rollout is complete, <code class="language-plaintext highlighter-rouge">OldReplicaSets</code> will be set to <code class="language-plaintext highlighter-rouge">&lt;none&gt;</code>.</p>
+
+<p>You can also use the command <code class="language-plaintext highlighter-rouge">kubectl rollout history</code> to obtain the history of rollouts associated with a particular deployment. If you have a current deployment in progress you can use <code class="language-plaintext highlighter-rouge">kubectl rollout status</code> to obtain the current status of a rollout.</p>
+
+<h3 id="scaling-a-deployment">Scaling a deployment</h3>
+
+<p>To scale up a deployment, you would edit your YAML file to increase the number of replicas. Once you have saved and committed the change, you can use the <code class="language-plaintext highlighter-rouge">kubectl apply</code> command to put it into effect.</p>
+
+<h3 id="updating-a-container-image">Updating a container image</h3>
+
+<p>Updating a container is also an update to a YAML file and a <code class="language-plaintext highlighter-rouge">kubectl apply</code> command call. It is a good idea to add an annotation to the deployment to record some information about the update.  Make sure to add this annotation to the template and not the deployment in the YAML file as <code class="language-plaintext highlighter-rouge">kubectl apply</code> command uses the field in the Deployment object. Also do not update the <code class="language-plaintext highlighter-rouge">change-cause</code> annotation when scaling as a change to that annotation will trigger a new rollout.</p>
+
+<p>Once you make the change and call <code class="language-plaintext highlighter-rouge">kubectl apply</code> you can monitor the rollout via the <code class="language-plaintext highlighter-rouge">kubectl rollout</code> command.</p>
+
+<p>If you are in the middle of a rollout and you want to temporarily pause the rollout (if you are seeing issues and want to investigate for example) you can use the command similar to <code class="language-plaintext highlighter-rouge">kubectl rollout pause deployments kuard</code>. To resume the rollout use <code class="language-plaintext highlighter-rouge">kubectl rollout resume deployments kuard</code>.</p>
+
+<h3 id="rollout-history">Rollout history</h3>
+
+<p>You can see the deployment history by running the command <code class="language-plaintext highlighter-rouge">kubectl rollout histoyr deployment kuard</code> If you are interested in more details about a particular revision, you can add the <code class="language-plaintext highlighter-rouge">--revision</code> flag as in <code class="language-plaintext highlighter-rouge">kubectl rollout history deployment kuard --revision=2</code></p>
+
+<p>If you need to undo a rollout to the prior version you can use the command <code class="language-plaintext highlighter-rouge">kubectl rollout undo deployment kuard</code>.The undo command works regardless of the state of the rollout. You can undo both partially completed and fully completed rollouts. <strong><em>Note</em></strong>: This is the imperative approach. The preferred declarative way is to update the YAML file to the version you are rolling back to and run that deployment.</p>
+
+<p>By default the revision history of a deployment is kept attached to the Deployment object. If you have deployment that you plan to keep for a long time and you make frequent updates you should limit the revision history. You can do this by setting the <code class="language-plaintext highlighter-rouge">revisionHistoryLimit</code> property in the deployment specification.</p>
+
+<h2 id="deployment-strategies">Deployment Strategies</h2>
+
+<p>As mentioned prior, Kubernetes supports two different rollout strategies, <code class="language-plaintext highlighter-rouge">Recreate</code> and <code class="language-plaintext highlighter-rouge">RollingUpdate</code></p>
+
+<h3 id="recreate-strategy">Recreate Strategy</h3>
+
+<p>The recreate strategy simply updates the ReplicaSet it manages to us the new image and terminates all of the Pods associated with the deployment. The ReplicaSet notices that it no longer has any replicas, and re-creates all Pods using the new image. Once the pods are re-created, they are running the new version. This strategy will almost certainly result in some downtime. Its typically uses for test deployments.</p>
+
+<h3 id="rollingupdate-strategy">RollingUpdate strategy</h3>
+
+<p>RollingUpdate can be used to roll out a new version of your service while it is still receiving user traffic, without any downtime. It works by updating a few Pods at a time until all of the Pods are running the new version of your software.</p>
+
+<p>This means that for a period of time, both the new and the old version of your service will be receiving and serving traffic. The software you are deploying needs to support this state.</p>
+
+<h4 id="configuring-a-rolling-update">Configuring a rolling update</h4>
+
+<p>There are two parameters you can use to tune the rolling update behavior; <code class="language-plaintext highlighter-rouge">maxUnavailable</code> and <code class="language-plaintext highlighter-rouge">maxSurge</code>.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">maxUnavailable</code> parameter sets the maximum number of Pods that can be unavailable during a rolling update. It can either be set to an absolute number (3 for example meaning maximum of 3 Pods can be unavailable) or as a percentage (20% meaning a maximum of 20% of the desired number of replicas can be unavailable). Generally you would use percentage, but setting hard value of 1 lets you deploy one Pod at a time.</p>
+
+<p>Using reduced capacity is one option of doing a deployment, but it may not always be a valid option (if you do not have dips in traffic for example). The other option is to create extra instances and take out the old ones which is done with the <code class="language-plaintext highlighter-rouge">maxSurge</code> parameter. The <code class="language-plaintext highlighter-rouge">maxSurge</code> parameter controls how many extra resources can be created to achieve a rollout. For example you can set <code class="language-plaintext highlighter-rouge">maxUnavailable</code> to 0 and <code class="language-plaintext highlighter-rouge">maxSurge</code> to 20%. The rolling update will scale up by 20% first then start removing the old instances.</p>
+
+<p>Setting <code class="language-plaintext highlighter-rouge">maxSurge</code> to 100% is equivalent to a blue/green deployment. The deployment controller first scales the new version to 100% of the old version. Once the new version is healthy, it immediately scales the old version down to 0%</p>
+
+<h4 id="slowing-rollouts-to-ensure-service-health">Slowing rollouts to ensure service health</h4>
+
+<p>The deployment controller examines the Pod’s status with readiness checks. If you want to use deployments to reliably roll out your service you must implement health checks for the containers in your Pod. Without these checks deployment controller is running blind.</p>
+
+<p>Just because a pod comes up healthy does not mean it does not have any issues. Memory leaks or low frequency bugs can take some time to be noticed. In most real world scenarios you want to wait some time before moving on to the next Pod. For deployments this time to wait can be defined by the <code class="language-plaintext highlighter-rouge">minReadySeconds</code> parameter. Setting <code class="language-plaintext highlighter-rouge">minReadySeconds</code> to 60 means a deployment has to wait for 60 seconds after a Pod comes up healthy until it moves on to the next one.</p>
+
+<p>You also want to set a timeout for the rollout should you have a scenario where Pods are just not coming up healthy. If you are using automated system to deploy a timeout is a good place to fire off a ticket and roll back the deployment. To set a timeout use the <code class="language-plaintext highlighter-rouge">progressDeadlineSeconds</code> parameter. Its important to note that his setting is for deployment progress not the overall length of a deployment. Every time the deployment creates or deletes a Pod the clock is reset for the timeout.</p>
+
+<h2 id="deleting-a-deployment">Deleting a Deployment</h2>
+
+<p>To imperatively delete a deployment ue the command similar to <code class="language-plaintext highlighter-rouge">kubectl delete deployment kuard</code>. To declaratively delete a deployment <code class="language-plaintext highlighter-rouge">kubectl delete -f kuard-deployment.yaml</code>.</p>
+
+<p>Deleting a deployment deletes the entire service including the ReplicaSets and Pods. If you want to leave those intact you can use the <code class="language-plaintext highlighter-rouge">--cascade=false</code> option to only delete the Deployment object.</p>
+
+<h2 id="monitoring-a-deployment">Monitoring a deployment</h2>
+
+<p>The status of a deployment can be obtained from the <code class="language-plaintext highlighter-rouge">status.conditions.array</code> where there will be a <code class="language-plaintext highlighter-rouge">Condition</code> whose <code class="language-plaintext highlighter-rouge">Type</code> is <code class="language-plaintext highlighter-rouge">Progressing</code> and whose <code class="language-plaintext highlighter-rouge">Status</code> is <code class="language-plaintext highlighter-rouge">False</code>. A deployment in such a state has failed and will not progress further.  How long you should wait for this state is controlled by the <code class="language-plaintext highlighter-rouge">spec.progressDeadlineSeconds</code> property.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

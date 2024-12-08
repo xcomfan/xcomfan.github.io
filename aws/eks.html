@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>AWS EKS | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="AWS EKS" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/aws/eks" />
+<meta property="og:url" content="http://0.0.0.0:4000/aws/eks" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="AWS EKS" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"AWS EKS","url":"http://0.0.0.0:4000/aws/eks"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">AWS EKS</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="random-notes-from-doc-review">Random notes from doc review</h2>
+
+<p>The control plane positions at least two API server instances and three etcd instances across three AWS Availability Zones within an AWS Region. If a control plane instance falters, Amazon EKS quickly replaces it using different Availability Zone if needed.</p>
+
+<p>EKS Cluster components can’t view or receive communication from other clusters or AWS accounts, except when authorized by Kubernetes role based access control (RBAC) policies.</p>
+
+<p>Kubernetes control plane components</p>
+
+<ul>
+  <li>
+    <p>API server (kube-apiserver) - exposes the Kubernetes API so requests to the cluster can be made from both inside and outside of the cluster. For example both kubectl and kubelet talk to the API server one to issue commands adn the other to check for status of a pod.</p>
+  </li>
+  <li>
+    <p>etcd key value store - etcd is used to keep track of the current state of the cluster. If <code class="language-plaintext highlighter-rouge">etcd</code> service becomes unavailable, you would be unable to update or query the status of the cluster (though workloads can run for a while). Critical clusters typically have multiple load-balanced instances of the <code class="language-plaintext highlighter-rouge">etcd</code> service running and do periodic backups <code class="language-plaintext highlighter-rouge">etcd</code> key value contents.</p>
+  </li>
+  <li>
+    <p>Scheduler - Scheduler determines which node or nodes for replicas should run a pod. If resources to run a pod are not available the request will fail unless you made other provisions such as Managed Node Groups or Karpenter that can automatically start up new nodes to handle the workloads.</p>
+  </li>
+  <li>
+    <p>Controller Manager - The Controller Manger runs a daemon process (kube-controller-manager) to watch the state of the cluster and make changes to the cluster to re-establish the expected states. There are several controllers that watch over different Kubernetes objects which include <code class="language-plaintext highlighter-rouge">node-lifecycle-controller</code>, <code class="language-plaintext highlighter-rouge">statefulset-controller</code>, <code class="language-plaintext highlighter-rouge">endpoint-controller</code>, <code class="language-plaintext highlighter-rouge">cronjob-controller</code> as well as others.</p>
+  </li>
+  <li>
+    <p>Cloud Controller Manager - Interactions between Kubernetes and the cloud provider that carries out requests for the underlying data center resources are handled by the Cloud Controller manger. Controllers managed by the Cloud Controller Manager can include a route controller (for setting up network routes), service controller (for using cloud load balancing services), and node controller (for using cloud APIs to keep Kubernetes nodes in sync with cloud nodes)</p>
+  </li>
+</ul>
+
+<p>Worker nodes are what we call the data plan.  Components in the data plane are as follows</p>
+
+<ul>
+  <li>
+    <p>kubelet - Each node runs kubelet which is what the API server communicates with to make sure node is properly registered and pods requested by the scheduler are running. Kubelet can read the Pod manifests and set up storage volumes or other features needed by the Pods on the local system. It can also check on health of locally running containers.</p>
+  </li>
+  <li>
+    <p>container runtime - The Container Runtime is responsible for pulling container images from appropriate registry, start/stop the container and respond to queries about the container. The default as of Kubernetes 1.24 is <code class="language-plaintext highlighter-rouge">containerd</code> You can optionally install Docker if you want.</p>
+  </li>
+  <li>
+    <p>kube-proxy - kube-proxy is responsible for communication between Pods using Services.  Kubernetes needs a way to set up Pod networks to track IP addresses and ports associated with those Pods. The kube-proxy service runs on every node to allow that communication between Pods to take place.</p>
+  </li>
+</ul>
+
+<p>A Kubernetes workload is just an application running on Kubernetes. This can be containers running in Pods or a batch job.</p>
+
+<p>Besides docker other tools that you an use the build container are <code class="language-plaintext highlighter-rouge">podman</code> and <code class="language-plaintext highlighter-rouge">nerdctl</code>.</p>
+
+<p>A Persistent Volume will stay after Pod is deleted, while an Ephemeral Volume is deleted when the Pod is deleted. A cluster admin can create different StorageClasses for your cluster which you can choose via attributes.</p>
+
+<p>Pods can be disrupted involuntarily (a node goes down) or voluntarily (an update is desired). You can configure a Pod dsruption budget to have some control over how available your application remains when disruptions occur.</p>
+
+<p>The ability for traffic that originates somewhere else to reach your nodes is called <strong>ingress</strong>. Traffic that originates from the nodes and leaves the network is called <strong>egress</strong>.</p>
+
+<p>When creating a VPC there are 3 sets of subnets you should consider creating.</p>
+
+<ol>
+  <li>Subnet for servers that will receive traffic from clients on the internet</li>
+  <li>Subnet for servers that will receive traffic only from other servers in the VPC</li>
+  <li>Subnet for servers that will receive traffic only though a VPN connection to your network.</li>
+</ol>
+
+<p>If your application will receive traffic from the internet, the VPC must have an internet gateway. Attaching an internet gateway to a VPC does not make your instnaces accessible from the internet. In addition to attaching the internet gateway you must update the subnet route toble with a route to the internet gateway. You must also ensure that the instances have public IP addresses and an associated security group that allows traffic from the internet over specific ports and protocols required by your applications.</p>
+
+<p>If you want to talk to outside world for patches, but not have inbound traffic you need to run a NAT gateway.</p>
+
+<p>The allowed block size for a VPC CIDR block is between a /16 netmask (65,536 IP addresses) or a /25 (16 IP addresses).</p>
+
+<p>While RFC1918 reserves the below for private networks avoid using the 172.16 one as that is used by some AWS services such as sage maker and you may get IP conflicts.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>10.0.0.0        -   10.255.255.255  (10/8 prefix)
+172.16.0.0      -   172.31.255.255  (172.16/12 prefix)
+192.168.0.0     -   192.168.255.255 (192.168/16 prefix)
+</code></pre></div></div>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Open Telemetry | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Open Telemetry" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/otel" />
+<meta property="og:url" content="http://0.0.0.0:4000/otel" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Open Telemetry" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Open Telemetry","url":"http://0.0.0.0:4000/otel"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Open Telemetry</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="working-my-way-through-the-otel-demo">Working My Way Through The OTEL demo</h2>
+
+<h3 id="questions">Questions</h3>
+
+<p>[ ] What is gRPC and why are we using it here?</p>
+
+<h2 id="ad-hoc-notes">Ad-hoc Notes</h2>
+
+<ul>
+  <li>
+    <p><strong>MELT</strong> = <strong>M</strong>etrics <strong>E</strong>vents <strong>L</strong>ogs and <strong>T</strong>races</p>
+  </li>
+  <li>Span context consists of the below in addition to info needed to identify current span and trace.
+    <ul>
+      <li>Trace ID</li>
+      <li>Span ID</li>
+      <li>Trace Flags</li>
+      <li>Trace State</li>
+    </ul>
+  </li>
+  <li>Correlation Context is optional and is made up of things such as …
+    <ul>
+      <li>Customer ID</li>
+      <li>Host Name</li>
+      <li>Region</li>
+      <li>Other application specific performance insights</li>
+    </ul>
+  </li>
+  <li>
+    <p>Propagation is the mechanism used to bundle up the context and transfer it among services.</p>
+  </li>
+  <li>Combined propagation nd context combine the engine behind distributed tracing.</li>
+</ul>
+
+<h2 id="freecodecamp-course-notes">FreeCodeCamp Course Notes</h2>
+
+<p><a href="https://youtu.be/r8UvWSX3KA8?si=elB3iPN508vZP-CQ">Course Link</a></p>
+
+<h2 id="documentation-notes">Documentation Notes</h2>
+
+<p>PLACEHOLDER</p>
+
+<h2 id="udemy-course-notes">Udemy Course Notes</h2>
+
+<p>Main differences between monitoring and observability are …</p>
+
+<ul>
+  <li>Monitoring can do metrics and logs but observability can also do tracing.</li>
+  <li>Monitoring uses static threshold but observability can do automatic thresholds.</li>
+  <li>Observability can help you find the underlying cause of an alert while monitoring will just alert.</li>
+</ul>
+
+<p>Otel collects …</p>
+
+<ul>
+  <li>Metrics - Point in time values</li>
+  <li>Logs</li>
+  <li>Traces</li>
+  <li>Baggage</li>
+</ul>
+
+<p>Collector is a proxy server that collects the data, processes it and sends it to a backend of your choice.</p>
+
+<h3 id="metrics">Metrics</h3>
+
+<p>If you are going to collect metrics in Otel you need to initialize a <strong>Meter Provider</strong>. This is typically done once globally and the application uses this single Meter Provider to create Meters (Thing of the Meter Provider as a Meter Factory). The <strong>Metric Exporter</strong> send the metrics to either a collector or a back end.</p>
+
+<p>Otel has support for the following metrics types</p>
+
+<ul>
+  <li>
+    <p>Counter - only increases (get reset when application is restarted)</p>
+  </li>
+  <li>
+    <p>Asynchronous Counter - Like a counter, but collected at regular intervals instead of being directly emitted by application code. Collected once per period (once every 2 minutes for example)</p>
+  </li>
+  <li>
+    <p>UpDownCounter - Can be incremented or decremented. Useful for tracking numbers that go up and down such as current memory usage or number of active connections.</p>
+  </li>
+  <li>
+    <p>Async UpDownCounter - Like UpDownCounter but updated asynchronously. Useful for values that fluctuate over time and need to be sampled at regular intervals.</p>
+  </li>
+  <li>
+    <p>Gauge - Unlike counters are not cumulative. Can be used for current CPU/Memory usage.</p>
+  </li>
+  <li>
+    <p>Histogram - Measures observations and counts them in configurable buckets. Used for understanding performance characteristics of your application.</p>
+  </li>
+</ul>
+
+<p>In the demo application the monitor/observability solutions used are</p>
+
+<ul>
+  <li>Prometheus for metrics</li>
+  <li>Jaeger for traces</li>
+  <li>OpenSearch for logs</li>
+</ul>
+
+<h3 id="traces">Traces</h3>
+
+<p>Just like a Metric Providers, Traces need a <strong>Tracer</strong> that is generated from a <strong>Tracer Provider</strong> which is like a factory for Tracers. The Tracers then generate spans which once generated are exported using the <strong>Trace Exporter</strong>.</p>
+
+<p>Span is a unit for work and there are 9 pieces of information collected in a Span.</p>
+
+<ul>
+  <li>Name</li>
+  <li>Span Context
+    <ul>
+      <li>Trace ID: Full request path id</li>
+      <li>Span ID: this span’s id</li>
+      <li>Trace Flags: Sampled?</li>
+      <li>Trace State: Custom vendor-info</li>
+    </ul>
+  </li>
+  <li>Parent Span ID</li>
+  <li>Start and End Timestamps</li>
+  <li>Attributes
+    <ul>
+      <li>Server Info</li>
+      <li>Process Info</li>
+      <li>OTel Info</li>
+      <li>Custom Info</li>
+    </ul>
+  </li>
+  <li>Span Events - Any info you want to pass with the span</li>
+  <li>Span Links - Associate spans in async transactions</li>
+  <li>Span Status - Values can be unset, error or OK. Unset means completed successfully. OK means completed successfully but the status is set explicitly by a developer.</li>
+  <li>Span Kind - Values can be client, server, internal, producer, consumer</li>
+</ul>
+
+<h2 id="collector-configuration">Collector Configuration</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">config.yaml</code> file has the following structure</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>receivers:
+
+processors:
+
+extensions:
+
+service:
+  extensions:
+  pipelines:
+  metrics:
+  logs:
+  traces:
+</code></pre></div></div>
+
+<p>We will dive into these sections below…</p>
+
+<h3 id="receivers">receivers</h3>
+
+<p>Responsible for receiving telemetry data which comes from instrumentation. Some receivers are capable of fetching data instead of listening for it. Some example receivers are OTLP, Prometheus, Jaeger.</p>
+
+<h3 id="processors">processors</h3>
+
+<p>Processors modify the received data. They can add/modify/remove data from collected/received data based on the processor settings. For example batch processor batches the data into batches to help compress it and reduce the number of connections. Some examples of processors are Batch, Memory Limiter, Attributes, Cumulative to Delta, Metrics Generation. Processors can receive data from one or more pipelines.</p>
+
+<h3 id="exporters">exporters</h3>
+
+<p>Exporters send the process data to a desired location. This can be directly to an observability back end, another collector (if its a Gateway collector), or to a log file. Most exporters require some level of configuration. Some examples of exporters are Debug (send data to standard out), OTLP gRPC, OTLP HTTP, Prometheus, Jaeger, Elasticsearch. Also can receive data from multiple pipelines.</p>
+
+<h3 id="extensions">extensions</h3>
+
+<p>Used by the collector to collect additional data. Allow you to expand what the collector does. For example health_check extension will add an HTTP endpoint that allows you to check status of the collector. The <code class="language-plaintext highlighter-rouge">pprof</code> extension allows for performance profiling of the collector. <code class="language-plaintext highlighter-rouge">zpages</code> extension provides in process page that allows you to see tracing debug data.</p>
+
+<h3 id="services">services</h3>
+
+<p>Enables components from the receivers, processors and exporters sections. If its listed in the other sections, but not in the services section it is not enabled.</p>
+
+<h4 id="extensionsservice">extensions(service)</h4>
+
+<h4 id="pipelines">pipelines</h4>
+
+<p>Connects the receivers, processors and exporters into a pipeline. For example is you have receiver 1 and 2 metrics received from receiver 1 can be sent to processor 1 and exported via exporter 2. We can build pipelines for metrics, logs and traces.</p>
+
+<p>Here is a sample configuration. Where trace data comes though otlp, opencensus, jaeger, and zipkin. Gets batched and exported to a debug log file.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
+  <span class="na">pipelines</span><span class="pi">:</span>
+    <span class="na">traces</span><span class="pi">:</span>
+      <span class="na">receivers</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">otlp</span><span class="pi">,</span> <span class="nv">opencensus</span><span class="pi">,</span> <span class="nv">jaeger</span><span class="pi">,</span> <span class="nv">zipkin</span><span class="pi">]</span>
+      <span class="na">processors</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">batch</span><span class="pi">]</span>
+      <span class="na">exporters</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">debug</span><span class="pi">]</span>
+
+    <span class="na">metrics</span><span class="pi">:</span>
+      <span class="na">receivers</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">otlp</span><span class="pi">,</span> <span class="nv">opencensus</span><span class="pi">,</span> <span class="nv">prometheus</span><span class="pi">]</span>
+      <span class="na">processors</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">batch</span><span class="pi">]</span>
+      <span class="na">exporters</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">debug</span><span class="pi">]</span>
+
+    <span class="na">logs</span><span class="pi">:</span>
+      <span class="na">receivers</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">otlp</span><span class="pi">]</span>
+      <span class="na">processors</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">batch</span><span class="pi">]</span>
+      <span class="na">exporters</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">debug</span><span class="pi">]</span>
+
+  <span class="na">extensions</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">health_check</span><span class="pi">,</span> <span class="nv">pprof</span><span class="pi">,</span> <span class="nv">zpages</span><span class="pi">]</span>
+</code></pre></div></div>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -9,16 +9,16 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://localhost:4000/python/objects" />
-<meta property="og:url" content="http://localhost:4000/python/objects" />
+<link rel="canonical" href="http://0.0.0.0:4000/python/objects" />
+<meta property="og:url" content="http://0.0.0.0:4000/python/objects" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Python Dictionaries" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Python Dictionaries","url":"http://localhost:4000/python/objects"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Python Dictionaries","url":"http://0.0.0.0:4000/python/objects"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
@@ -43,109 +43,819 @@
   </header>
 
   <div class="post-content">
-    <h2 id="creating-a-dictionary">Creating a Dictionary</h2>
+    <h2 id="what-are-enumerations">What are enumerations?</h2>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">bob1</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'Bob'</span><span class="p">,</span> <span class="n">job</span><span class="o">=</span><span class="s">'dev'</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">bob1</span>
-<span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'Bob'</span><span class="p">,</span> <span class="s">'job'</span><span class="p">:</span> <span class="s">'dev'</span><span class="p">,</span> <span class="s">'age'</span><span class="p">:</span> <span class="mi">40</span><span class="p">}</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">bob2</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">([</span><span class="s">'name'</span><span class="p">,</span><span class="s">'job'</span><span class="p">,</span><span class="s">'age'</span><span class="p">],[</span><span class="s">'Bob'</span><span class="p">,</span><span class="s">'dev'</span><span class="p">,</span><span class="mi">40</span><span class="p">]))</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">bob2</span>
-<span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'Bob'</span><span class="p">,</span> <span class="s">'job'</span><span class="p">:</span> <span class="s">'dev'</span><span class="p">,</span> <span class="s">'age'</span><span class="p">:</span> <span class="mi">40</span><span class="p">}</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">dict</span><span class="p">([(</span><span class="s">'name'</span><span class="p">,</span><span class="s">'Bob'</span><span class="p">),</span> <span class="p">(</span><span class="s">'age'</span><span class="p">,</span><span class="mi">40</span><span class="p">)])</span>
-<span class="p">{</span><span class="s">'name'</span><span class="p">:</span> <span class="s">'Bob'</span><span class="p">,</span> <span class="s">'age'</span><span class="p">:</span> <span class="mi">40</span><span class="p">}</span>
-</code></pre></div></div>
+<p>You can think of an enum as a set of constants. They are useful for defining immutable discrete values such as days of the week, months, seasons, program status codes etc. Enumeration allows you to group these numeric constants and assign them readable and descriptive names that you can use and reuse in your code.</p>
 
-<h2 id="avoiding-error-on-missing-key">Avoiding error on missing key</h2>
+<p>The <code class="language-plaintext highlighter-rouge">enum</code> module which provides the <code class="language-plaintext highlighter-rouge">Enum</code> class, is available as part of the Python standard library as of Python 3.4. A <code class="language-plaintext highlighter-rouge">enum34</code> backport is available if you are on an version of Python prior to 3.4.</p>
 
-<h3 id="using-get-method">Using get method</h3>
+<p>From PEP 435:</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">D</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">A</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">D</span>
-<span class="p">{</span><span class="s">'A'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">'B'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">'C'</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="c1"># get returns None by default
-</span><span class="o">&gt;&gt;&gt;</span> <span class="n">value</span> <span class="o">=</span> <span class="n">D</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'X'</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-<span class="bp">None</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="c1"># you can use a default value with get
-</span><span class="o">&gt;&gt;&gt;</span> <span class="n">D</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'X'</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
-<span class="mi">0</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="c1"># manual way to set default
-</span><span class="o">&gt;&gt;&gt;</span> <span class="n">value</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="s">'X'</span><span class="p">]</span> <span class="k">if</span> <span class="s">'X'</span> <span class="ow">in</span> <span class="n">D</span> <span class="k">else</span> <span class="mi">0</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">value</span>
-<span class="mi">0</span>
-</code></pre></div></div>
+<blockquote>
+  <p>An enumeration is a set of symbolic names bound to unique constant values. Within an enumeration, the values can be compared by identity, and the enumeration itself can be iterated over.</p>
+</blockquote>
 
-<h3 id="using-defaltdict-from-collections-module">Using defaltdict from collections module</h3>
+<p>Benefits of using enumerators are…</p>
 
-<p>You can use a default dict and pass a function to the constructor for generating a default value.</p>
+<ul>
+  <li>Conveniently grouping related constants</li>
+  <li>Allowing for additional behavior with custom methods</li>
+  <li>Providing quick and flexible access to enum members</li>
+  <li>Enabling direct iteration over members</li>
+  <li>Facilitate code completion</li>
+  <li>Enabling type and error checking with static checkers</li>
+  <li>Providing hub of searchable names</li>
+  <li>Mitigating spelling mistakes</li>
+  <li>Ensure constant values</li>
+  <li>Guarantee type safety by differentiating the same value shared across several <code class="language-plaintext highlighter-rouge">enums</code></li>
+  <li>Improving readability and maintainability by using descriptive names instead of mysterious values or magic numbers</li>
+  <li>Providing a single source of truth though the code</li>
+</ul>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">d</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="n">gen_default_value</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">d</span><span class="p">[</span><span class="s">"a"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-<span class="n">defaultdict</span><span class="p">(</span><span class="o">&lt;</span><span class="n">function</span> <span class="n">gen_default_value</span> <span class="n">at</span> <span class="mh">0x7fa949dd9510</span><span class="o">&gt;</span><span class="p">,</span> <span class="p">{</span><span class="s">'a'</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s">"x"</span><span class="p">])</span>
-<span class="n">my</span> <span class="n">default</span> <span class="n">value</span>
-</code></pre></div></div>
+<h2 id="creating-enumerations">Creating Enumerations</h2>
 
-<p>You an also use a lambda shorthand to avoid defining the default function</p>
+<p>A classic use case of enums is creating a set of enumerated constants such as days of the week where each day has a name and a value. Because enumerations values must be constants, Python doesn’t allow you to assign new values to members at runtime. This is why the members in example below are capitalized as they are constants.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">l_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="s">'my default value'</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">l_dct</span><span class="p">[</span><span class="s">'abc'</span><span class="p">]</span>
-<span class="s">'my default value'</span>
-</code></pre></div></div>
-
-<p>There are build in generators</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="c1"># The default is 0
-</span><span class="n">a_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="c1"># the default is 0.0
-</span><span class="n">a_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="c1"># the default is ""
-</span><span class="n">a_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span> <span class="c1"># the default is []
-</span><span class="n">a_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">tuple</span><span class="p">)</span> <span class="c1"># the default is ()
-</span><span class="n">a_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span> <span class="c1"># the default is False
-</span><span class="n">a_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span> <span class="c1"># the default is set()
-</span><span class="n">a_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">frozenset</span><span class="p">)</span> <span class="c1"># the default frozenset()
-</span><span class="n">a_dct</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span> <span class="c1"># the default is {}
-</span></code></pre></div></div>
-
-<h2 id="dictionary-operations">Dictionary Operations</h2>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">DC</span> <span class="o">=</span> <span class="p">{</span><span class="s">'Batman'</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s">'Superman'</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s">'Wonder Woman'</span><span class="p">:</span><span class="mi">3</span><span class="p">}</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Get dictionary values as a list
-</span><span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">DC</span><span class="p">.</span><span class="n">values</span><span class="p">())</span>
-<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="n">DC</span><span class="p">.</span><span class="n">values</span><span class="p">())</span>
-<span class="o">&lt;</span><span class="k">class</span> <span class="err">'</span><span class="nc">dict_values</span><span class="s">'&gt;
-
-&gt;&gt;&gt; # Get all items in dictionary as a list
-&gt;&gt;&gt; list(DC.items())
-[('</span><span class="n">Batman</span><span class="s">', 1), ('</span><span class="n">Superman</span><span class="s">', 2), ('</span><span class="n">Wonder</span> <span class="n">Woman</span><span class="s">', 3)]
-&gt;&gt;&gt; type(DC.items())
-&lt;class '</span><span class="n">dict_items</span><span class="s">'&gt;
-
-&gt;&gt;&gt; Marvel = {'</span><span class="n">Hulk</span><span class="s">':1, '</span><span class="n">Iron</span> <span class="n">Man</span><span class="s">':2, '</span><span class="n">Captain</span> <span class="n">America</span><span class="s">':3}
-&gt;&gt;&gt; # Concatenate dictionaries
-&gt;&gt;&gt; DC.update(Marvel)
-&gt;&gt;&gt; DC
-{'</span><span class="n">Batman</span><span class="s">': 1, '</span><span class="n">Superman</span><span class="s">': 2, '</span><span class="n">Wonder</span> <span class="n">Woman</span><span class="s">': 3, '</span><span class="n">Hulk</span><span class="s">': 1, '</span><span class="n">Iron</span> <span class="n">Man</span><span class="s">': 2, '</span><span class="n">Captain</span> <span class="n">America</span><span class="s">': 3}
-
-&gt;&gt;&gt; # Remove single item by key
-&gt;&gt;&gt; DC.pop('</span><span class="n">Wonder</span> <span class="n">Woman</span><span class="s">')
-3 # the value is returned when you pop
-&gt;&gt;&gt; DC
-{'</span><span class="n">Batman</span><span class="s">': 1, '</span><span class="n">Superman</span><span class="s">': 2, '</span><span class="n">Hulk</span><span class="s">': 1, '</span><span class="n">Iron</span> <span class="n">Man</span><span class="s">': 2, '</span><span class="n">Captain</span> <span class="n">America</span><span class="s">': 3}
-</span></code></pre></div></div>
-
-<h2 id="iterate-over-key-values-pairs-of-a-dictionary">Iterate over key values pairs of a dictionary</h2>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">DC</span> <span class="o">=</span> <span class="p">{</span><span class="s">'Batman'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">'Superman'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">'Hulk'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">'Iron Man'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s">'Captain America'</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">DC</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
-<span class="p">...</span>   <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'key is </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s"> value is </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Day</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">MONDAY</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="n">TUESDAY</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="p">...</span>   <span class="n">WEDNESDAY</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">...</span>   <span class="n">THURSDAY</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="p">...</span>   <span class="n">FRIDAY</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="p">...</span>   <span class="n">SATURDAY</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="p">...</span>   <span class="n">SUNDAY</span> <span class="o">=</span> <span class="mi">7</span>
 <span class="p">...</span>
-<span class="n">key</span> <span class="ow">is</span> <span class="n">Batman</span> <span class="n">value</span> <span class="ow">is</span> <span class="mi">1</span>
-<span class="n">key</span> <span class="ow">is</span> <span class="n">Superman</span> <span class="n">value</span> <span class="ow">is</span> <span class="mi">2</span>
-<span class="n">key</span> <span class="ow">is</span> <span class="n">Hulk</span> <span class="n">value</span> <span class="ow">is</span> <span class="mi">1</span>
-<span class="n">key</span> <span class="ow">is</span> <span class="n">Iron</span> <span class="n">Man</span> <span class="n">value</span> <span class="ow">is</span> <span class="mi">2</span>
-<span class="n">key</span> <span class="ow">is</span> <span class="n">Captain</span> <span class="n">America</span> <span class="n">value</span> <span class="ow">is</span> <span class="mi">3</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p>Enumerations are iterable so you can do things like …</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">Day</span>
+<span class="o">&lt;</span><span class="n">enum</span> <span class="s">'Day'</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">Day</span><span class="p">)</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">Day</span><span class="p">.</span><span class="n">MONDAY</span><span class="p">:</span> <span class="mi">1</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Day</span><span class="p">.</span><span class="n">TUESDAY</span><span class="p">:</span> <span class="mi">2</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Day</span><span class="p">.</span><span class="n">WEDNESDAY</span><span class="p">:</span> <span class="mi">3</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Day</span><span class="p">.</span><span class="n">THURSDAY</span><span class="p">:</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Day</span><span class="p">.</span><span class="n">FRIDAY</span><span class="p">:</span> <span class="mi">5</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Day</span><span class="p">.</span><span class="n">SATURDAY</span><span class="p">:</span> <span class="mi">6</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Day</span><span class="p">.</span><span class="n">SUNDAY</span><span class="p">:</span> <span class="mi">7</span><span class="o">&gt;</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="you-can-also-use-range-to-create-enumerations">You can also use range to create enumerations</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Season</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">WINTER</span><span class="p">,</span> <span class="n">SPRINT</span><span class="p">,</span> <span class="n">SUMMER</span><span class="p">,</span> <span class="n">FALL</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Season</span><span class="p">.</span><span class="n">FALL</span>
+<span class="o">&lt;</span><span class="n">Season</span><span class="p">.</span><span class="n">FALL</span><span class="p">:</span> <span class="mi">4</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<h3 id="differences-between-enum-and-regular-classes">Differences between Enum and regular classes</h3>
+
+<p>Even though you use the class syntax to create enumerations, they’re special classes that differ from normal Python classes. Unlike regular classes Enums …</p>
+
+<ul>
+  <li>Can’t be instantiated</li>
+  <li>Can’t be subclassed unless the base Enum has no members</li>
+  <li>Provide a human readable string representation</li>
+  <li>Are iterable</li>
+  <li>Provide hashable members that can be used as keys</li>
+  <li>Support access via
+    <ul>
+      <li>Square bracket syntax - <code class="language-plaintext highlighter-rouge">Example["Member"]</code></li>
+      <li>Call Syntax - <code class="language-plaintext highlighter-rouge">Example("Member")</code></li>
+      <li>Dot notation - <code class="language-plaintext highlighter-rouge">Example.Member</code></li>
+    </ul>
+  </li>
+  <li>Don’t allow member reassignments</li>
+</ul>
+
+<h3 id="members-do-not-need-to-be-consecutive-and-members-can-be-any-type">Members do not need to be consecutive and members can be any type</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Grade</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">A</span> <span class="o">=</span> <span class="mi">90</span>
+<span class="p">...</span>   <span class="n">B</span> <span class="o">=</span> <span class="mi">80</span>
+<span class="p">...</span>   <span class="n">C</span> <span class="o">=</span> <span class="mi">70</span>
+<span class="p">...</span>   <span class="n">D</span> <span class="o">=</span> <span class="mi">60</span>
+<span class="p">...</span>   <span class="n">F</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">Grade</span><span class="p">)</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">Grade</span><span class="p">.</span><span class="n">A</span><span class="p">:</span> <span class="mi">90</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Grade</span><span class="p">.</span><span class="n">B</span><span class="p">:</span> <span class="mi">80</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Grade</span><span class="p">.</span><span class="n">C</span><span class="p">:</span> <span class="mi">70</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Grade</span><span class="p">.</span><span class="n">D</span><span class="p">:</span> <span class="mi">60</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Grade</span><span class="p">.</span><span class="n">F</span><span class="p">:</span> <span class="mi">0</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">SwithPosition</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">ON</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="p">...</span>   <span class="n">OFF</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">SwithPosition</span><span class="p">)</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">SwithPosition</span><span class="p">.</span><span class="n">ON</span><span class="p">:</span> <span class="bp">True</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">SwithPosition</span><span class="p">.</span><span class="n">OFF</span><span class="p">:</span> <span class="bp">False</span><span class="o">&gt;</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="you-can-create-empty-enums-useful-for-building-hierarchy-of-enum-classes-to-reuse-functionality-though-inheritance">You can create empty enums useful for building hierarchy of enum classes to reuse functionality though inheritance</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">BaseTextEnum</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="k">def</span> <span class="nf">as_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="p">...</span>     <span class="k">try</span><span class="p">:</span>
+<span class="p">...</span>       <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">value</span><span class="p">)</span>
+<span class="p">...</span>     <span class="k">except</span><span class="p">:</span>
+<span class="p">...</span>       <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">value</span><span class="p">)]</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">string</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Alphabet</span><span class="p">(</span><span class="n">BaseTextEnum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">LOWERCASE</span> <span class="o">=</span> <span class="n">string</span><span class="p">.</span><span class="n">ascii_lowercase</span>
+<span class="p">...</span>   <span class="n">UPPERCASE</span> <span class="o">=</span> <span class="n">string</span><span class="p">.</span><span class="n">ascii_uppercase</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Alphabet</span><span class="p">.</span><span class="n">LOWERCASE</span>
+<span class="o">&lt;</span><span class="n">Alphabet</span><span class="p">.</span><span class="n">LOWERCASE</span><span class="p">:</span> <span class="s">'abcdefghijklmnopqrstuvwxyz'</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Alphabet</span><span class="p">.</span><span class="n">LOWERCASE</span><span class="p">.</span><span class="n">as_list</span><span class="p">()</span>
+<span class="p">[</span><span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">,</span> <span class="s">'c'</span><span class="p">,</span> <span class="s">'d'</span><span class="p">,</span> <span class="s">'e'</span><span class="p">,</span> <span class="s">'f'</span><span class="p">,</span> <span class="s">'g'</span><span class="p">,</span> <span class="s">'h'</span><span class="p">,</span> <span class="s">'i'</span><span class="p">,</span> <span class="s">'j'</span><span class="p">,</span> <span class="s">'k'</span><span class="p">,</span> <span class="s">'l'</span><span class="p">,</span> <span class="s">'m'</span><span class="p">,</span> <span class="s">'n'</span><span class="p">,</span> <span class="s">'o'</span><span class="p">,</span> <span class="s">'p'</span><span class="p">,</span> <span class="s">'q'</span><span class="p">,</span> <span class="s">'r'</span><span class="p">,</span> <span class="s">'s'</span><span class="p">,</span> <span class="s">'t'</span><span class="p">,</span> <span class="s">'u'</span><span class="p">,</span> <span class="s">'v'</span><span class="p">,</span> <span class="s">'w'</span><span class="p">,</span> <span class="s">'x'</span><span class="p">,</span> <span class="s">'y'</span><span class="p">,</span> <span class="s">'z'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="using-functional-api-to-create-enums">Using functional API to create Enums</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">Enum</code> class provides a functional API that you can use to create enumerations without the usual class syntax.  You just call <code class="language-plaintext highlighter-rouge">Enum</code> with the appropriate arguments.  The function signature is.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Enum</span><span class="p">(</span>
+    <span class="n">value</span><span class="p">,</span>
+    <span class="n">names</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">module</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <span class="n">qualname</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <span class="nb">type</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <span class="n">start</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Argument</th>
+      <th>Description</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">value</code></td>
+      <td>Holds a string with the name of the new enumeration class</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">names</code></td>
+      <td>Provides names fo the enumeration members. Can be a string containing member names, an iterable of member names or an iterable of name-value pairs</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">module</code></td>
+      <td>Takes the name of the module that defined the enumeration class. Along with qualname importatnt if you need to pickle your enumeration.</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">qualname</code></td>
+      <td>Holds the location of the module that defined the enumeration class. Important if you need to pickle the enumeration</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td>Holds a class to be used s the first mixin class</td>
+      <td>no</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">start</code></td>
+      <td>Takes the starting value from the enumeration values will begin. Defaults to 1 to provide consistency with truthy evaluation</td>
+      <td>no</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">HTTPMethod</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span>
+<span class="p">...</span>   <span class="s">"HTTPMethod"</span><span class="p">,</span> <span class="p">[</span><span class="s">"GET"</span><span class="p">,</span> <span class="s">"POST"</span><span class="p">,</span> <span class="s">"PUSH"</span><span class="p">,</span> <span class="s">"PATCH"</span><span class="p">,</span> <span class="s">"DELETE"</span><span class="p">]</span>
+<span class="p">...</span>   <span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">HTTPMethod</span><span class="p">)</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">HTTPMethod</span><span class="p">.</span><span class="n">GET</span><span class="p">:</span> <span class="mi">1</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">HTTPMethod</span><span class="p">.</span><span class="n">POST</span><span class="p">:</span> <span class="mi">2</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">HTTPMethod</span><span class="p">.</span><span class="n">PUSH</span><span class="p">:</span> <span class="mi">3</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">HTTPMethod</span><span class="p">.</span><span class="n">PATCH</span><span class="p">:</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">HTTPMethod</span><span class="p">.</span><span class="n">DELETE</span><span class="p">:</span> <span class="mi">5</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">HTTPMethod101</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span>
+<span class="p">...</span>   <span class="s">"HTTPMethod"</span><span class="p">,</span> <span class="p">[</span><span class="s">"GET"</span><span class="p">,</span> <span class="s">"POST"</span><span class="p">,</span> <span class="s">"PUSH"</span><span class="p">,</span> <span class="s">"PATCH"</span><span class="p">,</span> <span class="s">"DELETE"</span><span class="p">],</span> <span class="n">start</span><span class="o">=</span><span class="mi">101</span>
+<span class="p">...</span>   <span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">HTTPMethod101</span><span class="p">)</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">HTTPMethod</span><span class="p">.</span><span class="n">GET</span><span class="p">:</span> <span class="mi">101</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">HTTPMethod</span><span class="p">.</span><span class="n">POST</span><span class="p">:</span> <span class="mi">102</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">HTTPMethod</span><span class="p">.</span><span class="n">PUSH</span><span class="p">:</span> <span class="mi">103</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">HTTPMethod</span><span class="p">.</span><span class="n">PATCH</span><span class="p">:</span> <span class="mi">104</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">HTTPMethod</span><span class="p">.</span><span class="n">DELETE</span><span class="p">:</span> <span class="mi">105</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p>Using functional or class API is up to you, but if you need to create enumerations dynamically the functional API is your only choice. Example of doing this is below, but its generally a bad idea since you don’t know what users will input.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+<span class="p">...</span>   <span class="n">name</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s">"Member name: "</span><span class="p">)</span>
+<span class="p">...</span>   <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">{</span><span class="s">"q"</span><span class="p">,</span> <span class="s">"Q"</span><span class="p">}:</span>
+<span class="p">...</span>     <span class="k">break</span>
+<span class="p">...</span>   <span class="n">names</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">.</span><span class="n">upper</span><span class="p">())</span>
+<span class="p">...</span>
+<span class="n">Member</span> <span class="n">name</span><span class="p">:</span> <span class="n">YES</span>
+<span class="n">Member</span> <span class="n">name</span><span class="p">:</span> <span class="n">NO</span>
+<span class="n">Member</span> <span class="n">name</span><span class="p">:</span> <span class="n">q</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">DynamicEnum</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="s">"DynamicEnum"</span><span class="p">,</span> <span class="n">names</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">DynamicEnum</span><span class="p">)</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">DynamicEnum</span><span class="p">.</span><span class="n">YES</span><span class="p">:</span> <span class="mi">1</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">DynamicEnum</span><span class="p">.</span><span class="n">NO</span><span class="p">:</span> <span class="mi">2</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p>If you need to use functional API and need to set custom values for your Enum members, then you can use an iterable of name-value pairs as your names argument.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">HTTPStatusCode</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span>
+<span class="p">...</span>   <span class="n">value</span><span class="o">=</span><span class="s">"HTTPStatusCode"</span><span class="p">,</span>
+<span class="p">...</span>   <span class="n">names</span><span class="o">=</span><span class="p">[</span>
+<span class="p">...</span>     <span class="p">(</span><span class="s">"OK"</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span>
+<span class="p">...</span>     <span class="p">(</span><span class="s">"CREATED"</span><span class="p">,</span> <span class="mi">201</span><span class="p">),</span>
+<span class="p">...</span>     <span class="p">(</span><span class="s">"BAD_REQUEST"</span><span class="p">,</span> <span class="mi">400</span><span class="p">),</span>
+<span class="p">...</span>     <span class="p">(</span><span class="s">"NOT_FOUND"</span><span class="p">,</span> <span class="mi">404</span><span class="p">),</span>
+<span class="p">...</span>     <span class="p">(</span><span class="s">"SERVER_ERROR"</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span>
+<span class="p">...</span>   <span class="p">]</span>
+<span class="p">...</span> <span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">HTTPStatusCode</span><span class="p">)</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">HTTPStatusCode</span><span class="p">.</span><span class="n">OK</span><span class="p">:</span> <span class="mi">200</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">HTTPStatusCode</span><span class="p">.</span><span class="n">CREATED</span><span class="p">:</span> <span class="mi">201</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">HTTPStatusCode</span><span class="p">.</span><span class="n">BAD_REQUEST</span><span class="p">:</span> <span class="mi">400</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">HTTPStatusCode</span><span class="p">.</span><span class="n">NOT_FOUND</span><span class="p">:</span> <span class="mi">404</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">HTTPStatusCode</span><span class="p">.</span><span class="n">SERVER_ERROR</span><span class="p">:</span> <span class="mi">500</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<h3 id="using-automatic-values-aliases-and-unique-values">Using automatic values, aliases and unique values</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">enum</code> module provides a convenient function called <code class="language-plaintext highlighter-rouge">auto()</code> that allows you to set automatic values for your Enum members. Its default behavior is to assign consecutive integer values. You can mix auto and static value as in example below.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">auto</span><span class="p">,</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Day</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">MONDAY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+<span class="p">...</span>   <span class="n">TUESDAY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+<span class="p">...</span>   <span class="n">WEDNESDAY</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">...</span>   <span class="n">THURSDAY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+<span class="p">...</span>   <span class="n">FRIDAY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+<span class="p">...</span>   <span class="n">SATURDAY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+<span class="p">...</span>   <span class="n">SUNDAY</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">Day</span><span class="p">)</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">Day</span><span class="p">.</span><span class="n">MONDAY</span><span class="p">:</span> <span class="mi">1</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Day</span><span class="p">.</span><span class="n">TUESDAY</span><span class="p">:</span> <span class="mi">2</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Day</span><span class="p">.</span><span class="n">WEDNESDAY</span><span class="p">:</span> <span class="mi">3</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Day</span><span class="p">.</span><span class="n">THURSDAY</span><span class="p">:</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Day</span><span class="p">.</span><span class="n">FRIDAY</span><span class="p">:</span> <span class="mi">5</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Day</span><span class="p">.</span><span class="n">SATURDAY</span><span class="p">:</span> <span class="mi">6</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Day</span><span class="p">.</span><span class="n">SUNDAY</span><span class="p">:</span> <span class="mi">7</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p>You can modify the default behavior by overriding the <code class="language-plaintext highlighter-rouge">._generate_next_value_()</code> method as in example below.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">CardinalDirection</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="k">def</span> <span class="nf">_generate_next_value_</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">last_values</span><span class="p">):</span>
+<span class="p">...</span>     <span class="k">return</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="p">...</span>   <span class="n">NORTH</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+<span class="p">...</span>   <span class="n">SOUTH</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+<span class="p">...</span>   <span class="n">EAST</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+<span class="p">...</span>   <span class="n">WEST</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">CardinalDirection</span><span class="p">)</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">CardinalDirection</span><span class="p">.</span><span class="n">NORTH</span><span class="p">:</span> <span class="s">'N'</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">CardinalDirection</span><span class="p">.</span><span class="n">SOUTH</span><span class="p">:</span> <span class="s">'S'</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">CardinalDirection</span><span class="p">.</span><span class="n">EAST</span><span class="p">:</span> <span class="s">'E'</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">CardinalDirection</span><span class="p">.</span><span class="n">WEST</span><span class="p">:</span> <span class="s">'W'</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p>You can create two or more members with the same constant value. The redundant members are known as aliases and are useful in some situations. An important note is if you iterate over the Enum, aliases are not listed. If you need to see all the members you need to use dunder methods as shown below.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">OperatingSystem</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">UBUNTU</span> <span class="o">=</span> <span class="s">"linux"</span>
+<span class="p">...</span>   <span class="n">MACOS</span> <span class="o">=</span> <span class="s">"darwin"</span>
+<span class="p">...</span>   <span class="n">WINDOWS</span> <span class="o">=</span> <span class="s">"win"</span>
+<span class="p">...</span>   <span class="n">DEBIAN</span> <span class="o">=</span> <span class="s">"linux"</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">OperatingSystem</span><span class="p">)</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">OperatingSystem</span><span class="p">.</span><span class="n">UBUNTU</span><span class="p">:</span> <span class="s">'linux'</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">OperatingSystem</span><span class="p">.</span><span class="n">MACOS</span><span class="p">:</span> <span class="s">'darwin'</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">OperatingSystem</span><span class="p">.</span><span class="n">WINDOWS</span><span class="p">:</span> <span class="s">'win'</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">list</span><span class="p">(</span><span class="n">OperatingSystem</span><span class="p">.</span><span class="n">__members__</span><span class="p">.</span><span class="n">items</span><span class="p">())</span>
+<span class="p">[(</span><span class="s">'UBUNTU'</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">OperatingSystem</span><span class="p">.</span><span class="n">UBUNTU</span><span class="p">:</span> <span class="s">'linux'</span><span class="o">&gt;</span><span class="p">),</span> <span class="p">(</span><span class="s">'MACOS'</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">OperatingSystem</span><span class="p">.</span><span class="n">MACOS</span><span class="p">:</span> <span class="s">'darwin'</span><span class="o">&gt;</span><span class="p">),</span> <span class="p">(</span><span class="s">'WINDOWS'</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">OperatingSystem</span><span class="p">.</span><span class="n">WINDOWS</span><span class="p">:</span> <span class="s">'win'</span><span class="o">&gt;</span><span class="p">),</span> <span class="p">(</span><span class="s">'DEBIAN'</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">OperatingSystem</span><span class="p">.</span><span class="n">UBUNTU</span><span class="p">:</span> <span class="s">'linux'</span><span class="o">&gt;</span><span class="p">)]</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p>You can also use the <code class="language-plaintext highlighter-rouge">unique</code> decorator to ensure you don’t have duplicate members in your enumeration. When this decorator is used if you have a duplicate member, you will get a value error.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">unique</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">@</span><span class="n">unique</span>
+<span class="p">...</span> <span class="k">class</span> <span class="nc">OperatingSystem</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">UBUNTU</span> <span class="o">=</span> <span class="s">"linux"</span>
+<span class="p">...</span>   <span class="n">MACOS</span> <span class="o">=</span> <span class="s">"darwin"</span>
+<span class="p">...</span>   <span class="n">WINDOWS</span> <span class="o">=</span> <span class="s">"win"</span>
+<span class="p">...</span>   <span class="n">DEBIAN</span> <span class="o">=</span> <span class="s">"linux"</span>
+<span class="p">...</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">2</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+  <span class="n">File</span> <span class="s">"/usr/lib/python3.10/enum.py"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1022</span><span class="p">,</span> <span class="ow">in</span> <span class="n">unique</span>
+    <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">'duplicate values found in %r: %s'</span> <span class="o">%</span>
+<span class="nb">ValueError</span><span class="p">:</span> <span class="n">duplicate</span> <span class="n">values</span> <span class="n">found</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">enum</span> <span class="s">'OperatingSystem'</span><span class="o">&gt;</span><span class="p">:</span> <span class="n">DEBIAN</span> <span class="o">-&gt;</span> <span class="n">UBUNTU</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<h2 id="working-with-enumerations-in-python">Working with enumerations in Python</h2>
+
+<p>You access the enumerations members using dot notation, calling the enumeation with avalue as argument or using subscript notation. The dot notation is the most commonly used.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">CardinalDirection</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">NORTH</span> <span class="o">=</span> <span class="s">"N"</span>
+<span class="p">...</span>   <span class="n">SOUTH</span> <span class="o">=</span> <span class="s">"S"</span>
+<span class="p">...</span>   <span class="n">EAST</span> <span class="o">=</span> <span class="s">"E"</span>
+<span class="p">...</span>   <span class="n">WEST</span> <span class="o">=</span> <span class="s">"W"</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">CardinalDirection</span><span class="p">.</span><span class="n">NORTH</span>
+<span class="o">&lt;</span><span class="n">CardinalDirection</span><span class="p">.</span><span class="n">NORTH</span><span class="p">:</span> <span class="s">'N'</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">CardinalDirection</span><span class="p">(</span><span class="s">"N"</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">CardinalDirection</span><span class="p">.</span><span class="n">NORTH</span><span class="p">:</span> <span class="s">'N'</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">CardinalDirection</span><span class="p">[</span><span class="s">"NORTH"</span><span class="p">]</span>
+<span class="o">&lt;</span><span class="n">CardinalDirection</span><span class="p">.</span><span class="n">NORTH</span><span class="p">:</span> <span class="s">'N'</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p>Enumeration members are instances of their containing class. The members get a <code class="language-plaintext highlighter-rouge">.name</code> attribute which holds the member’s name as a string and a <code class="language-plaintext highlighter-rouge">.value</code> attribute that stores the value assigned to the member itself. You can access these using dot notation.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Semaphore</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">RED</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="n">YELLOW</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="p">...</span>   <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Semaphore</span><span class="p">.</span><span class="n">RED</span><span class="p">.</span><span class="n">name</span>
+<span class="s">'RED'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Semaphore</span><span class="p">.</span><span class="n">RED</span><span class="p">.</span><span class="n">value</span>
+<span class="mi">1</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p>Enumerations are iterable by default and thus work with all Python iteration mechanisms such as for loops. The order of the iteration is the same as it was defined int he class definition.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enume</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="nb">ModuleNotFoundError</span><span class="p">:</span> <span class="n">No</span> <span class="n">module</span> <span class="n">named</span> <span class="s">'enume'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Flavor</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">VANILLA</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="n">CHOCOLATE</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="p">...</span>   <span class="n">MINT</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">flavor</span> <span class="ow">in</span> <span class="n">Flavor</span><span class="p">:</span>
+<span class="p">...</span>   <span class="k">print</span><span class="p">(</span><span class="n">flavor</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="n">Flavor</span><span class="p">.</span><span class="n">VANILLA</span>
+<span class="n">Flavor</span><span class="p">.</span><span class="n">CHOCOLATE</span>
+<span class="n">Flavor</span><span class="p">.</span><span class="n">MINT</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">flavor</span> <span class="ow">in</span> <span class="n">Flavor</span><span class="p">:</span>
+<span class="p">...</span>   <span class="k">print</span><span class="p">(</span><span class="n">flavor</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="s">"-&gt;"</span><span class="p">,</span> <span class="n">flavor</span><span class="p">.</span><span class="n">value</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="n">VANILLA</span> <span class="o">-&gt;</span> <span class="mi">1</span>
+<span class="n">CHOCOLATE</span> <span class="o">-&gt;</span> <span class="mi">2</span>
+<span class="n">MINT</span> <span class="o">-&gt;</span> <span class="mi">3</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p>You can also use the <code class="language-plaintext highlighter-rouge">__members__</code> method to get a dictionary of all the members including the aliases.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">Flavor</span><span class="p">.</span><span class="n">__members__</span><span class="p">.</span><span class="n">keys</span><span class="p">():</span>
+<span class="p">...</span>   <span class="k">print</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="n">VANILLA</span>
+<span class="n">CHOCOLATE</span>
+<span class="n">MINT</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">Flavor</span><span class="p">.</span><span class="n">__members__</span><span class="p">.</span><span class="n">values</span><span class="p">():</span>
+<span class="p">...</span>   <span class="k">print</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="n">Flavor</span><span class="p">.</span><span class="n">VANILLA</span>
+<span class="n">Flavor</span><span class="p">.</span><span class="n">CHOCOLATE</span>
+<span class="n">Flavor</span><span class="p">.</span><span class="n">MINT</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">Flavor</span><span class="p">.</span><span class="n">__members__</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+<span class="p">...</span>   <span class="k">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s">"-&gt;"</span><span class="p">,</span> <span class="n">member</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="n">VANILLA</span> <span class="o">-&gt;</span> <span class="n">Flavor</span><span class="p">.</span><span class="n">VANILLA</span>
+<span class="n">CHOCOLATE</span> <span class="o">-&gt;</span> <span class="n">Flavor</span><span class="p">.</span><span class="n">CHOCOLATE</span>
+<span class="n">MINT</span> <span class="o">-&gt;</span> <span class="n">Flavor</span><span class="p">.</span><span class="n">MINT</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<h3 id="using-enumerations-in-if-and-match-statements">Using enumerations in if and match statements</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Semaphore</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">RED</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="n">YELLOW</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="p">...</span>   <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">handle_semaphore</span><span class="p">(</span><span class="n">light</span><span class="p">):</span>
+<span class="p">...</span>   <span class="k">if</span> <span class="n">light</span> <span class="ow">is</span> <span class="n">Semaphore</span><span class="p">.</span><span class="n">RED</span><span class="p">:</span>
+<span class="p">...</span>     <span class="k">print</span><span class="p">(</span><span class="s">"You must stop!"</span><span class="p">)</span>
+<span class="p">...</span>   <span class="k">elif</span> <span class="n">light</span> <span class="ow">is</span> <span class="n">Semaphore</span><span class="p">.</span><span class="n">YELLOW</span><span class="p">:</span>
+<span class="p">...</span>     <span class="k">print</span><span class="p">(</span><span class="s">"Light will change to red, be careful!"</span><span class="p">)</span>
+<span class="p">...</span>   <span class="k">elif</span> <span class="n">light</span> <span class="ow">is</span> <span class="n">Semaphore</span><span class="p">.</span><span class="n">GREEN</span><span class="p">:</span>
+<span class="p">...</span>     <span class="k">print</span><span class="p">(</span><span class="s">"You can continue!"</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">handle_semaphore</span><span class="p">(</span><span class="n">Semaphore</span><span class="p">.</span><span class="n">GREEN</span><span class="p">)</span>
+<span class="n">You</span> <span class="n">can</span> <span class="k">continue</span><span class="err">!</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">handle_semaphore</span><span class="p">(</span><span class="n">Semaphore</span><span class="p">.</span><span class="n">YELLOW</span><span class="p">)</span>
+<span class="n">Light</span> <span class="n">will</span> <span class="n">change</span> <span class="n">to</span> <span class="n">red</span><span class="p">,</span> <span class="n">be</span> <span class="n">careful</span><span class="err">!</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">handle_semaphore</span><span class="p">(</span><span class="n">Semaphore</span><span class="p">.</span><span class="n">RED</span><span class="p">)</span>
+<span class="n">You</span> <span class="n">must</span> <span class="n">stop</span><span class="err">!</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p>In Python 3.10 or later you can also use <code class="language-plaintext highlighter-rouge">match</code> statement</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Semaphore</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">RED</span> <span class="o">=</span><span class="mi">1</span>
+<span class="p">...</span>   <span class="n">YELLOW</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="p">...</span>   <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">handle_semaphore</span><span class="p">(</span><span class="n">light</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">match</span> <span class="n">light</span><span class="p">:</span>
+<span class="p">...</span>     <span class="n">case</span> <span class="n">Semaphore</span><span class="p">.</span><span class="n">RED</span><span class="p">:</span>
+<span class="p">...</span>       <span class="k">print</span><span class="p">(</span><span class="s">"You must stop!"</span><span class="p">)</span>
+<span class="p">...</span>     <span class="n">case</span> <span class="n">Semaphore</span><span class="p">.</span><span class="n">YELLOW</span><span class="p">:</span>
+<span class="p">...</span>       <span class="k">print</span><span class="p">(</span><span class="s">"Light will change to red, be careful!"</span><span class="p">)</span>
+<span class="p">...</span>     <span class="n">case</span> <span class="n">Semaphore</span><span class="p">.</span><span class="n">GREEN</span><span class="p">:</span>
+<span class="p">...</span>       <span class="k">print</span><span class="p">(</span><span class="s">"You can continue!"</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">handle_semaphore</span><span class="p">(</span><span class="n">Semaphore</span><span class="p">.</span><span class="n">GREEN</span><span class="p">)</span>
+<span class="n">You</span> <span class="n">can</span> <span class="k">continue</span><span class="err">!</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">handle_semaphore</span><span class="p">(</span><span class="n">Semaphore</span><span class="p">.</span><span class="n">YELLOW</span><span class="p">)</span>
+<span class="n">Light</span> <span class="n">will</span> <span class="n">change</span> <span class="n">to</span> <span class="n">red</span><span class="p">,</span> <span class="n">be</span> <span class="n">careful</span><span class="err">!</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">handle_semaphore</span><span class="p">(</span><span class="n">Semaphore</span><span class="p">.</span><span class="n">RED</span><span class="p">)</span>
+<span class="n">You</span> <span class="n">must</span> <span class="n">stop</span><span class="err">!</span>
+</code></pre></div></div>
+
+<h3 id="comparing-and-sorting-enumerations">Comparing and sorting enumerations</h3>
+
+<p>By default enumerations support identify <code class="language-plaintext highlighter-rouge">is</code> and <code class="language-plaintext highlighter-rouge">is not</code> and equality <code class="language-plaintext highlighter-rouge">==</code> and <code class="language-plaintext highlighter-rouge">!=</code> comparisons.  Every enum member has its own identity, which is different from the identity of its sibling members. This rule doesn’t apply to member aliases because they’re just references to existing members and share the same identity.  Identity checks between members of different enumerations always return false. Greater than or less then operators are not supported by default.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">AtlanticAveSemaphore</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">RED</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="n">YELLOW</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="p">...</span>   <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">...</span>   <span class="n">PEDESTRIAN_RED</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="n">PEDESTRIAN_GREEN</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">red</span> <span class="o">=</span> <span class="n">AtlanticAveSemaphore</span><span class="p">.</span><span class="n">RED</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">red</span> <span class="ow">is</span> <span class="n">AtlanticAveSemaphore</span><span class="p">.</span><span class="n">RED</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">red</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">AtlanticAveSemaphore</span><span class="p">.</span><span class="n">RED</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">yellow</span> <span class="o">=</span> <span class="n">AtlanticAveSemaphore</span><span class="p">.</span><span class="n">YELLOW</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">yellow</span> <span class="ow">is</span> <span class="n">red</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pedestrian_red</span> <span class="o">=</span> <span class="n">AtlanticAveSemaphore</span><span class="p">.</span><span class="n">PEDESTRIAN_RED</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">red</span> <span class="ow">is</span> <span class="n">pedestrian_red</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">EightAveSemaphore</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">RED</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="n">YELLOW</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="p">...</span>   <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">...</span>   <span class="n">PEDESTRIAN_RED</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="n">PEDESTRIAN_GREEN</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">EightAveSemaphore</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">RED</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="n">YELLOW</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="p">...</span>   <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">...</span>   <span class="n">PEDESTRIAN_RED</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="n">PEDESTRIAN_GREEN</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">AtlanticAveSemaphore</span><span class="p">.</span><span class="n">RED</span> <span class="ow">is</span> <span class="n">EightAveSemaphore</span><span class="p">.</span><span class="n">RED</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">AtlanticAveSemaphore</span><span class="p">.</span><span class="n">YELLOW</span> <span class="ow">is</span> <span class="n">EightAveSemaphore</span><span class="p">.</span><span class="n">YELLOW</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">red</span> <span class="o">=</span> <span class="n">AtlanticAveSemaphore</span><span class="p">.</span><span class="n">RED</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">red</span> <span class="o">==</span> <span class="n">AtlanticAveSemaphore</span><span class="p">.</span><span class="n">RED</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">red</span> <span class="o">!=</span> <span class="n">AtlanticAveSemaphore</span><span class="p">.</span><span class="n">RED</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">yellow</span> <span class="o">=</span> <span class="n">AtlanticAveSemaphore</span><span class="p">.</span><span class="n">YELLOW</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">yellow</span> <span class="o">==</span> <span class="n">red</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">yellow</span> <span class="o">!=</span> <span class="n">red</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p><strong><em>Note:</em></strong> The equality comparison defers to the identify one so checking members values for equality will not work as expected.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Semaphore</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">RED</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="n">YELLOW</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="p">...</span>   <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Semaphore</span><span class="p">.</span><span class="n">RED</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Semaphore</span><span class="p">.</span><span class="n">YELLOW</span> <span class="o">==</span> <span class="mi">2</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Semaphore</span><span class="p">.</span><span class="n">GREEN</span> <span class="o">!=</span> <span class="mi">3</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p>You can also do membership checks using in and not in operators.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Semaphore</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">RED</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="n">YELLOW</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="p">...</span>   <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Semaphore</span><span class="p">.</span><span class="n">RED</span> <span class="ow">in</span> <span class="n">Semaphore</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Semaphore</span><span class="p">.</span><span class="n">GREEN</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">Semaphore</span>
+<span class="bp">False</span>
+</code></pre></div></div>
+
+<p>If you need to sort you enumeration you need to generate a key for the sorting as less than / greater than are not supported in enumerations.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Season</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">SPRING</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="n">SUMMER</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="p">...</span>   <span class="n">AUTUMN</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">...</span>   <span class="n">WINTER</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">Season</span><span class="p">)</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="nb">TypeError</span><span class="p">:</span> <span class="s">'&lt;'</span> <span class="ow">not</span> <span class="n">supported</span> <span class="n">between</span> <span class="n">instances</span> <span class="n">of</span> <span class="s">'Season'</span> <span class="ow">and</span> <span class="s">'Season'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">Season</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">season</span><span class="p">:</span> <span class="n">season</span><span class="p">.</span><span class="n">value</span><span class="p">)</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">Season</span><span class="p">.</span><span class="n">SPRING</span><span class="p">:</span> <span class="mi">1</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Season</span><span class="p">.</span><span class="n">SUMMER</span><span class="p">:</span> <span class="mi">2</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Season</span><span class="p">.</span><span class="n">AUTUMN</span><span class="p">:</span> <span class="mi">3</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Season</span><span class="p">.</span><span class="n">WINTER</span><span class="p">:</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">Season</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">season</span><span class="p">:</span> <span class="n">season</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+<span class="p">[</span><span class="o">&lt;</span><span class="n">Season</span><span class="p">.</span><span class="n">AUTUMN</span><span class="p">:</span> <span class="mi">3</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Season</span><span class="p">.</span><span class="n">SPRING</span><span class="p">:</span> <span class="mi">1</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Season</span><span class="p">.</span><span class="n">SUMMER</span><span class="p">:</span> <span class="mi">2</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">Season</span><span class="p">.</span><span class="n">WINTER</span><span class="p">:</span> <span class="mi">4</span><span class="o">&gt;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<h2 id="extending-enumerations-with-new-behavior">Extending enumerations with new behavior</h2>
+
+<p>Enumerations are classes and thus can have methods and special methods. Regular methods are bound to instances of their containing enum, which are the enum members, so you must call regular methods on enum members than the on the enum itself. Remember that enumerations cannot be instantiated. <code class="language-plaintext highlighter-rouge">self</code> in this care refers to the current member.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Mood</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">FUNKY</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="n">MAD</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="p">...</span>   <span class="n">HAPPY</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">...</span>
+<span class="p">...</span>   <span class="k">def</span> <span class="nf">describe_mood</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="p">...</span>     <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">value</span>
+<span class="p">...</span>
+<span class="p">...</span>   <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="p">...</span>     <span class="k">return</span> <span class="sa">f</span><span class="s">"I feel </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="s">"</span>
+<span class="p">...</span>
+<span class="p">...</span>   <span class="o">@</span><span class="nb">classmethod</span>
+<span class="p">...</span>   <span class="k">def</span> <span class="nf">favorite_mood</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+<span class="p">...</span>     <span class="k">return</span> <span class="n">cls</span><span class="p">.</span><span class="n">HAPPY</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Mood</span><span class="p">.</span><span class="n">HAPPY</span><span class="p">.</span><span class="n">describe_mood</span><span class="p">()</span>
+<span class="p">(</span><span class="s">'HAPPY'</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">Mood</span><span class="p">.</span><span class="n">HAPPY</span><span class="p">)</span>
+<span class="n">I</span> <span class="n">feel</span> <span class="n">HAPPY</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Mood</span><span class="p">.</span><span class="n">favorite_mood</span><span class="p">()</span>
+<span class="o">&lt;</span><span class="n">Mood</span><span class="p">.</span><span class="n">HAPPY</span><span class="p">:</span> <span class="mi">3</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p>You can use this mechanism to implement the strategy pattern. In the example below <code class="language-plaintext highlighter-rouge">ASCENDING</code> and <code class="language-plaintext highlighter-rouge">DESCENDING</code> are strategies and the <code class="language-plaintext highlighter-rouge">__call__</code> method makes them both callable.  Note tha this is just an example of how to use the strategy pattern. Ascending/descending sorting is better implemented with <code class="language-plaintext highlighter-rouge">sorted()</code> and its revere argument to not over engineer.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Sort</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">ASCENDING</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="n">DESCENDING</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="p">...</span>
+<span class="p">...</span>   <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+<span class="p">...</span>     <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">self</span> <span class="ow">is</span> <span class="n">Sort</span><span class="p">.</span><span class="n">DESCENDING</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Sort</span><span class="p">.</span><span class="n">ASCENDING</span><span class="p">(</span><span class="n">numbers</span><span class="p">)</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Sort</span><span class="p">.</span><span class="n">DESCENDING</span><span class="p">(</span><span class="n">numbers</span><span class="p">)</span>
+<span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<p>You can leverage Mixin classes with enumerations. Mixins classes provide functionality that other classes can use in Python. In the example below we use the buit-in <code class="language-plaintext highlighter-rouge">int</code> type as a mixing to create an enumeration that supports integer comparisons. Inheriting from the enabled direct comparison between members through greater than, less than greater or equal, less than or equal operators. Note that when you use a data type as a mixin, the member’s <code class="language-plaintext highlighter-rouge">.value</code> attribute isn’t the same as the member itself, although its equivalent and will compare as such. That is why you can compare numbers of <code class="language-plaintext highlighter-rouge">Size</code> with integer values directly.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Size</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">S</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="n">M</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="p">...</span>   <span class="n">L</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">...</span>   <span class="n">XL</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Size</span><span class="p">.</span><span class="n">S</span> <span class="o">&gt;</span> <span class="n">Size</span><span class="p">.</span><span class="n">M</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Size</span><span class="p">.</span><span class="n">S</span> <span class="o">&lt;</span> <span class="n">Size</span><span class="p">.</span><span class="n">M</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Size</span><span class="p">.</span><span class="n">L</span> <span class="o">&gt;=</span> <span class="n">Size</span><span class="p">.</span><span class="n">M</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Size</span><span class="p">.</span><span class="n">L</span> <span class="o">&lt;=</span> <span class="n">Size</span><span class="p">.</span><span class="n">M</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Size</span><span class="p">.</span><span class="n">L</span> <span class="o">&gt;</span> <span class="mi">2</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Size</span><span class="p">.</span><span class="n">M</span> <span class="o">&lt;</span> <span class="mi">1</span>
+<span class="bp">False</span>
+</code></pre></div></div>
+
+<p>The signature for using Mixins in your enumeration is below. This signature implies that you can have one or more mixin classes, at most, one data type class and the parent Enum class in that order.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">EnumName</span><span class="p">([</span><span class="n">mixin_type</span><span class="p">,</span> <span class="p">...],</span> <span class="p">[</span><span class="n">data_type</span><span class="p">,]</span> <span class="n">enum_type</span><span class="p">):</span>
+    <span class="c1"># members go here
+</span></code></pre></div></div>
+
+<p>Below is an example of using multiple mixins</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">MixinA</span><span class="p">:</span>
+<span class="p">...</span>   <span class="k">def</span> <span class="nf">a</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="p">...</span>     <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"MixinA: </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">value</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">MixinB</span><span class="p">:</span>
+<span class="p">...</span>   <span class="k">def</span> <span class="nf">b</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="p">...</span>     <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"MixinB: </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">value</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">ValidEnum</span><span class="p">(</span><span class="n">MixinA</span><span class="p">,</span> <span class="n">MixinB</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">MEMBER</span> <span class="o">=</span> <span class="s">"value"</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ValidEnum</span><span class="p">.</span><span class="n">MEMBER</span><span class="p">.</span><span class="n">a</span><span class="p">()</span>
+<span class="n">MixinA</span><span class="p">:</span> <span class="n">value</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ValidEnum</span><span class="p">.</span><span class="n">MEMBER</span><span class="p">.</span><span class="n">b</span><span class="p">()</span>
+<span class="n">MixinB</span><span class="p">:</span> <span class="n">value</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ValidEnum</span><span class="p">.</span><span class="n">MEMBER</span><span class="p">.</span><span class="n">upper</span><span class="p">()</span>
+<span class="s">'VALUE'</span>
+</code></pre></div></div>
+
+<h2 id="other-enumeration-classes">Other enumeration classes</h2>
+
+<p>Integer enumerations are so common that there is a special <code class="language-plaintext highlighter-rouge">IntEnum</code> to cover this use case. The behavior of IntEnum is equivalent to using an <code class="language-plaintext highlighter-rouge">int</code> as a mixin class.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">IntEnum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Size</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">S</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="n">M</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="p">...</span>   <span class="n">L</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="p">...</span>   <span class="n">XL</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Size</span><span class="p">.</span><span class="n">S</span> <span class="o">&gt;</span> <span class="n">Size</span><span class="p">.</span><span class="n">M</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Size</span><span class="p">.</span><span class="n">S</span> <span class="o">&lt;</span> <span class="n">Size</span><span class="p">.</span><span class="n">M</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Size</span><span class="p">.</span><span class="n">L</span> <span class="o">&gt;=</span> <span class="n">Size</span><span class="p">.</span><span class="n">M</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Size</span><span class="p">.</span><span class="n">L</span> <span class="o">&lt;=</span> <span class="n">Size</span><span class="p">.</span><span class="n">M</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Size</span><span class="p">.</span><span class="n">L</span> <span class="o">&gt;</span> <span class="mi">2</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Size</span><span class="p">.</span><span class="n">M</span> <span class="o">&lt;</span> <span class="mi">1</span>
+<span class="bp">False</span>
+</code></pre></div></div>
+
+<p>Python 3.11 adds a StrEnum which behaves like using an <code class="language-plaintext highlighter-rouge">str</code> class as a mixin.</p>
+
+<p>You can use <code class="language-plaintext highlighter-rouge">IntFlag</code> as a base class for enumerations that support the bitwise operators. Below is an example of a Role enumeration. The members of this enumeration hold integer values that you can combine using the bitwise OR operator. <strong><em>Note:</em></strong> individual members of enums based on <code class="language-plaintext highlighter-rouge">IntFlag</code> (also known as flags) should take values that are powers of two, however this is not a requirements for combination of flags as in the example below.</p>
+
+<p><code class="language-plaintext highlighter-rouge">IntFlag</code> also supports integer operations but these types of operations return integer rather than member objects.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">IntFlag</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Role</span><span class="p">(</span><span class="n">IntFlag</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">OWNER</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="p">...</span>   <span class="n">POWER_USER</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="p">...</span>   <span class="n">USER</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="p">...</span>   <span class="n">SUPERVISOR</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="n">ADMIN</span> <span class="o">=</span> <span class="n">OWNER</span> <span class="o">|</span> <span class="n">POWER_USER</span> <span class="o">|</span> <span class="n">USER</span> <span class="o">|</span> <span class="n">SUPERVISOR</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">john_roles</span> <span class="o">=</span> <span class="n">Role</span><span class="p">.</span><span class="n">USER</span> <span class="o">|</span> <span class="n">Role</span><span class="p">.</span><span class="n">SUPERVISOR</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">john_roles</span>
+<span class="o">&lt;</span><span class="n">Role</span><span class="p">.</span><span class="n">USER</span><span class="o">|</span><span class="n">SUPERVISOR</span><span class="p">:</span> <span class="mi">3</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="n">john_roles</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">enum</span> <span class="s">'Role'</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">if</span> <span class="n">Role</span><span class="p">.</span><span class="n">USER</span> <span class="ow">in</span> <span class="n">john_roles</span><span class="p">:</span>
+<span class="p">...</span>   <span class="k">print</span><span class="p">(</span><span class="s">"John, you're a user"</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="n">John</span><span class="p">,</span> <span class="n">you</span><span class="s">'re a user
+&gt;&gt;&gt; if Role.SUPERVISOR in john_roles:
+...   print("John, you'</span><span class="n">re</span> <span class="n">a</span> <span class="n">supervisor</span><span class="s">")
+...
+John, you're a supervisor
+&gt;&gt;&gt; Role.OWNER in Role.ADMIN
+True
+&gt;&gt;&gt; Role.SUPERVISOR in Role.ADMIN
+True
+&gt;&gt;&gt; Role.ADMIN + 1
+16
+&gt;&gt;&gt; Role.ADMIN - 2
+13
+&gt;&gt;&gt; Role.ADMIN / 3
+5.0
+&gt;&gt;&gt; Role.ADMIN &lt; 20
+True
+&gt;&gt;&gt;
+</span></code></pre></div></div>
+
+<p>There is also the <code class="language-plaintext highlighter-rouge">Flag</code> type which works similar to <code class="language-plaintext highlighter-rouge">IntFlag</code> but does not support integer operations so you cannot for example use a member of type <code class="language-plaintext highlighter-rouge">Role</code> in an integer type operation. As wit the <code class="language-plaintext highlighter-rouge">IntFlag</code> values of members should be powers of 2 and that does not apply to the combinations such as <code class="language-plaintext highlighter-rouge">ADMIN</code> in the below example.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Flag</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">Role</span><span class="p">(</span><span class="n">Flag</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">OWNER</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="p">...</span>   <span class="n">POWER_USER</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="p">...</span>   <span class="n">USER</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="p">...</span>   <span class="n">SUPERVISOR</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">...</span>   <span class="n">ADMIN</span> <span class="o">=</span> <span class="n">OWNER</span> <span class="o">|</span> <span class="n">POWER_USER</span> <span class="o">|</span> <span class="n">USER</span> <span class="o">|</span> <span class="n">SUPERVISOR</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">john_roles</span> <span class="o">=</span> <span class="n">Role</span><span class="p">.</span><span class="n">USER</span> <span class="o">|</span> <span class="n">Role</span><span class="p">.</span><span class="n">SUPERVISOR</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">john_roles</span>
+<span class="o">&lt;</span><span class="n">Role</span><span class="p">.</span><span class="n">USER</span><span class="o">|</span><span class="n">SUPERVISOR</span><span class="p">:</span> <span class="mi">3</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">type</span><span class="p">(</span><span class="n">john_roles</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">enum</span> <span class="s">'Role'</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">if</span> <span class="n">Role</span><span class="p">.</span><span class="n">USER</span> <span class="ow">in</span> <span class="n">john_roles</span><span class="p">:</span>
+<span class="p">...</span>   <span class="k">print</span><span class="p">(</span><span class="s">"John, you're a user"</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="n">John</span><span class="p">,</span> <span class="n">you</span><span class="s">'re a user
+&gt;&gt;&gt; if Role.SUPERVISOR in john_roles:
+...   print("John, you'</span><span class="n">re</span> <span class="n">a</span> <span class="n">supervisor</span><span class="s">")
+...
+John, you're a supervisor
+&gt;&gt;&gt; Role.OWNER in Role.ADMIN
+True
+&gt;&gt;&gt; Role.SUPERVISOR in Role.ADMIN
+True
+&gt;&gt;&gt; ROLE.ADMIN + 1
+Traceback (most recent call last):
+  File "</span><span class="o">&lt;</span><span class="n">stdin</span><span class="o">&gt;</span><span class="s">", line 1, in &lt;module&gt;
+NameError: name 'ROLE' is not defined. Did you mean: 'Role'?
+&gt;&gt;&gt;
+</span></code></pre></div></div>
+
+<h2 id="examples-of-using-enumerations-in-code">Examples of using enumerations in code</h2>
+
+<h3 id="example-http-call-without-using-enumeration">Example HTTP call without using enumeration</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">http.client</span> <span class="kn">import</span> <span class="n">HTTPSConnection</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">process_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">match</span> <span class="n">response</span><span class="p">.</span><span class="n">getcode</span><span class="p">():</span>
+<span class="p">...</span>     <span class="n">case</span> <span class="mi">200</span><span class="p">:</span>
+<span class="p">...</span>       <span class="k">print</span><span class="p">(</span><span class="s">"Success!"</span><span class="p">)</span>
+<span class="p">...</span>     <span class="n">case</span> <span class="mi">201</span><span class="p">:</span>
+<span class="p">...</span>       <span class="k">print</span><span class="p">(</span><span class="s">"Successfully created!"</span><span class="p">)</span>
+<span class="p">...</span>     <span class="n">case</span> <span class="mi">400</span><span class="p">:</span>
+<span class="p">...</span>       <span class="k">print</span><span class="p">(</span><span class="s">"Bad request"</span><span class="p">)</span>
+<span class="p">...</span>     <span class="n">case</span> <span class="mi">404</span><span class="p">:</span>
+<span class="p">...</span>       <span class="k">print</span><span class="p">(</span><span class="s">"Not Found"</span><span class="p">)</span>
+<span class="p">...</span>     <span class="n">case</span> <span class="mi">500</span><span class="p">:</span>
+<span class="p">...</span>       <span class="k">print</span><span class="p">(</span><span class="s">"Internal server error"</span><span class="p">)</span>
+<span class="p">...</span>     <span class="n">case</span> <span class="n">_</span><span class="p">:</span>
+<span class="p">...</span>       <span class="k">print</span><span class="p">(</span><span class="s">"unexpected status"</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">connection</span> <span class="o">=</span> <span class="n">HTTPSConnection</span><span class="p">(</span><span class="s">"www.python.org"</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">try</span><span class="p">:</span>
+<span class="p">...</span>   <span class="n">connection</span><span class="p">.</span><span class="n">request</span><span class="p">(</span><span class="s">"GET"</span><span class="p">,</span> <span class="s">"/"</span><span class="p">)</span>
+<span class="p">...</span>   <span class="n">response</span> <span class="o">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">getresponse</span><span class="p">()</span>
+<span class="p">...</span>   <span class="n">process_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<span class="p">...</span> <span class="k">finally</span><span class="p">:</span>
+<span class="p">...</span>   <span class="n">connection</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+<span class="p">...</span>
+<span class="n">Success</span><span class="err">!</span>
+</code></pre></div></div>
+
+<h3 id="example-http-call-with-enumeration">Example HTTP call with enumeration</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">IntEnum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">http.client</span> <span class="kn">import</span> <span class="n">HTTPSConnection</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span> <span class="nc">HTTPStatusCode</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">OK</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="p">...</span>   <span class="n">CREATED</span> <span class="o">=</span> <span class="mi">201</span>
+<span class="p">...</span>   <span class="n">BAD_REQUEST</span> <span class="o">=</span> <span class="mi">400</span>
+<span class="p">...</span>   <span class="n">NOT_FOUND</span> <span class="o">=</span> <span class="mi">404</span>
+<span class="p">...</span>   <span class="n">SERVER_ERROR</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">def</span> <span class="nf">process_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+<span class="p">...</span>   <span class="n">match</span> <span class="n">response</span><span class="p">.</span><span class="n">getcode</span><span class="p">():</span>
+<span class="p">...</span>     <span class="n">case</span> <span class="n">HTTPStatusCode</span><span class="p">.</span><span class="n">OK</span><span class="p">:</span>
+<span class="p">...</span>       <span class="k">print</span><span class="p">(</span><span class="s">"Success!"</span><span class="p">)</span>
+<span class="p">...</span>     <span class="n">case</span> <span class="n">HTTPStatusCode</span><span class="p">.</span><span class="n">CREATED</span><span class="p">:</span>
+<span class="p">...</span>       <span class="k">print</span><span class="p">(</span><span class="s">"Successfully created!"</span><span class="p">)</span>
+<span class="p">...</span>     <span class="n">case</span> <span class="n">HTTPStatusCode</span><span class="p">.</span><span class="n">BAD_REQUEST</span><span class="p">:</span>
+<span class="p">...</span>       <span class="k">print</span><span class="p">(</span><span class="s">"Bad request"</span><span class="p">)</span>
+<span class="p">...</span>     <span class="n">case</span> <span class="n">HTTPStatusCode</span><span class="p">.</span><span class="n">NOT_FOUND</span><span class="p">:</span>
+<span class="p">...</span>       <span class="k">print</span><span class="p">(</span><span class="s">"Not found"</span><span class="p">)</span>
+<span class="p">...</span>     <span class="n">case</span> <span class="n">HTTPStatusCode</span><span class="p">.</span><span class="n">SERVER_ERROR</span><span class="p">:</span>
+<span class="p">...</span>       <span class="k">print</span><span class="p">(</span><span class="s">"Internal server error"</span><span class="p">)</span>
+<span class="p">...</span>     <span class="n">case</span> <span class="n">_</span><span class="p">:</span>
+<span class="p">...</span>       <span class="k">print</span><span class="p">(</span><span class="s">"Unexpected status"</span><span class="p">)</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">connection</span> <span class="o">=</span> <span class="n">HTTPSConnection</span><span class="p">(</span><span class="s">"www.python.org"</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">try</span><span class="p">:</span>
+<span class="p">...</span>   <span class="n">connection</span><span class="p">.</span><span class="n">request</span><span class="p">(</span><span class="s">"GET"</span><span class="p">,</span> <span class="s">"/"</span><span class="p">)</span>
+<span class="p">...</span>   <span class="n">response</span> <span class="o">=</span> <span class="n">connection</span><span class="p">.</span><span class="n">getresponse</span><span class="p">()</span>
+<span class="p">...</span>   <span class="n">process_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<span class="p">...</span> <span class="k">finally</span><span class="p">:</span>
+<span class="p">...</span>   <span class="n">connection</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+<span class="p">...</span>
+<span class="n">Success</span><span class="err">!</span>
 </code></pre></div></div>
 
   </div>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Python: pip | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Python: pip" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/sort_me/pip" />
+<meta property="og:url" content="http://0.0.0.0:4000/sort_me/pip" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Python: pip" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Python: pip","url":"http://0.0.0.0:4000/sort_me/pip"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Python: pip</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="scripts-modules-packages-and-libraries">Scripts Modules Packages, and Libraries</h2>
+
+<p>A <strong>module</strong> is a Python file that’s intended to be imported into scripts or other modules. It often defines members like classes, functions and variables intended to be used in other files that import it.</p>
+
+<p>A <strong>package</strong> is a collection of related modules that work together to provide certain functionality. These modules are contained within a folder and can be imported just like any other modules. This folder will often contain a special <code class="language-plaintext highlighter-rouge">__init__</code> file that tells python it’s a package, potentially containing more modules nested within sub-folders.</p>
+
+<p>A <strong>library</strong> is an umbrella term that loosely means “a bundle of code”. These can have tens or even hundreds of individual modules that can provide a wide range of functionality.</p>
+
+<h2 id="getting-started-with-pip-and-pypi">Getting Started With pip and PyPi</h2>
+
+<p>Python’s package manager is called pip, and it comes bundled with every recent version of Python. pip allows us to install packages that don’t come bundled with the Python standard library.  By default pip searches <a href="https://www.pypi.org/">PyPi</a> or the <strong>Python Package Index</strong>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">pip list</code> will show you all the packages you have installed.</p>
+
+<p><code class="language-plaintext highlighter-rouge">pip show &lt;package_name&gt;</code> will give you more details about a specific package.</p>
+
+<p>You can install packages from GitHub using pip using a command similar to: <code class="language-plaintext highlighter-rouge">python -m pip install git+https://github.com/realpython/rptree</code></p>
+
+<p>You can use the <code class="language-plaintext highlighter-rouge">-e</code> option with pip to install a package in editable mode. This allows you to work on the source code while still using the packages as if it were installed normally.</p>
+
+<h2 id="using-requirement-files">Using Requirement Files</h2>
+
+<p>A <strong>requirements file</strong> is a list of all of a project’s dependencies. This includes the dependencies needed by the dependencies. It also contains the specific version of each dependency, specified with a double equals sign <code class="language-plaintext highlighter-rouge">==</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">pip freeze</code> will list the current project dependencies to <code class="language-plaintext highlighter-rouge">stdout</code>.</p>
+
+<p>Thus you can generate a <code class="language-plaintext highlighter-rouge">requirements.txt</code> file with the command <code class="language-plaintext highlighter-rouge">pip freeze &gt; requirements.txt</code></p>
+
+<p>Once you have your requirements files you can install all the needed requirements on a different computer with <code class="language-plaintext highlighter-rouge">pip install -r requirements.txt</code></p>
+
+<p>By modifying the <code class="language-plaintext highlighter-rouge">requirements.txt</code> file to use <code class="language-plaintext highlighter-rouge">&gt;=</code> instead of <code class="language-plaintext highlighter-rouge">==</code>, you can tell pip to install the latest stable version of the dependency, with the version specified acting as a minimum.  For example to tell pip to install the latest version of <code class="language-plaintext highlighter-rouge">requests</code>, but never version <code class="language-plaintext highlighter-rouge">2.23.0</code> you would use the line <code class="language-plaintext highlighter-rouge">requests&gt;=2.22.0, != 2.23.0</code>.</p>
+
+<p>To upgrade your installed packages, run the command <code class="language-plaintext highlighter-rouge">pip install --upgrade -r requirements.txt</code>.</p>
+
+<h2 id="production-vs-development-dependencies">Production vs Development Dependencies</h2>
+
+<p>You may want specific packages in your development environment that you don’t want in production. For example you may not need unit testing frameworks in production. For this you can create a <code class="language-plaintext highlighter-rouge">requirements_dev.txt</code> file similar to the example below where you include all the production packages and then add the ones needed for development.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-r requirements.txt
+pytest&gt;=4.2.0
+</code></pre></div></div>
+
+<p>It’s also helpful to have a requirements file with “locked down” or “known good” versions of dependencies for us in a production environment. This way no call to pip will trigger an upgrade and possibly cause an issue.</p>
+
+<p>To do this just make a copy of your requirements files for example <code class="language-plaintext highlighter-rouge">cp requirements.txt requirements_locked.txt</code> and change all instances of <code class="language-plaintext highlighter-rouge">&gt;=</code> in the file to <code class="language-plaintext highlighter-rouge">==</code>.</p>
+
+<h2 id="uninstalling-packages">Uninstalling Packages</h2>
+
+<p><strong><em>Note:</em></strong> Pip will not warn you if the package you are trying to uninstall is a dependency for another packages. Its a good idea to use the <code class="language-plaintext highlighter-rouge">git show</code> command and check the <code class="language-plaintext highlighter-rouge">Required-by:</code> section of the output to confirm you are not breaking something.</p>
+
+<p>To uninstall just use the command <code class="language-plaintext highlighter-rouge">pip uninstall &lt;package_name&gt;</code> or <code class="language-plaintext highlighter-rouge">pip uninstall -y &lt;package_name&gt;</code> if you want to skip the confirmation.</p>
+
+<h2 id="alternatives-to-pip">Alternatives to pip</h2>
+
+<p>Check out Conda, Pipevn and Poetry</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

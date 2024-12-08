@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Kubernetes Jobs | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Kubernetes Jobs" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/kubernetes/jobs" />
+<meta property="og:url" content="http://0.0.0.0:4000/kubernetes/jobs" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Kubernetes Jobs" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Kubernetes Jobs","url":"http://0.0.0.0:4000/kubernetes/jobs"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Kubernetes Jobs</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="what-are-kubernetes-jobs">What are Kubernetes Jobs</h2>
+
+<p>The Job construct in kubernetes lets you run one time short-lives task. A job creates Pods that run until successful termination (i.e. exit with 0).</p>
+
+<h2 id="the-job-object">The Job object</h2>
+
+<p>The Job object is responsible for creating and managing Pods defined in a template in the job specification. These Pods generally run until successful completion. The Job object coordinates running a number of Pods in parallel. If the Pod fails before a successful termination, the job controller will create a new Pod based on the pod template in the job specification.</p>
+
+<p>Given that Pods have to be scheduled, theres is a chance that your job will not execute if the required resources are not found by the scheduler. Also, due to the nature of distributed systems there is a small chance, during certain failure scenarios, that duplicate Pods will be created for a specific task.</p>
+
+<h2 id="job-patterns">Job patterns</h2>
+
+<p>Jobs are designed to manage batch-like workloads where work items are processed by one or more Pods. By default, each job runs a single Pod once until successful termination. This job pattern is defined by two primary attributes of a job, namely the number of job completions and the number of Pods to run in parallel. In the case of run once until completion for example, the <code class="language-plaintext highlighter-rouge">completions</code> and <code class="language-plaintext highlighter-rouge">parallelism</code> parameters are set to 1.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Job pattern type</th>
+      <th>Use case</th>
+      <th>Behavior</th>
+      <th>Completions</th>
+      <th>Parallelism</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>One shot</td>
+      <td>Database migrations</td>
+      <td>A single Pod running once until successful completion</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Parallel fixed completions</td>
+      <td>Multiple pods processing a set of work in parallel</td>
+      <td>Once or more Pods running one or more times until reaching a fixed completion count</td>
+      <td>1+</td>
+      <td>1+</td>
+    </tr>
+    <tr>
+      <td>Work queue</td>
+      <td>Multiple Pods processing from a centralized work queue</td>
+      <td>One or more Pods running once until successful termination</td>
+      <td>1</td>
+      <td>2+</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="one-shot">One shot</h3>
+
+<p>One shot jobs provide a way to run a single Pod once until successful termination. A Pod must be created and submitted to the Kubernetes API. This is done using a Pod template defined in the job configuration. Once a job is up and running, the Pod backing the job must be monitored for successful termination. A job can fail for any number of reasons, including an application error, an uncaught exception during runtime, or a node failure before the jbo has a chance to complete. In all cases, the job controller is responsible for recreating the Pod until a successful termination occurs.</p>
+
+<p>There are multiple ways to create a one-shot job in Kubernetes. The easiest is to use the <code class="language-plaintext highlighter-rouge">kubectl</code> command line tools for example…</p>
+
+<p><code class="language-plaintext highlighter-rouge">kubectl run -i oneshot --image=gcr.io/kuar-demo/kuard-amd64:blue --restart=OnFailure -- --keygen-enable --keygen-exit-on-complete --keygen-num-to-gen 10</code></p>
+
+<p>Some things to note about the above example</p>
+
+<ul>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">-i</code> option indicates that this is an interactive command. <code class="language-plaintext highlighter-rouge">kubectl</code> will wait until the job is running and then show the log output from the first (and in this example only) Pod in the job.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">--restart=OnFailure</code> is the option that tells <code class="language-plaintext highlighter-rouge">kubectl</code> to create a Job object. Restart policy can be set to Never if you do not wish for kubernetes to keep trying to restart the Pod if it fails. The behavior with Never will be to keep crating new Pods which can create a lot of Junk in your cluster so the <code class="language-plaintext highlighter-rouge">OnFailure</code> restart option is preferred. Kubelet has mechanisms to do a crash loop backoff so as to not keep eating resources on the cluster.</p>
+  </li>
+  <li>
+    <p>All of the options after <code class="language-plaintext highlighter-rouge">--</code> are command line arguments to the container image. These instruct our test server (kuard) to generate 10 4096 bit SSH keys and then exit.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">kubectl</code> often misses the first couple of lines of the output with the <code class="language-plaintext highlighter-rouge">-i</code> option.</p>
+  </li>
+</ul>
+
+<p>After the job has completed, the Job object and related Pod are still around. This is so that you can inspect the log output. Note that this job won’t show up in <code class="language-plaintext highlighter-rouge">kubectl get jobs</code> unless you pass the <code class="language-plaintext highlighter-rouge">-a</code> flag. Without this flag <code class="language-plaintext highlighter-rouge">kubectl</code> hides completed jobs. To delete the job use the command <code class="language-plaintext highlighter-rouge">kubectl delete jobs oneshot</code>.</p>
+
+<p>You can also use a manifest file to create a job. Below is an example. You would then submit the job with the command <code class="language-plaintext highlighter-rouge">kubectl apply -f job-oneshot.yaml</code>. You can view the results of the job by looking at the logs of the Pod that was created using <code class="language-plaintext highlighter-rouge">kubectl describe jobs oneshot</code> to find the Pod and <code class="language-plaintext highlighter-rouge">kubectl logs oneshot-4kfdt</code> to see the logs from Pod.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">batch/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Job</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">oneshot</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">kuard</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">gcr.io/kuar-demo/kuard-amd64:blue</span>
+        <span class="na">imagePullPolicy</span><span class="pi">:</span> <span class="s">Always</span>
+    <span class="na">args</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s2">"</span><span class="s">--keygen-enable"</span>
+    <span class="pi">-</span> <span class="s2">"</span><span class="s">--keygen-exit-on-complete"</span>
+    <span class="pi">-</span> <span class="s2">"</span><span class="s">--keygen-num-to-gen=10"</span>
+    <span class="na">restartPolicy</span><span class="pi">:</span> <span class="s">OnFailure</span>
+</code></pre></div></div>
+
+<p>One thing to consider is a job may get stuck and not make progress. To handle this you want to use a liveness probe to determine if the job should be restarted.</p>
+
+<h3 id="parallelism">Parallelism</h3>
+
+<p>If for example you wnt to generate 100 keys by having 10 runs of kuard with each generating 10 keys while limiting to just running 5 pods at a time this will translate to <code class="language-plaintext highlighter-rouge">completions</code> of 10 and <code class="language-plaintext highlighter-rouge">parallelism</code> of 5. Below is an example of such a job manifest. You can start this job with the command <code class="language-plaintext highlighter-rouge">kubectl apply -f job-parallel.yaml</code></p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">batch/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Job</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">parallel</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">chapter</span><span class="pi">:</span> <span class="s">jobs</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">parallelism</span><span class="pi">:</span> <span class="m">5</span>
+  <span class="na">completions</span><span class="pi">:</span> <span class="m">10</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">chapter</span><span class="pi">:</span> <span class="s">jobs</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">kuard</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">gcr.io/kuar-demo/kuard-amd64:blue</span>
+        <span class="na">imagePullPolicy</span><span class="pi">:</span> <span class="s">Always</span>
+        <span class="na">args</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="s2">"</span><span class="s">--keygen-enable"</span>
+        <span class="pi">-</span> <span class="s2">"</span><span class="s">--keygen-exit-on-complete"</span>
+        <span class="pi">-</span> <span class="s2">"</span><span class="s">--keygen-num-to-gen=10"</span>
+      <span class="na">restartPolicy</span><span class="pi">:</span> <span class="s">OnFailure</span>
+</code></pre></div></div>
+
+<h3 id="work-queues">Work Queues</h3>
+
+<p>The manifest example below is telling the job to start up five Pods in parallel. As the <code class="language-plaintext highlighter-rouge">completions</code> parameter is unset, we put the job into a worker pool mode. Once the first Pod exits with a zero exit code, the job will start winding down and will not start any new Pods. This means that none of the workers should exit until the work is done and they are all in the process of finishing up. Note that in the book a work to be done queue was set up for the example workers.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">batch/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Job</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">message-queue</span>
+    <span class="na">component</span><span class="pi">:</span> <span class="s">consumer</span>
+    <span class="na">chapter</span><span class="pi">:</span> <span class="s">jobs</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">consumers</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">parallelism</span><span class="pi">:</span> <span class="m">5</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">message-queue</span>
+        <span class="na">component</span><span class="pi">:</span> <span class="s">consumer</span>
+        <span class="na">chapter</span><span class="pi">:</span> <span class="s">jobs</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">worker</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s2">"</span><span class="s">gcr.io/kuar-demo/kuard-amd64:blue"</span>
+        <span class="na">imagePullPolicy</span><span class="pi">:</span> <span class="s">Always</span>
+        <span class="na">args</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="s2">"</span><span class="s">--keygen-enable"</span>
+        <span class="pi">-</span> <span class="s2">"</span><span class="s">--keygen-exit-on-complete"</span>
+        <span class="pi">-</span> <span class="s2">"</span><span class="s">--keygen-memq-server=http://queue:8080/memq/server"</span>
+        <span class="pi">-</span> <span class="s2">"</span><span class="s">--keygen-memq-queue=keygen"</span>
+      <span class="na">restartPolicy</span><span class="pi">:</span> <span class="s">OnFailure</span>
+</code></pre></div></div>
+
+<p>For the example manifest above we can clean up using labels with the command <code class="language-plaintext highlighter-rouge">kubectl delete rs,svc,job -l chapter=jobs</code></p>
+
+<h3 id="cronjobs">CronJobs</h3>
+
+<p>Below is an example of a CronJob definition in Kubernetes. Note the <code class="language-plaintext highlighter-rouge">sepc.schedule field</code>, which contains the interval for the CronJob in standard cron format. As with other definitions you can schedule it with the command <code class="language-plaintext highlighter-rouge">kubectl create -f cron-job.yaml</code> and use <code class="language-plaintext highlighter-rouge">kubectl describe &lt;cron-job&gt;</code> to get the details.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">batch/v1beta1</span>
+    <span class="s">kind</span><span class="pi">:</span> <span class="s">CronJob</span>
+    <span class="s">metadata</span><span class="pi">:</span>
+      <span class="na">name</span><span class="pi">:</span> <span class="s">example-cron</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="c1"># Run every fifth hour</span>
+      <span class="na">schedule</span><span class="pi">:</span> <span class="s2">"</span><span class="s">0</span><span class="nv"> </span><span class="s">*/5</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*"</span>
+      <span class="na">jobTemplate</span><span class="pi">:</span>
+        <span class="na">spec</span><span class="pi">:</span>
+          <span class="na">template</span><span class="pi">:</span>
+            <span class="na">spec</span><span class="pi">:</span>
+              <span class="na">containers</span><span class="pi">:</span>
+              <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">batch-job</span>
+                <span class="na">image</span><span class="pi">:</span> <span class="s">my-batch-image</span>
+              <span class="na">restartPolicy</span><span class="pi">:</span> <span class="s">OnFailure</span>
+</code></pre></div></div>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

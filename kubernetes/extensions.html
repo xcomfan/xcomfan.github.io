@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Kubernetes: Extensions | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Kubernetes: Extensions" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/kubernetes/extensions" />
+<meta property="og:url" content="http://0.0.0.0:4000/kubernetes/extensions" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Kubernetes: Extensions" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Kubernetes: Extensions","url":"http://0.0.0.0:4000/kubernetes/extensions"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Kubernetes: Extensions</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h2 id="extending-kubernetes">Extending Kubernetes</h2>
+
+<p>Even cluster admins should be careful and use diligence when extending Kuberneetes with third party tools. Some extensions can be used as a vector to steal secrets or run malicious code. Extending a cluster makes it different than stock Kubernetes. When running multiple clusters, it is very valuable to build tooling to maintain consistency of experience across clusters which should include extensions that are installed.</p>
+
+<h3 id="points-of-extensibility">Points of extensibility</h3>
+
+<p>In addition to admission controllers and API extensions, there are a numbrer of ways to “extend” your cluster wihtout modifying the API server. These include DaemonSets that install automatic logging and monitoring tools that can scan your services for vulnerabilities.</p>
+
+<p>Admission contorllers are called prior to the API object being written into the backing storage. Adminssion controllers can reject or modify API requests. There are several admission controllers that are built into the Kubernetes API server. The limit range admission controller sets default limits for Pods without default limits. Many systems use custom admission controllers to auto-inject sidecar continers into all Pods created on the system to create “auto-magic” experiences.</p>
+
+<p>The other for of extension which can be used in conjunction with admission controllers is custom resources. With custom resources whole new API objects are added to the Kubernetes API surface area. These new APIs can be added to namespaces,are subject to RBAC and can be used with existing tools such as <code class="language-plaintext highlighter-rouge">kubectl</code>.</p>
+
+<p>The first thing you need to do to create a custom resource is to create a CustomResourceDefinition. This objec tis a meta-resource (a resource that is the definition of another resource). As a concrete exmple consider defining a new resource to represent load tests in your cluster. When a new LoadTest resource is created, a load test is spun up in your Kubernetes cluster and drives traffic to a service.  The first steap in creating this resource is defining it through CustomResourceDefinition. Below is an example. The name of a custom resource has to have the form <code class="language-plaintext highlighter-rouge">&lt;resource plural&gt;.&lt;api-group&gt;</code> to ensure that each resource definition is unique to the cluster.  The API group in the spec musht match the suffix in the metadata. Once you use <code class="language-plaintext highlighter-rouge">kubectl create -f loadtest-resource.yaml</code> (loadtest-resource.yaml is the file name with below example) you can right away run the command <code class="language-plaintext highlighter-rouge">kubectl get loadtests</code>.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apiextensions.k8s.io/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">CustomResourceDefinition</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">loadtests.beta.kuar.com</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">group</span><span class="pi">:</span> <span class="s">beta.kuar.com</span>
+  <span class="na">versions</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">v1</span>
+      <span class="na">served</span><span class="pi">:</span> <span class="no">true</span>
+      <span class="na">storage</span><span class="pi">:</span> <span class="no">true</span>
+  <span class="na">scope</span><span class="pi">:</span> <span class="s">Namespaced</span>
+  <span class="na">names</span><span class="pi">:</span>
+    <span class="na">plural</span><span class="pi">:</span> <span class="s">loadtests</span>
+    <span class="na">singular</span><span class="pi">:</span> <span class="s">loadtest</span>
+    <span class="na">kind</span><span class="pi">:</span> <span class="s">LoadTest</span>
+    <span class="na">shortNames</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">lt</span>
+</code></pre></div></div>
+
+<p>Now that you have the resource created you can create the resource. The manifest for that is below. You can provide a schema for the CustomResourceDefinition, but unless you want to do validation you don’t need to do that. Even if you do want to do validation you can register a validating admission controller. The manifest below can bre created using <code class="language-plaintext highlighter-rouge">kubectl create -f loadtest.yaml</code></p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">beta.kuar.com/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">LoadTest</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">my-loadtest</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">service</span><span class="pi">:</span> <span class="s">my-service</span>
+  <span class="na">scheme</span><span class="pi">:</span> <span class="s">https</span>
+  <span class="na">requestsPerSecond</span><span class="pi">:</span> <span class="m">1000</span>
+  <span class="na">paths</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">/index.html</span>
+    <span class="pi">-</span> <span class="s">/login.html</span>
+    <span class="pi">-</span> <span class="s">/shares/my-shares/</span>
+</code></pre></div></div>
+
+<p>At this point we can list the loadtest resource but it does not do anything yet. You can use the CRUD API to create read update delete objects but they will take no action. To actually do something a controller needs to be present in the cluster to react to the new API we defined. We need a piece of code that will continuously monitor the custom resources and create, modify, or delete LoadTests as necessary to implement the API. There is a Watch API on the API server that your code can use to implement this control loop. The API is a bit hard to use so you should look into supported mechanisms such as <code class="language-plaintext highlighter-rouge">informer</code> in the <a href="https://pkg.go.dev/k8s.io/client-go/informers">client-go library</a></p>
+
+<h2 id="patterns-for-custom-resources">Patterns for custom resources</h2>
+
+<h3 id="just-data">Just data</h3>
+
+<p>In the Just data pattern, you are simply using the API server for storage and retrieval of information for your application. You should not use the API server for storage and retrieval for your application; its not designed for that. API extensions should be used for control or configuration objects that help you manage the deployment or runtime of your application. An example use case for “just data” might be configuration for canary deployments of your application. While you can use ConfigMaps; ConfigMaps are untyped and sometimes using a more strongly typed API extension object provides clarity and ease of use. Extensions that are just data don’t need a corresponding controller to activate them, but they may have validating or mutating admission controllers to ensure that they are well formed.</p>
+
+<h3 id="compilers">Compilers</h3>
+
+<p>This pattern knows as “compiler” or “abstraction” pattern has the API extension object representing a higher-level abstraction that is “compiled” into a combination of lower level Kubernetes objects. The LoadTest extension we discussed prior is an example of this pattern. A user consumes the extension as a high level concept, in this example a <code class="language-plaintext highlighter-rouge">loadtest</code>, but it comes into being by being deployed as a collection of Kubernetes Pods and services. To achieve this, a compiled abstraction requires an API controller to be running somewhere in the cluster, to watch the current LoadTests and create the “compiled” representation. There is however no online health maintenances.</p>
+
+<h3 id="operators">Operators</h3>
+
+<p>Operator pattern provides online proactive management of the resources created by the extension. These extensions likely provide a higher level abstraction (for example a database) that is compiled down to a lower level representation, but they also provide online functionality such as snapshot, backups, or upgrades. To achieve this, the controller not only monitors the running state of the application supplied by the extension to add or remove things as necessary, but also monitors the running state of the application supplied by the extension and takes actions to remediate unhealthy databases, take snapshots or restore from a snapshot if failure occurs. Operators are the most complicated pattern for API extension.</p>
+
+<h2 id="getting-started">Getting started</h2>
+
+<p>The <a href="https://kubebuilder.io">Kubebuilder project</a> is a good resource to use when getting started with extension development.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

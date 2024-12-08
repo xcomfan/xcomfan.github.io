@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Kubernetes: Organizing Your Application | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Kubernetes: Organizing Your Application" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/kubernetes/projects" />
+<meta property="og:url" content="http://0.0.0.0:4000/kubernetes/projects" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Kubernetes: Organizing Your Application" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Kubernetes: Organizing Your Application","url":"http://0.0.0.0:4000/kubernetes/projects"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Kubernetes: Organizing Your Application</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="principles-to-guide-us">Principles to Guide Us</h2>
+
+<ul>
+  <li>File systems as the source of truth</li>
+  <li>Code review to ensure the quality of changes</li>
+  <li>Feature flags for staged roll forward and roll back</li>
+</ul>
+
+<h2 id="feature-gates-and-guard">Feature Gates and Guard</h2>
+
+<p>Feature gates and guards play an important role in bridging the gap of developing new features in source control and the deployment of those features into production. You can do the development behind a feature flag or gate as in the sippet below. This enables committing of code to the production branch long before the feature is ready to ship. The enabling of the feature requires just a configuration change to activate the flag. This makes it very clear what changed in the production environment, and makes it easy to roll back without having to go back to an older version of the code.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="nx">featureFlags</span><span class="p">.</span><span class="nx">myFlag</span><span class="p">){</span>
+  <span class="c1">// Feature implementation goes here</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="filesystem-layout">Filesystem layout</h2>
+
+<p>The first cardinality on which you want to organize your application is the semantic component or layer (e.g., frontend, batch work queue etc.) This may seem like overkill when one team manages all these components but it makes it easy to scale the team later. An application with a front end that uses two services would have a file layout similar to the below. Within each directory the configuration for each application is stored. These are YAML files that directly represent the current state of the cluster. Its generally useful to include both service name and the object type withing the same file. While Kubernetes allows for the creation of YAML files with multiple objects in the same file, this should generally be avoided. The only good reason to group objects in the same file is if they are conceptually identical. If grouping objects together doesn’t form a single concept, they probably shouldn’t be in a single file.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>frontend/
+  frontend-deployment.yaml
+  frontend-service.yaml
+  frontend-ingress.yaml
+service-1/
+  service-1-deployment.yaml
+  service-1-service.yaml
+  service-1-configmap.yaml
+service-2/
+  ...
+</code></pre></div></div>
+
+<h2 id="managing-periodic-versions">Managing periodic versions</h2>
+
+<p>It is very useful to be able to look back historically and see what your application deployment previously looked like. It is also useful to be able to iterate a configuration forward while still being able to deploy a stable release configuration. Thus its handy to be able to simultaneously store and maintain multiple different revisions of your configuration. There are two approaches to this.</p>
+
+<p>The first is to use tags, branches and source-control features. This leads to a more simplified directory structure and aligns with how source code revisions are managed. The second options is to clone the configuration within the filesystem and use directories for different revisions. This approach is convenient because it makes simultaneous viewing of the configuration very straightforward. Both of these are essentially identical and are just a matter of preference.</p>
+
+<h3 id="versioning-with-branches-and-tags">Versioning With Branches and Tags</h3>
+
+<p>When you are ready for release, you place a source-control tag (e.g <code class="language-plaintext highlighter-rouge">git tag v1.0</code>) on the config version and the HEAD continues to iterate forward. When you need to update the release configuration; first you commit the change to HEAD of the repository, then you create a new branch named v1 at the v1.0 tag. You then cherry-pick the desired change onto the release branch (<code class="language-plaintext highlighter-rouge">git cherry-pick &lt;edit&gt;</code>), and finally you tag this branch with the <code class="language-plaintext highlighter-rouge">v1.1</code> tag to indicate the new point release. <strong><em>Note:</em></strong> A common error is to cherry pick fixes into a release branch only. Its a good idea to cherry-pick it into all active releases, in case for some reason you need to roll back versions but the fix is still needed.</p>
+
+<h3 id="versioning-with-directories">Versioning With Directories</h3>
+
+<p>In this approach your versioned deployment exists within its own directory as in the example below. All deployments occur from <code class="language-plaintext highlighter-rouge">HEAD</code> instead of from specific revision tags. When adding a new configuration it is done to the files in the <code class="language-plaintext highlighter-rouge">current</code> directory. When creating a new release the current directory is copied to create a new directory associated wit the new release. When performing a bugfix change to a release, the pull request must modify the YAML file in all the relevant release directories. This is a slightly better experience than the cherry-picking approach described earlier, since it is clear in a single change request that all of the relevant versions are being updated with the same change, instead of requiring a cherry-pick per version.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>frontend/
+  v1/
+    frontend-deployment.yaml
+    frontend-service.yaml
+  current/
+    frontend-deployment.yaml
+    frontend-service.yaml
+service-1/
+  v1/
+    service-1-deployment.yaml
+    service-1-service.yaml
+  v2/
+    service-1-deployment.yaml
+    service-1-service.yaml
+  current/
+    service-1-deployment.yaml
+    service-1-service.yaml
+...
+</code></pre></div></div>
+
+<h2 id="structuring-your-application-for-development-testing-and-deployment">Structuring Your Application For Development, Testing and Deployment</h2>
+
+<p>There are two goals for your application with regard to development and testing.</p>
+
+<ul>
+  <li>
+    <p>Each developer should be able to easily develop new features for the application. Developers should be able to work in their own environment with all services available.</p>
+  </li>
+  <li>
+    <p>You should be able to easily and accurately test your application prior to deployment. This is essential to being able to quickly roll out features while maintaining availability.</p>
+  </li>
+</ul>
+
+<h3 id="progression-of-a-release">Progression Of a Release</h3>
+
+<p>To achieve both these goals it is important to relate stages of development to the release versions described earlier. The stages of release are:</p>
+
+<ul>
+  <li>
+    <p>HEAD - The bleeding edge of the configuration; the latest changes</p>
+  </li>
+  <li>
+    <p>Development - Largely stable, but not ready for deployment. Suitable for developers to use for building features.</p>
+  </li>
+  <li>
+    <p>Staging - The beginning of testing, unlikely to change unless problems are found.</p>
+  </li>
+  <li>
+    <p>Canary - The first release to users, used to test for problems with real world traffic and likewise give user a chance to test what is coming next.</p>
+  </li>
+  <li>
+    <p>Release - the current production release</p>
+  </li>
+</ul>
+
+<p>You should use a tag to mark the development stage. An automated process should be used to test the <code class="language-plaintext highlighter-rouge">HEAD</code> branch, and if test pass the <code class="language-plaintext highlighter-rouge">development</code> tag is moved to <code class="language-plaintext highlighter-rouge">HEAD</code>. Thus developers can track reasonably close to the latest changes when deploying their own environments.</p>
+
+<p>To map the stage to a specific revision if using source control approach you would use tags and if using file system approach you would use symbolic links.</p>
+
+<h2 id="parameterizing-your-applications-with-templates">Parameterizing Your Applications With Templates</h2>
+
+<p>Since its impractical to keep the development stages identical, but you want the environments to be as identical as possible its a good idea to have parameterized environments with templates. This lets you use a template for the bulk of the configuration but have a limited set of parameters to produce the final configuration. This makes it easy to see the differences between environments.</p>
+
+<h3 id="parameterizing-with-helm-and-templates">Parameterizing With Helm and Templates</h3>
+
+<p><a href="https://helm.sh">Helm</a> is a package manager for Kubernetes. They patterns described here for Helm will apply to whatever templating option you choose.</p>
+
+<p>Helm templating language use the “mustache” syntax, so for example</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">-deployment</span>
+</code></pre></div></div>
+
+<p>indicates that <code class="language-plaintext highlighter-rouge">Release.Name</code> should be substituted into the name of a deployment. To pass a parameter for this value you use <code class="language-plaintext highlighter-rouge">values.yaml</code> file with contents like the below.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Release</span><span class="pi">:</span>
+  <span class="na">Name</span><span class="pi">:</span> <span class="s">my-release</span>
+</code></pre></div></div>
+
+<p>After parameter substitution you would get …</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">my-release-deployment</span>
+</code></pre></div></div>
+
+<h3 id="filesystem-layout-for-parameterization">Filesystem Layout For Parameterization</h3>
+
+<p>With parametarization, instead of treating each deployment lifecycle stage as a pointer to a version, each deployment lifecycle is the combination of a parameter file and a pointer to a specific version.  Below is an example of such a layout.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>frontend/
+  staging/
+    templates -&gt; ../v2
+    staging-parameters.yaml
+  production/
+    templates -&gt; ../v1
+    production-parameters.yaml
+  v1/
+    frontend-deployment.yaml
+    frontend-service.yaml
+  v2/
+    frontend-deployment.yaml
+    frontend-service.yaml
+</code></pre></div></div>
+
+<p>Doing this with version control looks similar, except that the parameters for each life-cycle stage are kept at the root of the configuration directory tree.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>frontend/
+  staging-parameters.yaml
+  templates/
+  frontend-deployment.YAML
+</code></pre></div></div>
+
+<p>Should you need to have different configurations for different regions, your directory layout would lool like the below.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>frontend/
+  staging/
+    templates -&gt; ../v3/
+    parameters.yaml
+  eastus/
+    templates -&gt; ../v1/
+    parameters.yaml
+  westus/
+    templates -&gt; ../v2/
+    parameters.yaml
+...
+</code></pre></div></div>
+
+<p>If using version control your layout would look like…</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>frontend/
+  staging-parameters.yaml
+  eastus-parameters.yaml
+  westus-parameters.yaml
+  templates/
+    frontend-deployment.yaml
+...
+</code></pre></div></div>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

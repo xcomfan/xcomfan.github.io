@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Deploy Your Python Script on the Web With Flask | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Deploy Your Python Script on the Web With Flask" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/sort_me/pipx" />
+<meta property="og:url" content="http://0.0.0.0:4000/sort_me/pipx" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Deploy Your Python Script on the Web With Flask" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Deploy Your Python Script on the Web With Flask","url":"http://0.0.0.0:4000/sort_me/pipx"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Deploy Your Python Script on the Web With Flask</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="overview">Overview</h2>
+
+<p>Reason for using <code class="language-plaintext highlighter-rouge">pipx</code> over <code class="language-plaintext highlighter-rouge">PyPI</code> is <code class="language-plaintext highlighter-rouge">pipx</code> allows you to install and execute runnable scripts without impacting your Python interpreter.</p>
+
+<h2 id="get-started-with-pipx">Get Started with <code class="language-plaintext highlighter-rouge">pipx</code></h2>
+
+<p>Unlike <code class="language-plaintext highlighter-rouge">pip</code>, <code class="language-plaintext highlighter-rouge">pipx</code> doesn’t install packages into your system-wide Python interpreter or even an activated virtual environment. Instead, it automatically creates and manages virtual environments for you to isolate the dependencies of every package that you install. <code class="language-plaintext highlighter-rouge">pipx</code> also adds symbolic links to your <code class="language-plaintext highlighter-rouge">PATH</code> vairable for every command-line script exposed by the installed packages.</p>
+
+<p>You can classify code distributed through <code class="language-plaintext highlighter-rouge">PyPI</code> into three catagories</p>
+
+<ol>
+  <li>
+    <p><strong>Importable:</strong> It’s either pure Python source code or Python bindings of compiled shared objects that you want to import in your Python projects. Typically its libraries such as <code class="language-plaintext highlighter-rouge">requests</code> providing re-usable pieces of code to help you solve a common problem. They can also be frameworks such as <code class="language-plaintext highlighter-rouge">FastAPI</code> that you build your applications around.</p>
+  </li>
+  <li>
+    <p><strong>Runnable:</strong> These are usually command-line utility tools such as <code class="language-plaintext highlighter-rouge">black</code> or <code class="language-plaintext highlighter-rouge">flake8</code> that assist you during the development phase. They can also be full-fledged applications like <code class="language-plaintext highlighter-rouge">JupyterLab</code></p>
+  </li>
+  <li>
+    <p><strong>Hybrid:</strong> These combine both worlds by providing importable code and runnable scripts at the same time. <code class="language-plaintext highlighter-rouge">Flask</code> and <code class="language-plaintext highlighter-rouge">Django</code> are good examples, as they offer utility scripts while also being web frameworks.</p>
+  </li>
+</ol>
+
+<p>A distribution package is made runnable or hybrid by defining one or more <code class="language-plaintext highlighter-rouge">entry points</code> in the corresponding configuration file in <code class="language-plaintext highlighter-rouge">pyproject.toml</code> file or historically in <code class="language-plaintext highlighter-rouge">setup.py</code> or <code class="language-plaintext highlighter-rouge">setup.cfg</code>. The <code class="language-plaintext highlighter-rouge">pipx</code> tool will only let you install Python packages with at least one entry point. It will not work for runnable packages such as <code class="language-plaintext highlighter-rouge">Rich</code> or bare-bones libraries with Python code meant for importing.</p>
+
+<p>As a side note in Python you can package up <code class="language-plaintext highlighter-rouge">.pyz</code> files which are kind of like <code class="language-plaintext highlighter-rouge">jar</code> files for java and you can have those files have all the dependencies you need to be able to distribute your Python project with all dependencies included.</p>
+
+<p>You an install <code class="language-plaintext highlighter-rouge">pipx</code> via <code class="language-plaintext highlighter-rouge">pip</code>, but that will add a few dependencies to your global Python interpreter.  The command to do that would be <code class="language-plaintext highlighter-rouge">python -m pip install pipx</code>. You can also install it via your package manager.</p>
+
+<h2 id="configuring-pipx-before-first-use">Configuring pipx before first use</h2>
+
+<p>You can use the command <code class="language-plaintext highlighter-rouge">pipx ensurepath</code> to add the path <code class="language-plaintext highlighter-rouge">pipx</code> uses (<code class="language-plaintext highlighter-rouge">/home/user/.local/bin</code>) to your <code class="language-plaintext highlighter-rouge">PATH</code> environment variable. You can also do this manually in your dot files.</p>
+
+<p>To see what environment variables <code class="language-plaintext highlighter-rouge">pipx</code> has set you can use the command <code class="language-plaintext highlighter-rouge">pipx environment</code>.</p>
+
+<p>Run the <code class="language-plaintext highlighter-rouge">pipx completions</code> command to get instructions for adding completion hints to your shell.</p>
+
+<h2 id="run-single-use-python-apps">Run Single-Use Python Apps</h2>
+
+<p>Lets say you want to try running Ruff the rust based python linter, but you don’t want to set it up in your project.  You can just use the command <code class="language-plaintext highlighter-rouge">pipx run ruff check .</code>. With this command pipx will download the latest version of the requested package from PyPI and install it into a temporary virtual environment. It then will run the <code class="language-plaintext highlighter-rouge">ruff check .</code> command from that virtual environment without touching your project dependencies. To speed things up <code class="language-plaintext highlighter-rouge">pipx</code> will store the files in a cached location (<code class="language-plaintext highlighter-rouge">.</code> hidden directory) for two weeks. You can use the <code class="language-plaintext highlighter-rouge">--verbose</code> flag to see where this location is. You can also disable the cache with the <code class="language-plaintext highlighter-rouge">--no-cache</code> flag.</p>
+
+<p>In the Ruff example the entry point and the name of the package are the same. If they are different or if the package has multiple entry points, you can use the <code class="language-plaintext highlighter-rouge">--spec</code> option. For example <code class="language-plaintext highlighter-rouge">pipx run --spec httpie http --body ifconfig.co/country</code>. This installs the HTTPie package and runs its <code class="language-plaintext highlighter-rouge">http</code> entry point to ge the message body of an HTTP response from <code class="language-plaintext highlighter-rouge">ifconfig.co/country</code> (this is a good one liner to check if your VPN is working correctly ifconfig.co/country is a service that checks for country of your http request).</p>
+
+<p>You can also use the <code class="language-plaintext highlighter-rouge">--spec</code> option to run a specific version of a Python package. For example to run a specific version of poetry you would use the command <code class="language-plaintext highlighter-rouge">pipx run --spec 'poetry==1.1.11' poetry new your-project</code>.</p>
+
+<p>The requirement specifier has even more flexibility allowing you to bring extra dependencies or run a command straight from a remote Git repository or ZIP archive with the desired Python package.</p>
+
+<p><code class="language-plaintext highlighter-rouge">pipx run --spec git+https://github.com/realpython/reader.git realpython</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">pipx run --spec https://github.com/realpython/reader/archive/refs/tags/1.1.2.zip realpython</code></p>
+
+<p>The two commands above are an example of running the Real Python feed reader. The first command runs the <code class="language-plaintext highlighter-rouge">realpython</code> script directly from the default branch while the second one fetches the package from the giving release archive. You can optionally include a specific branch name or a commit hash in the Git URL by appending it after the <code class="language-plaintext highlighter-rouge">@</code> sign.</p>
+
+<p>You can use <code class="language-plaintext highlighter-rouge">pipx</code> to run a Python script from any remote URL or local file as long as it has the <code class="language-plaintext highlighter-rouge">.py</code> extension.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ubuntu@ubuntu:~/python_practice/real_python/pipx_intro<span class="nv">$ </span><span class="nb">echo</span> <span class="s1">'print("Hello, World!")'</span> <span class="o">&gt;</span> hello.py
+ubuntu@ubuntu:~/python_practice/real_python/pipx_intro<span class="nv">$ </span>pipx run hello.py
+Hello, World!
+</code></pre></div></div>
+
+<p>If your script requires third party packages, then you can declare them in a specially formatted command, which must adhere to <strong><em>inline script metadata</em></strong> syntax from PEP 723 at the top of the file.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># /// script
+# dependencies = [
+#   "rich==13.7.0",
+# ]
+# ///
+</span>
+<span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="k">print</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"[b]Hello, World[/b]"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>When you run the above script through <code class="language-plaintext highlighter-rouge">pipx</code> it will create a temporary virtual environment and install the listed dependencies.</p>
+
+<h2 id="install-python-apps-globally">Install Python Apps Globally</h2>
+
+<p>To install Ruff globally while keeping the systems interpreter intact you would use the command <code class="language-plaintext highlighter-rouge">pipx install ruff</code>. This creates an isolated virtual environment and install the latest version of the specified package into it. You can check the <code class="language-plaintext highlighter-rouge">pipx environment</code> to see where the permanent virtual environment is. <code class="language-plaintext highlighter-rouge">pipx</code> will also make a symbolic link for every entry point it finds in the installed package. This lets you run those tools directly by typing their names in your terminal as long as the directory is in your <code class="language-plaintext highlighter-rouge">PATH</code> variable.  For example is you install mypy with the command <code class="language-plaintext highlighter-rouge">pipx install mypy</code> you will get have globally available <code class="language-plaintext highlighter-rouge">dmypy, mypy, mypyc, stubgen, stubtest</code> as those are the entry points of the modules.</p>
+
+<p>Some python packages such as <code class="language-plaintext highlighter-rouge">polars</code> don’t define any entry points at all.  <code class="language-plaintext highlighter-rouge">pipx</code> will not install such packages and give you a meaningful error. If a dependency package has an entry point <code class="language-plaintext highlighter-rouge">pipx</code> will set that entry point.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">pipx install</code> command does not have a <code class="language-plaintext highlighter-rouge">--spec</code> paramater like the <code class="language-plaintext highlighter-rouge">run</code> command, but you can use a version constraint for example <code class="language-plaintext highlighter-rouge">pipx install poetry==1.1.11</code>.</p>
+
+<p>Note that you can have at most one virtual environment per package because <code class="language-plaintext highlighter-rouge">pipx</code> names its virtual environments after the corresponding Python packages. To differentiate between versions of the same package you can provide a custom <code class="language-plaintext highlighter-rouge">--suffix</code> option (experimental feature). You can also overwrite an existing environment with a new version by using the <code class="language-plaintext highlighter-rouge">--force</code> flag.</p>
+
+<h2 id="manage-your-installed-apps">Manage Your Installed Apps</h2>
+
+<h3 id="list-the-installed-apps">List the Installed Apps</h3>
+
+<p>You don’t have to memorize the individual Python entry points.  At any time you can run <code class="language-plaintext highlighter-rouge">pipx list</code> to see all of the virtual environments managed by <code class="language-plaintext highlighter-rouge">pipx</code> and their symbolic links and versions.  If you just want a list of packages without the environment details use <code class="language-plaintext highlighter-rouge">pipx list --short</code>.  To get full details of the underlying virtual environment of each package use <code class="language-plaintext highlighter-rouge">pipx list --json</code> which will give you a json output which may be handy for automated tasks.</p>
+
+<h3 id="upgrade-apps-to-their-latest-versions">Upgrade Apps to Their Latest Versions</h3>
+
+<p><code class="language-plaintext highlighter-rouge">pipx upgrade &lt;package name&gt;</code> for example <code class="language-plaintext highlighter-rouge">pipx upgrade ruff</code></p>
+
+<p>This command will use the correct virtual environment for the package and under the hood run <code class="language-plaintext highlighter-rouge">python -m pip install</code>. This saves you having to find and source the virtual environment yourself.</p>
+
+<p>To upgrade all packages managed by <code class="language-plaintext highlighter-rouge">pipx</code> use <code class="language-plaintext highlighter-rouge">pipx upgrade-all</code></p>
+
+<h3 id="downgrade-apps-to-a-specific-version">Downgrade Apps to a Specific Version</h3>
+
+<p>To downgrade or install a specific version you need to use the requirement specifier and the force flag to over write the existing installed version. For example <code class="language-plaintext highlighter-rouge">pipx install --force ruff=0.0.292</code> where <code class="language-plaintext highlighter-rouge">ruff</code> is the package you are downgrading.</p>
+
+<p><code class="language-plaintext highlighter-rouge">pipx</code> has <code class="language-plaintext highlighter-rouge">reinstall-all</code> and <code class="language-plaintext highlighter-rouge">reinstall</code> commands they don’t do what  you want in this scenario.</p>
+
+<h3 id="uninstall-apps-and-virtual-environments">Uninstall Apps and Virtual Environments</h3>
+
+<p>To remove a Python package managed by <code class="language-plaintext highlighter-rouge">pipx</code> and its corresponding virtual environment use the command <code class="language-plaintext highlighter-rouge">pipx uninstall ruff</code> where <code class="language-plaintext highlighter-rouge">ruff</code> is the package you wish to uninstall.</p>
+
+<p>To uninstall everything use <code class="language-plaintext highlighter-rouge">pipx uninstall-all</code></p>
+
+<h2 id="take-control-over-virtual-environments">Take Control Over Virtual Environments</h2>
+
+<h3 id="inject-dependencies-into-managed-environments">Inject Dependencies Into Managed Environments</h3>
+
+<p>If for example you installed Poetry using <code class="language-plaintext highlighter-rouge">pipx</code> and you want to add the optional plugin <code class="language-plaintext highlighter-rouge">poetry-plugin-export</code> you would use the <code class="language-plaintext highlighter-rouge">inject</code> functionality from <code class="language-plaintext highlighter-rouge">pipx</code>.  For example <code class="language-plaintext highlighter-rouge">pipx inject poetry poetry-plugin-export poetry-plugin-bundle</code></p>
+
+<p>The <code class="language-plaintext highlighter-rouge">inject</code> subcommand takes the original package name already installed and a list of extra dependencies.</p>
+
+<p>To confirm that the dependencies were installed, you can use the <code class="language-plaintext highlighter-rouge">pipx runpip</code> command which lets you run arbitrary <code class="language-plaintext highlighter-rouge">pip</code> commands inside an apps virtual environment. The command would look similar to <code class="language-plaintext highlighter-rouge">pipx runpip poetry list | grep poetry</code>.</p>
+
+<p>While you could use <code class="language-plaintext highlighter-rouge">runpip</code> to uninstall dependencies from a managed virtual environment, you’re better off with a more concise <code class="language-plaintext highlighter-rouge">uninject</code> subcommand that pipx has to offer.  <code class="language-plaintext highlighter-rouge">pipx uninject poetry poetry-plugin-export</code>.</p>
+
+<h3 id="use-a-specific-python-version-in-new-environments">Use a Specific Python Version in New Environments</h3>
+
+<p>By default, <code class="language-plaintext highlighter-rouge">pipx</code> will use the standard-library <code class="language-plaintext highlighter-rouge">venv</code> module from the Python interpreter you installed <code class="language-plaintext highlighter-rouge">pipx</code> with. You can override the default Python interpreter.</p>
+
+<p>To override the interpreter before installing a package with <code class="language-plaintext highlighter-rouge">pipx</code> by modifying the <code class="language-plaintext highlighter-rouge">PIPX_DEFAULT_PYTHON</code> environment variable.  Both <code class="language-plaintext highlighter-rouge">pipx run</code> and <code class="language-plaintext highlighter-rouge">pipx install</code> will respect this variable.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ export PIPX_DEFAULT_PYTHON=/path/to/python-3.13.0a4/bin/python3
+$ pipx run ipython
+Python 3.13.0a4 (tags/v3.13.0a4:9d34f60783, Feb 26 2024, 13:03:08) [GCC 13.2.0]
+Type 'copyright', 'credits' or 'license' for more information
+IPython 8.22.1 -- An enhanced Interactive Python. Type '?' for help.
+
+In [1]:
+</code></pre></div></div>
+
+<p>You can also use the <code class="language-plaintext highlighter-rouge">--python</code> argument. For example <code class="language-plaintext highlighter-rouge">pipx install --python=/home/user/.pyenv/versions/3.11.8/bin/python mypy</code></p>
+
+<p>If you want to change the python version in an existing environment you can use the <code class="language-plaintext highlighter-rouge">pipx reinstall</code> command. Run on its own it will remove the packages along with their virtual environment and install them again. You can combine this command with the <code class="language-plaintext highlighter-rouge">--python</code> parameter or setting the <code class="language-plaintext highlighter-rouge">PIPX_DEFAULT_PYTHON</code> environment variable to change the existing environment.</p>
+
+<h2 id="make-your-own-app-for-pipx">Make Your Own APP for pipx</h2>
+
+<p>pick a Python packaging tool like setuptools, Flit, or Poetry, and specify your entry points accordingly. Then, build a wheel distribution package and publish it on PyPI. As a rule of thumb, you should first upload your package to TestPyPI for verification.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

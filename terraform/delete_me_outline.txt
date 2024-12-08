@@ -2,6 +2,7 @@ temp page for me to brainstorm categories for organizing the Terraform notes.
 
 - Terraform workflow
     - depends on and the resource lifecycle
+    - recomended project layout
 - Managing Terraform state
 - Terraform DSL language
     - variables

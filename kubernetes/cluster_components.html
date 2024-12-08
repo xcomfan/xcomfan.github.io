@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Kubernetes Cluster Components | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Kubernetes Cluster Components" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/kubernetes/cluster_components" />
+<meta property="og:url" content="http://0.0.0.0:4000/kubernetes/cluster_components" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Kubernetes Cluster Components" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Kubernetes Cluster Components","url":"http://0.0.0.0:4000/kubernetes/cluster_components"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Kubernetes Cluster Components</h1>
+  </header>
+
+  <div class="post-content">
+    <p>Many of the components that make up Kubernetes are deployed using Kubernetes itself. Some of these components are covered below.</p>
+
+<h2 id="kubernetes-proxy">Kubernetes proxy</h2>
+
+<p>The kubernetes proxy is responsible for routing network traffic to load-balanced services in the Kubernetes cluster. To do this job the, the proxy must be present on every node int he cluster.</p>
+
+<h2 id="the-docker-container-runtime">The Docker Container Runtime</h2>
+
+<p>Kubernetes relies on a container runtime to actually run containers. The interface to this container runtime is defined by the <strong>Container Runtime Interface (CRI)</strong> standard. The CRI API is implemented by a number of different programs, including <code class="language-plaintext highlighter-rouge">containerd-cri</code> built by Docker and the <code class="language-plaintext highlighter-rouge">cir-o</code> implementation from Red Hat.</p>
+
+<h2 id="kubelet">Kubelet</h2>
+
+<p>Kubelet is the daemon on each node that launches containers. Under the hood Kubernetes uses <code class="language-plaintext highlighter-rouge">cgroup</code> technology to restrict resource utilization.</p>
+
+<h2 id="controller-manager">Controller-manager</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">controller-manager</code> is responsible for running various controllers that regulate behavior in the cluster; for example, ensuring that tall of the replicas of a service are available and healthy.</p>
+
+<h2 id="scheduler">scheduler</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">scheduler</code> is responsible for placing different pods onto different nodes in the cluster.</p>
+
+<h2 id="etcd">etcd</h2>
+
+<p><code class="language-plaintext highlighter-rouge">etcd</code> server is the storage for the cluster where all of the API objects are stored.</p>
+
+<h2 id="kubernetes-dns">Kubernetes DNS</h2>
+
+<p>Kubernetes runs a DNS server, which provides naming and discovery for the services that are defined in the cluster. This DNS server also runs as a replicated service on the cluster. Depending on the size of your cluster, you may see one or more DNS servers running in your cluster.</p>
+
+<h2 id="kubernetes-ui">Kubernetes UI</h2>
+
+<p>The UI is run as a single replica, but it is still managed by a Kubernetes deployment for reliability and upgrades. You can use kubectl proxy to access this UI.  If you run the command <code class="language-plaintext highlighter-rouge">kubectl proxy</code> you should be able to get tot he UI at <code class="language-plaintext highlighter-rouge">http://localhost: 8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/</code>.</p>
+
+<p>This component may not always be installed.</p>
+
+<h2 id="kubectl---the-official-kubernetes-client"><a href="/kubernetes/labels_and_annotations">Kubectl</a> - The official Kubernetes client</h2>
+
+<h2 id="kubernetes-api">Kubernetes API</h2>
+
+<p>Everything contained in Kubernetes is represented by a RESTful resource. These objects exist at unique HTTP paths; for example, <code class="language-plaintext highlighter-rouge">https://your-k8s.com/api/v1/namespaces/default/pods/my-pod</code> leads to the representation of a Pod in the default namespace. The <code class="language-plaintext highlighter-rouge">kubectl</code> command makes HTTP requests to these URLs to access Kubernetes objects that reside at these paths.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

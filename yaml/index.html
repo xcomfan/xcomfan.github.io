@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>YAML Reference | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="YAML Reference" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/yaml/" />
+<meta property="og:url" content="http://0.0.0.0:4000/yaml/" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="YAML Reference" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"YAML Reference","url":"http://0.0.0.0:4000/yaml/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">YAML Reference</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="what-is-yaml">What is YAML</h2>
+
+<p>YAML is a <a href="https://en.wikipedia.org/wiki/Comparison_of_data-serialization_formats">data serialization format</a>. YAML is also a superset of JSON meaning that every valid JSON document also happens to be a YAML document. YAML puts more focus on human readability making it more applicable to configuration files edited by hand rather than as a transport layer.</p>
+
+<p>YAML uses Python style block indentation (leading white space on each line defines the scope of a block)to define structure. This makes it easier to read, but you can’t collapse whitespace to reduce size when transferring messages over a network.</p>
+
+<p>The official YAML site is <a href="https://yaml.org/">yaml.org</a></p>
+
+<h2 id="yaml-syntax">YAML Syntax</h2>
+
+<p>There are three fundamental data structures in YAML.</p>
+
+<ol>
+  <li>
+    <p><strong>Scalars</strong> - Simple values like numbers, strings or booleans.</p>
+  </li>
+  <li>
+    <p><strong>Arrays</strong> - Sequences of scalars or other collections</p>
+  </li>
+  <li>
+    <p><strong>Hashes</strong> - Associated arrays, also known as maps, dictionaries, objects, or records comprised of key-value pairs.</p>
+  </li>
+</ol>
+
+<table>
+  <thead>
+    <tr>
+      <th>Data Type</th>
+      <th>YAML</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Null</td>
+      <td><code class="language-plaintext highlighter-rouge">null</code>, <code class="language-plaintext highlighter-rouge">~</code></td>
+    </tr>
+    <tr>
+      <td>Boolean</td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>, <code class="language-plaintext highlighter-rouge">false</code></td>
+    </tr>
+    <tr>
+      <td>Integer</td>
+      <td><code class="language-plaintext highlighter-rouge">10</code>, <code class="language-plaintext highlighter-rouge">0b10</code>, <code class="language-plaintext highlighter-rouge">0x10</code>, <code class="language-plaintext highlighter-rouge">0o10</code></td>
+    </tr>
+    <tr>
+      <td>Floating-Point</td>
+      <td><code class="language-plaintext highlighter-rouge">3.14</code>, <code class="language-plaintext highlighter-rouge">12.5e-9</code>, <code class="language-plaintext highlighter-rouge">.inf</code>, <code class="language-plaintext highlighter-rouge">.nan</code></td>
+    </tr>
+    <tr>
+      <td>String</td>
+      <td><code class="language-plaintext highlighter-rouge">Lorem</code>, ‘ipsum`</td>
+    </tr>
+    <tr>
+      <td>Date and Time</td>
+      <td><code class="language-plaintext highlighter-rouge">2024-10-31</code>, <code class="language-plaintext highlighter-rouge">23:59</code>, <code class="language-plaintext highlighter-rouge">2022-01-16 23:59:59</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Reserved words in YAML can be written in lowercase (<code class="language-plaintext highlighter-rouge">null</code>), uppercase (<code class="language-plaintext highlighter-rouge">NULL</code>) or title case (<code class="language-plaintext highlighter-rouge">Null</code>) any other case variant of such words will be treated as plain text.</p>
+
+<p>Sequences in YAML are just like Python lists. They use the standard square bracket syntax <code class="language-plaintext highlighter-rouge">[]</code> if in the inline-block mode or leading <code class="language-plaintext highlighter-rouge">-</code> at the start of each line when they are block indented. You can keep your list items at the same indentation level as their property or add more indentation if that improves readability.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">fruits</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">apple</span><span class="pi">,</span> <span class="nv">banana</span><span class="pi">,</span> <span class="nv">orange</span><span class="pi">]</span>
+<span class="na">veggies</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">tomato</span>
+  <span class="pi">-</span> <span class="s">cucumber</span>
+  <span class="pi">-</span> <span class="s">onion</span>
+<span class="na">mushrooms</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="s">champignon</span>
+<span class="pi">-</span> <span class="s">truffle</span>
+</code></pre></div></div>
+
+<p>YAML has hashes analogous to Python dicts. They are made of keys (property names) followed by a colon (<code class="language-plaintext highlighter-rouge">:</code>) and a value.</p>
+
+<p>Notice in the below example how the list of children contains <strong>anonymous objects</strong>. Unlike for example the spouse defined under a property named <code class="language-plaintext highlighter-rouge">spouse</code>. When anonymous or unnamed objects appear as list items, you can recognize them by their properties, which are aligned with an opening dash character (<code class="language-plaintext highlighter-rouge">-</code>)</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">person</span><span class="pi">:</span>
+  <span class="na">firstName</span><span class="pi">:</span> <span class="s">John</span>
+  <span class="na">lastName</span><span class="pi">:</span> <span class="s">Doe</span>
+  <span class="na">dateOfBirth</span><span class="pi">:</span> <span class="s">1969-12-31</span>
+  <span class="na">married</span><span class="pi">:</span> <span class="no">true</span>
+  <span class="na">spouse</span><span class="pi">:</span>
+    <span class="na">firstName</span><span class="pi">:</span> <span class="s">Jane</span>
+    <span class="na">lastName</span><span class="pi">:</span> <span class="s">Smith</span>
+  <span class="na">children</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">fistName</span><span class="pi">:</span> <span class="s">Bobby</span>
+      <span class="na">dateOfBirth</span><span class="pi">:</span> <span class="s">2001-05-14</span>
+    <span class="pi">-</span> <span class="na">firstName</span><span class="pi">:</span> <span class="s">Molly</span>
+      <span class="na">dateOfBirth</span><span class="pi">:</span> <span class="s">1995-01-17</span>
+</code></pre></div></div>
+
+<p>Property names in YAML are flexible. They can contain whitespace characters and span multiple lines. YAML hashes allow you to use almost any data type for a key.</p>
+
+<h2 id="unique-features">Unique Features</h2>
+
+<p>YAML understands various date and time formats, including the <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> standard, and can work with optional time zones. Timestamps such as 23:59:59 get deserialized into the number of seconds elapsed since midnight.</p>
+
+<p>To solve ambiguities you can cast values to specific data types by using <strong>YAML tags</strong> which start with a double exclamation point <code class="language-plaintext highlighter-rouge">!!</code>. There are a few <a href="https://yaml.org/type/index.html">language-independent tags</a>, but different parsers might provide additional extensions only relevant to your programming language.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">text</span><span class="pi">:</span> <span class="kt">!!str</span> <span class="s">2022-01-16</span>
+
+<span class="na">numbers</span><span class="pi">:</span> <span class="kt">!!set</span>
+    <span class="pi">?</span> <span class="m">5</span>
+    <span class="pi">?</span> <span class="m">8</span>
+    <span class="pi">?</span> <span class="m">13</span>
+
+<span class="na">image</span><span class="pi">:</span> <span class="kt">!!binary</span>
+    <span class="s">R0lGODdhCAAIAPAAAAIGAfr4+SwAA</span>
+    <span class="s">AAACAAIAAACDIyPeWCsClxDMsZ3CgA7</span>
+
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">?</code> denotes a mapping key in YAML. They are usually unnecessary but can help you define a compound key from another collection or a key that contains reserved characters.</p>
+
+<p>Another YAML feature is <strong>anchors and aliases</strong> which let you define an element once and then refer to it many times within the same document.  Possible use cases for this are</p>
+
+<ul>
+  <li>Reusing the shipping address for invoicing</li>
+  <li>Rotating meal in a meal plan</li>
+  <li>Referencing exercises in a training program.</li>
+</ul>
+
+<p>To declare an anchor which you can think of as a named variable you use the ampersand <code class="language-plaintext highlighter-rouge">&amp;</code> symbol and you use the asterisk <code class="language-plaintext highlighter-rouge">*</code> to derefernce it.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">recursive</span><span class="pi">:</span> <span class="nl">&amp;cycle</span> <span class="pi">[</span><span class="nv">*cycle</span><span class="pi">]</span>
+
+<span class="na">exercises</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">muscles</span><span class="pi">:</span> <span class="nl">&amp;push-up</span>
+      <span class="pi">-</span> <span class="s">pectoral</span>
+      <span class="pi">-</span> <span class="s">triceps</span>
+      <span class="pi">-</span> <span class="s">biceps</span>
+  <span class="pi">-</span> <span class="na">muscles</span><span class="pi">:</span> <span class="nl">&amp;squat</span>
+      <span class="pi">-</span> <span class="s">glutes</span>
+      <span class="pi">-</span> <span class="s">quadriceps</span>
+      <span class="pi">-</span> <span class="s">hamstrings</span>
+  <span class="pi">-</span> <span class="na">muscles</span><span class="pi">:</span> <span class="nl">&amp;plank</span>
+      <span class="pi">-</span> <span class="s">abs</span>
+      <span class="pi">-</span> <span class="s">core</span>
+      <span class="pi">-</span> <span class="s">shoulders</span>
+
+<span class="na">schedule</span><span class="pi">:</span>
+  <span class="na">monday</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="nv">*push-up</span>
+    <span class="pi">-</span> <span class="nv">*squat</span>
+  <span class="na">tuesday</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="nv">*plank</span>
+  <span class="na">wednesday</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="nv">*push-up</span>
+    <span class="pi">-</span> <span class="nv">*plank</span>
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">recursive</code> above demonstrates a circular reference. This property is a sequence whose only element is the sequence itself. In other words <code class="language-plaintext highlighter-rouge">recursive[0]</code> is the same as <code class="language-plaintext highlighter-rouge">recursive</code> This feature allows you to represent directed graphs in YAML.</p>
+
+<p>You can also <strong>merge</strong> or override attributes defined elsewhere by combining two or more objects.</p>
+
+<p>In the example below the <code class="language-plaintext highlighter-rouge">rectangle</code> object inherits properties of share and square while adding a new attribute <code class="language-plaintext highlighter-rouge">b</code>, and changing the value of <code class="language-plaintext highlighter-rouge">color</code></p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">shape</span><span class="pi">:</span> <span class="nl">&amp;shape</span>
+  <span class="na">color</span><span class="pi">:</span> <span class="s">blue</span>
+
+<span class="na">square</span><span class="pi">:</span> <span class="nl">&amp;square</span>
+  <span class="na">a</span><span class="pi">:</span> <span class="m">5</span>
+
+<span class="na">rectangle</span><span class="pi">:</span>
+  <span class="s">&lt;&lt;</span> <span class="pi">:</span> <span class="nv">*shape</span>
+  <span class="s">&lt;&lt;</span> <span class="pi">:</span> <span class="nv">*square</span>
+  <span class="na">b</span><span class="pi">:</span> <span class="m">3</span>
+  <span class="na">color</span><span class="pi">:</span> <span class="s">green</span>
+</code></pre></div></div>
+
+<p>Scalars in YAML support either a <strong>flow styel</strong> or a <strong>block style</strong>, which give you different levels of control over the newline handling in multiline strings. Flow scalars can start on the same line as their property name and may span multiple lines. In such a case, each line’s leading and trailing whitespace will always be folded into a single space, turning paragraphs into lines.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">text</span><span class="pi">:</span> <span class="s">Lorem ipsum</span>
+   <span class="s">dolor sit amet</span>
+
+   <span class="s">Lorem ipsum</span>
+   <span class="s">dolor sit amet</span>
+</code></pre></div></div>
+
+<p>The above YAML code would produce the below text:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Lorem ipsum dolor sit amet
+Lorem ipsum dolor sit amet
+</code></pre></div></div>
+
+<p>In contrast to flow calars, block scalars allow for changing how to deal with newlines, trailing newlines, or indentation. Fore example, the pipe (<code class="language-plaintext highlighter-rouge">|</code>) indicator placed right after the property name preserves the newlines literally, which can be handy for embedding shell scripts in your YAML file.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">script</span><span class="pi">:</span> <span class="pi">|</span>
+   <span class="s">#!/usr/bin/env python</span>
+
+   <span class="s">def main():</span>
+       <span class="s">print("Hello world")</span>
+
+   <span class="s">if __name__ == "__main__":</span>
+       <span class="s">main()</span>
+</code></pre></div></div>
+
+<p>The YAML document above defines a property named <code class="language-plaintext highlighter-rouge">script</code>, which holds a short Python script. Without the pipe indicator, a YAML parser would’ve treated the following lines as nested elements rather than as a whole. Ansible frequently takes advantage of this feature.</p>
+
+<p>If you want to only fold lines with indentation determined by the first line in a paragraph, then use the greater than sign (<code class="language-plaintext highlighter-rouge">&gt;</code>) indicator:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="na">text</span><span class="pi">:</span> <span class="pi">&gt;</span>
+   <span class="s">Lorem</span>
+     <span class="s">ipsum</span>
+   <span class="s">dolor</span>
+   <span class="s">sit</span>
+   <span class="s">amet</span>
+
+   <span class="s">Lorem ipsum</span>
+   <span class="s">dolor sit amet</span>
+</code></pre></div></div>
+
+<p>The above YAML would produce text that looks like.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Lorem
+  ipsum
+dolor sit amet
+Lorem ipsum dolor sit amet
+</code></pre></div></div>
+
+<p>Finally you can have multiple YAML documents stored in a single file separated with the triple dash (<code class="language-plaintext highlighter-rouge">---</code>). You can optionally use the triple dot (<code class="language-plaintext highlighter-rouge">...</code>) to mark the end of each document.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

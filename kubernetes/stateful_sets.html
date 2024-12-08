@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Kubernetes: StatefulSets | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Kubernetes: StatefulSets" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/kubernetes/stateful_sets" />
+<meta property="og:url" content="http://0.0.0.0:4000/kubernetes/stateful_sets" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Kubernetes: StatefulSets" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Kubernetes: StatefulSets","url":"http://0.0.0.0:4000/kubernetes/stateful_sets"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Kubernetes: StatefulSets</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="kubernetes-native-storage-with-statefulsets">Kubernetes Native Storage with StatefulSets</h2>
+
+<p>StatefulSets are replicated groups of Pods, similar to ReplicaSets, but unlike ReplicaSets they have the following unique properties.</p>
+
+<ul>
+  <li>
+    <p>Each replica gets a persistent hostname with a unique index (e.g., database-0, database-1, etc.)</p>
+  </li>
+  <li>
+    <p>Each replica is created in order from lowest to highest index, and creation will block until the Pod at the previous index is healthy and available. This also applies to scaling up.</p>
+  </li>
+  <li>
+    <p>When a StatefulSet is deleted, each of the managed replica Pods is also deleted in order from highest to lowest. This also applied to scaling down the number of replicas.</p>
+  </li>
+</ul>
+
+<p>This set of features makes it easier to deploy storage applications on Kubernetes. For example, the combination of stable hostnames and ordering mean that all replicas, other thant he first one, can reliably reference <code class="language-plaintext highlighter-rouge">database-0</code> for the purposes of discovery and establishing replication quorum.</p>
+
+<h3 id="manually-replicated-mongodb-with-statefulsets">Manually replicated MongoDB with StatefulSets</h3>
+
+<p>In this section we set up a replicated MongoDB cluster as an example of using StatefulSets. The example below creates a MongoDB based replicated storage utilizing StatefulSets. When this manifest is deployed with <code class="language-plaintext highlighter-rouge">kubectl apply -f mongo-simple.yaml</code> you will see the pods coming up one at a time and getting unique names for each Pod.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">StatefulSet</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">mongo</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">serviceName</span><span class="pi">:</span> <span class="s2">"</span><span class="s">mongo"</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">3</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">mongo</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">mongodb</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">mongo:3.4.1</span>
+        <span class="na">command</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="s">mongod</span>
+        <span class="pi">-</span> <span class="s">--replSet</span>
+        <span class="pi">-</span> <span class="s">rs0</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">27017</span>
+<span class="na">name</span><span class="pi">:</span> <span class="s">peer</span>
+</code></pre></div></div>
+
+<p>Once the StatefulSet is created, we also need to create a “headless” service to manage the DNS entries for the StatefulSet. In Kubernetes a service is called <strong>headless</strong>  if it doesn’t have a cluster virtual IP address. Since with StatefulSets each Pod has a unique identity, it doesn’t really make sense to have a load-balancing IP address for the replicated service. You can create a headless service using <code class="language-plaintext highlighter-rouge">clusterIP: None</code> in the service specification as in the example below.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">mongo</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">ports</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">port</span><span class="pi">:</span> <span class="m">27017</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">peer</span>
+  <span class="na">clusterIP</span><span class="pi">:</span> <span class="s">None</span>
+  <span class="na">selector</span><span class="pi">:</span>
+<span class="na">app</span><span class="pi">:</span> <span class="s">mongo</span>
+</code></pre></div></div>
+
+<p>Once the service is created, there are four DNS entries that are populated. <code class="language-plaintext highlighter-rouge">mongo.default.svc.cluster.local</code> is created, but unlike with a standard service a DNS lookup on this hostname provides all the addresses in the StatefulSet. In addition, entries are created for <code class="language-plaintext highlighter-rouge">mongo-0.mongo.default.svc.cluster.local</code> and <code class="language-plaintext highlighter-rouge">mongo-1.mongo</code> and <code class="language-plaintext highlighter-rouge">mongo-2.mongo</code>. Each of these resolves to the specific IP address of the replica index in the StatefulSet. Thus, with StatefulSets you get well-defined, persistent names for each replica in the set. This useful when you are configuring a replicated storage solution.</p>
+
+<p>At this point you would need to run the below command below in the Pod to set to make <code class="language-plaintext highlighter-rouge">rs0</code> with <code class="language-plaintext highlighter-rouge">mongo-0.mongo</code> be the initial primary.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl <span class="nb">exec</span> <span class="nt">-it</span> mongo-0 mongo <span class="o">&gt;</span> rs.initiate<span class="o">(</span> <span class="o">{</span>
+_id: <span class="s2">"rs0"</span>,
+      members:[ <span class="o">{</span> _id: 0, host: <span class="s2">"mongo-0.mongo:27017"</span> <span class="o">}</span> <span class="o">]</span>
+     <span class="o">})</span><span class="p">;</span>
+OK
+</code></pre></div></div>
+
+<p>To automate the execution of this command we can add an additional containers to our Pods to perform the initialization.  You can use ConfigMap to add a script into the existing MongoDB image as in the example below. Its mounting a ConfigMap volume whose name is <code class="language-plaintext highlighter-rouge">mongo-init</code>. This ConfigMap holds a script that performs our initialization. It first determines whether it is running on <code class="language-plaintext highlighter-rouge">mongo-0</code> or not. If it si on <code class="language-plaintext highlighter-rouge">mongo-0</code> it creates teh ReplicaSet using the same command we ran manually. If its on a different replica it waits until the ReplicaSet exists and then it registers itself as a member of that ReplicaSet.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">...</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">init-mongo</span>
+  <span class="na">image</span><span class="pi">:</span> <span class="s">mongo:3.4.1</span>
+  <span class="na">command</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">bash</span>
+  <span class="pi">-</span> <span class="s">/config/init.sh</span>
+  <span class="na">volumeMounts</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">config</span>
+    <span class="na">mountPath</span><span class="pi">:</span> <span class="s">/config</span>
+  <span class="na">volumes</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">config</span>
+    <span class="na">configMap</span><span class="pi">:</span>
+      <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">mongo-init"</span>
+</code></pre></div></div>
+
+<p>The script below sleeps forever after initializing the cluster. Since every container in the Pod needs to have the same <code class="language-plaintext highlighter-rouge">RestartPolicy</code>. Since we don’t want the Mongo cluster to get restarted we need to have our initialization containers run forever as well or Kubernetes may think the Pod is unhealthy.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">ConfigMap</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">mongo-init</span>
+<span class="na">data</span><span class="pi">:</span>
+  <span class="s">init.sh</span><span class="pi">:</span> <span class="pi">|</span>
+    <span class="s">#!/bin/bash</span>
+    <span class="s"># Need to wait for the readiness health check to pass so that the</span>
+    <span class="s"># mongo names resolve. This is kind of wonky.</span>
+    <span class="s">until ping -c 1 ${HOSTNAME}.mongo; do</span>
+      <span class="s">echo "waiting for DNS (${HOSTNAME}.mongo)..."</span>
+<span class="s">sleep 2 done</span>
+    <span class="s">until /usr/bin/mongo --eval 'printjson(db.serverStatus())'; do</span>
+      <span class="s">echo "connecting to local mongo..."</span>
+      <span class="s">sleep </span><span class="m">2</span>
+    <span class="s">done</span>
+    <span class="s">echo "connected to local."</span>
+<span class="s">HOST=mongo-0.mongo:27017</span>
+    <span class="s">until /usr/bin/mongo --host=${HOST} --eval 'printjson(db.serverStatus())'; do</span>
+      <span class="s">echo "connecting to remote mongo..."</span>
+      <span class="s">sleep </span><span class="m">2</span>
+    <span class="s">done</span>
+    <span class="s">echo "connected to remote."</span>
+    <span class="s">if [[ "${HOSTNAME}" != 'mongo-0' ]]; then</span>
+      <span class="s">until /usr/bin/mongo --host=${HOST} --eval="printjson(rs.status())" \</span>
+            <span class="s">| grep -v "no replset config has been received"; do</span>
+        <span class="s">echo "waiting for replication set initialization"</span>
+        <span class="s">sleep </span><span class="m">2</span>
+      <span class="s">done</span>
+      <span class="s">echo "adding self to mongo-0"</span>
+      <span class="s">/usr/bin/mongo --host=${HOST} \</span>
+         <span class="s">--eval="printjson(rs.add('${HOSTNAME}.mongo'))"</span>
+    <span class="s">fi</span>
+    <span class="s">if [[ "${HOSTNAME}" == 'mongo-0' ]]; then</span>
+      <span class="s">echo "initializing replica set"</span>
+      <span class="s">/usr/bin/mongo --eval="printjson(rs.initiate(\</span>
+          <span class="s">{'_id'</span><span class="pi">:</span> <span class="s1">'</span><span class="s">rs0'</span><span class="err">,</span> <span class="s1">'</span><span class="s">members'</span><span class="pi">:</span> <span class="pi">[{</span><span class="s1">'</span><span class="s">_id'</span><span class="pi">:</span> <span class="nv">0</span><span class="pi">,</span> <span class="nv">\</span>
+           <span class="nv">'host'</span><span class="pi">:</span> <span class="s1">'</span><span class="s">mongo-0.mongo:27017'</span><span class="pi">}]</span><span class="err">}</span><span class="s">))"</span>
+    <span class="s">fi</span>
+    <span class="s">echo "initialized"</span>
+    <span class="s">while </span><span class="no">true</span><span class="s">; do</span>
+      <span class="s">sleep </span><span class="m">3600</span>
+<span class="s">done</span>
+</code></pre></div></div>
+
+<h3 id="persistent-volumes-and-statefulsets">Persistent Volumes and StatefulSets</h3>
+
+<p>For persistent storage you need to mount a persistent volume in the <code class="language-plaintext highlighter-rouge">/data/db</code> directory in the Pod template. Because the StatefulSet replicates more than one Pod you cannot simply reference a persistent volume claim. Instead you need to add a <strong>persistent volume claim template</strong>. A claim template is like a Pod template, but it creates volume claims.</p>
+
+<p>The following needs to be added to your stateful definition. When you add a volume claim template to a StatefulSet definition, each time the StatefulSet controller creates a Pod that is part of the StatefulSet it will create a persistent volume claim based on this template as part of that Pod. For these replicated persistent volumes to work correctly, you either need to have auto provisions set up for persistent volumes or you need to pre populate a collection of persistent volume objects for the StatefulSet controller to draw from. If there are no claims that can be created, the StatefulSet controller will not be able to create the corresponding Pods.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">volumeClaimTemplates</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">database</span>
+  <span class="na">annotations</span><span class="pi">:</span>
+    <span class="s">volume.alpha.kubernetes.io/storage-class</span><span class="pi">:</span> <span class="s">anything</span>
+  <span class="na">spec</span><span class="pi">:</span>
+    <span class="na">accessModes</span><span class="pi">:</span> <span class="pi">[</span> <span class="s2">"</span><span class="s">ReadWriteOnce"</span> <span class="pi">]</span>
+    <span class="na">resources</span><span class="pi">:</span>
+    <span class="na">requests</span><span class="pi">:</span>
+    <span class="na">storage</span><span class="pi">:</span> <span class="s">100Gi</span>
+</code></pre></div></div>
+
+<h3 id="readines-probes-for-the-mongo-cluster">Readines probes for the Mongo cluster</h3>
+
+<p>For this example we can use the below for the readiness probe.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">livenessProbe</span><span class="pi">:</span>
+  <span class="na">exec</span><span class="pi">:</span>
+    <span class="na">command</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">/usr/bin/mongo</span>
+    <span class="pi">-</span> <span class="s">--eval</span>
+    <span class="pi">-</span> <span class="s">db.serverStatus()</span>
+  <span class="na">initialDelaySeconds</span><span class="pi">:</span> <span class="m">10</span>
+  <span class="na">timeoutSeconds</span><span class="pi">:</span> <span class="m">10</span>
+</code></pre></div></div>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

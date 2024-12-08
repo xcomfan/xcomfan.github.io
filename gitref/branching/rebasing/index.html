@@ -9,16 +9,16 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://localhost:4000/gitref/branching/rebasing/" />
-<meta property="og:url" content="http://localhost:4000/gitref/branching/rebasing/" />
+<link rel="canonical" href="http://0.0.0.0:4000/gitref/branching/rebasing/" />
+<meta property="og:url" content="http://0.0.0.0:4000/gitref/branching/rebasing/" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Branching" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Branching","url":"http://localhost:4000/gitref/branching/rebasing/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Branching","url":"http://0.0.0.0:4000/gitref/branching/rebasing/"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="My References" /></head>
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
@@ -189,6 +189,10 @@
 <h3 id="rebase-vs-merge">Rebase vs. merge</h3>
 
 <p>When you merge branches you see the full history of your repository.  ALl the experimental and dead end branches will be visible in the repository history.  Rebasing lets you have a cleaner history.</p>
+
+<h2 id="using-rebasing-to-pull-remote-code-to-your-local-working-branch">Using rebasing to pull remote code to your local working branch.</h2>
+
+<p><code class="language-plaintext highlighter-rouge">git pull --rebase origin master</code> resolve any merge conflicts and use <code class="language-plaintext highlighter-rouge">git rebase --continue</code>.</p>
 
   </div>
 
