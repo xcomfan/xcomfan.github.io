@@ -11,6 +11,7 @@ title: Contents
 
 ## [Algorithms]({% link algorithms/algorithms.md %})
 ## [AWS]({% link AWS/aws.md %})
+## [Databases]({% link databases/databases.md %})
 ## [Docker]({% link docker/docker.md %})
 ## [Git]({% link gitref/gitref.md %})
 ## [Go]({% link go/go.md%})
