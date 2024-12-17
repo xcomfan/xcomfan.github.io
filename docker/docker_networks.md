@@ -4,6 +4,8 @@ title: "Docker Network"
 permalink: /docker/network
 ---
 
+This way both containers will receive hostnames corresponding to their names give by the `--name` option.
+
 ## What Is Docker Network?
 
 When setting up multiple containers that need to work together, you should use [Docker Networks](https://docs.docker.com/network/)

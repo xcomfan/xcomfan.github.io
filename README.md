@@ -19,3 +19,8 @@ find . -mindepth 1 -maxdepth 1 ! -name '_site' ! -name '.*' -exec rm -rf {} +
 ```bash
 cp -rfp _site/* ./
 ```
+
+
+## Plugins Used
+
+* [Breadcrumbs](https://jekyllcodex.org/without-plugin/breadcrumbs/#)

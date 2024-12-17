@@ -4,69 +4,9 @@ title: "Docker Quick Reference"
 permalink: /docker/quick_ref
 ---
 
-## Container lifecycle management
-
-### Creating new container
-
-#### From Docker Registry
-
-`docker run -d --name  <name_you_want_to_call_it> <registry_image_name>`
-
-`docker run --rm -it --name redis-client --link redis-server:redis-client redis redis-cli -h redis-server`
-
-The `--rm` flag tells Docker to remove the created container as soon as you terminate it. The `-i` `-t` flags (combined to `-it`) run the containers interactively. The `--network` option connects this containers to the virtual network we created earlier. This way both containers will receive hostnames corresponding to their names give by the `--name` option. By using the `-h` parameter tells Redis CLI to connect to a Redis server identified by its containers name
-
-### Start or stop a container
-
-`docker start|stop <container_name> or <container_id>`
-
-### List containers
-
-For all containers use `docker ps -all` for just running ones you can use `docker ps`
-
-## Remove stopped containers
-
-`docker rm <container_name>`
-
-## Connect to a running container
-
-### Using docker exec
-
-The `-i` makes the command executing interactive
-
-`docker exec -i <container_id> /bin/bash`
-
-### SSH way
-
-use `docker ps` to see the containers you have running the use the command below to get IP address of container
-
-`docker inspect -f "{{ .NetworkSettings.IPAddress }}" [container-name-or-id]`
-
-once you have the ip you can log in with `ssh [username]@[ip-address]`
-
-## Port Forwarding
-
 
 
 ## BREAKPOINT 
-
-
-To use port mapping we will stop the current Redis server and spin up a new one with a mapped port.
-
-```bash
-docker stop redis-server
-docker rm redis-server
-docker run -d --name redis-server -p 6379:6379 redis
-```
-
-If you want to get the details for the redis container you can use the command `docker inspect redis-server` which will give you a json of all the data about the container.
-
-```bash
-docker stop redis-server
-python -m pytest -v test/integration/
-```
-
-To run the E2E test make sure that your Redis docker container is running. If its not you can start it with `docker start redis-server`.
 
 The `Dockerfile` needs to have a specific format documented [here](https://docs.docker.com/reference/dockerfile/)
 

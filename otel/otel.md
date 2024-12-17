@@ -172,3 +172,56 @@ services:
 
   extensions: [health_check, pprof, zpages]
 ```
+
+## My Otel Experiment Notes
+
+In my VM I just downloaded the zip file with the binary.
+
+```bash
+curl --proto '=https' --tlsv1.2 -fOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v0.115.1/otelcol_0.115.1_linux_arm64.tar.gz
+
+tar -xvf otelcol_0.115.1_linux_arm64.tar.gz
+```
+
+I created a basic config below.
+
+```yaml
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+
+exporters:
+  file:
+    path: /home/ubuntu/otel_experiments/collector_output.json
+
+extensions:
+  health_check:
+  pprof:
+  zpages:
+
+service:
+  extensions: [health_check, pprof, zpages]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [file]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [file]
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [file]
+```
+
+I start it manually with the command `./otelcol --config=myconfig.yaml`
+
