@@ -10,13 +10,11 @@ permalink: /docker/quick_ref
 
 The `Dockerfile` needs to have a specific format documented [here](https://docs.docker.com/reference/dockerfile/)
 
-We are using the [official Python image](https://hub.docker.com/_/python) as our base image. In our case the `slim-bullseye` name at end of the image name means that we are using the slimmed down variant of `Debian Bullseye`
+
 
 Putting it all together we git [this Dockerfile](https://github.com/xcomfan/real_python_examples/blob/0935c4472276a1e5f9899f7a54c182b429db5b73/page-tracker/Dockerfile) and you can build it with the command `docker build -t page-tracker .`. This command will look for Docker file in the current directory `.` and tag the resulting image with the default label `latest` so the full image name will be `page-tracker:lates`.
 
 The idea behind [multi-stage builds](https://docs.docker.com/build/building/multi-stage/) is to partition your Dockerfile into stages, each of which can be based on a completely different image. This is particularly useful when your application's development and runtime environments are different. For example, you can install the necessary build tools in a temporary image meant just for building and testing your application and then copy the resulting executable into the final image. Multi stage builds can make your images much smaller and more efficient.
-
-To start with the refactor we will make a copy of `Dockerfile` called `Dockerfile.dev`. Note that when running docker build you specify the file you want to use for the build with the `-f` option as in `docker build -f Dockerfile.dev -t page-tracker .`  We are keeping `Dockerfile.dev` for later and making our changes for the multi stage build in `Dockerfile`.
 
 Each stage in a Dockerfile begins with its own `FROM` instructions, so we will have two. The first stage will be nearly identical to our current `Dockerfile` we copied from to create `Dockerfile.dev` except that we give the stage the name `builder` which we refer to later.  Because we will be transferring your packaged page tracker application from one image to another, we need to add the extra step of building a distribution package using the `Python wheel` format. The `pip wheel` command will create a file named something like `page_tracker-1.0.0-py3-none-any.whl` in the `dist/` subfolder. We also remove the `CMD` instruction from this stage, as it'll become part of the next stage.
 
@@ -32,7 +30,7 @@ An image repository on your Docker Hub account is a collection of Docker image t
 
 Once you set up your Docker account use `docker login -u <username>` to login from command line. If you are using 2FA you need to set up an access token and provide that as your password.
 
-Docker hub controls what repository your image is pushed to via tagging. You tag the image using your Docker Hub username and repository as a prefix. For example `docker tag page-tracker:719e61c xcomfan/page-tracker:719e61c`. This form we are follwing is `registry/username/repository:tag`. The registry part can be left out when you are pushing to default docker hub as we are doing in this example.  Otherwise it can be a domain address or an IP address with an optional port number of your private registry instance. If you don't provide a tag Docker implicitly applies the `latest` tag. You can tag the same image with more than one tag for example `docker tag page-tracker:719e61c xcomfan/page-tracker:latest`
+Docker hub controls what repository your image is pushed to via tagging. You tag the image using your Docker Hub username and repository as a prefix. For example `docker tag page-tracker:719e61c xcomfan/page-tracker:719e61c`. This form we are following is `registry/username/repository:tag`. The registry part can be left out when you are pushing to default docker hub as we are doing in this example.  Otherwise it can be a domain address or an IP address with an optional port number of your private registry instance. If you don't provide a tag Docker implicitly applies the `latest` tag. You can tag the same image with more than one tag for example `docker tag page-tracker:719e61c xcomfan/page-tracker:latest`
 
 Once you've correctly tagged the images, you can send them to the desired registry with `docker push` for example...
 
