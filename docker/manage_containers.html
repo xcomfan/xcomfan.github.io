@@ -3,20 +3,20 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Docker | My References</title>
+<title>Managing Docker Containers | My References</title>
 <meta name="generator" content="Jekyll v3.9.2" />
-<meta property="og:title" content="Docker" />
+<meta property="og:title" content="Managing Docker Containers" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
 <meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
-<link rel="canonical" href="http://0.0.0.0:4000/docker" />
-<meta property="og:url" content="http://0.0.0.0:4000/docker" />
+<link rel="canonical" href="http://0.0.0.0:4000/docker/manage_containers" />
+<meta property="og:url" content="http://0.0.0.0:4000/docker/manage_containers" />
 <meta property="og:site_name" content="My References" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Docker" />
+<meta property="twitter:title" content="Managing Docker Containers" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Docker","url":"http://0.0.0.0:4000/docker"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Managing Docker Containers","url":"http://0.0.0.0:4000/docker/manage_containers"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
 <body><header class="site-header" role="banner">
@@ -39,7 +39,7 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Docker</h1>
+    <h1 class="post-title">Managing Docker Containers</h1>
   </header>
 
   <div class="post-content">
@@ -48,26 +48,44 @@
 <a href="/">Home</a>
 
   
-    / Docker
+    / <a href="/docker/">Docker</a>
+  
+
+  
+    / Managing Docker Containers
   
 
 </div>
 
 <h2>———</h2>
 
-<p><a href="/docker/create_container">Running a container from registry image</a></p>
+<h2 id="list-containers-on-your-system">List containers on your system</h2>
 
-<p><a href="/docker/create_container">Connecting to a running containers</a></p>
+<p><code class="language-plaintext highlighter-rouge">docker ps</code> will list all running containers <code class="language-plaintext highlighter-rouge">docker ps -a</code> will list all running and stopped/exited containers.</p>
 
-<p><a href="/docker/manage_containers">Managing containers on your system</a></p>
+<h2 id="starting-stopping-and-sending-signals-to-containers">Starting, stopping and sending signals to containers</h2>
 
-<p><a href="/docker/manage_images">Managing images on your system</a></p>
+<p>To stop a container <code class="language-plaintext highlighter-rouge">docker stop &lt;container_name or id&gt;</code> - will SIGTEM then SIGKILL the main process but containers resources remain so it can be restarted.</p>
 
-<h2 id="to-be-removed-once-cleaned-up">TO BE REMOVED ONCE CLEANED UP</h2>
+<p>Once stopped you can restart/continue with <code class="language-plaintext highlighter-rouge">docker start &lt;container_name or id&gt;</code></p>
 
-<p><a href="/docker/images">Docker Images</a></p>
+<p>You can also use <code class="language-plaintext highlighter-rouge">docker kill &lt;container_name or id&gt;</code> which will send the SIGKILL signal by default; but can be combined with <code class="language-plaintext highlighter-rouge">--signal</code> option to send any signal to the main process in the containers. For example `docker kill –signal=SIGHUP my_container.</p>
 
-<p><a href="/docker/quick_ref">Quick Reference</a></p>
+<h2 id="removing-containers">Removing containers</h2>
+
+<p><code class="language-plaintext highlighter-rouge">docker rm &lt;containers_name || container_id&gt;</code> for example <code class="language-plaintext highlighter-rouge">docker rm web-server</code></p>
+
+<p>To remove a containers and its volumes use the <code class="language-plaintext highlighter-rouge">--volumes</code> option <code class="language-plaintext highlighter-rouge">docker rm --volumes nginx</code></p>
+
+<p>A container needs to be stopped to be removed. You can use the <code class="language-plaintext highlighter-rouge">--force</code> flag to remove a running container.</p>
+
+<h3 id="bulk-remove">Bulk remove</h3>
+
+<p><code class="language-plaintext highlighter-rouge">docker rm $(docker ps --filter status=exited -q)</code> or using <code class="language-plaintext highlighter-rouge">xargs</code> <code class="language-plaintext highlighter-rouge">docker ps --filter status=exited -q | xargs docker rm</code></p>
+
+<h2 id="inspecting-a-containers">Inspecting a containers</h2>
+
+<p><code class="language-plaintext highlighter-rouge">docker inspect &lt;container-name&gt;</code> will give you JSON output with all the data about a container.</p>
 
   </div>
 

@@ -241,6 +241,57 @@ service:
   <span class="na">extensions</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">health_check</span><span class="pi">,</span> <span class="nv">pprof</span><span class="pi">,</span> <span class="nv">zpages</span><span class="pi">]</span>
 </code></pre></div></div>
 
+<h2 id="my-otel-experiment-notes">My Otel Experiment Notes</h2>
+
+<p>In my VM I just downloaded the zip file with the binary.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--proto</span> <span class="s1">'=https'</span> <span class="nt">--tlsv1</span>.2 <span class="nt">-fOL</span> https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v0.115.1/otelcol_0.115.1_linux_arm64.tar.gz
+
+<span class="nb">tar</span> <span class="nt">-xvf</span> otelcol_0.115.1_linux_arm64.tar.gz
+</code></pre></div></div>
+
+<p>I created a basic config below.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">receivers</span><span class="pi">:</span>
+  <span class="na">otlp</span><span class="pi">:</span>
+    <span class="na">protocols</span><span class="pi">:</span>
+      <span class="na">grpc</span><span class="pi">:</span>
+        <span class="na">endpoint</span><span class="pi">:</span> <span class="s">0.0.0.0:4317</span>
+      <span class="na">http</span><span class="pi">:</span>
+        <span class="na">endpoint</span><span class="pi">:</span> <span class="s">0.0.0.0:4318</span>
+
+<span class="na">processors</span><span class="pi">:</span>
+  <span class="na">batch</span><span class="pi">:</span>
+
+<span class="na">exporters</span><span class="pi">:</span>
+  <span class="na">file</span><span class="pi">:</span>
+    <span class="na">path</span><span class="pi">:</span> <span class="s">/home/ubuntu/otel_experiments/collector_output.json</span>
+
+<span class="na">extensions</span><span class="pi">:</span>
+  <span class="na">health_check</span><span class="pi">:</span>
+  <span class="na">pprof</span><span class="pi">:</span>
+  <span class="na">zpages</span><span class="pi">:</span>
+
+<span class="na">service</span><span class="pi">:</span>
+  <span class="na">extensions</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">health_check</span><span class="pi">,</span> <span class="nv">pprof</span><span class="pi">,</span> <span class="nv">zpages</span><span class="pi">]</span>
+  <span class="na">pipelines</span><span class="pi">:</span>
+    <span class="na">traces</span><span class="pi">:</span>
+      <span class="na">receivers</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">otlp</span><span class="pi">]</span>
+      <span class="na">processors</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">batch</span><span class="pi">]</span>
+      <span class="na">exporters</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">file</span><span class="pi">]</span>
+    <span class="na">metrics</span><span class="pi">:</span>
+      <span class="na">receivers</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">otlp</span><span class="pi">]</span>
+      <span class="na">processors</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">batch</span><span class="pi">]</span>
+      <span class="na">exporters</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">file</span><span class="pi">]</span>
+    <span class="na">logs</span><span class="pi">:</span>
+      <span class="na">receivers</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">otlp</span><span class="pi">]</span>
+      <span class="na">processors</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">batch</span><span class="pi">]</span>
+      <span class="na">exporters</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">file</span><span class="pi">]</span>
+</code></pre></div></div>
+
+<p>I start it manually with the command <code class="language-plaintext highlighter-rouge">./otelcol --config=myconfig.yaml</code></p>
+
+
   </div>
 
 </article>

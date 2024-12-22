@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Requests Library | My References</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="Requests Library" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<meta property="og:description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description." />
+<link rel="canonical" href="http://0.0.0.0:4000/sort_me/requests_library" />
+<meta property="og:url" content="http://0.0.0.0:4000/sort_me/requests_library" />
+<meta property="og:site_name" content="My References" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Requests Library" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.","headline":"Requests Library","url":"http://0.0.0.0:4000/sort_me/requests_library"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://0.0.0.0:4000/feed.xml" title="My References" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">My References</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Requests Library</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="requests-library-is-not-have-async-support">Requests Library is not have Async support.</h2>
+
+<p>If you need async support check out <a href="https://docs.aiohttp.org/en/stable/">AIOHTTP</a> or <a href="https://www.python-httpx.org/async/">HTTPX</a></p>
+
+<p>HTTPX is broadly compatible with Requests syntax.</p>
+
+<h2 id="getting-started">Getting Started</h2>
+
+<p>Because requests is a third party library you need to install it.</p>
+
+<p><code class="language-plaintext highlighter-rouge">python -m pip install requests</code></p>
+
+<h2 id="response-object">Response Object</h2>
+
+<h3 id="status-code-checking-and-handling">Status code checking and handling</h3>
+
+<p>If you use a Response instance in a conditional expression, then it will evaluate to <code class="language-plaintext highlighter-rouge">True</code> if the status code was smaller than 400.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">response</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Success!"</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="nb">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s">"Non-success status code: </span><span class="si">{</span><span class="n">response</span><span class="p">.</span><span class="n">status_code</span><span class="si">}</span><span class="s">)
+</span></code></pre></div></div>
+
+<p>Keep in mind that this approach does not check for a <code class="language-plaintext highlighter-rouge">200</code> status code. <code class="language-plaintext highlighter-rouge">204</code> NO CONTENT and <code class="language-plaintext highlighter-rouge">304</code> NOT MODIFIED are also considered successful.</p>
+
+<p>You can also use Requests built in <code class="language-plaintext highlighter-rouge">raise_for_status()</code> To raise an exception if a request was unsuccessful.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">requests.exceptions</span> <span class="kn">import</span> <span class="n">HTTPError</span>
+
+<span class="n">URLS</span> <span class="o">=</span> <span class="p">[</span><span class="s">"https://api.github.com"</span><span class="p">,</span> <span class="s">"https://api.github.com/invalid"</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">URLS</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">response</span><span class="p">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">HTTPError</span> <span class="k">as</span> <span class="n">http_err</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"HTTP error occurred: </span><span class="si">{</span><span class="n">http_err</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Other error occurred: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">"Success!"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="content">Content</h3>
+
+<p>To see the content of a response in raw bytes use <code class="language-plaintext highlighter-rouge">.content</code>.</p>
+
+<p>To get the text version use <code class="language-plaintext highlighter-rouge">.text</code>. Because the decoding of bytes to a string requires an encoding scheme; Requests will try to guess the encoding based on the headers in the response. You can provide an explicit encoding by setting <code class="language-plaintext highlighter-rouge">.encoding</code> before accessing <code class="language-plaintext highlighter-rouge">.text</code>.</p>
+
+<p>If the response is in JSON format you can load it to a dictionary with the <code class="language-plaintext highlighter-rouge">.json()</code> method.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">requests</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"https://api.github.com"</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="p">.</span><span class="n">content</span>
+<span class="sa">b</span><span class="s">'{"current_user_url":"https://api.github.com/user","current_user_authorizations_html_url":...'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="p">.</span><span class="n">text</span>
+<span class="s">'{"current_user_url":"https://api.github.com/user","current_user_authorizations_html_url...'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="p">.</span><span class="n">econding</span> <span class="o">=</span> <span class="s">"utf-8"</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="p">.</span><span class="n">text</span>
+<span class="s">'{"current_user_url":"https://api.github.com/user","current_user_authorizations_html_url...'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="p">.</span><span class="n">json</span><span class="p">()</span>
+<span class="p">{</span><span class="s">'current_user_url'</span><span class="p">:</span> <span class="s">'https://api.github.com/user'</span><span class="p">,</span> <span class="s">'current_user_authorizations_html_url'</span><span class="p">:</span> <span class="p">...</span><span class="s">'}
+&gt;&gt;&gt; type(response.json())
+&lt;class '</span><span class="nb">dict</span><span class="s">'&gt;
+</span></code></pre></div></div>
+
+<h3 id="response-headers">Response headers</h3>
+
+<p>You can access the headers of a response with <code class="language-plaintext highlighter-rouge">.headers</code> which returns a dictionary like object. Because the HTTP specification defines headers as case insensitive this dictionary object is not case sensitive for indexing by key.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"https://api.github.com"</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="p">.</span><span class="n">headers</span>
+<span class="p">{</span><span class="s">'Server'</span><span class="p">:</span> <span class="s">'GitHub.com'</span><span class="p">,</span>
+<span class="p">...</span>
+<span class="s">'X-GitHub-Request-Id'</span><span class="p">:</span> <span class="s">'AE83:3F40:2151C46:438A840:65C38178'</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="p">.</span><span class="n">headers</span><span class="p">[</span><span class="s">"Content-Type"</span><span class="p">]</span>
+<span class="s">'application/json; charset=utf-8'</span>
+<span class="o">&gt;&gt;&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="p">.</span><span class="n">headers</span><span class="p">[</span><span class="s">"content-type"</span><span class="p">]</span>
+<span class="s">'application/json; charset=utf-8'</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<h2 id="query-string-parameters">Query String Parameters</h2>
+
+<p>Query string parameters are the arguments passed inside a URL. You set those for your request by passing a <code class="language-plaintext highlighter-rouge">data</code> parameter.</p>
+
+<p>The example below we use query string parameters in calling GitHub search API.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span>
+    <span class="s">"https://api.github.com/search/repositories"</span><span class="p">,</span>
+    <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s">"q"</span><span class="p">:</span> <span class="s">"language:python"</span><span class="p">,</span> <span class="s">"sort"</span><span class="p">:</span> <span class="s">"stars"</span><span class="p">,</span> <span class="s">"order"</span><span class="p">:</span> <span class="s">"desc"</span><span class="p">}</span>
+    <span class="p">)</span>
+
+<span class="n">json_resonse</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="n">json</span><span class="p">()</span>
+<span class="n">popular_repositories</span> <span class="o">=</span> <span class="n">json_resonse</span><span class="p">[</span><span class="s">"items"</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">repo</span> <span class="ow">in</span> <span class="n">popular_repositories</span><span class="p">[:</span><span class="mi">3</span><span class="p">]:</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Name: </span><span class="si">{</span><span class="n">repo</span><span class="p">[</span><span class="s">'name'</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Description: </span><span class="si">{</span><span class="n">repo</span><span class="p">[</span><span class="s">'description'</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Stars: </span><span class="si">{</span><span class="n">repo</span><span class="p">[</span><span class="s">'stargazers_count'</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>You can even pass the <code class="language-plaintext highlighter-rouge">data</code> values as bytes</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span>
+<span class="p">...</span>     <span class="s">"https://api.github.com/search/repositories"</span><span class="p">,</span>
+<span class="p">...</span>     <span class="n">params</span><span class="o">=</span><span class="sa">b</span><span class="s">"q=language:python&amp;sort=stars&amp;order=desc"</span><span class="p">,</span>
+<span class="p">...</span> <span class="p">)</span>
+<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<h2 id="request-headers">Request Headers</h2>
+
+<p>To customize the headers sent with your request use the <code class="language-plaintext highlighter-rouge">headers</code> parameter.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span>
+    <span class="s">"https://api.github.com/search/repositories"</span><span class="p">,</span>
+    <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s">"q"</span><span class="p">:</span> <span class="s">'"real python"'</span><span class="p">},</span>
+    <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s">"Accept"</span><span class="p">:</span> <span class="s">"application/vnd.github.text-match+json"</span><span class="p">},</span>
+<span class="p">)</span>
+
+<span class="c1"># View the new `text-matches` list which provides information
+# about your search term within the results
+</span><span class="n">json_response</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="n">json</span><span class="p">()</span>
+<span class="n">first_repository</span> <span class="o">=</span> <span class="n">json_response</span><span class="p">[</span><span class="s">"items"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">first_repository</span><span class="p">[</span><span class="s">"text_matches"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s">"matches"</span><span class="p">])</span>
+</code></pre></div></div>
+
+<h2 id="other-http-methods">Other HTTP Methods</h2>
+
+<p>The authors of the requests library created <a href="https://httpbin.org">httpbin.org</a> which is a service that accepts request and provides responses for practicing/demos. We will be using it here for our examples.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"https://httpbin.org/get"</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="s">"https://httpbin.org/post"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s">"key"</span><span class="p">:</span> <span class="s">"value"</span><span class="p">})</span>
+<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="p">.</span><span class="n">put</span><span class="p">(</span><span class="s">"https://httpbin.org/put"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s">"key"</span><span class="p">:</span> <span class="s">"value"</span><span class="p">})</span>
+<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="p">.</span><span class="n">delete</span><span class="p">(</span><span class="s">"https://httpbin.org/delete"</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="p">.</span><span class="n">head</span><span class="p">(</span><span class="s">"https://httpbin.org/get"</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="p">.</span><span class="n">patch</span><span class="p">(</span><span class="s">"https://httpbin.org/patch"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s">"key"</span><span class="p">:</span> <span class="s">"value"</span><span class="p">})</span>
+<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="p">.</span><span class="n">options</span><span class="p">(</span><span class="s">"https://httpbin.org/get"</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<p><strong><em>Note:</em></strong> All of the above calls are high level shortcuts to <code class="language-plaintext highlighter-rouge">requests.request()</code> passing the name of the relevant HTTP method.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="p">.</span><span class="n">request</span><span class="p">(</span><span class="s">"GET"</span><span class="p">,</span> <span class="s">"https://httpbin.org/get"</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<h2 id="the-message-body">The Message Body</h2>
+
+<p>According to the HTTP specification, POST, PUT, and the less common PATCH requests pass their data through the message body rather than through parameters in the query string. Use the <code class="language-plaintext highlighter-rouge">data</code> parameter of requests to pass the payload. <code class="language-plaintext highlighter-rouge">data</code> takes a dictionary, a list of tuples, bytes, or a file like object. You will need to adapt the <code class="language-plaintext highlighter-rouge">data</code> being sent by your request to the service you are dealing with.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="s">"https://httpbin.org/post"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s">"key"</span><span class="p">:</span> <span class="s">"value"</span><span class="p">})</span>
+<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<p>You can also send the same data as a list of tuples</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="s">"https://httpbin.org/post"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">[(</span><span class="s">"key"</span><span class="p">,</span> <span class="s">"value"</span><span class="p">)])</span>
+<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<p>If you need to send JSON data, then you can use the <code class="language-plaintext highlighter-rouge">json</code> parameter. Requests will serialize your data and add the Content-Type header for you.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="s">"https://httpbin.org/post"</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s">"key"</span><span class="p">:</span> <span class="s">"value"</span><span class="p">})</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">json_response</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="n">json</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">json_response</span><span class="p">[</span><span class="s">"data"</span><span class="p">]</span>
+<span class="s">'{"key": "value"}'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">json_response</span><span class="p">[</span><span class="s">"headers"</span><span class="p">][</span><span class="s">"Content-Type"</span><span class="p">]</span>
+<span class="s">'application/json'</span>
+</code></pre></div></div>
+
+<h2 id="request-inspection">Request Inspection</h2>
+
+<p>When you a request, the Requests library prepares the request before actually sending it to the destination server. Request preparation includes things such as serializing JSON content and validating headers. You can view the <code class="language-plaintext highlighter-rouge">PreparedRequest</code> by accessing the <code class="language-plaintext highlighter-rouge">.request</code> on a Response Object.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="s">"https://httpbin.org/post"</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s">"key"</span><span class="p">:</span><span class="s">"value"</span><span class="p">})</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">headers</span><span class="p">[</span><span class="s">"Content-Type"</span><span class="p">]</span>
+<span class="s">'application/json'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">url</span>
+<span class="s">'https://httpbin.org/post'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">body</span>
+<span class="sa">b</span><span class="s">'{"key": "value"}'</span>
+</code></pre></div></div>
+
+<h2 id="authentication">Authentication</h2>
+
+<p>Typically you authenticate by passing the <code class="language-plaintext highlighter-rouge">Authorization</code> header or a custom header defined by the service. All the functions of Requests provide a parameter <code class="language-plaintext highlighter-rouge">auth</code> for passing credentials.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span>
+<span class="p">...</span>     <span class="s">"https://httpbin.org/basic-auth/user/passwd"</span><span class="p">,</span>
+<span class="p">...</span>     <span class="n">auth</span><span class="o">=</span><span class="p">(</span><span class="s">"user"</span><span class="p">,</span> <span class="s">"passwd"</span><span class="p">)</span>
+<span class="p">...</span> <span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="p">.</span><span class="n">status_code</span>
+<span class="mi">200</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">headers</span><span class="p">[</span><span class="s">"Authorization"</span><span class="p">]</span>
+<span class="s">'Basic dXNlcjpwYXNzd2Q='</span>
+</code></pre></div></div>
+
+<p>Requests does the work of serializing the authentication to the HTTP basic authentication scheme. You could make the equivalent call by using <code class="language-plaintext highlighter-rouge">HTTPBasicAuth</code></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">requests.auth</span> <span class="kn">import</span> <span class="n">HTTPBasicAuth</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span>
+<span class="p">...</span>     <span class="s">"https://httpbin.org/basic-auth/user/passwd"</span><span class="p">,</span>
+<span class="p">...</span>     <span class="n">auth</span><span class="o">=</span><span class="n">HTTPBasicAuth</span><span class="p">(</span><span class="s">"user"</span><span class="p">,</span> <span class="s">"passwd"</span><span class="p">)</span>
+<span class="p">...</span> <span class="p">)</span>
+<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<p>Requests provides other authentication options such as <code class="language-plaintext highlighter-rouge">HTTPDigestAuth</code> and <code class="language-plaintext highlighter-rouge">HTTPProxyAuth</code></p>
+
+<h3 id="authenticating-with-a-bearer-token">Authenticating with a Bearer Token</h3>
+
+<p>Below is a bad way of authenticating with a token that works. The reasons why its bad is 1. Your token is being sent with HTTP basic encryption which is not secure, and 2. using an empty string is input looks a bit awkward.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">token</span> <span class="o">=</span> <span class="s">"&lt;YOUR_GITHUB_PA_TOKEN&gt;"</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span>
+<span class="p">...</span>     <span class="s">"https://api.github.com/user"</span><span class="p">,</span>
+<span class="p">...</span>     <span class="n">auth</span><span class="o">=</span><span class="p">(</span><span class="s">""</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+<span class="p">...</span> <span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="p">.</span><span class="n">status_code</span>
+<span class="mi">200</span>
+</code></pre></div></div>
+
+<p>A better way is to create a subclass of <code class="language-plaintext highlighter-rouge">AuthBase</code> and implement <code class="language-plaintext highlighter-rouge">.__call__()</code>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">requests.auth</span> <span class="kn">import</span> <span class="n">AuthBase</span>
+
+<span class="k">class</span> <span class="nc">TokenAuth</span><span class="p">(</span><span class="n">AuthBase</span><span class="p">):</span>
+    <span class="s">"""Implements a token authentication scheme."""</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">token</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+        <span class="s">"""Attach an API token to the Authorization header."""</span>
+        <span class="n">request</span><span class="p">.</span><span class="n">headers</span><span class="p">[</span><span class="s">"Authorization"</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"Bearer </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">token</span><span class="si">}</span><span class="s">"</span>
+        <span class="k">return</span> <span class="n">request</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">requests</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">custom_token_auth</span> <span class="kn">import</span> <span class="n">TokenAuth</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">token</span> <span class="o">=</span> <span class="s">"&lt;YOUR_GITHUB_PA_TOKEN&gt;"</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span>
+<span class="p">...</span>     <span class="s">"https://api.github.com/user"</span><span class="p">,</span>
+<span class="p">...</span>     <span class="n">auth</span><span class="o">=</span><span class="n">TokenAuth</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+<span class="p">...</span> <span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="p">.</span><span class="n">status_code</span>
+<span class="mi">200</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">response</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">headers</span><span class="p">[</span><span class="s">"Authorization"</span><span class="p">]</span>
+<span class="s">'Bearer ghp_b...Tx'</span>
+</code></pre></div></div>
+
+<p>For OAuth authentication look into <a href="https://docs.python-requests.org/en/latest/user/authentication/#oauth-1-authentication">Oauth</a> and <a href="https://requests-oauthlib.readthedocs.io/en/latest/">Requests-OAuthlib</a></p>
+
+<h2 id="ssl-certificate-verification">SSL Certificate Verification</h2>
+
+<p>If you want to disable SSL certificate verification pass <code class="language-plaintext highlighter-rouge">False</code> to <code class="language-plaintext highlighter-rouge">verify</code> parameter.</p>
+
+<p>Requests uses a package called <a href="https://requests.readthedocs.io/en/latest/user/advanced/#ca-certificates">certifi</a> to provide certificate authorities.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"https://api.github.com"</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">InsecureRequestWarning</span><span class="p">:</span> <span class="n">Unverified</span> <span class="n">HTTPS</span> <span class="n">request</span> <span class="ow">is</span> <span class="n">being</span> <span class="n">made</span> <span class="n">to</span> <span class="n">host</span>
+<span class="err">⮑</span> <span class="s">'api.github.com'</span><span class="p">.</span> <span class="n">Adding</span> <span class="n">certificate</span> <span class="n">verification</span> <span class="ow">is</span> <span class="n">strongly</span> <span class="n">advised</span><span class="p">.</span>
+<span class="err">⮑</span> <span class="n">See</span><span class="p">:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">urllib3</span><span class="p">.</span><span class="n">readthedocs</span><span class="p">.</span><span class="n">io</span><span class="o">/</span><span class="n">en</span><span class="o">/</span><span class="n">latest</span><span class="o">/</span><span class="n">advanced</span><span class="o">-</span><span class="n">usage</span><span class="p">.</span><span class="n">html</span><span class="c1">#tls-warnings
+</span><span class="err">⮑</span>  <span class="n">warnings</span><span class="p">.</span><span class="n">warn</span><span class="p">(</span>
+<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<h2 id="performance">Performance</h2>
+
+<h3 id="timeouts">Timeouts</h3>
+
+<p>By default Requests will wait indefinitely on the response, so you should almost always specify a timeout duration to prevent these issues from happening.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"https://api.github.com"</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span><span class="o">&gt;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"https://api.github.com"</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">3.05</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<p>You can also pass a tuple to <code class="language-plaintext highlighter-rouge">timeout</code> with 1. a connection timeout (the time it allows to establish a connection), and 2. a read timeout (the time it will wait on a response once your client has established a connection).</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"https://api.github.com"</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="p">(</span><span class="mf">3.05</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="o">&lt;</span><span class="n">Response</span> <span class="p">[</span><span class="mi">200</span><span class="p">]</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<h3 id="the-session-object">The <code class="language-plaintext highlighter-rouge">Session</code> Object</h3>
+
+<p>High level <code class="language-plaintext highlighter-rouge">requests</code> APIs such as <code class="language-plaintext highlighter-rouge">get()</code> and <code class="language-plaintext highlighter-rouge">post()</code> are based on a class called <code class="language-plaintext highlighter-rouge">Session</code>. If you need to fine-tune your control over how your requests are being made you may need to use the <code class="language-plaintext highlighter-rouge">Session</code> object.</p>
+
+<p>Sessions are used to persist parameter across requests. For example, if you want to use the same authentication across multiple requests, then you can use a session. The primary performance improvement here is using the same session you don’t have to re-establish a session with each called instead it is kep in a connection pool and re-used.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">custom_token_auth</span> <span class="kn">import</span> <span class="n">TokenAuth</span>
+
+<span class="n">TOKEN</span> <span class="o">=</span> <span class="s">"&lt;YOUR_GITHUB_PA_TOKEN&gt;"</span>
+
+<span class="k">with</span> <span class="n">requests</span><span class="p">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+    <span class="n">session</span><span class="p">.</span><span class="n">auth</span> <span class="o">=</span> <span class="n">TokenAuth</span><span class="p">(</span><span class="n">TOKEN</span><span class="p">)</span>
+
+    <span class="n">first_response</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"https://api.github.com/user"</span><span class="p">)</span>
+    <span class="n">second_response</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"https://api.github.com/user"</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">first_response</span><span class="p">.</span><span class="n">headers</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">second_response</span><span class="p">.</span><span class="n">json</span><span class="p">())</span>
+</code></pre></div></div>
+
+<h3 id="max-retries">Max Retries</h3>
+
+<p>Requests won’t do retries by default when a request fails. To apply this functionality you need to implement a custom <a href="https://requests.readthedocs.io/en/latest/user/advanced/#transport-adapters"><code class="language-plaintext highlighter-rouge">transport adapter</code></a>. Transport adapters let you define a set of configurations for each service that you are working with. For example if you want requests to <code class="language-plaintext highlighter-rouge">https://api.github.com</code> to retry two tmes before finally raising a <code class="language-plaintext highlighter-rouge">RetryError</code> you would build a transport adapter, set its <code class="language-plaintext highlighter-rouge">max_retries</code> parameter, and mount it to an existing <code class="language-plaintext highlighter-rouge">Session</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">requests.adapters</span> <span class="kn">import</span> <span class="n">HTTPAdapter</span>
+<span class="kn">from</span> <span class="nn">requests.exceptions</span> <span class="kn">import</span> <span class="n">RetryError</span>
+
+<span class="n">github_adapter</span> <span class="o">=</span> <span class="n">HTTPAdapter</span><span class="p">(</span><span class="n">max_retries</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">Session</span><span class="p">()</span>
+
+<span class="n">session</span><span class="p">.</span><span class="n">mount</span><span class="p">(</span><span class="s">"https://api.github.com"</span><span class="p">,</span> <span class="n">github_adapter</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"https://api.github.com/"</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">RetryError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Error: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">finally</span><span class="p">:</span>
+    <span class="n">session</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>A better version of the example above below uses the <code class="language-plaintext highlighter-rouge">urllib3.util.Retry</code> library to further customize the retry functionality and adds logging so you can monitor when retries happen.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">requests.adapters</span> <span class="kn">import</span> <span class="n">HTTPAdapter</span>
+<span class="kn">from</span> <span class="nn">requests.exceptions</span> <span class="kn">import</span> <span class="n">RetryError</span>
+<span class="kn">from</span> <span class="nn">urllib3.util</span> <span class="kn">import</span> <span class="n">Retry</span>
+
+<span class="n">logging</span><span class="p">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="p">.</span><span class="n">DEBUG</span><span class="p">)</span>
+
+<span class="n">retries</span> <span class="o">=</span> <span class="n">Retry</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">status_forcelist</span><span class="o">=</span><span class="p">[</span><span class="mi">404</span><span class="p">])</span>
+
+<span class="n">github_adapter</span> <span class="o">=</span> <span class="n">HTTPAdapter</span><span class="p">(</span><span class="n">max_retries</span><span class="o">=</span><span class="n">retries</span><span class="p">)</span>
+
+<span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">Session</span><span class="p">()</span>
+
+<span class="n">session</span><span class="p">.</span><span class="n">mount</span><span class="p">(</span><span class="s">"https://api.github.com"</span><span class="p">,</span> <span class="n">github_adapter</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"https://api.github.com/"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">status_code</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">"https://api.github.com/invalid"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">status_code</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">RetryError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Error: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">finally</span><span class="p">:</span>
+    <span class="n">session</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div></div>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">My References</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">My References</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jekyll"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jekyll</span></a></li><li><a href="https://www.twitter.com/jekyllrb"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">jekyllrb</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
