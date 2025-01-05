@@ -344,6 +344,8 @@ Below is the flow which AWS goes through any time its evaluating permissions in 
 * Session Policies - If we get to this step that means that we are using an IAM role. If session policy does not allow the action you get a deny. If there is no session policy or if session policy allows the action we move on to Identify Policies.
 * Identity Policies - If allowed; allow the action otherwise deny.
 
+Note: Groups are not real identities which can be accessed by ARNs in resource policies.
+
 ### Multi Account Flow
 
 You need an allow from both accounts. So account B needs to allow the access from account A and account A has to allow the access from account B. The flow of checks is same as single account flow otherwise.
@@ -374,3 +376,66 @@ VPCs can be created which provide shared infrastructure services to other AWS ac
 
 These are just the AWS applied limits so you don't use up a bunch of services. Each service has specific limits you need to operate withing. Just check the docs or AWS console "service quotas" for the limits. You can create a Quota request template that can be applied to your organization accounts so that you are not manually adjusting quotas per account. You can also create a cloudwatch alarm that will trigger when you are using a certain percentage of the quota for the service. There was a legacy way of tracking this via support but now you should be using the Service Quotas console.
 
+## SAML 2.0 Identity federation
+
+SAML means Security Assertion Markup Language which is an open standard used by many identify providers. This functionality lets you use an identify provided used in your enterprise to **indirectly** access AWS CLI or console. The identify provider must be SAML 2.0 compatible to work with AWS. Web identity provided such as Google, or Facebook will not work here.
+
+At a high level the process is you set up a trust between the identify provided and IAM. Once identity provider verifies a user it will use `STS:AssumeRoleWithSAML` call to get STS credentials for the user which grand the access based on the role assumed. For access to AWS console its the same process, but instead of a trust between your identify provider and IAM you set up a trust between identity provider and a SAML/SSO endpoint on AWS.
+
+## AWS Single Sign-on (SSO)
+
+This should replace SAML 2.0 federation and is not the recommended way. It allows you to manage SSO access to AWS accounts. There is a built in identity service or you can link it to an existing one that you have.
+
+## DHCP in a VPC
+
+You can either use Amazon provided DNS (Route 53 resolver running within VPC) or provide your own DNS host.
+
+Configuration is done via DHCP option sets. Each options set is immutable and can be associated with 0 or more VPCs. Each VPC can have 0 or at most 1 Option Set associated with it. You can change the associated option set, but changes will only occur when DHCP renews occur.
+
+## VPC Router Deep Dive
+
+Virtual Router within a VPC. Is created when a VPC is created and his highly available across all AZx in that region. Its scalable without any involvement from the user. Responsible for routing traffic between subnets. Also routes from external network into VPC and from VPC into external networks. Has in interface in every subnet at the subnet+1 address (default gateway via DHCP Options Set). Controlled using route tables.
+
+Every VPC is created with a Main Route Table (RT). This main route table is the default for every subnet in the VPC. Custom route tables can be created and associated with subnets in the VPC removing the Main RT. Subnets can be associated with one Route Table only either a custom one or the default Main RT.
+
+Its best practice to leave the Main RT blank and set your routes in the custom route tables. That way if custom route table is removed you don't get surprise/unexpected behavior. 
+
+Route tables can contain multiple routes, and the most specific route wins (`/32` is most specific with just one ip address) when deciding which route to use. Route tables can also be associated with Gateways. Target of a route can be `local` which means the local VPC.
+
+## Stateful vs Stateless Firewalls
+
+As a fundamental concept when you establish a connection for example via https on port 443, what happens under the hood is the client is making on request on port 443 and the server is responding to an ephemeral port chosen by the clients OS. Thus a connection is identified by the unique combination of request IP, request port and response IP and response port.
+
+The primary difference between a stateful and stateless firewall is that with a stateless firewall each request is independent. So as in the example above, you need to create a rule for the inbound request and for the outbound response (this is from perspective of the servers it reverses for the client.) You also have to allow the range of ephemeral ports since you don't know which one will be selected. A stateful firewall on the other hand is able to match up a request with a response so if the request is allowed the corresponding response is also allowed without having to create the extra rules.
+
+## Network Access Controls Lists (NACL)
+
+NACLs are associated with subnets. Every subnet has an associated network ACL. The NACL comes into play when data crosses the boundary of the subnet. NACL is not evaluated for traffic within a subnet; just data coming into subnet and leaving subnet. NACLs are stateless so you need to have rules for both outbound and inbound requests. 
+
+Rules of a NACL are processed in order till a match is found. Once a match is found processing stops so the first match rule wins if you have two rules with same parameters. There is also a catch all indicated by `*` which effectively says deny if none of the rules match.
+
+Below is an example of a NACL for https.  `0.0.0.0/0` mean from anywhere. There is an inbound rule for port 443 and outbound for the response.
+
+| Rule number | Type | Protocol | Port range | Source | Allow/Deny |
+| ----------- | ---- | -------- | ---------- | ------ | ---------- |
+| 110 | HTTPS(443) | TCP | 443 | 0.0.0.0/0 | Allow |
+| * | All traffic | All | All | 0.0.0.0/0 | Deny |
+
+| Rule number | Type | Protocol | Port range | Source | Allow/Deny |
+| ----------- | ---- | -------- | ---------- | ------ | ---------- |
+| 120 | Custom TCP | TCP | 1024-65535 | 0.0.0.0/0 | Allow |
+| * | All traffic | All | All | 0.0.0.0/0 | Deny |
+
+Default NACL created with a VPC will allow all traffic.
+
+NACLS allow you to explicitly deny access so it may be a good tool to block bad actors. 
+
+There is no logic that NACLs are capable of. They just look at source and destination IPs and ports. They also can only be applied to subnets only, not individual resources.
+
+Custom NACLs you create just deny traffic by default. Just something to be aware of if you are creating one as it differs from the allow all traffic behavior you get with the default NACL created with a subnet.
+
+
+
+## END
+
+[comment]: <> (TODO: Once done with course videos do a review and organization of this so it makes sense to you and you can dive deep on some of the ambiguous concepts)
