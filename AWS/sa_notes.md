@@ -4,6 +4,8 @@ title: "AWS SA Notes Monolith"
 permalink: /aws/sa_notes
 ---
 
+[comment]: <> (TODO: Once done with course videos do a review and organization of this so it makes sense to you and you can dive deep on some of the ambiguous concepts)
+
 ## Intro And Course Details
 
 [GitHub repo](https://github.com/acantril/aws-sa-pro) for the course should have some good examples, and resources for the course.
@@ -434,8 +436,68 @@ There is no logic that NACLs are capable of. They just look at source and destin
 
 Custom NACLs you create just deny traffic by default. Just something to be aware of if you are creating one as it differs from the allow all traffic behavior you get with the default NACL created with a subnet.
 
+## Security Groups
 
+Security groups are stateful. Thus if you allow the request the response is automatically allowed.
 
-## END
+Security groups do not have an explicit deny. You can only allow or implicitly deny. In other words you cannot block a specific bad actor. This is why NACLs are used in combination with security groups.
 
-[comment]: <> (TODO: Once done with course videos do a review and organization of this so it makes sense to you and you can dive deep on some of the ambiguous concepts)
+Security groups support IP/CIDR and logical resources including other security groups and itself. Itself is useful because you can use it to allow all traffic between resources in the same security group.
+
+Security groups are not attached to instances but actually attached to ENIs. The UI sometimes makes it look like you are attached a SG to an instances but its actually being attached to ENI.
+
+## AWS Local Zones
+
+Local Zones are kind of like AZs but more local. Useful if you have latency sensitive applications. The AZ in the region is a parent to these Local Zones and the subnets from the parent region is extended to the local zones so you can create resources in the local Zones which leverage the same subnets.
+
+## Border Gateway Protocol (BPG) 101
+
+Autonomous Systems (AS) - Routers controlled by one entity ... a network in BGP
+
+ASNs are uniq and allocated by IANA (0-65535) 64512 - 65534 are private
+
+BGP Operates over tcp port 179 and is reliable
+
+BGP is not automatic - peering is manually configured
+
+BGP is a path-vector protocol. It exchanges the best path to a destination between peers. This path is called **ASPATH**
+
+**iBGP** = Internal BGP - Routing within an AS
+
+**eBGP** = External BGP - Routing between ASs
+
+## AWS Global Accelerator
+
+Global Accelerator helps with the issue of your application being hosted in one region but having users access it from another (thing global application).
+
+It starts with 2 anycast IP addresses. Anycast IP addresses are a special type of IP addresses (normal IP addresses are unicast and refer to one network device). Anycast are IPs that are advertised onto the internet but multiple devices can use. Core routers will route the traffic to the device closest to the source.
+
+With Global Accelerator if you use one of these two IP addresses you are routed to an edge location closest to you over public internet. Global accelerator takes the traffic and sends it to the target location, but now its going over the AWS private network not public internet.
+
+Global Accelerator is very similar to Cloud Front. It moves the AWS network closer to your customers. Global accelerator can route the traffic either to one region or to the closest region.
+
+Main difference between Global Accelerator and CloudFront is Global Accelerator is a network product and is used on TCP/UDP. CloudFront only works on HTTP.
+
+## IPSEC VPN Fundamentals
+
+As you know symmetric encryption is fast, but you need to have a way to share the key. Asymmetric is slow, but you don't need to send a key (it can be negotiated during session establishment). For this reason IPSEC has two main phases **IKE Phase 1** the slow part where the key to be used is is established. this is when you authenticate via a password (pre shared key) or certificate, using asymmetric encryption agree on and create a symmetric key and set up the encrypted tunnel. **IKE Phase 2** uses the keys from phase 1 for bulk data transfer.
+
+There are policy based and route based VPNs Route based is simple and based on destination. Policy based checks rules and applies different security configurations depending on what rules apply to the traffic.
+
+## AWS Site to Site VPN
+
+AWS Site to Site VPN is a logical connections between a VPC and on-premises network encrypted using IPSec, running over the public internet.
+
+Can be fully HA if you design and implement it correctly and can be set up in about an hour. It is comprised of ..
+
+* Virtual Private Gateway (VGW) this can be a target on route tables.
+* Customer Gateway (CGW) - either a logical configuration of a physical devices in an AWS customer data center.
+* VPN Connection between the VGW and CGW.
+
+[comment]: <> (TODO: This is a good candidate to re watch "Site2Site VPN Refresher" and fill out the notes as when I viewed it it was not relevant to what I am working on.)
+
+## Transit Gateway
+
+[comment]: <> (TODO: Come back and write up notes on "Transit Gateway Refresher" and the deep dive lesson)
+
+## 
