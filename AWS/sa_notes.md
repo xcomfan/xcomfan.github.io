@@ -6,9 +6,73 @@ permalink: /aws/sa_notes
 
 [comment]: <> (TODO: Once done with course videos do a review and organization of this so it makes sense to you and you can dive deep on some of the ambiguous concepts)
 
+## AWS Public vs Private Services
+
+Public Service in AWS is one that is accessed over public internet. Private services run within a VPC and can only be accesses from the VPC. You can set up access from a VPC to public services so that access will not go over public internet but will stay in the AWS network. S3 is one such global service.
+
+## AWS Global Infrastructure
+
+Check out [AWS Infrastructure](https://aws.amazon.com/about-aws/global-infrastructure/regions_az/) site for visualization of AWS global infrastructure
+
+An Availability Zone is not necessarily one data center. It could be numerous data centers. The Availability Zone designation means that it is isolated from other Availability Zones within a Region.
+
+**Globally Resilient** service means that a region can fail and the service will continue to operate.
+
+**Region Resilient** services operate as separate services within each region and generally replicated data to multiple availability zones within that region.
+
+**AZ Resilient** services run from a single AZ. If that AZ fails the service will fail.
+
 ## Intro And Course Details
 
 [GitHub repo](https://github.com/acantril/aws-sa-pro) for the course should have some good examples, and resources for the course.
+
+## Virtual Private Cloud (VPC)
+
+A VPC is a virtual network inside AWS.
+
+A VPC is within 1 account and 1 region.
+
+By default a VPC is private and isolated (you decide if you want to remove isolation or privacy)
+
+There are two types of VPC the default VPC and Custom VPCs. You can only have one default VPC per region but many custom VPCs.
+
+You will typically work with custom VPCs for implementations as they allow for more control.
+
+Default VPCs have all the networking configuration configured by AWS on your behalf and are less flexible.
+
+Every VPC is allocated a range of VPC address known as a VPC CIDR (for example `172.31.0.0/16`) which defines the start and end range of IP addresses that can be used in a VPC.
+
+Custom VPCs can have multiple CIDR ranges, but default VPC only gets one and it is always the same. Its `172.31.0.0/16`.
+
+To make a VPC function across Availability Zones you divide the VPC into subnets. Default VPC will have one subnet in each availability zone.
+
+Each subnet uses a part of the CIDR range and they cannot overlap. For example 172.31.0.0/20 for us-east0-2a, 172.31.16.0/20 for us-east0-2b and 172.31.32.0/20 for us-east0-2c
+
+A default VPC can be deleted an recreated so you can force a 0 VPC situation.
+
+Default VPC carves up the /16 CIDR ranges into /20 ranges for each AZ.
+
+Default VPC comes with an Internet Gateway (IGW), Security Group (SG) and a Network ACL (NACL)
+
+By default anything placed into a default VPC will get a public IPv4 address.
+
+## S3
+
+On object in S3 can be from 0 bytes to 5TB in size.
+
+Buckets are created in a specific AWS region. This means that your data has a primary home region and unless you configure it to do so your data will not leave that region. This also means that in case of disaster teh blast radius is that region.
+
+A bucket name needs to be globally unique (unique across all Regions and AZs)
+
+A bucket is not a file system. Its flat so all objects in a bucket are at the same level. If you use a name such as `/images/my_picture.jpg` The UI will present that as a directory. Folders in S3 are often called prefixes.
+
+Bucket names must be between 3 and 63 characters, start with a lowercase letter or a number and cannot be formatted like IP addresses (`1.1.1.1`).
+
+There is a soft limit of 100 buckets and a hard limit of 1000 buckets per account.
+
+You have an unlimited number of objects in a bucket.
+
+Key for an object is the name and value is the data.
 
 ## AWS Accounts
 
@@ -500,4 +564,266 @@ Can be fully HA if you design and implement it correctly and can be set up in ab
 
 [comment]: <> (TODO: Come back and write up notes on "Transit Gateway Refresher" and the deep dive lesson)
 
-## 
+## Advanced VPC Routing
+
+Routing table can be associated with an IGW or VGW.
+
+IPv4 and IPv6 are handled separately within a Routing Table.
+
+Routes send traffic based on destinations to a target.
+
+Route table has a limit of 50 static routes and 100 dynamic (propagated) routes.
+
+With two conflicting routes in an RT the longest prefix wins so `/32` will win over a `/24` or `/16` or `/0` (the higher the slash number the more specific a route is).
+
+Static routes have higher priority than dynamic routes as static routes are likely to be ones you manually input.
+
+Any routes learned have the below priority order (only applies if conflicting route)
+
+* Routes learned via Direct Connect (highest)
+* Routes learned via Static VPN
+* Routes learned via BGP based VPN
+* AS_PATH (This is the BGP path between two autonomous systems) (lowest)
+
+Communications between VPCs with CIDR overlaps is really hard and has many limitations. Avoid CIDR overlaps.
+
+[comment]: <> (TODO: Review the Advanced VPC routing content and update notes. Not sure why the flow of the videos jumped to advanced VPC stuff before covering setting up a regular VPC.)
+
+## AWS PrivateLink
+
+PrivateLink lets you connect securely to services hosted in other AWS accounts. Services are presented into your account as private IP addresses and elastic network interfaces. Providing a service this way is one way of using a service without your data going over the public internet.
+
+If setting up a PrivateLink service for it to be highly available you need to have multiple endpoints.
+
+PrivateLink support IPv4 and TCP only. IPV6 is not supported yet.
+
+Private DNS is supported (verified domains) so users of the service can make an DNS entry and override in their VPC the name used for that service.
+
+Direct Connect, Site to Site VPN and VPC Peering are supported.
+
+## VPC Endpoints (Gateway Endpoints)
+
+At time of writing they provide access to S3 and DynamoDB.
+
+Allows you to access these services without setting up internet gateway or public IPs for your resources and to not traverse the public internet.
+
+Prefix list is added to route table with the Gateway Endpoint as a target. Prefix list is just like any entry in a routing table, but the list of IPs is managed by AWS.
+
+The provided endpoint is HA across all AZs in a region by default.
+
+An endpoint policy is used to control what it can access. For example you can allow for connecting to only a particular set of s3 buckets.
+
+Gateway Endpoints can only be used to access services in the same region. You cannot access cross region services.
+
+You can configure S3 buckets to only accept connections from a specific gateway endpoint. This helps with preventing leaky buckets.
+
+These are a logical gateway object and thus can only be accessed from the VPC they exist in.
+
+## Interface Endpoints
+
+Also supports just S3 and DynamoDB like VPC Endpoints.
+
+Not HA by default. For HA add one endpoint, to one subnet per AZ used in the VPC.
+
+You can use Security Groups to control access to the endpoint which you can't do with VPC endpoints.
+
+Endpoints policies restrict what can be done with the endpoint.
+
+Only support TCP and IPv4.
+
+Behind the scenes use PrivateLink
+
+Provides service endpoints in DNS, but can be overridden with your own DNS entry.
+
+[comment]: <> (TODO: Go over this section again you kind of watched it in a hurry)
+
+## Route53
+
+Route 53 provides two services:
+
+1. Register Domains
+2. Host Zone files on managed nameservers
+
+S3 is a Global service and thus no region picking is needed. Its also globally resilient.
+
+For registering domains S3 has relationships with all the major domain registries.
+
+When you register a domain with Route 53:
+
+1. Route 53 checks with the registry if the domain is available.
+2. If the domain is available Route53 creates a zone file (a database as a flat file with all the DNS information for a domain). In addition to creating a zone file Route53 creates a nameservice for the zone. This domain having a zone file is referred to as **hosted zone** in AWS terminology. Route53 places the zone file onto the managed nameservers and communicates with the registry to add these managed nameserver records as name server (NS) records with the registry.
+
+Hosted zone can be public (find the DNS record on internet) or private (linked and usable within a VPC not publicly accessible).
+
+## Domain Registration with Route53
+
+Process is just standard domain registration from at least via UI.
+
+Make sure you check spam folder for any verification steps needed.
+
+Each domain needs a hosted zone which there will be a small charge for.
+
+The nameservers of a domain should be the same as the ones in the hosted zone for the domain. If you ever delete the hosted zone for some reason and recreate it you will get 4 new nameserver hosts for the hosted zone. You will need to update your registered domain with those servers.
+
+## DNS Record Types
+
+* NS - Name Server records specify what the name server is for a domain
+* A and AAAA Records - Map host-names to IP addresses. A for IPv4 and AAAA for IPv6. Generally you create both for the same name and the OS or client can figure out which one they want to use.
+* CNAME - Canonical name is an alias or shortcut. You can have multiple CNAME records point to the same A record so that you can use a host for multiple purposes.
+* MX - Used for email. MX record has two parts a priority and a value. Lower values are higher priority. If priority values are the same than any of them can be selected. MX record can pointe to inside the zone or if you use a fqnd (. at end) it points to outside the zone.
+* TXT Record - Allows you to add arbitrary text to a domain. One common use for txt record is to prove domain ownership. Also can be used to fight spam to provide information about authorized entities.
+
+All DNS records have at TTL (Time to Live time)
+
+It may be a good idea to lower the TTL value some time before you are going to be making changes to reduce chances of caching issues.
+
+## IAM Identity Policies
+
+An Identity is an IAM user, group or role.
+
+An IAM policy is a set of statements that allow or deny access to AWS resources.
+
+We will use the below IAM policy document as an example.
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "FullAccess",
+            "Effect": "Allow",
+            "Action": ["s3:*"],
+            "Restore": ["*"]
+        },
+        {
+            "Sid": "DenyCatBucket",
+            "Action": ["s3:*"],
+            "Effect": "Deny",
+            "Resource": ["arn:aws:s3:::catgifs", "arn:aws:s3:::catgifs/*"]
+        }
+    ]
+}
+```
+
+`Sid` is an optional field that lets you identity a statement and what it does.
+
+A statement only applies if the action an identity is taking on a resource math the action and resource in the statement.
+
+If specifying a specific resource you need to use the ARN format.
+
+If you have an explicit allow and an explicit deny; the deny will always win. By default everything is denied so you need to explicitly allow and not have it bee denied in any other policy to provide the access.
+
+There are two types of policies **inline** and **managed**. An inline policy is one that you apply directly to an account. A managed policy is one that you create the policy and then apply that policy to users. The difference is with inline you would have a copy per user and managed you would have a single copy associated to multiple users. A managed policy is its own object.
+
+Inline policies are typically used for exceptions to the typical access provided by a managed policy.
+
+There are AWS managed policies which are created by AWS and your own which you create.
+
+## IAM Users and ARNs
+
+IAM users are an identity used for anything requiring long-term AWS access. For example humans, applications or service accounts.
+
+IAM starts with a principal (people, computers, services or group of any of these). First a principal has to identify themselves to IAM. You authenticate with Access Keys or a username and password which are both long term credentials. Once logged in the principle is now known as an "authenticated identity".
+
+ARNs are Amazon Resource Name and they uniquely identify a resource in AWS. Let you identify a single resource or a group of resources using wildcards.
+
+General format is:
+
+```text
+arn:partition:service:region:account-id:resource-id
+arn:partition:service:region:account-id:resource-type/resource-id
+arn:partition:service:region:account-id:resource-type:resource-id
+```
+
+`arn:aws:s3:::catgifs` references a bucket while `arn:aws:s3:::catgifs/*` references all items in a bucket. These two ARNs DO NOT overlap. Certain actions are bucket level action so you need to use the first while some are objects based actions so you need to use the second. If you want to provide access for a bucket and objects in the bucket you would need to use both.
+
+When you see `:::` in an ARN it means those fields are not needed. For example in the ARNs above for S3 because S3 is globally unique just the bucket name is enough to identify the resource. The `::` syntax is for when something does not need to be specified.
+
+`partition` is usually just `aws` but for some scenarios such as if you are in China region you would have `aws-cn` for partition.
+
+You can only have up to 5000 users per account.
+
+IAM user can be a member of 10 IAM groups.
+
+These limits have system design impacts. IAM Roles or identity federation can be used to work around these limits.
+
+## IAM Groups
+
+IAM Groups are simply containers for IAM Users. You cannot log into a group and groups have no credentials of their own. Groups can however have policies attached to them both inline and managed. A user that is in a group will get teh policies attached to that group along with any policies attached to the user themselves. This makes Groups an effective admin/management tool. To re-iterate Groups are not a true identity. They can't be referenced as a principal in a policy.
+
+## IAM Roles
+
+A roles are also identities within IAM. They are intended to be used by multiple users in same AWS account or users and services. A role does not represent "you" or a user it represents a level of access.
+
+IAM roles have two types of policies that can be attached to them. Trust Policies which specify what identities can assume that role and Permission Policies which specify what AWS resources the role has access to.
+
+### Service Linked Roles
+
+Service Linked Roles are IAM roles linked to a specific service with permissions predefined by that service. You cannot delete this role until it is no longer required. When creating a policy that allows for the creation of service linked roles you need to be exact in specifying the service. [This link](https://docs.aws.amazon.com/IAM/latest/UserGuide/using-service-linked-roles.html) has details on which services have which service name string.
+
+## AWS Control Tower
+
+AWS Control Tower offers a straightforward way to set up and govern an AWS multi-account environment, following prescriptive best practices. AWS Control Tower orchestrates the capabilities of several other AWS services, including AWS Organizations, AWS Service Catalog, and AWS IAM Identity Center (successor to AWS Single Sign-On), to build a landing zone in less than an hour. Resources are set up and managed on your behalf.
+
+AWS Control Tower orchestration extends the capabilities of AWS Organizations. To help keep your organizations and accounts from drift, which is divergence from best practices, AWS Control Tower applies preventive and detective controls (guardrails). For example, you can use guardrails to help ensure that security logs and necessary cross-account access permissions are created, and not altered.
+
+[comment]: <> (TODO: These notes are from the overview lesson this topic warrants a deeper dive.)
+
+## S3 Security
+
+S3 is private by default. Only user that has access by default is the account root user.
+
+First way to grant access to an S3 bucket is with a **bucket policy**. A bucket policy is a **resource policy** which is just like an identify policy but attached to a resource instead of to an identity. With an identity policy you control what that identity can access. With a resource policy you are controlling who can access that resources. Identity policies can only be attached to identities in your own account thus identity policies can only control security within your account. Resource policies can allow/deny same or different accounts. Resource policies are also able to allow/deny anonymous principals.
+
+Below is an example of a resource policy. Notice that it has a `Principal` component. You would not see this in an identity policy because the identify itself is the principal.
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement":[
+        {
+            "Sid": "PublicRead",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": ["s3:GetObject"],
+            "Resource":["arn:aws:s3:::secretcatproject/*"]
+        }
+    ]
+}
+```
+
+Bucket polices should be your default though when it comes to granting anonymous access to an S3 bucket.
+
+Bucket polices can control who can access objects and even block specific IP addresses. Example below:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Id": "BlockUnLeet",
+    "Statement": [
+        {
+            "Sid": "IPAllow",
+            "Effect": "Deny",
+            "Principal": "*",
+            "Action": "s3:*",
+            "Resource": "arn:aws:s3:::secretcatproject/*",
+            "Condition": {
+                "NotIpAddress": {"aws:SourceIp": "1.3.3.7/32"}
+            }
+        }
+    ]
+}
+```
+
+More bucket policy examples can be found [here](https://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html)
+
+Another approach to provide access to a bucket is less used now but its ACLs (Access Control Lists). ACLs are very limited and AWS recommends using bucket policies. They essentially allow for read, write, read and write of the ACL anf full control. Nothing outside of that.
+
+## S3 Static Hosting
+
+S3 can generate a URL for you which will be based on region and bucket name, or you can use a custom domain but then the bucket name has to match the custom domain. 
+
+This feature is useful not just for a whole static site, but to have static content in S3 that a dynamic app can reference as part of the page the client sees.
+
+Its also good to use as status or other type of out of bound management pages.
+

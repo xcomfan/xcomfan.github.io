@@ -14,4 +14,6 @@ permalink: /algorithms
 
 [Insertion sort]({% link algorithms/insertion_sort.md %})
 
+[Interview Coding]({% link algorithms/interview_coding.md %})
+
 [Queue Implemented from two tacks]({% link algorithms/queue_from_stacks.md %})
