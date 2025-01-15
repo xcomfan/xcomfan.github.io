@@ -243,3 +243,38 @@ The pattern looks like this:
 * K Pairs with Largest Sums (hard)
 
 ## Topological Sort
+
+Topological sort is used to find a linear ordering of elements that have dependencies on each other. For example, if event 'B' is dependant on event 'A', 'A' comes before 'B' in topological ordering.
+
+The pattern works like this:
+
+1. Initialization
+  a. Store the graph in adjacency lists by using a HashMap
+  b. To fin all sources, use a HashMap to keep the count of in-degreesBuild the graph and find in-degrees of all vertices.
+
+2. Build the graph from the input and populate the in-degrees hashMap.
+
+3. Find all sources
+  a. All vertices with '0' in-degrees will be sources and are stored in a Queue.
+
+4. Sort
+    a. For each source, do the following things:
+      i. Add it to the sorted list
+      ii. Get all of its children from the graph
+      iii. Decrement the in-degree of each child by 1
+      iv. If a child's in-degree becomes '0', add it to the sources Queue
+
+    b. Repeat (a), until the source Queue is empty
+
+[comment]: <> (TODO: Visual would be very helpful here refer to link and see if you can doctor something up without using images: https://hackernoon.com/14-patterns-to-ace-any-coding-interview-question-c5bb3357f6e)
+
+### How to identify Topological Sort pattern
+
+* The problem will deal with graphs that have no directed cycles
+* If you're asked to update all objects in a sorted order
+* If you have a class of objects that follow a particular order
+
+### Problems Featuring the Topological Sort pattern
+
+* Task scheduling (medium)
+* Minimum height of a tree (hard)
