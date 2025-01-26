@@ -26,5 +26,6 @@ title: Contents
 ## [Python]({% link python/python.md %})
 ## [System Design]({% link system_design/system_design.md %})
 ## [Terraform]({% link terraform/terraform.md %})
+## [Unsorted Notes]({% link unsorted/unsorted.md %})
 ## [Windows]({% link windows/windows_terminal.md %})
 ## [YAML]({% link yaml.md %})

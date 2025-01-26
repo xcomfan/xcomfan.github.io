@@ -510,6 +510,8 @@ Security groups support IP/CIDR and logical resources including other security g
 
 Security groups are not attached to instances but actually attached to ENIs. The UI sometimes makes it look like you are attached a SG to an instances but its actually being attached to ENI.
 
+
+
 ## AWS Local Zones
 
 Local Zones are kind of like AZs but more local. Useful if you have latency sensitive applications. The AZ in the region is a parent to these Local Zones and the subnets from the parent region is extended to the local zones so you can create resources in the local Zones which leverage the same subnets.
@@ -971,3 +973,254 @@ This will also work with replication. The object encryption will be maintained.
 
 If replicating plaintext to a bucket using bucket keys the object in encrypted at the destination side (ETAG changes between source and destination) more details [here](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-key.html)
 
+## S3 Object Storage Classes
+
+With the default S3 Standard objects are replicated to 3 AZs in a region. You are billed per GB of data stored, per GB of transfer out and price per 1000 requests. There are not minimum object amounts or storage sizes. Standard has a first byte access time of milliseconds. Standard should be used for frequently accessed data that is non replaceable.
+
+S3 Standard IA (Infrequent Access) is just like standard in features but there is a retrieval fee in addition to the transfer fee. The storage cost is cheaper however. There is also a minimum of 30 days storage charge (no matter how long object is stored you get billed for 30 days). You also get charged for 128kb per object (or more if object is bigger) even if object is smaller than 128kb.  S3 Standard IA should be used for long lived data which is irreplaceable but where access is infrequent.
+
+S3 One Zone-IA Similar to IA but not replicated to 3 regions in an AZ. Data is still replicated withing the availability zone, but not across availability zones. Should be used for long lived but non critical and replaceable data that is infrequently accessed.
+
+S3 Glacier Instant - Higher extraction fees and minimum storage of 90 days but even cheaper per GB cost. Good for long lived data that is accessed once a quarter.
+
+S3 Glacier Flexible - Think of these as cold objects. They can't be made public and any access requires a retrieval process. You have 3 options for retrieval, expedited takes 1 to 5 minutes but is expensive, standard which takes 3 to 5 hours and bulk which takes 5 to 12 hours. Has a 40kb minimum billable size and 90 Day min Duration.
+
+S3 Glacier Deep Archive - The cheapest to store. 40kb min billable size and 180 day minimum billable duration. Objects cannot be made public. Take much longer to retrieve 12 hours standard and 48 hours for bulk. Good for archival data.
+
+S3 Intelligent-Tiering - Contains 5 tiers within it. Frequent access, Infrequent Access, Archive Instant Access, Archive Access and Deep Archive. Usage of Archive and Deep Archive is optional. The other tiers S3 will monitor and move infrequently accesses objects to. Good for long lived data where usage patterns are unknown.
+
+## S3 Lifecycle Configuration
+
+Lets you transition objects between storage classes based on rules or delete objects after a certain time. You can't configure based on how frequently accessed an object is for that use intelligent tiering. In Lifecycle configuration an object needs to be in standard for 30 days before it can be moved to a cheaper class. You also can't move to Standard IA or One Zone IA and Glacier classes in a single rule. Need to combine two rules for that.
+
+## S3 Replication
+
+There are two types of replications Cross Region Replication (CRR) and Same Region Replication (SRR). SRR is when you want to replicate between two accounts in same region.
+
+Configuration is done on source bucket. A role needs to be configured via Trust Policy so that you can assume that role and write to the destination bucket. If replicating to a different account you need to have a bucket policy which trusts the account that is sending the data.
+
+You can replicate all objects or filter based on prefix or tags.
+
+You can also select storage class in the destination bucket. 
+
+You can also configure ownership in the destination account.
+
+RTC (Replication Time Control) can be used to add a 15 minute SLA to the replication process. Without this its a best effort thing. You can also use monitoring to see what is queued for replication.
+
+Replication is not retroactive. If a bucket has objects when you enable replication, those objects will not be replicated. Only the new objects will be replicated.
+
+A bucket cannot be enabled for replication without versioning being enabled.
+
+Batch replication can be used to replicate existing objects.
+
+Replication is not bi-directional. It goes one way from source to destination. An option for bi directional replication has been recently added but that is a separate feature you need to enable.
+
+With some extra configuration SSE-S3, SSE-KMS and SSE-C encryption is supported for replication.  SSE-C is a recent addition.
+
+No system events, Glacier or Glacier Deep Archive can be replicated. (Glacier should be though of as a separate storage product)
+
+By default deletes are not replicated but this can be enabled.
+
+Uses for replication are:
+
+* Log aggregation
+* Prod and test account/environment sync
+* Resilience with strict sovereignty requirements
+* Global Resilience Improvements
+* Latency Reduction
+
+## S3 Pre Signed URLs
+
+Pre signed URLs allow you to give another person access to an object in an S3 bucket using your credentials in a safe and secure way.
+
+Without using pre signed URLs the only way to give an anonymous/un-authenticated user access to an object is s3 is:
+
+* Give the anonymous user an AWS Identify
+* Give the anonymous user AWS Credentials
+* Make the bucket public
+
+None of these options are ideal.
+
+When you ask s3 to create a pre signed URL the pre signed url has embedded in it credentials with an expiration time. It will also have the details of which object and bucket the pre signed URL is for.
+
+Pre signed URLs can be used for GET and PUT (download and upload operations)
+
+When using the URL, the permissions match the identity which generated it at the moment the link the being used. So if you get an access denied that means that either the creator of the link did not have access initially or it does not have access at the time you are using the link.
+
+DO NOT generate signed URLs with an IAM role. the URL will stop working when the temporary credentials of the role expire.
+
+One way to generate a pre signed link is via aws cli `aws s3 presign s3://some_prefix/file.txt --expires-in 180`.
+
+## S3 Select and Glacier Select
+
+The problem this feature solves is if you have a large 5TB object and you download that 5TB object you are going to be billed for the 5TB of transfer.
+
+S3/Glacier Select lets you use SQL-LIke statements to extract a part of the object. 
+
+No demo for this in the course just making you aware it exists.
+
+## S3 Events
+
+Allows you to configure event notifications on a bucket.
+
+Can be delivered to SNS, SQS and Lambda Functions
+
+Events supporter are of create category (put, post, copy, completeMultiPartUpload), delete (*, Delete, DeleteMarkerCreated), restore (Post(initiated), completed) and replication (OperationMissedThreshold, OperationReplicatedAfterThreshold, OperationNotTracked, OperationFailedReplication)
+
+Notifications can be send to Lambda, SQS Queue and SNS Topics. You will need to add resource policies to those services so that they are allowed to interact with S3.
+
+## S3 Access Logs
+
+Logs for a source bucket will be sent to a target bucket. Works using an S3 Log Delivery Group. You need to give the Log Delivery Group write access to the target bucket. Logs are delivered as files and are newline delimited.
+
+If you use this you need to manage the storage lifecycle of the log files in the target bucket.
+
+## S3 Object Lock
+
+Can be enabled on a new bucket or existing but with help of AWS support.
+
+Implements WORM (Write Once Read Many) - No delete no overwrite
+
+Requires versioning and individual versions of the object are locked.
+
+A lock has a Retention period and a Legal Hold. These can be defined at the object or at the bucket level.
+
+If you use compliance mode that means that an object cannot be adjusted, deleted or overwritten during the retention period. It also means the retention period itself cannot be adjusted or removed. This even included the account root user. This is the most strict form of object lock.
+
+Governance mode allows for the lock setting to be adjusted.
+
+Governance mode is good for preventing accidental deletions or even for testing policy before turning on compliance mode.
+
+There is also the option of S3 Legal Hold. This is an on or off toggle. The object will not be deletable or changeable until the legal hold is removed. The `s3:PutObjectLegalHold` permission is required to add or remove the hold. Used to prevent accidental deletions or to flag an object as critical for a project.
+
+These options can be used in conjunction with each other.
+
+## S3 Access Points
+
+If you have an S3 bucket that is very widely used your bucket policy can become very complicated (think many different teams needing different access permissions). S3 Access points addresses this by allowing you to create multiple access points to the same bucket each with different policies and different network access controls. Each endpoint has its own address.
+
+You can create these both via UI or via CLI `aws s3control create-access-point --name secretcats --account-id 123456789012 --bucket catpics`
+
+You can restrict an access point to have a specific VPC as the request origin.
+
+Any permissions defined on an access point also need to be defined on the bucket policy. You can have wide open access on a bucket policy to a specific access point and then use the access point permissions to fine tune the access. This is a commonly used pattern.
+
+## VPC Sizing and Structure
+
+Before creating a custom VPC take these considerations into account.
+
+* What size should the VPC be?
+* Are there any networks we can't use?
+* Other VPC's, Cloud, On-premises, Partners & Vendors
+* Try to predict the future
+* VPC Structure - Tiers & Resiliency (Availability Zones)
+
+In AWS smallest VPC you can make is `/28` (16 IP addresses) and maximum size is a `/16` (65536 IP addresses).
+
+Its good to avoid common ranges so avoid using  `10.0.X.X` and `10.1.X.X` because `10.0` is the default and many people pick the next one as the non default. Generally good to avoid 10.0.X.X to 10.10.X.X so good starting point is 10.16.
+
+Aim to have at least 2 networks per region being used per account and add some buffer.
+
+For example if you will be using 5 Regions (3 in US and Europe and Australia), and 4 accounts that would make it `5 * 2 * 4` and bring us to 40 IP ranges.
+
+10.128 to 10.255 is a Google default so avoid that.
+
+VPC Sizing:
+
+| VPC Size | Netmask | Subnet Size | Hosts/Subnet* | Subnet/VPC | Total IPs* |
+| -------- | ------- | ----------- | ------------- | ---------- | ---------- |
+| Micro| /24 | /27 | 27 | 8 | 216 |
+| Small | /21 | /24 | 251 | 8 | 2008 |
+| Medium | /19 | /22 | 1019 | 8 | 8152 |
+| Large | /18 | /21 | 2043 | 8 | 16344 |
+| Extra Large | /16 | /20 | 4091 | 16 | 65456 |
+
+You want to plan to use 4 availability zones in your VPC with one being a spare in case you have growth.
+
+Within each availability zone you want to have "tiers" a good default for number of tiers is 4 (Web tier, app tier, db tier and a spare). This can vary depending on what you are doing, but its a good start.
+
+Each tier would have its own subnet in each AZ.
+
+Some useful links:
+
+https://github.com/acantril/aws-sa-associate-saac02/tree/master/07-VPC-Basics/01_vpc_sizing_and_structure
+
+https://cloud.google.com/vpc/docs/vpc
+
+https://aws.amazon.com/answers/networking/aws-single-vpc-design/
+
+## Custom VPCs Theory and Demo
+
+If you choose Dedicated Tenancy at the VPC level then you will be locked in to using dedicated tenancy in that VPC. If you pick default options than you can choose at resource creation time what tenancy you need.
+
+In AWS diagrams blue means private subnets and green means public by convention.
+
+A subnet can never be in more than one availability zone.
+
+Some IPs in every VPC subnet are reserved 5 in total:
+
+If for example we are talking about a VPC with subnet 10.16.16.0/20 (10.16.16.0 to 10.16.31.255) the following addresses are reserved/not usable.
+
+* Network address 10.16.16.0
+* Network + 1 10.16.16.1 - VPC Router
+* Network + 2 10.16.15.2 - Reserved for DNS
+* Network + 3 10.16.16.3 - Reserved for future use
+* Last IP in Subnet 10.16.31.255 - The broadcast address
+
+DHCP Options set controls DHCP behavior for the subnet. You can create your own option sets, but you cannot edit them.
+
+## VPC Routing and Internet Gateway
+
+VPC Router is a highly available device that exists in every subnet at the network + 1 IP address. By default it will route traffic between the subnets of a VPC. This routing is controlled by a Routing table and each VPC by default has a "Main" route table which you can override with your own. As you recall a subnet can only have one subnet associated with it, but a route table can be associated with many subnets.
+
+All routing tables have at least one entry with a local target so that VPC router knows where local traffic should be sent.
+
+Internet Gateway (IGW) is a region resilient(mean that one IGW can cover all AZs in a region) gateway attached to a VPC.
+
+VPC can have none or 1 IGW, and IGW can be attached to only 1 VPC at a time.  
+
+IGW Gateways traffic between the VPC and the Internet or AWS Public Zone services (S3, SQS, SNS, etc.)
+
+To use an IGW:
+
+1. Create IGW
+2. Attache IGW to VPC
+3. Create custom Routing Table
+4. Associate Route Table to VPC
+5. Default Routes go to IGW
+6. Subnet allocate IPv4 and IPv6 automatically
+
+Side note about public IPv4 addresses. The public IP address is never seen by the instance and its OS. The public IP is associated with the private IP in an internet gateway so that the gateway can send the traffic meant for that IP to the correct private address.
+
+## NAT (Network Address Translation) Gateway
+
+A set of processes that remaps source or destination IPs. This is sometimes referred to as IP masquerading (hiding CIDR blocks behind one IP address).
+
+Useful because public IP addresses are running out.
+
+Gives a private CIDR range **outgoing** internet access. You just use the routing table in a private subnet and point the default IPv4 route to the NAT Gateway.
+
+Nat Gateways are resilient to an AZ (HA in that AZ)
+
+NAT Gateways run from a public subnet and utilizes an Elastic IP address.
+
+You need one Gateway and one RT in each AZ that you use.
+
+Scale to 45 Gbps and are charged by time and data volume. You can route to multiple NAT Gateways if you need more bandwidth. Partial hours are billed as full hours.
+
+You can create a NAT instance. If you do this make sure you disable source and destination checks as by default an EC2 instance will drop any data on its network work where the network card is not either the source or destination. If we are using an EC2 instance as a NAT Gateway, we need to disable that feature.
+
+For maximum availability you would have a NAT Gateway in each AZ that you use.
+
+EC2 as NAT instance is a good idea if:
+
+* Cost is a matter
+* Test or low volume VPCs
+* Can save money in situation where you have a lot of data going over the gateway.
+* Provides predictable cost
+* Can be used for port forwarding and as bastion hosts.
+* Can use Network ACLs and Security Groups. NAT Gateway only supports NACL.
+
+NAT is not needed for IPv6. In AWS all IPv6 addresses are publicly routable.
+
+Internet Gateway works with ALL IPv6 IPs directly. If an instance in a private subnet has a default IPv6 route to an Internet Gateway it will become a public instance. If you want outgoing only IPv6 access look at the Egress Only Internet Gateway which will get covered later.
